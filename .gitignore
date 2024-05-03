@@ -28,6 +28,7 @@ build/
 *.dll
 *.so
 *.dylib
+.Next
 
 # Ignore package manager lock files
 package-lock.json
