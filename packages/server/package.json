@@ -1,1 +1,33 @@
-{"name":"server","version":"1.0.0","description":"","main":"index.js","devDependencies":{"@types/cookie-parser":"^1.4.7","@types/cors":"^2.8.17","@types/express":"^4.17.21","@types/mongoose":"^5.11.97","@types/morgan":"^1.9.9","@types/node":"^20.12.8","@types/nodemon":"^1.19.6","dotenv":"^16.4.5","morgan":"^1.10.0","nodemon":"^3.1.0","ts-node":"^10.9.2","typescript":"^5.4.5"},"scripts":{"start":"ts-node .","dev":"../../node_modules/nodemon/bin/nodemon.js"},"keywords":[],"author":"Hernan Chalco","license":"ISC","dependencies":{"cookie-parser":"^1.4.6","cors":"^2.8.5","express":"^4.19.2","mongoose":"^8.3.3"}}
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.12.8",
+    "@types/nodemon": "^1.19.6",
+    "dotenv": "^16.4.5",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "start": "ts-node .",
+    "dev": "../../node_modules/nodemon/bin/nodemon.js"
+  },
+  "keywords": [],
+  "author": "Hernan Chalco",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.3"
+  }
+}
