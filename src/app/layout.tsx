@@ -8,15 +8,14 @@ import Providers from "../store/provider";
 // We can also fetch the list of txvariants from the server and pass them to the client
 
 type LayoutProps = {
-  title: string;
   children: React.ReactNode;
 };
 
-const Layout: React.FC<LayoutProps> = ({ title, children }) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <html>
       <Head>
-        <title>{title}</title>
+        <title>{"Adyen Sandbox"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <body>
