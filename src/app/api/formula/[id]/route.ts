@@ -8,6 +8,7 @@ interface Params {
 
 export async function GET(request: NextRequest, { params }: Params) {
   const { id } = params;
+  console.log("test");
 
   console.log(`Getting a Formula with id: ${id}`);
   return Response.json({ id: id });
