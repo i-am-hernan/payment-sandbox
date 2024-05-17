@@ -4,7 +4,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IFormula extends Document {
   name: string;
   slug: string;
-  stringifiedConfiguration: string;
+  configuration: any;
   description: string;
   createdBy: string | null;
 }
@@ -14,7 +14,7 @@ const FormulaSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
-    stringifiedConfiguration: { type: String, required: true },
+    configuration: { type: Schema.Types.Mixed, required: true },
     description: { type: String, required: true },
     createdBy: { type: Schema.Types.ObjectId, required: false, default: null },
   },

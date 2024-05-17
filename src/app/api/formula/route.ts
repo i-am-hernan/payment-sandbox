@@ -7,11 +7,11 @@ export async function GET(request: Request) {
   console.log("Getting a Formuala");
   return NextResponse.json(
     {
-      stringifiedConfiguration: {
+      configuration: {
         environment: "test", // Change to 'live' for the live environment.
         clientKey: "test_M6TZBF6HYRAZHMFBGXMILDLMAEOYAERI", // Public key used for client-side authentication: https://docs.adyen.com/development-resources/client-side-authentication
         analytics: {
-          enabled: true, // Set to false to not send analytics data to Adyen.
+          enabled: false, // Set to false to not send analytics data to Adyen.
         },
         session: {
           id: "",
@@ -22,6 +22,9 @@ export async function GET(request: Request) {
         },
         onError: (error: any, component: any) => {
           console.error(error.name, error.message, error.stack, component);
+        },
+        onChange: (state: any, component: any) => {
+          console.log(state);
         },
         // Any payment method specific configuration. Find the configuration specific to each payment method:  https://docs.adyen.com/payment-methods
         // For example, this is 3D Secure configuration for cards:
@@ -34,7 +37,7 @@ export async function GET(request: Request) {
         },
       },
       date: new Date().toISOString(),
-      createdBy: "mustafa.hoda",
+      createdBy: "admin",
       _id: "60f3b3b3c9f3b0001f1f3b3b",
     },
     { status: 200 }

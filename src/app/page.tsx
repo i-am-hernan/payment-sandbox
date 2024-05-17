@@ -13,6 +13,7 @@ import { IFormula } from "./schema/Formula";
 const Page: any = () => {
   const getStarterFormula = async (): Promise<IFormula> => {
     const response = await fetch("http://localhost:3000/api/formula/", {
+      cache: "no-store",
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -45,12 +46,13 @@ const Page: any = () => {
   useEffect(() => {
     const createAdyenCheckout = async () => {
       const starterFormula = await getStarterFormula();
-      const { stringifiedConfiguration } = starterFormula;
+      console.log(starterFormula);
+      const { configuration } = starterFormula;
       const session = await createAdyenSession();
 
-      console.log(stringifiedConfiguration);
+      console.log(configuration);
       // Parse the stringified configuration
-      const configuration = JSON.parse(JSON.stringify(stringifiedConfiguration));
+      // const configuration = JSON.parse(JSON.stringify(stringifiedConfiguration));
       console.log(configuration);
       // Inject the session data into the formula
       configuration.session.id = session.id;
