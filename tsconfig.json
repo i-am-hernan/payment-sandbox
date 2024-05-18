@@ -1,11 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "src/", // Add this line
+
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -26,13 +24,12 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"]
+    }
   },
-  "include": [
-    "./src",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./src", ".next/types/**/*.ts", "@/components/ui", "@/lib"],
+  "exclude": ["node_modules"]
 }

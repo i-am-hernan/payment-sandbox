@@ -5,6 +5,7 @@ import FrontendMain from "../components/Sandbox/Frontend/FrontendMain";
 import Component from "../components/Sandbox/Adyen/Component";
 import AdyenState from "../components/Sandbox/Adyen/AdyenState";
 import { useEffect } from "react";
+import { Button } from "../components/ui/button";
 
 import AdyenCheckout from "@adyen/adyen-web";
 import "@adyen/adyen-web/dist/adyen.css";
@@ -74,6 +75,8 @@ const Page: any = () => {
     //   bottomRight={AdyenState}
     // />
     <>
+      <Button variant="outline">Button</Button>
+
       <h1 className="text-3xl font-bold underline">Testing</h1>
       {/* <div id="dropInContainer"></div> */}
     </>
