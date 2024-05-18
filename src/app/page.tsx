@@ -1,15 +1,12 @@
 "use client";
 
-import SandboxLayout from "../components/Sandbox/Layout";
-import FrontendMain from "../components/Sandbox/Frontend/FrontendMain";
-import Component from "../components/Sandbox/Adyen/Component";
-import AdyenState from "../components/Sandbox/Adyen/AdyenState";
 import { useEffect } from "react";
 import { Button } from "../components/ui/button";
 
 import AdyenCheckout from "@adyen/adyen-web";
 import "@adyen/adyen-web/dist/adyen.css";
 import { IFormula } from "./schema/Formula";
+import { Navbar } from "../components/Navbar";
 
 import "./globals.css";
 
@@ -75,10 +72,13 @@ const Page: any = () => {
     //   bottomRight={AdyenState}
     // />
     <>
-      <Button variant="outline">Button</Button>
+      <Navbar />
 
-      <h1 className="text-3xl font-bold underline">Testing</h1>
-      {/* <div id="dropInContainer"></div> */}
+      <div className="flex flex-col sm:w-full items-center justify-center h-screen">
+        <h1 className="text-3xl font-bold">💰 Adyen Payment Sandbox 🏝️</h1>
+        <Button>Button</Button>
+        <div className="sm:w-full md:w-1/2" id="dropInContainer"></div>
+      </div>
     </>
   );
 };

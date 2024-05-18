@@ -1,6 +1,6 @@
 "use client";
 
-import { themeOptions } from "../components/theme";
+import { themeOptions } from "../old-components/theme";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 
 const SandboxTheme = ({ children }: any) => {

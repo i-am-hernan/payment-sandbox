@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import AdyenClient from "../../../AdyenClient/client";
+import AdyenClient from "@/lib/AdyenClient/client";
 
 // const { Client, CheckoutAPI, Types } = require("@adyen/api-library");
 // import { Client, CheckoutAPI, Types } from "@adyen/api-library";
