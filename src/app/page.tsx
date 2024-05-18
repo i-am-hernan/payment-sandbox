@@ -10,6 +10,8 @@ import AdyenCheckout from "@adyen/adyen-web";
 import "@adyen/adyen-web/dist/adyen.css";
 import { IFormula } from "./schema/Formula";
 
+import "./globals.css";
+
 const Page: any = () => {
   const getStarterFormula = async (): Promise<IFormula> => {
     const response = await fetch("http://localhost:3000/api/formula/", {
@@ -72,8 +74,8 @@ const Page: any = () => {
     //   bottomRight={AdyenState}
     // />
     <>
-      <h1>Test</h1>
-      <div id="dropInContainer"></div>
+      <h1 className="text-3xl font-bold underline">Testing</h1>
+      {/* <div id="dropInContainer"></div> */}
     </>
   );
 };
