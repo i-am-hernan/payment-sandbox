@@ -1,6 +1,11 @@
 "use client";
 
-import { Box } from "@mui/material";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import useViewport from "@/hooks/useViewport";
 
 interface SandboxLayoutContentProps {
   main: any;
@@ -13,80 +18,77 @@ const SandboxLayout = ({
   topRight: TopRight,
   bottomRight: BottomRight,
 }: SandboxLayoutContentProps) => {
-  const drawerWidth = 50;
-  const headerHeight = 50;
-  const editorWidth = 450;
 
-  const mainStyle = {
-    position: "fixed",
-    top: "0",
-    bottom: "0",
-    bgcolor: "yellow",
-    width: {
-      xs: "0",
-      sm: "0",
-      md: `calc(100% - ${drawerWidth}px)`,
-      lg: `calc(100% - ${drawerWidth}px - ${editorWidth}px)`,
-      xl: `calc(100% - ${drawerWidth}px - ${editorWidth}px)`,
-    },
-    maxWidth: {
-      xs: "0",
-      sm: "0",
-      md: `calc(100% - ${drawerWidth}px)`,
-      lg: `calc(100% - ${drawerWidth}px - ${editorWidth}px)`,
-      xl: `calc(100% - ${drawerWidth}px - ${editorWidth}px)`,
-    },
-    ml: {
-      xs: 0,
-      sm: 0,
-      md: `${drawerWidth}px`,
-      lg: `${drawerWidth}px`,
-      xl: `${drawerWidth}px`,
-    },
-    mr: {
-      xs: 0,
-      md: 0,
-      lg: `${editorWidth}px`,
-      xl: `${editorWidth}px`,
-    },
-    overflow: "scroll",
-    mt: `${headerHeight}px`,
-  };
+  const { width } = useViewport();
 
-  const topRightStyle = {
-    position: "fixed",
-    top: `${headerHeight}px`,
-    right: 0,
-    height: `calc((100% - ${headerHeight}px)/2)`,
-    width: `${editorWidth}px`,
-    maxWidth: `${editorWidth}px`,
-    bgcolor: "black",
-    overflow: "scroll",
-  };
+  const breakpoint = (widthPX: any) => {
+    if (widthPX < 640) {
+      return 'sm';
+    } else if (widthPX < 768) {
+      return 'md';
+    } else if (widthPX < 1024) {
+      return 'lg';
+    } else if (widthPX < 1280) {
+      return 'xl';
+    } else if (widthPX < 1536) {
+      return '2xl';
+    } else {
+      return '3xl';
+    }
+  }
 
-  const bottomRightStyle = {
-    position: "fixed",
-    right: 0,
-    bottom: 0,
-    height: `calc((100% - ${headerHeight}px)/2)`,
-    width: `${editorWidth}px`,
-    maxWidth: `${editorWidth}px`,
-    bgcolor: "red",
-    overflow: "scroll",
-  };
+  const defaultMainSize = (() => {
+    switch (breakpoint(width)) {
+      case 'sm':
+        return 0;
+      case 'md':
+        return 50;
+      case 'lg':
+        return 60;
+      case 'xl':
+        return 60;
+      case '2xl':
+        return 60;
+      case '3xl':
+        return 60;
+      default:
+        return 60;
+    }
+  })();
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <Box id="main-content" sx={mainStyle}>
-        <Main />
-      </Box>
-      <Box id="topRight-content" sx={topRightStyle}>
-        <TopRight />
-      </Box>
-      <Box id="bottomRight-content" sx={bottomRightStyle}>
-        <BottomRight />
-      </Box>
-    </Box>
+    <ResizablePanelGroup
+      direction="horizontal"
+      className="rounded-lg border bg-primary !h-[180vh] sm:!h-screen"
+    >
+      {defaultMainSize > 0 && <ResizablePanel defaultSize={defaultMainSize} minSize={50} maxSize={70}>
+        <div className={`flex items-center justify-center p-6`}>
+          <span className="font-semibold">
+            <Main />
+          </span>
+        </div>
+      </ResizablePanel>}
+      <ResizableHandle />
+      <ResizablePanel>
+        <ResizablePanelGroup direction="vertical">
+          <ResizablePanel defaultSize={50} minSize={30} maxSize={70}>
+            <div className="flex h-full items-center justify-center p-6">
+              <span className="font-semibold">
+                <TopRight />
+              </span>
+            </div>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={50}>
+            <div className="flex h-full items-center justify-center p-6">
+              <span className="font-semibold">
+                <BottomRight />
+              </span>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 };
 
