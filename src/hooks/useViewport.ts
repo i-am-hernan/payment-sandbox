@@ -1,5 +1,5 @@
 // useViewport.ts
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Viewport {
   width: number | null;
@@ -13,21 +13,26 @@ const useViewport = (): Viewport => {
   });
 
   useEffect(() => {
-    // The check for window existence is corrected to ensure it runs only in the browser
-    if (typeof window !== "undefined") {
-      const handleResize = () => {
-        setViewport({
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-      };
+    // Function to update the viewport size
+    const handleResize = () => {
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
 
+    // Ensure this code runs only in the browser
+    if (typeof window !== "undefined") {
+      // Set initial size
+      handleResize();
+
+      // Add event listener for window resize
       window.addEventListener("resize", handleResize);
 
-      // Cleanup event listener on unmount
+      // Cleanup event listener on component unmount
       return () => window.removeEventListener("resize", handleResize);
     }
-  }, []);
+  }, []); // Empty dependency array ensures this effect runs only once on mount
 
   return viewport;
 };
