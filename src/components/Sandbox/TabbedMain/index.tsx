@@ -12,15 +12,15 @@ interface TabbedMainProps {
 
 const TabbedMain = ({ titles: Titles, contents: Contents }: TabbedMainProps) => {
 
-    return (<Tabs defaultValue={Titles[0]} className="w-full h-full">
-        <TabsList>
-            {Titles.map((title, index) => {
-                return <TabsTrigger value={title}>{title}</TabsTrigger>
+    return (<Tabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
+        <TabsList className="w-full">
+            {Titles.map((title) => {
+                return <TabsTrigger value={title} className="px-8">{title}</TabsTrigger>
             })}
         </TabsList>
         {Contents.map((content, index) => {
-            return (<TabsContent value={Titles[index]}>
-                <Card>
+            return (<TabsContent value={Titles[index]} className="w-full flex-grow">
+                <Card className="w-full h-full rounded-lg border-2">
                     <CardContent>
                         {content}
                     </CardContent>

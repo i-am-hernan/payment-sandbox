@@ -21,10 +21,10 @@ const SandboxLayout = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-primary !h-[180vh] sm:!h-screen"
+      className="bg-background !h-[180vh] sm:!h-screen"
     >
       <ResizablePanel defaultSize={60} minSize={50} maxSize={70} className="hidden sm:flex">
-        <div className="items-center justify-center p-6 font-semibold flex w-full">
+        <div className="items-center justify-center p-3 font-semibold flex w-full h-full">
           {Main}
         </div>
       </ResizablePanel>
