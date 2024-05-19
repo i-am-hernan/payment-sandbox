@@ -97,7 +97,7 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["HTML", "CSS", "JS"]}
-              contents={[<HTML />, <CSS />, <JS />]}
+              contents={[<HTML key={"HTML"}/>, <CSS key={"CSS"}/>, <JS key={"JS"}/>]}
             />
           }
           topRight={AdyenComponent}
@@ -109,7 +109,7 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["/Sessions"]}
-              contents={[<HTML />]}
+              contents={[<HTML key={"Sessions"}/>]}
             />
           }
           topRight={AdyenComponent}
@@ -121,7 +121,7 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["Events"]}
-              contents={[<HTML />]}
+              contents={[<HTML key={"HTML"}/>]}
             />
           }
           topRight={AdyenComponent}

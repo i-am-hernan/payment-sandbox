@@ -14,12 +14,12 @@ const TabbedMain = ({ titles: Titles, contents: Contents }: TabbedMainProps) => 
 
     return (<Tabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
         <TabsList className="w-full">
-            {Titles.map((title) => {
-                return <TabsTrigger value={title} className="px-8">{title}</TabsTrigger>
+            {Titles.map((title, index) => {
+                return <TabsTrigger key={index} value={title} className="px-8">{title}</TabsTrigger>
             })}
         </TabsList>
         {Contents.map((content, index) => {
-            return (<TabsContent value={Titles[index]} className="w-full flex-grow">
+            return (<TabsContent key={index} value={Titles[index]} className="w-full flex-grow">
                 <Card className="w-full h-full rounded-lg border-2">
                     <CardContent>
                         {content}

@@ -18,7 +18,7 @@ interface SectionType {
 }
 
 const Page: any = () => {
-  const [section, setSection] = useState("client");
+  const [section, setSection] = useState<SectionType["section"]>("client");
 
   return (
     <div>
@@ -32,7 +32,7 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["HTML", "CSS", "JS"]}
-              contents={[<HTML />, <CSS />, <JS />]}
+              contents={[<HTML key={"HTML"}/>, <CSS key={"CSS"}/>, <JS key={"JS"}/>]}
             />
           }
           topRight={AdyenComponent}
@@ -44,7 +44,7 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["/PaymentMethods", "/Payments", "/Payment/Details"]}
-              contents={[<API />, <API />, <API />]}
+              contents={[<API key={"paymentmethods"}/>, <API key={"payments"}/>, <API key={"paymentdetails"}/>]}
             />
           }
           topRight={AdyenComponent}
@@ -56,7 +56,7 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["Events"]}
-              contents={[<Events />]}
+              contents={[<Events key={"Events"}/>]}
             />
           }
           topRight={AdyenComponent}
