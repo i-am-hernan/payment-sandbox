@@ -11,7 +11,6 @@ interface TabbedMainProps {
 }
 
 const TabbedMain = ({ titles: Titles, contents: Contents }: TabbedMainProps) => {
-
     return (<Tabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
         <TabsList className="w-full">
             {Titles.map((title, index) => {

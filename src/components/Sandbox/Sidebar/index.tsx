@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import {
-    Drawer,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import CodeIcon from "@mui/icons-material/Code";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -15,8 +15,14 @@ import WebhookIcon from "@mui/icons-material/Webhook";
 
 const Sidebar = (props: any) => {
   const { section, setSection } = props;
+  const buttons = [
+    { name: "client", icon: <CodeIcon /> },
+    { name: "server", icon: <StorageIcon /> },
+    { name: "webhooks", icon: <WebhookIcon /> },
+  ];
+
   return (
-    <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-full border-r-4 text-center pt-2">
+    <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-full border-r-4 text-center pt-3">
       <span>
         <Drawer direction="left">
           <DrawerTrigger>
@@ -31,43 +37,22 @@ const Sidebar = (props: any) => {
           </DrawerContent>
         </Drawer>
       </span>
-      <div className="mt-[52px]">
-        <Button
-          variant="outline"
-          size="icon"
-          className={`mt-2 ${
-            section === "client"
-              ? "text-[var(--custom-accent)] hover:text-[var(--custom-accent)]"
-              : "hover:text-current"
-          }`}
-          onClick={() => setSection("client")}
-        >
-          <CodeIcon />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className={`mt-2 ${
-            section === "server"
-              ? "text-[var(--custom-accent)] hover:text-[var(--custom-accent)]"
-              : "hover:text-current"
-          }`}
-          onClick={() => setSection("server")}
-        >
-          <StorageIcon />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className={`mt-2 ${
-            section === "webhooks"
-              ? "text-[var(--custom-accent)] hover:text-[var(--custom-accent)]"
-              : "hover:text-current"
-          }`}
-          onClick={() => setSection("webhooks")}
-        >
-          <WebhookIcon />
-        </Button>
+      <div className="mt-[58px]">
+        {buttons.map((button) => (
+          <Button
+            key={button.name}
+            variant="outline"
+            size="icon"
+            className={`mt-2 ${
+              section === button.name
+                ? "text-[var(--custom-accent)] hover:text-[var(--custom-accent)]"
+                : "hover:text-current"
+            }`}
+            onClick={() => setSection(button.name)}
+          >
+            {button.icon}
+          </Button>
+        ))}
       </div>
     </span>
   );

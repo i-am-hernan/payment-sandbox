@@ -7,9 +7,10 @@ import CSS from "@/components/Frontend/CSS";
 import HTML from "@/components/Frontend/HTML";
 import JS from "@/components/Frontend/JS";
 import SandboxLayout from "@/components/Sandbox/Layout";
+import Sidebar from "@/components/Sandbox/Sidebar";
 import TabbedMain from "@/components/Sandbox/TabbedMain";
 import Events from "@/components/Webhooks/Events";
-import Sidebar from "@/components/Sandbox/Sidebar";
+import Topbar from "@/components/Sandbox/Topbar";
 
 import { useState } from "react";
 
@@ -23,16 +24,17 @@ const Page: any = () => {
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />
-      <span
-        className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-b-4"
-        style={{ width: `calc(100vw - var(--sidebar-width))` }}
-      ></span>
+      <Topbar />
       {section === "client" && (
         <SandboxLayout
           main={
             <TabbedMain
               titles={["HTML", "CSS", "JS"]}
-              contents={[<HTML key={"HTML"}/>, <CSS key={"CSS"}/>, <JS key={"JS"}/>]}
+              contents={[
+                <HTML key={"HTML"} />,
+                <CSS key={"CSS"} />,
+                <JS key={"JS"} />,
+              ]}
             />
           }
           topRight={AdyenComponent}
@@ -44,7 +46,11 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["/PaymentMethods", "/Payments", "/Payment/Details"]}
-              contents={[<API key={"paymentmethods"}/>, <API key={"payments"}/>, <API key={"paymentdetails"}/>]}
+              contents={[
+                <API key={"paymentmethods"} />,
+                <API key={"payments"} />,
+                <API key={"paymentdetails"} />,
+              ]}
             />
           }
           topRight={AdyenComponent}
@@ -56,7 +62,7 @@ const Page: any = () => {
           main={
             <TabbedMain
               titles={["Events"]}
-              contents={[<Events key={"Events"}/>]}
+              contents={[<Events key={"Events"} />]}
             />
           }
           topRight={AdyenComponent}
