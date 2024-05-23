@@ -6,11 +6,11 @@ import API from "@/components/Backend/API";
 import CSS from "@/components/Frontend/CSS";
 import HTML from "@/components/Frontend/HTML";
 import JS from "@/components/Frontend/JS";
-import SandboxLayout from "@/components/Sandbox/Layout";
-import Sidebar from "@/components/Sandbox/Sidebar";
-import TabbedMain from "@/components/Sandbox/TabbedMain";
 import Events from "@/components/Webhooks/Events";
-import Topbar from "@/components/Sandbox/Topbar";
+import SandboxLayout from "@/components/custom/Sandbox/Layout";
+import Sidebar from "@/components/custom/Sandbox/Sidebar";
+import TabbedMain from "@/components/custom/Sandbox/TabbedMain";
+import Topbar from "@/components/custom/Sandbox/Topbar";
 
 import { useState } from "react";
 
