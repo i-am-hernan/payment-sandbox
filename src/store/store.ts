@@ -3,7 +3,7 @@ import { currentFormulaReducer, adyenParametersReducer } from './reducers';
 
 export const store = configureStore({
   reducer: {
-    currenFormula: currentFormulaReducer,
+    currentFormula: currentFormulaReducer,
     adyenParameters: adyenParametersReducer
   }
 });

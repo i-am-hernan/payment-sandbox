@@ -1,109 +1,147 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// Define the types for properties that can be of any shape
 export interface CurrentFormulaPropType {
   [key: string]: any;
 }
 
-export type StepsType = "checkout" | "local" | "sessions" | "review";
-
+// Define the shape of the state
 export interface CurrentFormula {
-  checkoutConfiguration: CurrentFormulaPropType | {};
+  checkoutConfiguration: CurrentFormulaPropType;
   checkoutAPIVersion: string;
   adyenWebVersion: string;
-  txVariantConfiguration: CurrentFormulaPropType | {};
+  txVariantConfiguration: CurrentFormulaPropType;
   txVariant: string;
-  sessionsRequest: CurrentFormulaPropType | {};
-  sessionsResponse: CurrentFormulaPropType | {};
-  paymentMethodsRequest: CurrentFormulaPropType | {};
-  paymentsRequest: CurrentFormulaPropType | {};
-  paymentsDetailsRequest: CurrentFormulaPropType | {};
+  sessionsRequest: CurrentFormulaPropType;
+  sessionsResponse: CurrentFormulaPropType;
+  paymentMethodsRequest: CurrentFormulaPropType;
+  paymentMethodsResponse: CurrentFormulaPropType;
+  paymentsRequest: CurrentFormulaPropType;
+  paymentsResponse: CurrentFormulaPropType;
+  paymentsDetailsRequest: CurrentFormulaPropType;
+  paymentsDetailsResponse: CurrentFormulaPropType;
   isRedirect: boolean;
-  style: CurrentFormulaPropType | {};
-  theme?: string;
+  style?: CurrentFormulaPropType;
   [key: string]: any;
 }
-// The initial state will be empty and then populated by an API call to retrieve the default formula
-const initialFormula: CurrentFormula = {
+
+// Define the initial state
+const initialState: CurrentFormula = {
   checkoutConfiguration: {},
-  local: {},
-  sessions: {},
-  defaultSessionProps: {},
-  sessionsResponse: {},
-  products: {},
+  checkoutAPIVersion: "",
+  adyenWebVersion: "",
+  txVariantConfiguration: {},
   txVariant: "",
+  sessionsRequest: {},
+  sessionsResponse: {},
+  paymentMethodsRequest: {},
+  paymentMethodsResponse: {},
+  paymentsRequest: {},
+  paymentsResponse: {},
+  paymentsDetailsRequest: {},
+  paymentsDetailsResponse: {},
   isRedirect: false,
   style: {},
-  adyenState: {},
-  theme: localStorage.getItem("style") || "dark",
 };
 
-const onDeckSlice = createSlice({
-  name: "onDeck",
-  initialFormula,
+// Create the slice with typed reducers
+const formulaSlice = createSlice({
+  name: "formula",
+  initialState,
   reducers: {
-    updateCheckoutInfo: (state, action: PayloadAction<OnDeckPropType>) => {
-      state.checkout = action.payload;
+    updateFormula: (state, action: PayloadAction<Partial<CurrentFormula>>) => {
+      return { ...state, ...action.payload };
     },
-    updateLocalInfo: (state, action: PayloadAction<OnDeckPropType>) => {
-      state.local = action.payload;
-    },
-    updateSessionsInfo: (state, action: PayloadAction<OnDeckPropType>) => {
-      state.sessions = action.payload;
-    },
-    updateDefaultSessionProps: (
+    updateCheckoutConfiguration: (
       state,
-      action: PayloadAction<OnDeckPropType>
+      action: PayloadAction<CurrentFormulaPropType>
     ) => {
-      state.defaultSessionProps = action.payload;
+      state.checkoutConfiguration = action.payload;
     },
-    updateRedirectInfo: (state, action: PayloadAction<any>) => {
-      state.isRedirect = action.payload;
+    updateCheckoutAPIVersion: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.checkoutAPIVersion = action.payload;
     },
-    updateTxVariant: (state, action: PayloadAction<string>) => {
+    updateAdyenWebVersion: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.adyenWebVersion = action.payload;
+    },
+    updateTxVariantConfiguration: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.txVariantConfiguration = action.payload;
+    },
+    updateTxVariant: (
+      state,
+      action: PayloadAction<string>
+    ) => {
       state.txVariant = action.payload;
     },
-    updateSteps: (state, action: PayloadAction<any>) => {
-      state.steps = action.payload;
+    updateSessionsRequest: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.sessionsRequest = action.payload;
     },
-    updateActiveStep: (state, action: PayloadAction<any>) => {
-      state.activeStep = action.payload;
-    },
-    updateSessionsResponseInfo: (state, action: PayloadAction<any>) => {
+    updateSessionsResponse: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
       state.sessionsResponse = action.payload;
     },
-    updateStyleInfo: (state, action: PayloadAction<any>) => {
-      state.style = action.payload;
+    updatePaymentMethodsRequest: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.paymentMethodsRequest = action.payload;
     },
-    updateAdyenStateInfo: (state, action: PayloadAction<any>) => {
-      state.adyenState = action.payload;
+    updatePaymentMethodsResponse: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.paymentMethodsResponse = action.payload;
     },
-    updateProductsInfo: (state, action: PayloadAction<any>) => {
-      state.products = action.payload;
+    updatePaymentsRequest: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.paymentsRequest = action.payload;
     },
-    updateTheme: (state, action: PayloadAction<any>) => {
-      localStorage.setItem("style", action.payload);
-      state.theme = action.payload;
+    updatePaymentsResponse: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.paymentsResponse = action.payload;
     },
-    resetOnDeckInfo: (state) => {
-      const { defaultSessionProps, products, txVariant, theme } = state;
-      const style =
-        txVariant === "dropin" ? defaultDropinStyle : defaultComponentStyle;
-      // console.log('resetOnDeckInfo', state.defaultSessionProps);
-      // state.sessions = { sessions: defaultSessionProps };
-      return {
-        ...initialFormula,
-        defaultSessionProps,
-        theme,
-        style,
-        products,
-        txVariant,
-      };
+    updatePaymentsDetailsRequest: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.paymentsDetailsRequest = action.payload;
+    },
+    updatePaymentsDetailsResponse: (
+      state,
+      action: PayloadAction<CurrentFormulaPropType>
+    ) => {
+      state.paymentsDetailsResponse = action.payload;
+    },
+    updateIsRedirect: (
+      state,
+      action: PayloadAction<boolean>
+    ) => {
+      state.isRedirect = action.payload;
     },
     clearOnDeckInfo: (state) => {
-      let { products } = state;
-      return { ...initialFormula, products };
+      const { txVariant } = state;
+      return { ...initialState, txVariant };
     },
   },
 });
 
-export const { actions, reducer } = onDeckSlice;
+// Export actions and reducer
+export const { actions, reducer } = formulaSlice;
