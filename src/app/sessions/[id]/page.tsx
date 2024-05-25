@@ -1,16 +1,16 @@
 "use client";
 
-import AdyenComponent from "@/components/Adyen/AdyenComponent";
-import AdyenState from "@/components/Adyen/AdyenState";
-import API from "@/components/Backend/API";
-import CSS from "@/components/Frontend/CSS";
-import HTML from "@/components/Frontend/HTML";
-import JS from "@/components/Frontend/JS";
-import Events from "@/components/Webhooks/Events";
-import SandboxLayout from "@/components/custom/Sandbox/Layout";
-import Sidebar from "@/components/custom/Sandbox/Sidebar";
-import TabbedMain from "@/components/custom/Sandbox/TabbedMain";
-import Topbar from "@/components/custom/Sandbox/Topbar";
+import AdyenComponent from "@/components/Custom/Adyen/AdyenComponent";
+import AdyenState from "@/components/Custom/Adyen/AdyenState";
+import API from "@/components/Custom/Sandbox/Backend/API";
+import CSS from "@/components/Custom/Sandbox/Frontend/CSS";
+import HTML from "@/components/Custom/Sandbox/Frontend/HTML";
+import JS from "@/components/Custom/Sandbox/Frontend/JS";
+import Events from "@/components/Custom/Sandbox/Webhooks/Events";
+import SandboxLayout from "@/components/Custom/Sandbox/Layout";
+import Sidebar from "@/components/Custom/Sandbox/Layout/Sidebar";
+import TabbedMain from "@/components/Custom/Sandbox/Layout/TabbedMain";
+import Topbar from "@/components/Custom/Sandbox/Layout/Topbar";
 
 import { useState } from "react";
 
