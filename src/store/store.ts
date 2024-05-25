@@ -1,11 +1,10 @@
-'use client';
-
 import { configureStore } from '@reduxjs/toolkit';
-import { sessionReducer } from './reducers';
+import { currentFormulaReducer, adyenParametersReducer } from './reducers';
 
 export const store = configureStore({
   reducer: {
-    session: sessionReducer
+    currenFormula: currentFormulaReducer,
+    adyenParameters: adyenParametersReducer
   }
 });
 
