@@ -1,11 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { currentFormulaReducer, adyenParametersReducer } from './reducers';
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  adyenParametersReducer,
+  currentFormulaReducer,
+  sandboxReducer,
+} from "./reducers";
 
 export const store = configureStore({
   reducer: {
     currentFormula: currentFormulaReducer,
-    adyenParameters: adyenParametersReducer
-  }
+    adyenParameters: adyenParametersReducer,
+    sandbox: sandboxReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

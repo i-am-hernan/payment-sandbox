@@ -1,7 +1,9 @@
 "use client";
 
-import AdyenComponent from "@/components/custom/adyen/AdyenComponent";
+import { AdyenAdvance } from "@/components/custom/adyen/AdyenAdvance";
 import AdyenState from "@/components/custom/adyen/AdyenState";
+import { AdvanceComponent } from "@/components/custom/adyen/advanced/AdvanceComponent";
+import { AdvanceRedirectComponent } from "@/components/custom/adyen/advanced/AdvanceRedirectComponent";
 import API from "@/components/custom/sandbox/backend/API";
 import CSS from "@/components/custom/sandbox/frontend/CSS";
 import HTML from "@/components/custom/sandbox/frontend/HTML";
@@ -9,15 +11,13 @@ import JS from "@/components/custom/sandbox/frontend/JS";
 import SandboxLayout from "@/components/custom/sandbox/layout";
 import Sidebar from "@/components/custom/sandbox/layout/sidebar";
 import TabbedMain from "@/components/custom/sandbox/layout/tabbedMain";
-import Events from "@/components/custom/sandbox/webhooks/Events";
 import Topbar from "@/components/custom/sandbox/layout/topbar";
-
+import Events from "@/components/custom/sandbox/webhooks/Events";
 import { useState } from "react";
 
 interface SectionType {
   section: "client" | "server" | "webhooks";
 }
-
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
 
@@ -37,8 +37,8 @@ const Page: any = () => {
               ]}
             />
           }
-          topRight={AdyenComponent}
-          bottomRight={AdyenState}
+          topRight={<AdyenAdvance />}
+          bottomRight={<AdyenState />}
         />
       )}
       {section === "server" && (
@@ -53,8 +53,8 @@ const Page: any = () => {
               ]}
             />
           }
-          topRight={AdyenComponent}
-          bottomRight={AdyenState}
+          topRight={<AdyenAdvance />}
+          bottomRight={<AdyenState/>}
         />
       )}
       {section === "webhooks" && (
@@ -65,8 +65,8 @@ const Page: any = () => {
               contents={[<Events key={"Events"} />]}
             />
           }
-          topRight={AdyenComponent}
-          bottomRight={AdyenState}
+          topRight={<AdyenAdvance />}
+          bottomRight={<AdyenState/>}
         />
       )}
     </div>

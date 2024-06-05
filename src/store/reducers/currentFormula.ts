@@ -8,10 +8,9 @@ export interface CurrentFormulaPropType {
 // Define the shape of the state
 export interface CurrentFormula {
   checkoutConfiguration: CurrentFormulaPropType;
-  checkoutAPIVersion: string;
+  checkoutAPIVersion: "67" | "68" | "69" | "70";
   adyenWebVersion: string;
   txVariantConfiguration: CurrentFormulaPropType;
-  txVariant: string;
   sessionsRequest: CurrentFormulaPropType;
   sessionsResponse: CurrentFormulaPropType;
   paymentMethodsRequest: CurrentFormulaPropType;
@@ -20,18 +19,16 @@ export interface CurrentFormula {
   paymentsResponse: CurrentFormulaPropType;
   paymentsDetailsRequest: CurrentFormulaPropType;
   paymentsDetailsResponse: CurrentFormulaPropType;
-  isRedirect: boolean;
   style?: CurrentFormulaPropType;
   [key: string]: any;
 }
 
 // Define the initial state
 const initialState: CurrentFormula = {
+  checkoutAPIVersion: "70",
+  adyenWebVersion: "5.64.0",
   checkoutConfiguration: {},
-  checkoutAPIVersion: "",
-  adyenWebVersion: "",
   txVariantConfiguration: {},
-  txVariant: "",
   sessionsRequest: {},
   sessionsResponse: {},
   paymentMethodsRequest: {},
@@ -40,7 +37,6 @@ const initialState: CurrentFormula = {
   paymentsResponse: {},
   paymentsDetailsRequest: {},
   paymentsDetailsResponse: {},
-  isRedirect: false,
   style: {},
 };
 
@@ -76,12 +72,7 @@ const formulaSlice = createSlice({
     ) => {
       state.txVariantConfiguration = action.payload;
     },
-    updateTxVariant: (
-      state,
-      action: PayloadAction<string>
-    ) => {
-      state.txVariant = action.payload;
-    },
+
     updateSessionsRequest: (
       state,
       action: PayloadAction<CurrentFormulaPropType>
@@ -130,15 +121,8 @@ const formulaSlice = createSlice({
     ) => {
       state.paymentsDetailsResponse = action.payload;
     },
-    updateIsRedirect: (
-      state,
-      action: PayloadAction<boolean>
-    ) => {
-      state.isRedirect = action.payload;
-    },
     clearOnDeckInfo: (state) => {
-      const { txVariant } = state;
-      return { ...initialState, txVariant };
+      return { ...initialState };
     },
   },
 });
