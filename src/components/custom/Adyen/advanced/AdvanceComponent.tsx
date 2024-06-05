@@ -8,7 +8,7 @@ export const AdvanceComponent = (props: any) => {
     checkoutConfiguration,
     checkoutAPIVersion,
     adyenWebVersion,
-    txVariant,
+    variant,
     txVariantConfiguration,
     paymentMethodsRequest,
     paymentsRequest,
@@ -26,13 +26,13 @@ export const AdvanceComponent = (props: any) => {
     checkoutConfiguration,
     checkoutAPIVersion,
     adyenWebVersion,
-    txVariant,
+    variant,
     txVariantConfiguration,
     paymentMethodsRequest,
     paymentsRequest,
     paymentsDetailsRequest
   );
-  return <h1>helklo</h1>;
+  return <h1>hello world</h1>;
 
   // useEffect(() => {
   //   if (checkout) {

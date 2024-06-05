@@ -6,4 +6,5 @@ module.exports = {
     PRODUCTION: process.env.PRODUCTION || true,
     DOMAIN_DEVELOPMENT: process.env.DOMAIN_DEVELOPMENT || "http://localhost:3000",
   },
+  reactStrictMode: false
 };

@@ -10,7 +10,7 @@ import { AdvanceRedirectComponent } from "@/components/custom/adyen/advanced/Adv
 // we also need to get the variant from the path
 // we also need to understand if this is a redirect
 export const AdyenAdvance = () => {
-  // const variant = useParams<{ variant: string }>();
+  const { variant } = useParams<{ variant: string }>();
 
   const {
     checkoutConfiguration,
@@ -24,35 +24,24 @@ export const AdyenAdvance = () => {
 
   const isRedirect = false;
 
-  // if (!variant) return null;
+  if (!variant) return null;
 
-  // console.log(
-  //   checkoutAPIVersion,
-  //   adyenWebVersion,
-  //   checkoutConfiguration,
-  //   txVariantConfiguration,
-  //   paymentMethodsRequest,
-  //   paymentsRequest,
-  //   paymentsDetailsRequest
-  // );
-  // return (
-  //   <div>
-  //     {!isRedirect && (
-  //       <AdvanceComponent
-  //         checkoutConfiguration={checkoutConfiguration}
-  //         checkoutAPIVersion={checkoutAPIVersion}
-  //         adyenWebVersion={adyenWebVersion}
-  //         txVariantConfiguration={txVariantConfiguration}
-  //         paymentMethodsRequest={paymentMethodsRequest}
-  //         paymentsRequest={paymentsRequest}
-  //         paymentsDetailsRequest={paymentsDetailsRequest}
-  //         variant={variant}
-  //       />
-  //     )}
+  return (
+    <div>
+      {!isRedirect && (
+        <AdvanceComponent
+          checkoutAPIVersion={checkoutAPIVersion}
+          adyenWebVersion={adyenWebVersion}
+          checkoutConfiguration={checkoutConfiguration}
+          variant={variant}
+          txVariantConfiguration={txVariantConfiguration}
+          paymentMethodsRequest={paymentMethodsRequest}
+          paymentsRequest={paymentsRequest}
+          paymentsDetailsRequest={paymentsDetailsRequest}
+        />
+      )}
 
-  //     {isRedirect && <AdvanceRedirectComponent />}
-  //   </div>
-  // );
-  console.log('AdyenAdvance')
-  return <h1>hello</h1>;
+      {isRedirect && <AdvanceRedirectComponent />}
+    </div>
+  );
 };
