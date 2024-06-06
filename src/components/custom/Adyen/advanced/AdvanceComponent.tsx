@@ -15,11 +15,16 @@ export const AdvanceComponent = (props: any) => {
     paymentsDetailsRequest,
   } = props;
 
-  // const { data, loading, error: paymentMethodsError } = useApi(
-  //   `merchant/api/${checkoutAPIVersion}/paymentMethods`,
-  //   "GET",
-  //   paymentMethodsRequest
-  // );
+  const {
+    data,
+    loading,
+    error: paymentMethodsError,
+  } = useApi(
+    `api/checkout/v${checkoutAPIVersion}/paymentMethods`,
+    "POST",
+    paymentMethodsRequest
+  );
+  console.log(data);
 
   // const { adyenCheckout, error: adyenError } = useAdyenScript(adyenWebVersion);
   console.log(
