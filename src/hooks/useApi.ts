@@ -31,7 +31,7 @@ export const useApi: UseApi = (endpoint, method, payload) => {
 
     const makeRequest: () => void = async () => {
       try {
-        const response = await fetch(`${API_URL}/${endpoint}`, requestOptions);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${endpoint}`, requestOptions);
         const data = await response.json();
         setLoading(false);
         setData(data);
