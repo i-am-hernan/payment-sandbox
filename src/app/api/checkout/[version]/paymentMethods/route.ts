@@ -9,11 +9,11 @@ export async function POST(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-Key": "Your API Key Here",
+          "X-API-Key": `${process.env.ADYEN_API_KEY}`,
         },
         body: JSON.stringify({
           ...request.body,
-          merchantAccount: "Your Merchant Account Here",
+          merchantAccount: `${process.env.ADYEN_MERCHANT_ACCOUNT}`,
         }),
       }
     );
