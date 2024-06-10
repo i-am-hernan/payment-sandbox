@@ -26,9 +26,9 @@ const SandboxLayout = ({
         defaultSize={60}
         minSize={50}
         maxSize={70}
-        className="hidden sm:flex"
+        className="sm:flex"
       >
-        <div className="items-center justify-center p-3 font-semibold flex w-full h-full">
+        <div className="items-center justify-center p-3 flex w-full h-full">
           {Main}
         </div>
       </ResizablePanel>
@@ -36,14 +36,16 @@ const SandboxLayout = ({
       <ResizablePanel defaultSize={40}>
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel defaultSize={50} minSize={30} maxSize={70}>
-            <div className="flex h-full items-center justify-center p-6">
-              <span className="font-semibold">{TopRight}</span>
+            <h1 className="bg-border">component</h1>
+            <div className="h-full items-center justify-center p-6 overflow-auto">
+              <span>{TopRight}</span>
             </div>
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={50}>
-            <div className="flex h-full items-center justify-center p-6">
-              <span className="font-semibold">{BottomRight}</span>
+            <h1 className="bg-border">state</h1>
+            <div className="flex h-full">
+              <span className="flex h-full">{BottomRight}</span>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>

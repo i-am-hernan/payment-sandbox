@@ -23,7 +23,7 @@ export async function POST(
     }
 
     const data = await response.json();
-    return Response.json({ data });
+    return Response.json({ ...data });
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();

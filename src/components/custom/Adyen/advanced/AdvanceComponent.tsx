@@ -1,13 +1,15 @@
+"use client";
+
 import { useApi } from "@/hooks/useApi";
-import { useEffect } from "react";
-import useAdyenScript from "@/hooks/useAdyenScript";
+import { useEffect, useRef } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+
 // import { ReactComponent as AdyenIdkIcon } from "@/assets/adyen-idk-icon.svg"
 
 export const AdvanceComponent = (props: any) => {
   const {
     checkoutConfiguration,
     checkoutAPIVersion,
-    adyenWebVersion,
     variant,
     txVariantConfiguration,
     paymentMethodsRequest,
@@ -17,65 +19,76 @@ export const AdvanceComponent = (props: any) => {
 
   const {
     data,
-    loading,
-    error: paymentMethodsError,
+    loading: loadingAPI,
+    error: adyenApiError,
   } = useApi(
     `api/checkout/v${checkoutAPIVersion}/paymentMethods`,
     "POST",
     paymentMethodsRequest
   );
-  console.log(data);
 
-  // const { adyenCheckout, error: adyenError } = useAdyenScript(adyenWebVersion);
-  console.log(
-    checkoutConfiguration,
-    checkoutAPIVersion,
-    adyenWebVersion,
-    variant,
-    txVariantConfiguration,
-    paymentMethodsRequest,
-    paymentsRequest,
-    paymentsDetailsRequest
+  const checkoutRef = useRef(null);
+
+  // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
+  const configuration = {
+    paymentMethodsResponse: data,
+    clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
+    ...checkoutConfiguration,
+    environment: "test",
+    onChange: ({ data }: any, dropin: any) => {
+      // handle state change
+    },
+    onSubmit: async (state: any, dropin: any) => {
+      const response = await fetch(
+        `api/checkout/v${checkoutAPIVersion}/payments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...paymentsRequest,
+            paymentMethod: state.data.paymentMethod,
+          }),
+        }
+      );
+      const paymentResponse = await response.json();
+      if (paymentResponse.action) {
+        dropin.handleAction(paymentResponse.action);
+      } else {
+        // handle payment success
+      }
+    },
+  };
+
+  useEffect(() => {
+    try {
+      const initCheckout: any = async () => {
+        const checkout = await (window as any).AdyenCheckout(configuration);
+        const component = checkout
+          .create(variant, {
+            ...txVariantConfiguration,
+          })
+          .mount(checkoutRef.current);
+      };
+      if (checkoutRef.current) {
+        initCheckout();
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error);
+      }
+    }
+  }, [configuration, variant, checkoutRef]);
+
+  return (
+    <div>
+      {loadingAPI ? (
+        <Skeleton className="w-[100px] h-[20px] rounded-full" />
+      ) : (
+        <div id="checkout" ref={checkoutRef}></div>
+      )}
+      {adyenApiError && <div>Error...</div>}
+    </div>
   );
-  return <h1>hello world</h1>;
-
-  // useEffect(() => {
-  //   if (checkout) {
-  //     try {
-  //       checkout
-  //         .create(product, {
-  //           ...local,
-  //         })
-  //         .mount("#checkout");
-  //     } catch (error: any) {
-  //       console.error(error);
-  //       setCreateError(error.message);
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [checkout, local]);
-
-  // return (
-  //   <Box sx={configuration?.style}>
-  //     {!checkout && !error && !result && <LinearProgress />}
-  //     {showMessages()}
-  //     {!error && !result && checkout && (
-  //       <Box
-  //         mx={7}
-  //         my={2}
-  //         px={1}
-  //         py={1}
-  //         sx={{
-  //           borderRadius: 3,
-  //           bgcolor: "secondary.light",
-  //           border: 1,
-  //           borderColor: "primary.light",
-  //         }}
-  //       >
-  //         <CssBaseline />
-  //         <div id="checkout"></div>
-  //       </Box>
-  //     )}
-  //   </Box>
-  // );
 };

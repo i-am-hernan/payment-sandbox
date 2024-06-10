@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 
 interface AdyenScriptHook {
   error: string | null;
-  adyenCheckout: any | null;
+  loading: boolean;
 }
 
 const useAdyenScript = (version: string): AdyenScriptHook => {
   const [error, setError] = useState<string | null>(null);
-  const [adyenCheckout, setAdyenCheckout] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const scriptId = `adyen-script-${version}`;
@@ -26,9 +26,12 @@ const useAdyenScript = (version: string): AdyenScriptHook => {
     script.src = `https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/${version}/adyen.js`;
     script.async = true;
     script.onload = () => {
-      setAdyenCheckout((window as any).adyenCheckout); // Set adyenCheckout to the global object from the window
+      setLoading(false); // Set loading to false when the script has loaded
     };
-    script.onerror = () => setError("Error loading Adyen script"); // Set error if there's an error loading the script
+    script.onerror = () => {
+      setError("Error loading Adyen script");
+      setLoading(false);
+    }; // Set error if there's an error loading the script
     document.body.appendChild(script);
 
     // Add the new CSS
@@ -46,7 +49,7 @@ const useAdyenScript = (version: string): AdyenScriptHook => {
     };
   }, [version]); // This effect depends on the version, it will re-run if the version changes
 
-  return { error, adyenCheckout };
+  return { error, loading };
 };
 
 export default useAdyenScript;
