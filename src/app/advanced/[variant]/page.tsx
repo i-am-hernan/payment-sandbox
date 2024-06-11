@@ -29,7 +29,7 @@ const Page: any = () => {
         <SandboxLayout
           main={
             <TabbedMain
-              titles={["HTML", "CSS", "JS"]}
+              titles={["checkout.html", "checkout.css", "checkout.js"]}
               contents={[
                 <HTML key={"HTML"} />,
                 <CSS key={"CSS"} />,

@@ -5,6 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { useParams } from "next/navigation";
 
 interface SandboxLayoutContentProps {
   main: any;
@@ -17,6 +18,7 @@ const SandboxLayout = ({
   topRight: TopRight,
   bottomRight: BottomRight,
 }: SandboxLayoutContentProps) => {
+  const { variant } = useParams<{ variant: string }>();
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -36,14 +38,16 @@ const SandboxLayout = ({
       <ResizablePanel defaultSize={40}>
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel defaultSize={50} minSize={30} maxSize={70}>
-            <h1 className="bg-border">component</h1>
+            <p className="bg-border leading-7 pl-2">{`${
+              variant ? variant : "loading"
+            }`}</p>
             <div className="h-full items-center justify-center p-6 overflow-auto">
               <span>{TopRight}</span>
             </div>
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={50}>
-            <h1 className="bg-border">state</h1>
+            <p className="bg-border leading-7 pl-2">state</p>
             <div className="flex h-full">
               <span className="flex h-full">{BottomRight}</span>
             </div>
