@@ -22,7 +22,7 @@ export const AdvanceComponent = (props: any) => {
     loading: loadingAPI,
     error: adyenApiError,
   } = useApi(
-    `api/checkout/v${checkoutAPIVersion}/paymentMethods`,
+    `/api/checkout/v${checkoutAPIVersion}/paymentMethods`,
     "POST",
     paymentMethodsRequest
   );
@@ -32,16 +32,35 @@ export const AdvanceComponent = (props: any) => {
 
   useEffect(() => {
     let configuration: any = {
-      paymentMethodsResponse: data,
-      clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
       ...checkoutConfiguration,
-      environment: "test",
+      paymentMethodsResponse: data,
       onChange: ({ data }: any, dropin: any) => {
         // handle state change
       },
+      onAdditionalDetails: async (state: any, dropin: any) => {
+        const response = await fetch(
+          `/api/checkout/v${checkoutAPIVersion}/payments/details`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...paymentsDetailsRequest,
+              details: state.data.details,
+            }),
+          }
+        );
+        const paymentResponse = await response.json();
+        if (paymentResponse.action) {
+          dropin.handleAction(paymentResponse.action);
+        } else {
+          // handle payment success
+        }
+      },
       onSubmit: async (state: any, dropin: any) => {
         const response = await fetch(
-          `api/checkout/v${checkoutAPIVersion}/payments`,
+          `/api/checkout/v${checkoutAPIVersion}/payments`,
           {
             method: "POST",
             headers: {

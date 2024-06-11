@@ -27,13 +27,28 @@ export interface CurrentFormula {
 const initialState: CurrentFormula = {
   checkoutAPIVersion: "70",
   adyenWebVersion: "5.64.0",
-  checkoutConfiguration: {},
+  checkoutConfiguration: {
+    clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
+    environment: "test",
+  },
   txVariantConfiguration: {},
   sessionsRequest: {},
   sessionsResponse: {},
-  paymentMethodsRequest: {},
+  paymentMethodsRequest: {
+    shopperReference: "Hernan",
+  },
   paymentMethodsResponse: {},
-  paymentsRequest: {},
+  paymentsRequest: {
+    countryCode: "US",
+    amount: {
+      value: 1000,
+      currency: "USD",
+    },
+    channel: "Web",
+    returnUrl: "http://localhost:3000",
+    reference: "reference",
+    shopperLocale: "en_US"
+  },
   paymentsResponse: {},
   paymentsDetailsRequest: {},
   paymentsDetailsResponse: {},

@@ -3,6 +3,7 @@ export async function POST(
   { params }: { params: { version: string } }
 ) {
   try {
+    const requestBody = await request.json();
     const response = await fetch(
       `https://checkout-test.adyen.com/${params.version}/paymentMethods`,
       {
@@ -12,7 +13,7 @@ export async function POST(
           "X-API-Key": `${process.env.ADYEN_API_KEY}`,
         },
         body: JSON.stringify({
-          ...request.body,
+          ...requestBody,
           merchantAccount: `${process.env.ADYEN_MERCHANT_ACCOUNT}`,
         }),
       }
