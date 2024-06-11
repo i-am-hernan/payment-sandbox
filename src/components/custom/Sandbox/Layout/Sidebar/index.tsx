@@ -37,11 +37,11 @@ const Sidebar = (props: any) => {
           </DrawerContent>
         </Drawer>
       </span>
-      <div className="mt-[58px]">
+      <div className="mt-1">
         {buttons.map((button) => (
           <Button
             key={button.name}
-            variant="outline"
+            variant="ghost"
             size="icon"
             className={`mt-2 ${
               section === button.name

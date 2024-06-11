@@ -2,8 +2,6 @@
 
 import { AdyenAdvance } from "@/components/custom/adyen/AdyenAdvance";
 import AdyenState from "@/components/custom/adyen/AdyenState";
-import { AdvanceComponent } from "@/components/custom/adyen/advanced/AdvanceComponent";
-import { AdvanceRedirectComponent } from "@/components/custom/adyen/advanced/AdvanceRedirectComponent";
 import API from "@/components/custom/sandbox/backend/API";
 import CSS from "@/components/custom/sandbox/frontend/CSS";
 import HTML from "@/components/custom/sandbox/frontend/HTML";
@@ -20,55 +18,37 @@ interface SectionType {
 }
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
+  let titles: any = [];
+  let contents: any = [];
+
+  if (section === "client") {
+    titles.push("checkout.html", "style.css", "checkout.js");
+    contents.push(
+      <HTML key={"HTML"} />,
+      <CSS key={"CSS"} />,
+      <JS key={"JS"} />
+    );
+  } else if (section === "server") {
+    titles.push("/paymentMethods", "/payments", "/payment/details");
+    contents.push(
+      <API key={"paymentmethods"} />,
+      <API key={"payments"} />,
+      <API key={"paymentdetails"} />
+    );
+  } else if (section === "webhooks") {
+    titles.push("Events");
+    contents.push(<Events key={"Events"} />);
+  }
 
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
-      {section === "client" && (
-        <SandboxLayout
-          main={
-            <TabbedMain
-              titles={["checkout.html", "checkout.css", "checkout.js"]}
-              contents={[
-                <HTML key={"HTML"} />,
-                <CSS key={"CSS"} />,
-                <JS key={"JS"} />,
-              ]}
-            />
-          }
-          topRight={<AdyenAdvance />}
-          bottomRight={<AdyenState />}
-        />
-      )}
-      {section === "server" && (
-        <SandboxLayout
-          main={
-            <TabbedMain
-              titles={["/PaymentMethods", "/Payments", "/Payment/Details"]}
-              contents={[
-                <API key={"paymentmethods"} />,
-                <API key={"payments"} />,
-                <API key={"paymentdetails"} />,
-              ]}
-            />
-          }
-          topRight={<AdyenAdvance />}
-          bottomRight={<AdyenState/>}
-        />
-      )}
-      {section === "webhooks" && (
-        <SandboxLayout
-          main={
-            <TabbedMain
-              titles={["Events"]}
-              contents={[<Events key={"Events"} />]}
-            />
-          }
-          topRight={<AdyenAdvance />}
-          bottomRight={<AdyenState/>}
-        />
-      )}
+      <SandboxLayout
+        main={<TabbedMain titles={titles} contents={contents} key={section}/>}
+        topRight={<AdyenAdvance />}
+        bottomRight={<AdyenState />}
+      />
     </div>
   );
 };
