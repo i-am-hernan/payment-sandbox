@@ -56,14 +56,11 @@ const formulaSlice = createSlice({
     },
     updateCheckoutAPIVersion: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<"67" | "68" | "69" | "70">
     ) => {
       state.checkoutAPIVersion = action.payload;
     },
-    updateAdyenWebVersion: (
-      state,
-      action: PayloadAction<string>
-    ) => {
+    updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
       state.adyenWebVersion = action.payload;
     },
     updateTxVariantConfiguration: (

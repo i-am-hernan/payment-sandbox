@@ -1,6 +1,6 @@
 "use client";
 
-import AdyenComponent from "@/components/custom/adyen/AdyenComponent";
+import { AdyenAdvance } from "@/components/custom/adyen/AdyenAdvance";
 import AdyenState from "@/components/custom/adyen/AdyenState";
 import API from "@/components/custom/sandbox/backend/API";
 import CSS from "@/components/custom/sandbox/frontend/CSS";
@@ -37,7 +37,7 @@ const Page: any = () => {
               ]}
             />
           }
-          topRight={AdyenComponent}
+          topRight={AdyenAdvance}
           bottomRight={AdyenState}
         />
       )}
@@ -51,7 +51,7 @@ const Page: any = () => {
               ]}
             />
           }
-          topRight={AdyenComponent}
+          topRight={AdyenAdvance}
           bottomRight={AdyenState}
         />
       )}
@@ -63,7 +63,7 @@ const Page: any = () => {
               contents={[<Events key={"Events"} />]}
             />
           }
-          topRight={AdyenComponent}
+          topRight={AdyenAdvance}
           bottomRight={AdyenState}
         />
       )}
