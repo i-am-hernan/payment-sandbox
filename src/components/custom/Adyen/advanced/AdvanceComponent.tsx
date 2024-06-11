@@ -28,40 +28,39 @@ export const AdvanceComponent = (props: any) => {
   );
 
   const checkoutRef = useRef(null);
-
   // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
-  const configuration = {
-    paymentMethodsResponse: data,
-    clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
-    ...checkoutConfiguration,
-    environment: "test",
-    onChange: ({ data }: any, dropin: any) => {
-      // handle state change
-    },
-    onSubmit: async (state: any, dropin: any) => {
-      const response = await fetch(
-        `api/checkout/v${checkoutAPIVersion}/payments`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...paymentsRequest,
-            paymentMethod: state.data.paymentMethod,
-          }),
-        }
-      );
-      const paymentResponse = await response.json();
-      if (paymentResponse.action) {
-        dropin.handleAction(paymentResponse.action);
-      } else {
-        // handle payment success
-      }
-    },
-  };
 
   useEffect(() => {
+    let configuration: any = {
+      paymentMethodsResponse: data,
+      clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
+      ...checkoutConfiguration,
+      environment: "test",
+      onChange: ({ data }: any, dropin: any) => {
+        // handle state change
+      },
+      onSubmit: async (state: any, dropin: any) => {
+        const response = await fetch(
+          `api/checkout/v${checkoutAPIVersion}/payments`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...paymentsRequest,
+              paymentMethod: state.data.paymentMethod,
+            }),
+          }
+        );
+        const paymentResponse = await response.json();
+        if (paymentResponse.action) {
+          dropin.handleAction(paymentResponse.action);
+        } else {
+          // handle payment success
+        }
+      },
+    };
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
@@ -79,7 +78,15 @@ export const AdvanceComponent = (props: any) => {
         console.error(error);
       }
     }
-  }, [configuration, variant, checkoutRef]);
+  }, [
+    variant,
+    checkoutRef,
+    txVariantConfiguration,
+    data,
+    paymentsRequest,
+    checkoutAPIVersion,
+    checkoutConfiguration,
+  ]);
 
   return (
     <div>
