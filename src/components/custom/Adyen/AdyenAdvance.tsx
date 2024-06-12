@@ -2,14 +2,16 @@
 
 import { AdvanceComponent } from "@/components/custom/adyen/advanced/AdvanceComponent";
 import { AdvanceRedirectComponent } from "@/components/custom/adyen/advanced/AdvanceRedirectComponent";
+import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
-import { Skeleton } from "@/components/ui/skeleton";
-// This should have the logic to pull from global state and to pass it to the corresponding component
-// we also need to get the variant from the path
-// we also need to understand if this is a redirect
+import { adyenVariantActions } from "@/store/reducers";
+import { useDispatch } from "react-redux";
+
+const { updateVariantState } = adyenVariantActions;
+
 export const AdyenAdvance = () => {
   const { variant } = useParams<{ variant: string }>();
   const {
@@ -22,11 +24,10 @@ export const AdyenAdvance = () => {
     paymentsDetailsRequest,
   } = useSelector((state: RootState) => state.currentFormula);
   const isRedirect = false;
-  const {
-    error: adyenScriptError,
-    loading: loadingAdyenScript,
-  } = useAdyenScript(adyenWebVersion);
+  const { error: adyenScriptError, loading: loadingAdyenScript } =
+    useAdyenScript(adyenWebVersion);
 
+  const dispatch = useDispatch();  
   if (!variant) return null;
 
   if (loadingAdyenScript || !variant) {
@@ -50,7 +51,12 @@ export const AdyenAdvance = () => {
       {!isRedirect && (
         <AdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}
-          checkoutConfiguration={checkoutConfiguration}
+          checkoutConfiguration={{
+            ...checkoutConfiguration,
+            onChange: (state: any) => {
+              dispatch(updateVariantState(state));
+            },
+          }}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}
           paymentMethodsRequest={paymentMethodsRequest}

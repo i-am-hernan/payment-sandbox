@@ -34,9 +34,6 @@ export const AdvanceComponent = (props: any) => {
     let configuration: any = {
       ...checkoutConfiguration,
       paymentMethodsResponse: data,
-      onChange: ({ data }: any, dropin: any) => {
-        // handle state change
-      },
       onAdditionalDetails: async (state: any, dropin: any) => {
         const response = await fetch(
           `/api/checkout/v${checkoutAPIVersion}/payments/details`,
