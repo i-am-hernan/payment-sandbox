@@ -25,7 +25,7 @@ export interface CurrentFormula {
 
 // Define the initial state
 const initialState: CurrentFormula = {
-  checkoutAPIVersion: "70",
+  checkoutAPIVersion: "68",
   adyenWebVersion: "5.64.0",
   checkoutConfiguration: {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
