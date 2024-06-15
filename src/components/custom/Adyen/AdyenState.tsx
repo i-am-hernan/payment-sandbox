@@ -3,13 +3,13 @@ import { javascript } from "@codemirror/lang-javascript";
 import { githubLight } from "@uiw/codemirror-theme-github";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { EditorView } from '@codemirror/view';
+import { EditorView } from "@codemirror/view";
 
 const AdyenState = () => {
   const { variantState } = useSelector(
     (state: RootState) => state.adyenVariant
   );
-  console.log(variantState);
+
   return (
     <div className="flex">
       <div className="flex codemirror-wrapper ">
