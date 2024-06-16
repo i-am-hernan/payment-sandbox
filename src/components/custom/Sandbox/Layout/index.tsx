@@ -34,21 +34,21 @@ const SandboxLayout = ({
           {Main}
         </div>
       </ResizablePanel>
-      <ResizableHandle />
+      <ResizableHandle withHandle/>
       <ResizablePanel defaultSize={40}>
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel defaultSize={50} minSize={30} maxSize={70}>
             <p className="border-b-4 leading-7 flex text-sm">
-              <span className="border-r-4 pl-4 pr-4">{`${variant ? variant : "loading"}`}</span>
+              <span className="border-r-4 px-4 py-[2px]">{`${variant ? variant : "loading"}`}</span>
             </p>
             <div className="h-full items-center justify-center p-6 overflow-auto">
               <span>{TopRight}</span>
             </div>
           </ResizablePanel>
-          <ResizableHandle />
+          <ResizableHandle/>
           <ResizablePanel defaultSize={50}>
             <p className="border-b-4 leading-7 flex text-sm">
-              <span className="border-r-4 pl-4 pr-4">state</span>
+              <span className="border-r-4 px-4 py-[2px]">state</span>
             </p>
             <div className="flex h-full">
               <span className="flex h-full">{BottomRight}</span>

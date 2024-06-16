@@ -22,7 +22,7 @@ export const AdvanceComponent = (props: any) => {
     loading: loadingAPI,
     error: adyenApiError,
   } = useApi(
-    `/api/checkout/v${checkoutAPIVersion}/paymentMethods`,
+    `api/checkout/v${checkoutAPIVersion}/paymentMethods`,
     "POST",
     paymentMethodsRequest
   );
@@ -56,6 +56,7 @@ export const AdvanceComponent = (props: any) => {
         }
       },
       onSubmit: async (state: any, dropin: any) => {
+        console.log('frontend',state.data)
         const response = await fetch(
           `/api/checkout/v${checkoutAPIVersion}/payments`,
           {
@@ -65,7 +66,7 @@ export const AdvanceComponent = (props: any) => {
             },
             body: JSON.stringify({
               ...paymentsRequest,
-              paymentMethod: state.data.paymentMethod,
+              ...state.data,
             }),
           }
         );

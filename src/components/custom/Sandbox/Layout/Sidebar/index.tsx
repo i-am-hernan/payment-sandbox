@@ -43,9 +43,9 @@ const Sidebar = (props: any) => {
             key={button.name}
             variant="ghost"
             size="icon"
-            className={`mt-2 ${
+            className={`mt-2 rounded-none ${
               section === button.name
-                ? "border-[1px] border-adyen"
+                ? "border-[1px] border-adyen "
                 : "hover:border-[1px] hover:border-adyen hover:border-dotted"
             }`}
             onClick={() => setSection(button.name)}

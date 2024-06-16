@@ -3,7 +3,7 @@ export async function POST(
   { params }: { params: { version: string } }
 ) {
   try {
-    const requestBody = await request.json(); 
+    const requestBody = await request.json();
     const response = await fetch(
       `https://checkout-test.adyen.com/${params.version}/payments`,
       {
@@ -22,7 +22,7 @@ export async function POST(
     if (!response.ok) {
       throw response;
     }
-    console.log("in payments route");
+
     const data = await response.json();
     return Response.json({ ...data });
   } catch (error: any) {

@@ -1,15 +1,14 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface TabbedMainProps {
+interface MainTabsProps {
   titles: string[];
   contents: React.ReactNode[];
 }
-//data-[state=active]:border-primary data-[state=active]:border-[1px]
-const TabbedMain = ({
+
+const MainTabs = ({
   titles: Titles,
   contents: Contents,
-}: TabbedMainProps) => {
+}: MainTabsProps) => {
   return (
     <Tabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
       <span className="border-b-4 flex">
@@ -19,7 +18,7 @@ const TabbedMain = ({
               <TabsTrigger
                 key={index}
                 value={title}
-                className="px-3 py-1"
+                className="px-3 py-[2px]"
               >
                 <p >{title}</p>
               </TabsTrigger>
@@ -42,4 +41,4 @@ const TabbedMain = ({
   );
 };
 
-export default TabbedMain;
+export default MainTabs;

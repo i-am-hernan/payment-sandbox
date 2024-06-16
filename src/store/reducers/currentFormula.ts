@@ -25,8 +25,8 @@ export interface CurrentFormula {
 
 // Define the initial state
 const initialState: CurrentFormula = {
-  checkoutAPIVersion: "68",
-  adyenWebVersion: "5.64.0",
+  checkoutAPIVersion: "70",
+  adyenWebVersion: "5.60.0",
   checkoutConfiguration: {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
     environment: "test",
@@ -47,7 +47,8 @@ const initialState: CurrentFormula = {
     channel: "Web",
     returnUrl: "http://localhost:3000",
     reference: "reference",
-    shopperLocale: "en_US"
+    shopperLocale: "en_US",
+    merchantAccount:"HernanChalco",
   },
   paymentsResponse: {},
   paymentsDetailsRequest: {},

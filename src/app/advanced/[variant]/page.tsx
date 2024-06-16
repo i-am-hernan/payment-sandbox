@@ -8,7 +8,7 @@ import HTML from "@/components/custom/sandbox/frontend/HTML";
 import JS from "@/components/custom/sandbox/frontend/JS";
 import SandboxLayout from "@/components/custom/sandbox/layout";
 import Sidebar from "@/components/custom/sandbox/layout/sidebar";
-import TabbedMain from "@/components/custom/sandbox/layout/tabbedMain";
+import MainTabs from "@/components/custom/sandbox/layout/mainTabs";
 import Topbar from "@/components/custom/sandbox/layout/topbar";
 import Events from "@/components/custom/sandbox/webhooks/Events";
 import { useState } from "react";
@@ -45,7 +45,7 @@ const Page: any = () => {
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
       <SandboxLayout
-        main={<TabbedMain titles={titles} contents={contents} key={section}/>}
+        main={<MainTabs titles={titles} contents={contents} key={section}/>}
         topRight={<AdyenAdvance />}
         bottomRight={<AdyenState />}
       />
