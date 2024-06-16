@@ -5,7 +5,7 @@ interface TabbedMainProps {
   titles: string[];
   contents: React.ReactNode[];
 }
-
+//data-[state=active]:border-primary data-[state=active]:border-[1px]
 const TabbedMain = ({
   titles: Titles,
   contents: Contents,
@@ -19,9 +19,9 @@ const TabbedMain = ({
               <TabsTrigger
                 key={index}
                 value={title}
-                className="px-8 border-r-4 py-[3px]"
+                className="px-3 py-1"
               >
-                <p>{title}</p>
+                <p >{title}</p>
               </TabsTrigger>
             );
           })}

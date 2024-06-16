@@ -45,8 +45,8 @@ const Sidebar = (props: any) => {
             size="icon"
             className={`mt-2 ${
               section === button.name
-                ? "text-[var(--custom-accent)] hover:text-[var(--custom-accent)]"
-                : "hover:text-current"
+                ? "border-[1px] border-adyen"
+                : "hover:border-[1px] hover:border-adyen hover:border-dotted"
             }`}
             onClick={() => setSection(button.name)}
           >
