@@ -88,10 +88,10 @@ export const useAdyenAdvance = (
     }
   }, [
     variant,
-    checkoutRef,
     txVariantConfiguration,
     paymentMethodsResponse,
     paymentsRequest,
+    paymentsDetailsRequest,
     checkoutAPIVersion,
     checkoutConfiguration,
     checkoutRef
