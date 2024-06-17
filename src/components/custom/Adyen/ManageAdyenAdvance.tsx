@@ -1,7 +1,7 @@
 "use client";
 
-import { AdvanceComponent } from "@/components/custom/adyen/advanced/AdvanceComponent";
-import { AdvanceRedirectComponent } from "@/components/custom/adyen/advanced/AdvanceRedirectComponent";
+import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdvanceComponent";
+import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import type { RootState } from "@/store/store";
@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 
 const { updateVariantState } = adyenVariantActions;
 
-export const AdyenAdvance = () => {
+export const ManageAdyenAdvance = () => {
   const { variant } = useParams<{ variant: string }>();
   const {
     checkoutConfiguration,
@@ -21,7 +21,7 @@ export const AdyenAdvance = () => {
     txVariantConfiguration,
     paymentMethodsRequest,
     paymentsRequest,
-    paymentsDetailsRequest,
+    paymentsDetailsRequest
   } = useSelector((state: RootState) => state.currentFormula);
   const isRedirect = false;
   const { error: adyenScriptError, loading: loadingAdyenScript } =
@@ -49,7 +49,7 @@ export const AdyenAdvance = () => {
   return (
     <div>
       {!isRedirect && (
-        <AdvanceComponent
+        <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}
           checkoutConfiguration={{
             ...checkoutConfiguration,
@@ -65,7 +65,7 @@ export const AdyenAdvance = () => {
         />
       )}
 
-      {isRedirect && <AdvanceRedirectComponent />}
+      {isRedirect && <RedirectAdvanceComponent />}
     </div>
   );
 };

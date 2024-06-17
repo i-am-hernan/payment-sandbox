@@ -12,15 +12,13 @@ export interface CurrentFormula {
   adyenWebVersion: string;
   txVariantConfiguration: CurrentFormulaPropType;
   sessionsRequest: CurrentFormulaPropType;
-  sessionsResponse: CurrentFormulaPropType;
   paymentMethodsRequest: CurrentFormulaPropType;
-  paymentMethodsResponse: CurrentFormulaPropType;
   paymentsRequest: CurrentFormulaPropType;
-  paymentsResponse: CurrentFormulaPropType;
   paymentsDetailsRequest: CurrentFormulaPropType;
-  paymentsDetailsResponse: CurrentFormulaPropType;
-  style?: CurrentFormulaPropType;
-  [key: string]: any;
+  style: CurrentFormulaPropType;
+  unsavedChanges: number;
+  lastBuild: [CurrentFormula] | null;
+  runBuild: boolean;
 }
 
 // Define the initial state
@@ -33,11 +31,9 @@ const initialState: CurrentFormula = {
   },
   txVariantConfiguration: {},
   sessionsRequest: {},
-  sessionsResponse: {},
   paymentMethodsRequest: {
     shopperReference: "Hernan",
   },
-  paymentMethodsResponse: {},
   paymentsRequest: {
     countryCode: "US",
     amount: {
@@ -48,12 +44,13 @@ const initialState: CurrentFormula = {
     returnUrl: "http://localhost:3000",
     reference: "reference",
     shopperLocale: "en_US",
-    merchantAccount:"HernanChalco",
+    merchantAccount: "HernanChalco",
   },
-  paymentsResponse: {},
   paymentsDetailsRequest: {},
-  paymentsDetailsResponse: {},
   style: {},
+  unsavedChanges: 0,
+  lastBuild: null,
+  runBuild: true,
 };
 
 // Create the slice with typed reducers
@@ -61,6 +58,9 @@ const formulaSlice = createSlice({
   name: "formula",
   initialState,
   reducers: {
+    updateRunBuild: (state) => {
+      state.runBuild = !state.runBuild;
+    },
     updateFormula: (state, action: PayloadAction<Partial<CurrentFormula>>) => {
       return { ...state, ...action.payload };
     },
@@ -69,6 +69,12 @@ const formulaSlice = createSlice({
       action: PayloadAction<CurrentFormulaPropType>
     ) => {
       state.checkoutConfiguration = action.payload;
+    },
+    addUnsavedChanges: (state) => {
+      state.unsavedChanges += 1;
+    },
+    resetUnsavedChanges: (state) => {
+      state.unsavedChanges = 0;
     },
     updateCheckoutAPIVersion: (
       state,
@@ -92,23 +98,11 @@ const formulaSlice = createSlice({
     ) => {
       state.sessionsRequest = action.payload;
     },
-    updateSessionsResponse: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
-      state.sessionsResponse = action.payload;
-    },
     updatePaymentMethodsRequest: (
       state,
       action: PayloadAction<CurrentFormulaPropType>
     ) => {
       state.paymentMethodsRequest = action.payload;
-    },
-    updatePaymentMethodsResponse: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
-      state.paymentMethodsResponse = action.payload;
     },
     updatePaymentsRequest: (
       state,
@@ -116,23 +110,11 @@ const formulaSlice = createSlice({
     ) => {
       state.paymentsRequest = action.payload;
     },
-    updatePaymentsResponse: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
-      state.paymentsResponse = action.payload;
-    },
     updatePaymentsDetailsRequest: (
       state,
       action: PayloadAction<CurrentFormulaPropType>
     ) => {
       state.paymentsDetailsRequest = action.payload;
-    },
-    updatePaymentsDetailsResponse: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
-      state.paymentsDetailsResponse = action.payload;
     },
     clearOnDeckInfo: (state) => {
       return { ...initialState };

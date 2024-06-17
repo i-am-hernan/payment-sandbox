@@ -1,6 +1,4 @@
 "use client";
-
-import { AdyenAdvance } from "@/components/custom/adyen/AdyenAdvance";
 import AdyenState from "@/components/custom/adyen/AdyenState";
 import API from "@/components/custom/sandbox/backend/API";
 import CSS from "@/components/custom/sandbox/frontend/CSS";
@@ -14,61 +12,8 @@ import Topbar from "@/components/custom/sandbox/layout/topbar";
 
 import { useState } from "react";
 
-interface SectionType {
-  section: "client" | "server" | "webhooks";
-}
-
 const Page: any = () => {
-  const [section, setSection] = useState<SectionType["section"]>("client");
-
-  return (
-    <div>
-      <Sidebar section={section} setSection={setSection} />
-      <Topbar />
-      {section === "client" && (
-        <SandboxLayout
-          main={
-            <TabbedMain
-              titles={["HTML", "CSS", "JS"]}
-              contents={[
-                <HTML key={"HTML"} />,
-                <CSS key={"CSS"} />,
-                <JS key={"JS"} />,
-              ]}
-            />
-          }
-          topRight={AdyenAdvance}
-          bottomRight={AdyenState}
-        />
-      )}
-      {section === "server" && (
-        <SandboxLayout
-          main={
-            <TabbedMain
-              titles={["/Sessions"]}
-              contents={[
-                <API key={"Sessions"} />
-              ]}
-            />
-          }
-          topRight={AdyenAdvance}
-          bottomRight={AdyenState}
-        />
-      )}
-      {section === "webhooks" && (
-        <SandboxLayout
-          main={
-            <TabbedMain
-              titles={["Events"]}
-              contents={[<Events key={"Events"} />]}
-            />
-          }
-          topRight={AdyenAdvance}
-          bottomRight={AdyenState}
-        />
-      )}
-    </div>
-  );
+  return <h1>sessions</h1>;
 };
 
 export default Page;

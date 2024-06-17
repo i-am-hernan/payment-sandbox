@@ -1,6 +1,6 @@
 "use client";
 
-import { AdyenAdvance } from "@/components/custom/adyen/AdyenAdvance";
+import { ManageAdyenAdvance } from "@/components/custom/adyen/ManageAdyenAdvance";
 import AdyenState from "@/components/custom/adyen/AdyenState";
 import API from "@/components/custom/sandbox/backend/API";
 import CSS from "@/components/custom/sandbox/frontend/CSS";
@@ -12,6 +12,8 @@ import MainTabs from "@/components/custom/sandbox/layout/mainTabs";
 import Topbar from "@/components/custom/sandbox/layout/topbar";
 import Events from "@/components/custom/sandbox/webhooks/Events";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
 
 interface SectionType {
   section: "client" | "server" | "webhooks";
@@ -20,6 +22,9 @@ const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
   let titles: any = [];
   let contents: any = [];
+  const { runBuild, checkoutAPIVersion } = useSelector(
+    (state: RootState) => state.currentFormula
+  );
 
   if (section === "client") {
     titles.push("checkout.html", "style.css", "checkout.js");
@@ -29,7 +34,11 @@ const Page: any = () => {
       <JS key={"JS"} />
     );
   } else if (section === "server") {
-    titles.push("/paymentMethods", "/payments", "/payment/details");
+    titles.push(
+      `/v${checkoutAPIVersion}/paymentMethods`,
+      `/v${checkoutAPIVersion}/payments`,
+      `/v${checkoutAPIVersion}/payment/details`
+    );
     contents.push(
       <API key={"paymentmethods"} />,
       <API key={"payments"} />,
@@ -45,8 +54,10 @@ const Page: any = () => {
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
       <SandboxLayout
-        main={<MainTabs titles={titles} contents={contents} key={section}/>}
-        topRight={<AdyenAdvance />}
+        main={<MainTabs titles={titles} contents={contents} key={section} />}
+        topRight={
+          <ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />
+        }
         bottomRight={<AdyenState />}
       />
     </div>

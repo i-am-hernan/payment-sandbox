@@ -1,39 +1,30 @@
-"use client";
+import { useEffect, useState } from "react";
 
-import { useApi } from "@/hooks/useApi";
-import { useEffect, useRef } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+interface AdyenAdvanceHook {
+  error: string | null;
+  result: object | null;
+}
 
-// import { ReactComponent as AdyenIdkIcon } from "@/assets/adyen-idk-icon.svg"
-
-export const AdvanceComponent = (props: any) => {
-  const {
-    checkoutConfiguration,
-    checkoutAPIVersion,
-    variant,
-    txVariantConfiguration,
-    paymentMethodsRequest,
-    paymentsRequest,
-    paymentsDetailsRequest,
-  } = props;
-
-  const {
-    data,
-    loading: loadingAPI,
-    error: adyenApiError,
-  } = useApi(
-    `api/checkout/v${checkoutAPIVersion}/paymentMethods`,
-    "POST",
-    paymentMethodsRequest
-  );
-
-  const checkoutRef = useRef(null);
-  // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
+export const useAdyenAdvance = (
+  variant: string,
+  checkoutAPIVersion: string,
+  checkoutConfiguration: any,
+  txVariantConfiguration: any,
+  paymentMethodsResponse: any,
+  paymentsRequest: any,
+  paymentsDetailsRequest: any,
+  checkoutRef: any,
+): AdyenAdvanceHook => {
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<object | null>(null);
 
   useEffect(() => {
     let configuration: any = {
       ...checkoutConfiguration,
-      paymentMethodsResponse: data,
+      paymentMethodsResponse: paymentMethodsResponse,
+      onError: (error: any) => {
+        setError(JSON.stringify(error));
+      },
       onAdditionalDetails: async (state: any, dropin: any) => {
         const response = await fetch(
           `/api/checkout/v${checkoutAPIVersion}/payments/details`,
@@ -56,7 +47,6 @@ export const AdvanceComponent = (props: any) => {
         }
       },
       onSubmit: async (state: any, dropin: any) => {
-        console.log('frontend',state.data)
         const response = await fetch(
           `/api/checkout/v${checkoutAPIVersion}/payments`,
           {
@@ -75,6 +65,7 @@ export const AdvanceComponent = (props: any) => {
           dropin.handleAction(paymentResponse.action);
         } else {
           // handle payment success
+          setResult(paymentResponse);
         }
       },
     };
@@ -92,27 +83,19 @@ export const AdvanceComponent = (props: any) => {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(error);
+        setError(JSON.stringify(error));
       }
     }
   }, [
     variant,
     checkoutRef,
     txVariantConfiguration,
-    data,
+    paymentMethodsResponse,
     paymentsRequest,
     checkoutAPIVersion,
     checkoutConfiguration,
+    checkoutRef
   ]);
 
-  return (
-    <div>
-      {loadingAPI ? (
-        <Skeleton className="w-[100px] h-[20px] rounded-full" />
-      ) : (
-        <div id="checkout" ref={checkoutRef}></div>
-      )}
-      {adyenApiError && <div>Error...</div>}
-    </div>
-  );
+  return { error, result };
 };
