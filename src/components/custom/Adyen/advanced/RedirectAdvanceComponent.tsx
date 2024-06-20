@@ -1,3 +1,3 @@
-export const RedirectAdvanceComponent = () => {
+export const RedirectAdvanceComponent = (redirectResult:any) => {
   return <div>Redirect</div>;
 };

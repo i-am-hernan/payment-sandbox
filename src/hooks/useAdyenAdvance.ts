@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 
 interface AdyenAdvanceHook {
-  error: string | null;
+  error: object | null;
   result: object | null;
 }
 
 export const useAdyenAdvance = (
-  variant: string,
+  txVariant: string,
   checkoutAPIVersion: string,
   checkoutConfiguration: any,
   txVariantConfiguration: any,
   paymentMethodsResponse: any,
   paymentsRequest: any,
   paymentsDetailsRequest: any,
-  checkoutRef: any,
+  checkoutRef: any
 ): AdyenAdvanceHook => {
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const useAdyenAdvance = (
       ...checkoutConfiguration,
       paymentMethodsResponse: paymentMethodsResponse,
       onError: (error: any) => {
-        setError(JSON.stringify(error));
+        setError(error);
       },
       onAdditionalDetails: async (state: any, dropin: any) => {
         const response = await fetch(
@@ -39,11 +39,13 @@ export const useAdyenAdvance = (
             }),
           }
         );
-        const paymentResponse = await response.json();
-        if (paymentResponse.action) {
-          dropin.handleAction(paymentResponse.action);
+        const paymentDetailsResponse = await response.json();
+        if (paymentDetailsResponse.statusCode >= 400) {
+          setError(paymentDetailsResponse);
+        } else if (paymentDetailsResponse.action) {
+          dropin.handleAction(paymentDetailsResponse.action);
         } else {
-          // handle payment success
+          setResult(paymentDetailsResponse);
         }
       },
       onSubmit: async (state: any, dropin: any) => {
@@ -61,10 +63,11 @@ export const useAdyenAdvance = (
           }
         );
         const paymentResponse = await response.json();
-        if (paymentResponse.action) {
+        if (paymentResponse.status >= 400) {
+          setError(paymentResponse);
+        } else if (paymentResponse.action) {
           dropin.handleAction(paymentResponse.action);
         } else {
-          // handle payment success
           setResult(paymentResponse);
         }
       },
@@ -73,7 +76,7 @@ export const useAdyenAdvance = (
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
         const component = checkout
-          .create(variant, {
+          .create(txVariant, {
             ...txVariantConfiguration,
           })
           .mount(checkoutRef.current);
@@ -83,18 +86,18 @@ export const useAdyenAdvance = (
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(JSON.stringify(error));
+        setError(error);
       }
     }
   }, [
-    variant,
+    txVariant,
     txVariantConfiguration,
     paymentMethodsResponse,
     paymentsRequest,
     paymentsDetailsRequest,
     checkoutAPIVersion,
     checkoutConfiguration,
-    checkoutRef
+    checkoutRef,
   ]);
 
   return { error, result };

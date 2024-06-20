@@ -1,9 +1,9 @@
 "use client";
 
-import { useApi } from "@/hooks/useApi";
-import { useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
+import { useApi } from "@/hooks/useApi";
+import { useRef } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -13,11 +13,11 @@ export const InitAdvanceComponent = (props: any) => {
   const {
     checkoutConfiguration,
     checkoutAPIVersion,
-    variant,
+    txVariant,
     txVariantConfiguration,
     paymentMethodsRequest,
     paymentsRequest,
-    paymentsDetailsRequest
+    paymentsDetailsRequest,
   } = props;
 
   const {
@@ -33,8 +33,8 @@ export const InitAdvanceComponent = (props: any) => {
   const checkoutRef = useRef(null);
   // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
 
-  const { result: adyenResult, error: adyenSDKError } = useAdyenAdvance(
-    variant,
+  const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
+    txVariant,
     checkoutAPIVersion,
     checkoutConfiguration,
     txVariantConfiguration,
@@ -44,28 +44,32 @@ export const InitAdvanceComponent = (props: any) => {
     checkoutRef
   );
 
+  const error =
+    adyenSDKError || paymentMethodsError
+      ? { ...adyenSDKError, ...paymentMethodsError }
+      : null;
+
   return (
     <div>
-      {(paymentMethodsError || adyenSDKError) && (
+      {error && (
         <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            Your session has expired. Please log in again.
-          </AlertDescription>
+          <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
         </Alert>
       )}
       {adyenResult && (
-        <Alert>
-          <AlertTitle>Error</AlertTitle>
+        <Alert variant="default" className="border-primary">
+          <AlertTitle>{adyenResult.resultCode}</AlertTitle>
           <AlertDescription>
-            Your session has expired. Please log in again.
+            {`PSP Reference: ${adyenResult.pspReference}`}
           </AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods ? (
+      {loadingPaymentMethods && (
         <Skeleton className="w-[100px] h-[20px] rounded-full" />
-      ) : (
-        <div id="checkout" ref={checkoutRef}></div>
+      )}
+      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
+        <div ref={checkoutRef}></div>
       )}
     </div>
   );

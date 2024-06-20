@@ -1,16 +1,20 @@
-import { useEffect, useState } from 'react';
-import { API_URL } from '../config';
+import { useEffect, useState } from "react";
+import { API_URL } from "../config";
 
-type UseApi = (endpoint: string, method: string, payload?: any) => { data: any; loading: boolean; error: any };
+type UseApi = (
+  endpoint: string,
+  method: string,
+  payload?: any
+) => { data: any; loading: boolean; error: any };
 
 export type RequestOptions = {
-    method: string;
-    headers: {
-      'Content-type': string;
-      Authorization?: string;
-    };
-    body?: string;
+  method: string;
+  headers: {
+    "Content-type": string;
+    Authorization?: string;
   };
+  body?: string;
+};
 
 export const useApi: UseApi = (endpoint, method, payload) => {
   const [data, setData] = useState(null);
@@ -21,8 +25,8 @@ export const useApi: UseApi = (endpoint, method, payload) => {
     const requestOptions: RequestOptions = {
       method,
       headers: {
-        'Content-type': 'application/json'
-      }
+        "Content-type": "application/json",
+      },
     };
 
     if (payload) {
@@ -31,10 +35,17 @@ export const useApi: UseApi = (endpoint, method, payload) => {
 
     const makeRequest: () => void = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${endpoint}`, requestOptions);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}`,
+          requestOptions
+        );
         const data = await response.json();
         setLoading(false);
-        setData(data);
+        if (data.status >= 400) {
+          setError(data);
+        } else {
+          setData(data);
+        }
       } catch (err: any) {
         console.error(err);
         setError(err.message);

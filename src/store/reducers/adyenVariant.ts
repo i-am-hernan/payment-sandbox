@@ -29,7 +29,7 @@ const variantSlice = createSlice({
     ) => {
       state.variantState = action.payload;
     },
-    clearAdyenVariant: (state) => {
+    clearAdyenVariant: () => {
       return { ...initialState };
     },
   },

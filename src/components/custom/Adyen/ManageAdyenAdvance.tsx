@@ -4,16 +4,13 @@ import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdv
 import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
-import type { RootState } from "@/store/store";
-import { useParams } from "next/navigation";
-import { useSelector } from "react-redux";
 import { adyenVariantActions } from "@/store/reducers";
-import { useDispatch } from "react-redux";
+import type { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 const { updateVariantState } = adyenVariantActions;
 
 export const ManageAdyenAdvance = () => {
-  const { variant } = useParams<{ variant: string }>();
   const {
     checkoutConfiguration,
     checkoutAPIVersion,
@@ -21,16 +18,18 @@ export const ManageAdyenAdvance = () => {
     txVariantConfiguration,
     paymentMethodsRequest,
     paymentsRequest,
-    paymentsDetailsRequest
+    paymentsDetailsRequest,
+    isRedirect,
+    redirectResult,
+    txVariant,
   } = useSelector((state: RootState) => state.currentFormula);
-  const isRedirect = false;
+
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
 
-  const dispatch = useDispatch();  
-  if (!variant) return null;
+  const dispatch = useDispatch();
 
-  if (loadingAdyenScript || !variant) {
+  if (loadingAdyenScript || !txVariant) {
     return (
       <div className="flex flex-col space-y-3 items-center m-4">
         <Skeleton className="h-[180px] w-[250px] rounded-xl bg-border" />
@@ -57,7 +56,7 @@ export const ManageAdyenAdvance = () => {
               dispatch(updateVariantState(state));
             },
           }}
-          variant={variant}
+          txVariant={txVariant}
           txVariantConfiguration={txVariantConfiguration}
           paymentMethodsRequest={paymentMethodsRequest}
           paymentsRequest={paymentsRequest}
@@ -65,7 +64,9 @@ export const ManageAdyenAdvance = () => {
         />
       )}
 
-      {isRedirect && <RedirectAdvanceComponent />}
+      {isRedirect && redirectResult && (
+        <RedirectAdvanceComponent redirectResult={redirectResult} />
+      )}
     </div>
   );
 };

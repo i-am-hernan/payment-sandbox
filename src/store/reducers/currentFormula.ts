@@ -10,15 +10,18 @@ export interface CurrentFormula {
   checkoutConfiguration: CurrentFormulaPropType;
   checkoutAPIVersion: "67" | "68" | "69" | "70";
   adyenWebVersion: string;
+  txVariant: string;
   txVariantConfiguration: CurrentFormulaPropType;
   sessionsRequest: CurrentFormulaPropType;
   paymentMethodsRequest: CurrentFormulaPropType;
   paymentsRequest: CurrentFormulaPropType;
   paymentsDetailsRequest: CurrentFormulaPropType;
   style: CurrentFormulaPropType;
+  isRedirect: boolean;
   unsavedChanges: number;
   lastBuild: [CurrentFormula] | null;
   runBuild: boolean;
+  redirectResult: string | null;
 }
 
 // Define the initial state
@@ -29,6 +32,7 @@ const initialState: CurrentFormula = {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
     environment: "test",
   },
+  txVariant: "dropin",
   txVariantConfiguration: {},
   sessionsRequest: {},
   paymentMethodsRequest: {
@@ -41,7 +45,7 @@ const initialState: CurrentFormula = {
       currency: "USD",
     },
     channel: "Web",
-    returnUrl: "http://localhost:3000",
+    returnUrl: "http://localhost:3000/advanced/dropin",
     reference: "reference",
     shopperLocale: "en_US",
     merchantAccount: "HernanChalco",
@@ -49,8 +53,10 @@ const initialState: CurrentFormula = {
   paymentsDetailsRequest: {},
   style: {},
   unsavedChanges: 0,
+  isRedirect: false,
   lastBuild: null,
   runBuild: true,
+  redirectResult: null,
 };
 
 // Create the slice with typed reducers
@@ -85,13 +91,21 @@ const formulaSlice = createSlice({
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
       state.adyenWebVersion = action.payload;
     },
+    updateIsRedirect: (state, action: PayloadAction<boolean>) => {
+      state.isRedirect = action.payload;
+    },
+    updateRedirectResult: (state, action: PayloadAction<string>) => {
+      state.redirectResult = action.payload;
+    },
+    updateTxVariant: (state, action: PayloadAction<string>) => {
+      state.txVariant = action.payload;
+    },
     updateTxVariantConfiguration: (
       state,
       action: PayloadAction<CurrentFormulaPropType>
     ) => {
       state.txVariantConfiguration = action.payload;
     },
-
     updateSessionsRequest: (
       state,
       action: PayloadAction<CurrentFormulaPropType>
