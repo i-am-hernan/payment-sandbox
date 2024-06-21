@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { currentFormulaActions } from "@/store/reducers";
 import { useDispatch } from "react-redux";
 
-const { updateRunBuild } = currentFormulaActions;
+const { updateRunBuild, updateIsRedirect } = currentFormulaActions;
 
 const Topbar = (props: any) => {
   const dispatch = useDispatch();
@@ -18,6 +18,8 @@ const Topbar = (props: any) => {
         size="sm"
         className="px-4"
         onClick={() => {
+          window.history.replaceState({}, document.title, window.location.pathname);
+          dispatch(updateIsRedirect(false));
           dispatch(updateRunBuild());
         }}
       >

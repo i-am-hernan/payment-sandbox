@@ -32,17 +32,17 @@ const initialState: CurrentFormula = {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
     environment: "test",
   },
-  txVariant: "dropin",
+  txVariant: "",
   txVariantConfiguration: {},
   sessionsRequest: {},
   paymentMethodsRequest: {
     shopperReference: "Hernan",
   },
   paymentsRequest: {
-    countryCode: "US",
+    countryCode: "NL",
     amount: {
-      value: 1000,
-      currency: "USD",
+      value: 10000,
+      currency: "EUR",
     },
     channel: "Web",
     returnUrl: "http://localhost:3000/advanced/dropin",

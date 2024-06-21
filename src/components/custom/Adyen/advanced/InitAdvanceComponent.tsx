@@ -13,7 +13,7 @@ export const InitAdvanceComponent = (props: any) => {
   const {
     checkoutConfiguration,
     checkoutAPIVersion,
-    txVariant,
+    variant,
     txVariantConfiguration,
     paymentMethodsRequest,
     paymentsRequest,
@@ -34,7 +34,7 @@ export const InitAdvanceComponent = (props: any) => {
   // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
 
   const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
-    txVariant,
+    variant,
     checkoutAPIVersion,
     checkoutConfiguration,
     txVariantConfiguration,
