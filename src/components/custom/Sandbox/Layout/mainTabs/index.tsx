@@ -11,7 +11,7 @@ const MainTabs = ({
 }: MainTabsProps) => {
   return (
     <Tabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
-      <span className="border-b-4 flex">
+      <span className="border-b-2 flex">
         <TabsList className="justify-start">
           {Titles.map((title, index) => {
             return (

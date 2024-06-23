@@ -22,7 +22,7 @@ const Sidebar = (props: any) => {
   ];
 
   return (
-    <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-full border-r-4 text-center pt-3">
+    <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-full border-2 text-center pt-3">
       <span>
         <Drawer direction="left">
           <DrawerTrigger>

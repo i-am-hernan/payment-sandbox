@@ -39,7 +39,15 @@ export const RedirectAdvanceComponent = (props: any) => {
           </AlertDescription>
         </Alert>
       )}
-      {loading && <Skeleton className="w-[100px] h-[20px] rounded-full" />}
+      {loading && (
+        <div className="flex flex-col space-y-3 items-center m-4">
+          <Skeleton className="h-[180px] w-[250px] rounded-xl bg-border" />
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-[250px] bg-border" />
+            <Skeleton className="h-7 w-[250px] bg-border" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

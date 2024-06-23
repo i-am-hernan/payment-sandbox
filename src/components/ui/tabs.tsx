@@ -23,7 +23,7 @@ const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
-  <div className="border-r-4 p-[3px]">
+  <div className="border-r-2 p-[3px]">
     <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
