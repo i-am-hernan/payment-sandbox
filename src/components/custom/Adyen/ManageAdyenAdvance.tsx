@@ -24,7 +24,7 @@ export const ManageAdyenAdvance = () => {
     paymentsRequest,
     paymentsDetailsRequest,
     isRedirect,
-    redirectResult
+    redirectResult,
   } = useSelector((state: RootState) => state.currentFormula);
 
   const { error: adyenScriptError, loading: loadingAdyenScript } =
@@ -34,13 +34,12 @@ export const ManageAdyenAdvance = () => {
     variant: string;
   }>();
   const searchParams = useSearchParams();
-  const redirectResultQueryParameter = searchParams.get('redirectResult');
+  const redirectResultQueryParameter = searchParams.get("redirectResult");
 
   if (redirectResultQueryParameter && !isRedirect) {
     dispatch(updateIsRedirect(true));
     //need to remove query path parameters without refreshing
     dispatch(updateRedirectResult(redirectResultQueryParameter));
-    console.log('redirectResultQueryParameter',redirectResultQueryParameter);
   }
 
   if (loadingAdyenScript || !variant) {
@@ -79,7 +78,12 @@ export const ManageAdyenAdvance = () => {
       )}
 
       {isRedirect && redirectResult && (
-        <RedirectAdvanceComponent redirectResult={redirectResult} />
+        <RedirectAdvanceComponent
+          variant={variant}
+          redirectResult={redirectResult}
+          checkoutAPIVersion={checkoutAPIVersion}
+          paymentsDetailsRequest={paymentsDetailsRequest}
+        />
       )}
     </div>
   );

@@ -11,6 +11,7 @@ import MainTabs from "@/components/custom/sandbox/layout/mainTabs";
 import Sidebar from "@/components/custom/sandbox/layout/sidebar";
 import Topbar from "@/components/custom/sandbox/layout/topbar";
 import Events from "@/components/custom/sandbox/webhooks/Events";
+import { useParams } from "next/navigation";
 import type { RootState } from "@/store/store";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -22,19 +23,23 @@ interface SectionType {
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
 
-  const { runBuild, checkoutAPIVersion, txVariant } = useSelector(
+  const { runBuild, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.currentFormula
   );
+
+  const { variant } = useParams<{
+    variant: string;
+  }>();
 
   let titles: any = [];
   let contents: any = [];
 
   if (section === "client") {
-    titles.push("checkout.html", "style.css", "checkout.js");
+    titles.push(`${variant ? variant : 'checkout'}.js`, "style.css", "checkout.html");
     contents.push(
-      <HTML key={"HTML"} />,
+      <JS key={"JS"} />,
       <CSS key={"CSS"} />,
-      <JS key={"JS"} />
+      <HTML key={"HTML"} />
     );
   } else if (section === "server") {
     titles.push(
