@@ -12,7 +12,7 @@ dist/
 *.log
 *.tmp
 
-# Ignore environment-specific files
+# Ignore environment-specimific files
 .env
 .env.local
 .env.*.local
