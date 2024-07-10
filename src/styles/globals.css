@@ -43,6 +43,7 @@
     --topbar-width: 3rem;
 
     --radius: 0.4rem;
+    --grey: 210, 16.67%, 96.47%;
 
     --custom-accent: rgb(10, 191, 83);
   }
@@ -73,6 +74,7 @@
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
+    --grey: 0, 0%, 75%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
@@ -81,6 +83,7 @@
 @layer base {
   * {
     @apply border-border;
+    
   }
   body {
     @apply bg-background text-foreground;

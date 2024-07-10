@@ -1,12 +1,18 @@
-'use client';
-
-import { configureStore } from '@reduxjs/toolkit';
-import { sessionReducer } from './reducers';
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  adyenParametersReducer,
+  adyenVariantReducer,
+  currentFormulaReducer,
+  sandboxReducer,
+} from "./reducers";
 
 export const store = configureStore({
   reducer: {
-    session: sessionReducer
-  }
+    currentFormula: currentFormulaReducer,
+    adyenParameters: adyenParametersReducer,
+    adyenVariant: adyenVariantReducer,
+    sandbox: sandboxReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
