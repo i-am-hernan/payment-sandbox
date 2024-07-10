@@ -7,8 +7,6 @@ node_modules/
 
 # Ignore compiled output
 dist/
-out/
-!out/Layout/
 
 # Ignore logs and temporary files
 *.log
