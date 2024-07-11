@@ -1,5 +1,5 @@
 const JS = () => {
-    return <div>CODE</div>;
+    return <div>JS</div>;
   };
   
   export default JS;
