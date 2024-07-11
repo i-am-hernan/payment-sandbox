@@ -37,7 +37,7 @@ export const useApi: UseApi = (endpoint, method, payload) => {
         const domain =
           process.env.VERCEL_URL || process.env.NEXT_PUBLIC_API_URL;
         const response = await fetch(
-          `${domain}/${endpoint}`,
+          `test${domain}/${endpoint}`,
           requestOptions
         );
         const data = await response.json();
