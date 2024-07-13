@@ -44,6 +44,7 @@ const AdyenState = () => {
         <CodeMirror
           value={formattedCode}
           height="100%"
+          readOnly={true}
           theme={githubLight}
           extensions={[javascript({ jsx: true }), EditorView.lineWrapping]}
         />
