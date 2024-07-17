@@ -24,11 +24,7 @@ export const InitAdvanceComponent = (props: any) => {
     data: paymentMethodsResponse,
     loading: loadingPaymentMethods,
     error: paymentMethodsError,
-  } = useApi(
-    `api/checkout/v${checkoutAPIVersion}/paymentMethods`,
-    "POST",
-    paymentMethodsRequest
-  );
+  } = useApi(`api/checkout/v${checkoutAPIVersion}/paymentMethods`, "POST", paymentMethodsRequest);
 
   const checkoutRef = useRef(null);
   // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
@@ -44,10 +40,7 @@ export const InitAdvanceComponent = (props: any) => {
     checkoutRef
   );
 
-  const error =
-    adyenSDKError || paymentMethodsError
-      ? { ...adyenSDKError, ...paymentMethodsError }
-      : null;
+  const error = adyenSDKError || paymentMethodsError ? { ...adyenSDKError, ...paymentMethodsError } : null;
 
   return (
     <div>
@@ -60,17 +53,11 @@ export const InitAdvanceComponent = (props: any) => {
       {adyenResult && (
         <Alert variant="default" className="border-primary">
           <AlertTitle>{adyenResult.resultCode}</AlertTitle>
-          <AlertDescription>
-            {`PSP Reference: ${adyenResult.pspReference}`}
-          </AlertDescription>
+          <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods && (
-        <Skeleton className="w-[100px] h-[20px] rounded-full" />
-      )}
-      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div ref={checkoutRef}></div>
-      )}
+      {loadingPaymentMethods && <Skeleton className="w-[100px] h-[20px] rounded-full" />}
+      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && <div ref={checkoutRef}></div>}
     </div>
   );
 };
