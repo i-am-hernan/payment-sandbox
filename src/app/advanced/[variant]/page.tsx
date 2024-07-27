@@ -22,9 +22,8 @@ interface SectionType {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
-
   const { runBuild, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.currentFormula
+    (state: RootState) => state.formula
   );
 
   const { variant } = useParams<{
@@ -35,7 +34,11 @@ const Page: any = () => {
   let contents: any = [];
 
   if (section === "client") {
-    titles.push(`${variant ? variant : 'checkout'}.js`, "style.css", "checkout.html");
+    titles.push(
+      `${variant ? variant : "checkout"}.js`,
+      "style.css",
+      "checkout.html"
+    );
     contents.push(
       <JS key={"JS"} />,
       <CSS key={"CSS"} />,

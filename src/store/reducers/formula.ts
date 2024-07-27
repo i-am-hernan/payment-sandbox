@@ -1,31 +1,31 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the types for properties that can be of any shape
-export interface CurrentFormulaPropType {
+export interface FormulaPropType {
   [key: string]: any;
 }
 
 // Define the shape of the state
-export interface CurrentFormula {
-  checkoutConfiguration: CurrentFormulaPropType;
+export interface Formula {
+  checkoutConfiguration: FormulaPropType;
   checkoutAPIVersion: "67" | "68" | "69" | "70";
   adyenWebVersion: string;
   txVariant: string;
-  txVariantConfiguration: CurrentFormulaPropType;
-  sessionsRequest: CurrentFormulaPropType;
-  paymentMethodsRequest: CurrentFormulaPropType;
-  paymentsRequest: CurrentFormulaPropType;
-  paymentsDetailsRequest: CurrentFormulaPropType;
-  style: CurrentFormulaPropType;
+  txVariantConfiguration: FormulaPropType;
+  sessionsRequest: FormulaPropType;
+  paymentMethodsRequest: FormulaPropType;
+  paymentsRequest: FormulaPropType;
+  paymentsDetailsRequest: FormulaPropType;
+  style: FormulaPropType;
   isRedirect: boolean;
   unsavedChanges: number;
-  lastBuild: [CurrentFormula] | null;
+  lastBuild: [FormulaPropType] | null;
   runBuild: boolean;
   redirectResult: string | null;
 }
 
 // Define the initial state
-const initialState: CurrentFormula = {
+const initialState: FormulaPropType = {
   checkoutAPIVersion: "70",
   adyenWebVersion: "5.60.0",
   checkoutConfiguration: {
@@ -67,12 +67,12 @@ const formulaSlice = createSlice({
     updateRunBuild: (state) => {
       state.runBuild = !state.runBuild;
     },
-    updateFormula: (state, action: PayloadAction<Partial<CurrentFormula>>) => {
+    updateFormula: (state, action: PayloadAction<Partial<Formula>>) => {
       return { ...state, ...action.payload };
     },
     updateCheckoutConfiguration: (
       state,
-      action: PayloadAction<CurrentFormulaPropType>
+      action: PayloadAction<FormulaPropType>
     ) => {
       state.checkoutConfiguration = action.payload;
     },
@@ -102,31 +102,31 @@ const formulaSlice = createSlice({
     },
     updateTxVariantConfiguration: (
       state,
-      action: PayloadAction<CurrentFormulaPropType>
+      action: PayloadAction<FormulaPropType>
     ) => {
       state.txVariantConfiguration = action.payload;
     },
     updateSessionsRequest: (
       state,
-      action: PayloadAction<CurrentFormulaPropType>
+      action: PayloadAction<FormulaPropType>
     ) => {
       state.sessionsRequest = action.payload;
     },
     updatePaymentMethodsRequest: (
       state,
-      action: PayloadAction<CurrentFormulaPropType>
+      action: PayloadAction<FormulaPropType>
     ) => {
       state.paymentMethodsRequest = action.payload;
     },
     updatePaymentsRequest: (
       state,
-      action: PayloadAction<CurrentFormulaPropType>
+      action: PayloadAction<FormulaPropType>
     ) => {
       state.paymentsRequest = action.payload;
     },
     updatePaymentsDetailsRequest: (
       state,
-      action: PayloadAction<CurrentFormulaPropType>
+      action: PayloadAction<FormulaPropType>
     ) => {
       state.paymentsDetailsRequest = action.payload;
     },

@@ -8,9 +8,10 @@ import { adyenVariantActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useSearchParams } from "next/navigation";
-import { currentFormulaActions } from "@/store/reducers";
+import { formulaActions } from "@/store/reducers";
+import { useApi } from "@/hooks/useApi";
 
-const { updateIsRedirect, updateRedirectResult } = currentFormulaActions;
+const { updateIsRedirect, updateRedirectResult } = formulaActions;
 
 const { updateVariantState } = adyenVariantActions;
 
@@ -25,10 +26,20 @@ export const ManageAdyenAdvance = () => {
     paymentsDetailsRequest,
     isRedirect,
     redirectResult,
-  } = useSelector((state: RootState) => state.currentFormula);
+  } = useSelector((state: RootState) => state.formula);
 
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
+
+    const { data: sdkData, loading: sdkSpecsLoading, error: sdkSpecsError } = useApi(
+      `adyen/sdk/specs`,
+      "GET"
+    );
+    const { data: apiSpecs, loading: apiSpecsLoading, error: apiSpecsError } = useApi(
+      `adyen/api/specs`,
+      "GET"
+    );
+
   const dispatch = useDispatch();
   const { variant } = useParams<{
     variant: string;

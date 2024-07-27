@@ -28,7 +28,6 @@ const SandboxLayout = ({
         defaultSize={60}
         minSize={50}
         maxSize={70}
-        className="sm:flex"
       >
         <div className="items-center justify-center flex w-full h-full">
           {Main}
@@ -50,8 +49,8 @@ const SandboxLayout = ({
             <p className="border-b-2 leading-7 flex text-sm">
               <span className="border-r-2 px-4 py-[2px]">state</span>
             </p>
-            <div className="flex h-full">
-              <span className="flex h-full">{BottomRight}</span>
+            <div className="h-full">
+              <span className="h-full">{BottomRight}</span>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>

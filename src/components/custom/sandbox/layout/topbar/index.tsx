@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { currentFormulaActions } from "@/store/reducers";
+import { formulaActions } from "@/store/reducers";
 import { useDispatch } from "react-redux";
 
-const { updateRunBuild, updateIsRedirect } = currentFormulaActions;
+const { updateRunBuild, updateIsRedirect } = formulaActions;
 
 const Topbar = (props: any) => {
   const dispatch = useDispatch();
