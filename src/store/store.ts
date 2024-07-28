@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {
-  adyenParametersReducer,
+  specsReducer,
   adyenVariantReducer,
   formulaReducer,
   sandboxReducer,
@@ -9,7 +9,7 @@ import {
 export const store = configureStore({
   reducer: {
     formula: formulaReducer,
-    adyenParameters: adyenParametersReducer,
+    specs: specsReducer,
     adyenVariant: adyenVariantReducer,
     sandbox: sandboxReducer,
   },

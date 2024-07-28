@@ -7,14 +7,16 @@ import CSS from "@/components/custom/sandbox/frontend/CSS";
 import HTML from "@/components/custom/sandbox/frontend/HTML";
 import JS from "@/components/custom/sandbox/frontend/JS";
 import SandboxLayout from "@/components/custom/sandbox/layout";
-import MainTabs from "@/components/custom/sandbox/layout/mainTabs";
+import DevTools from "@/components/custom/sandbox/layout/devTools";
 import Sidebar from "@/components/custom/sandbox/layout/sidebar";
 import Topbar from "@/components/custom/sandbox/layout/topbar";
 import Events from "@/components/custom/sandbox/webhooks/Events";
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useApi } from "@/hooks/useApi";
+import { specsActions } from "@/store/reducers";
 
 interface SectionType {
   section: "client" | "server" | "webhooks";
@@ -22,16 +24,47 @@ interface SectionType {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
-  const { runBuild, checkoutAPIVersion } = useSelector(
+  const { runBuild, checkoutAPIVersion, adyenWebVersion } = useSelector(
     (state: RootState) => state.formula
   );
-
+  const { data: sdkSpecs, error: sdkSpecsError } = useApi(
+    `api/specs/adyen-web/WebComponents-v${adyenWebVersion.replaceAll(".","_")}`,
+    "GET"
+  );
+  const { data: apiSpecs, error: apiSpecsError } = useApi(
+    `api/specs/checkout/CheckoutService-v${checkoutAPIVersion}`,
+    "GET"
+  );
+  const { checkout, "adyen-web": adyenWeb } = useSelector(
+    (state: RootState) => state.specs
+  );
   const { variant } = useParams<{
     variant: string;
   }>();
 
   let titles: any = [];
   let contents: any = [];
+  const dispatch = useDispatch();
+
+  if (sdkSpecs && !adyenWeb) {
+    dispatch(
+      specsActions.updateSpecs({
+        "adyen-web": sdkSpecs,
+      })
+    );
+  }
+
+  if (apiSpecs && !checkout) {
+    dispatch(
+      specsActions.updateSpecs({
+        checkout: apiSpecs,
+      })
+    );
+  }
+
+  if (sdkSpecsError || apiSpecsError) {
+    return <p>Error</p>;
+  }
 
   if (section === "client") {
     titles.push(
@@ -65,7 +98,7 @@ const Page: any = () => {
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
       <SandboxLayout
-        main={<MainTabs titles={titles} contents={contents} key={section} />}
+        main={<DevTools titles={titles} contents={contents} key={section} />}
         topRight={
           <ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />
         }

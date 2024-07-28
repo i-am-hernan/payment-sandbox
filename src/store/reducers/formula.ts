@@ -27,7 +27,7 @@ export interface Formula {
 // Define the initial state
 const initialState: FormulaPropType = {
   checkoutAPIVersion: "70",
-  adyenWebVersion: "5.60.0",
+  adyenWebVersion: "5.66.1",
   checkoutConfiguration: {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
     environment: "test",
