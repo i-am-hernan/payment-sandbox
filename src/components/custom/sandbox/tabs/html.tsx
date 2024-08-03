@@ -1,4 +1,4 @@
-import { PanelManager } from "@/components/custom/sandbox/layout/mainPanels/panelManager";
+import { ManageEditors } from "@/components/custom/sandbox/editors/manageEditors";
 import type { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { formulaActions } from "@/store/reducers";
@@ -15,7 +15,7 @@ const HTML = () => {
   const dispatch = useDispatch();
 
   return (
-    <PanelManager
+    <ManageEditors
       type="html"
       value={{ adyenWebVersion: adyenWebVersion }}
       code={createHtmlCode(adyenWebVersion, variant)}

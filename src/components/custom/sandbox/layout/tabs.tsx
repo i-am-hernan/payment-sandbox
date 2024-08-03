@@ -1,15 +1,18 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs as ShadTabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
-
-interface DevToolsProps {
+interface TabsProps {
   titles: string[];
   contents: React.ReactNode[];
 }
 
-const DevTools = ({ titles: Titles, contents: Contents }: DevToolsProps) => {
-
+const Tabs = ({ titles: Titles, contents: Contents }: TabsProps) => {
   return (
-    <Tabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
+    <ShadTabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
       <span className="border-b-2 flex">
         <TabsList className="justify-start">
           {Titles.map((title, index) => {
@@ -32,8 +35,8 @@ const DevTools = ({ titles: Titles, contents: Contents }: DevToolsProps) => {
           </TabsContent>
         );
       })}
-    </Tabs>
+    </ShadTabs>
   );
 };
 
-export default DevTools;
+export default Tabs;

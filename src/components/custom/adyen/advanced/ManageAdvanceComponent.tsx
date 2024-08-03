@@ -16,7 +16,7 @@ const { updateIsRedirect, updateRedirectResult } = formulaActions;
 const { updateVariantState } = adyenVariantActions;
 const { updateSpecs } = specsActions;
 
-export const ManageAdyenAdvance = () => {
+export const ManageAdvanceComponent = () => {
   const {
     checkoutConfiguration,
     checkoutAPIVersion,

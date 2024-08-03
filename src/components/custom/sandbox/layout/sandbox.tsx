@@ -7,17 +7,17 @@ import {
 } from "@/components/ui/resizable";
 import { useParams } from "next/navigation";
 
-interface SandboxLayoutContentProps {
+interface SandboxContentProps {
   main: any;
   topRight: any;
   bottomRight: any;
 }
 
-const SandboxLayout = ({
+const Sandbox = ({
   main: Main,
   topRight: TopRight,
   bottomRight: BottomRight,
-}: SandboxLayoutContentProps) => {
+}: SandboxContentProps) => {
   const { variant } = useParams<{ variant: string }>();
   return (
     <ResizablePanelGroup
@@ -59,4 +59,4 @@ const SandboxLayout = ({
   );
 };
 
-export default SandboxLayout;
+export default Sandbox;

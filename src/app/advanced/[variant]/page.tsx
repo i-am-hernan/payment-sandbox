@@ -1,16 +1,16 @@
 "use client";
 
-import CodeEditor from "@/components/custom/sandbox/codeEditor";
-import { ManageAdyenAdvance } from "@/components/custom/adyen/ManageAdyenAdvance";
-import API from "@/components/custom/sandbox/backend/API";
-import CSS from "@/components/custom/sandbox/frontend/CSS";
-import HTML from "@/components/custom/sandbox/frontend/HTML";
-import JS from "@/components/custom/sandbox/frontend/JS";
-import SandboxLayout from "@/components/custom/sandbox/layout";
-import DevTools from "@/components/custom/sandbox/layout/devTools";
-import Sidebar from "@/components/custom/sandbox/layout/sidebar";
-import Topbar from "@/components/custom/sandbox/layout/topbar";
-import Events from "@/components/custom/sandbox/webhooks/Events";
+import CodeEditor from "@/components/custom/sandbox/editors/codeEditor";
+import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
+import API from "@/components/custom/sandbox/tabs/api";
+import CSS from "@/components/custom/sandbox/tabs/css";
+import HTML from "@/components/custom/sandbox/tabs/html";
+import JS from "@/components/custom/sandbox/tabs/js";
+import Sandbox from "@/components/custom/sandbox/layout/sandbox";
+import Tabs from "@/components/custom/sandbox/layout/tabs";
+import Sidebar from "@/components/custom/sandbox/navbars/sidebar";
+import Topbar from "@/components/custom/sandbox/navbars/topbar";
+import Events from "@/components/custom/sandbox/tabs/events";
 
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
@@ -39,14 +39,14 @@ const Page: any = () => {
 
   if (section === "client") {
     titles.push(
-      `${variant ? variant : "checkout"}.js`,
+      "checkout.html",
       "style.css",
-      "checkout.html"
+      `${variant ? variant : "checkout"}.js`
     );
     contents.push(
-      <JS key={"JS"} />,
+      <HTML key={"HTML"} />,
       <CSS key={"CSS"} />,
-      <HTML key={"HTML"} />
+      <JS key={"JS"} />
     );
   } else if (section === "server") {
     titles.push(
@@ -68,12 +68,14 @@ const Page: any = () => {
     <div>
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
-      <SandboxLayout
-        main={<DevTools titles={titles} contents={contents} key={section} />}
+      <Sandbox
+        main={<Tabs titles={titles} contents={contents} key={section} />}
         topRight={
-          <ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />
+          <ManageAdvanceComponent key={runBuild ? "runBuild" : "default"} />
         }
-        bottomRight={<CodeEditor code={JSON.stringify(variantState)} type="json"/>}
+        bottomRight={
+          <CodeEditor code={JSON.stringify(variantState)} type="json" />
+        }
       />
     </div>
   );
