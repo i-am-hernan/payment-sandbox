@@ -8,9 +8,12 @@ import { adyenVariantActions, formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { useApi } from "@/hooks/useApi";
+import { specsActions } from "@/store/reducers";
 
 const { updateIsRedirect, updateRedirectResult } = formulaActions;
 const { updateVariantState } = adyenVariantActions;
+const { updateSpecs } = specsActions;
 
 export const ManageAdyenAdvance = () => {
   const {
@@ -28,6 +31,22 @@ export const ManageAdyenAdvance = () => {
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
 
+  const {
+    data: apiSpecsData,
+    error: apiSpecsError,
+  } = useApi(
+    `api/specs/checkout/CheckoutService-v${checkoutAPIVersion}`,
+    "GET"
+  );
+
+  const {
+    data: sdkSpecsData,
+    error: sdkSpecsError,
+  } = useApi(
+    `api/specs/adyen-web/WebComponents-v${adyenWebVersion.replaceAll(".", "_")}`,
+    "GET"
+  );
+
   const dispatch = useDispatch();
   const { variant } = useParams<{
     variant: string;
@@ -39,6 +58,16 @@ export const ManageAdyenAdvance = () => {
     dispatch(updateIsRedirect(true));
     dispatch(updateRedirectResult(redirectResultQueryParameter));
   }
+
+  if (sdkSpecsData && apiSpecsData) {
+    dispatch(
+      updateSpecs({
+        checkoutApi: sdkSpecsData,
+        adyenWeb: apiSpecsData,
+      })
+    );
+  }
+
 
   if (loadingAdyenScript || !variant) {
     return (
@@ -52,7 +81,7 @@ export const ManageAdyenAdvance = () => {
     );
   }
 
-  if (adyenScriptError) {
+  if (adyenScriptError || apiSpecsError || sdkSpecsError) {
     return <div>Error</div>;
   }
 

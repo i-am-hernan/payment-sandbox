@@ -5,13 +5,13 @@ export interface Specs {
 }
 
 export interface SpecsList {
-  checkout?: Specs | null;
-  "adyen-web"?: Specs | null;
+  checkoutApi?: Specs | null;
+  adyenWeb?: Specs | null;
 }
 
 const initialState: SpecsList = {
-  checkout: null,
-  "adyen-web": null,
+  checkoutApi: null,
+  adyenWeb: null,
 };
 
 export const SpecsSlice = createSlice({

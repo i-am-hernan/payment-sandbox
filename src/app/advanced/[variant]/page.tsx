@@ -11,12 +11,11 @@ import DevTools from "@/components/custom/sandbox/layout/devTools";
 import Sidebar from "@/components/custom/sandbox/layout/sidebar";
 import Topbar from "@/components/custom/sandbox/layout/topbar";
 import Events from "@/components/custom/sandbox/webhooks/Events";
+
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useApi } from "@/hooks/useApi";
-import { specsActions } from "@/store/reducers";
+import { useSelector } from "react-redux";
 
 interface SectionType {
   section: "client" | "server" | "webhooks";
@@ -24,47 +23,16 @@ interface SectionType {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
-  const { runBuild, checkoutAPIVersion, adyenWebVersion } = useSelector(
+  const { runBuild, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
-  const { data: sdkSpecs, error: sdkSpecsError } = useApi(
-    `api/specs/adyen-web/WebComponents-v${adyenWebVersion.replaceAll(".","_")}`,
-    "GET"
-  );
-  const { data: apiSpecs, error: apiSpecsError } = useApi(
-    `api/specs/checkout/CheckoutService-v${checkoutAPIVersion}`,
-    "GET"
-  );
-  const { checkout, "adyen-web": adyenWeb } = useSelector(
-    (state: RootState) => state.specs
-  );
+
   const { variant } = useParams<{
     variant: string;
   }>();
 
   let titles: any = [];
   let contents: any = [];
-  const dispatch = useDispatch();
-
-  if (sdkSpecs && !adyenWeb) {
-    dispatch(
-      specsActions.updateSpecs({
-        "adyen-web": sdkSpecs,
-      })
-    );
-  }
-
-  if (apiSpecs && !checkout) {
-    dispatch(
-      specsActions.updateSpecs({
-        checkout: apiSpecs,
-      })
-    );
-  }
-
-  if (sdkSpecsError || apiSpecsError) {
-    return <p>Error</p>;
-  }
 
   if (section === "client") {
     titles.push(
