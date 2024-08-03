@@ -5,20 +5,28 @@ import {
 } from "@/components/ui/resizable";
 import { LeftPanel } from "@/components/custom/sandbox/layout/mainPanels/leftPanel";
 import { RightPanel } from "@/components/custom/sandbox/layout/mainPanels/rightPanel";
+import codeEditor from "@/components/custom/sandbox/codeEditor";
+import CodeEditor from "@/components/custom/sandbox/codeEditor";
 
 interface PanelManagerProps {
   type: "html" | "css" | "js" | "api" | "events";
+  title?: string;
+  content?: string;
   value: any;
-  codePrefix: string;
-  codePostfix: string;
-  specs: any;
+  code: string;
+  specs?: any;
   onChange: (config: any) => void;
-  definitions?: any;
 }
 
 export const PanelManager = (props: PanelManagerProps) => {
-  const { type, value, codePrefix, codePostfix, schema, onChange, ...other } =
-    props;
+  const {
+    type,
+    value,
+    code,
+    specs,
+    onChange,
+    ...other
+  } = props;
 
   return (
     <ResizablePanelGroup
@@ -27,7 +35,7 @@ export const PanelManager = (props: PanelManagerProps) => {
       {...other}
     >
       <ResizablePanel defaultSize={50} className="sm:flex">
-        <LeftPanel />
+        <CodeEditor code={code} type="html"/>
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={50}>

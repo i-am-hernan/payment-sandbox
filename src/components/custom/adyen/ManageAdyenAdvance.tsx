@@ -10,6 +10,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useApi } from "@/hooks/useApi";
 import { specsActions } from "@/store/reducers";
+import { useEffect } from "react";
 
 const { updateIsRedirect, updateRedirectResult } = formulaActions;
 const { updateVariantState } = adyenVariantActions;
@@ -31,18 +32,12 @@ export const ManageAdyenAdvance = () => {
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
 
-  const {
-    data: apiSpecsData,
-    error: apiSpecsError,
-  } = useApi(
+  const { data: apiSpecsData, error: apiSpecsError } = useApi(
     `api/specs/checkout/CheckoutService-v${checkoutAPIVersion}`,
     "GET"
   );
 
-  const {
-    data: sdkSpecsData,
-    error: sdkSpecsError,
-  } = useApi(
+  const { data: sdkSpecsData, error: sdkSpecsError } = useApi(
     `api/specs/adyen-web/WebComponents-v${adyenWebVersion.replaceAll(".", "_")}`,
     "GET"
   );
@@ -54,20 +49,27 @@ export const ManageAdyenAdvance = () => {
   const searchParams = useSearchParams();
   const redirectResultQueryParameter = searchParams.get("redirectResult");
 
-  if (redirectResultQueryParameter && !isRedirect) {
-    dispatch(updateIsRedirect(true));
-    dispatch(updateRedirectResult(redirectResultQueryParameter));
-  }
+  useEffect(() => {
+    if (redirectResultQueryParameter && !isRedirect) {
+      dispatch(updateIsRedirect(true));
+      dispatch(updateRedirectResult(redirectResultQueryParameter));
+    }
 
-  if (sdkSpecsData && apiSpecsData) {
-    dispatch(
-      updateSpecs({
-        checkoutApi: sdkSpecsData,
-        adyenWeb: apiSpecsData,
-      })
-    );
-  }
-
+    if (sdkSpecsData) {
+      dispatch(
+        updateSpecs({
+          adyenWeb: sdkSpecsData,
+        })
+      );
+    }
+    if (apiSpecsData) {
+      dispatch(
+        updateSpecs({
+          checkoutApi: apiSpecsData,
+        })
+      );
+    }
+  }, [redirectResultQueryParameter, isRedirect, sdkSpecsData, apiSpecsData]);
 
   if (loadingAdyenScript || !variant) {
     return (

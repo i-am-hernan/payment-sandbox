@@ -2,36 +2,34 @@ import { PanelManager } from "@/components/custom/sandbox/layout/mainPanels/pane
 import type { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { formulaActions } from "@/store/reducers";
+import { createHtmlCode } from "@/lib/utils";
+import { useParams } from "next/navigation";
 
 const { updateFormula } = formulaActions;
 
 const HTML = () => {
   const { adyenWebVersion } = useSelector((state: RootState) => state.formula);
-  const { "adyen-web": adyenWebSpecs } = useSelector(
-    (state: RootState) => state.specs
-  );
-
+  const { variant } = useParams<{
+    variant: string;
+  }>();
   const dispatch = useDispatch();
 
-  // return (
-  //   <PanelManager
-  //     type="html"
-  //     value={{ adyenWebVersion: adyenWebVersion }}
-  //     codePrefix=""
-  //     codePostfix=""
-  //     specs={adyenWebSpecs}
-  //     onChange={(config: any) => {
-  //       const { adyenWebVersion } = config;
-  //       dispatch(
-  //         updateFormula({
-  //           adyenWebVersion: adyenWebVersion,
-  //         })
-  //       );
-  //     }}
-  //   />
-  // );
-  console.log(adyenWebSpecs);
-  return <div>HTML</div>;
+  return (
+    <PanelManager
+      type="html"
+      value={{ adyenWebVersion: adyenWebVersion }}
+      code={createHtmlCode(adyenWebVersion, variant)}
+      specs={null}
+      onChange={(config: any) => {
+        const { adyenWebVersion } = config;
+        dispatch(
+          updateFormula({
+            adyenWebVersion: adyenWebVersion,
+          })
+        );
+      }}
+    />
+  );
 };
 
 export default HTML;

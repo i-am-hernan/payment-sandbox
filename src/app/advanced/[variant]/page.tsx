@@ -1,6 +1,6 @@
 "use client";
 
-import AdyenState from "@/components/custom/adyen/AdyenState";
+import CodeEditor from "@/components/custom/sandbox/codeEditor";
 import { ManageAdyenAdvance } from "@/components/custom/adyen/ManageAdyenAdvance";
 import API from "@/components/custom/sandbox/backend/API";
 import CSS from "@/components/custom/sandbox/frontend/CSS";
@@ -25,6 +25,9 @@ const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
   const { runBuild, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
+  );
+  const { variantState } = useSelector(
+    (state: RootState) => state.adyenVariant
   );
 
   const { variant } = useParams<{
@@ -70,7 +73,7 @@ const Page: any = () => {
         topRight={
           <ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />
         }
-        bottomRight={<AdyenState />}
+        bottomRight={<CodeEditor code={JSON.stringify(variantState)} type="json"/>}
       />
     </div>
   );

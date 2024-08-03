@@ -49,8 +49,8 @@ const SandboxLayout = ({
             <p className="border-b-2 leading-7 flex text-sm">
               <span className="border-r-2 px-4 py-[2px]">state</span>
             </p>
-            <div className="h-full">
-              <span className="h-full">{BottomRight}</span>
+            <div className="h-full flex">
+              <span className="h-full flex">{BottomRight}</span>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
