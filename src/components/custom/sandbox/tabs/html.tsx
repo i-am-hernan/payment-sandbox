@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { formulaActions } from "@/store/reducers";
 import { createHtmlCode } from "@/lib/utils";
 import { useParams } from "next/navigation";
+import { WEBVERSIONS } from "@/assets/constants/constants";
 
 const { updateFormula } = formulaActions;
 
@@ -19,14 +20,12 @@ const HTML = () => {
       type="html"
       value={{ adyenWebVersion: adyenWebVersion }}
       code={createHtmlCode(adyenWebVersion, variant)}
+      version={adyenWebVersion}
+      versions={WEBVERSIONS}
+      versionTitle="Adyen Web Version"
       specs={null}
-      onChange={(config: any) => {
-        const { adyenWebVersion } = config;
-        dispatch(
-          updateFormula({
-            adyenWebVersion: adyenWebVersion,
-          })
-        );
+      onChange={(value: any) => {
+        dispatch(updateFormula(value));
       }}
     />
   );

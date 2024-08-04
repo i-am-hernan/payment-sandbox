@@ -13,26 +13,46 @@ interface ManageEditorsProps {
   code: string;
   version: string;
   versions: string[];
+  versionTitle: string;
   value?: any;
   specs?: any;
   onChange: (config: any) => void;
 }
 
 export const ManageEditors = (props: ManageEditorsProps) => {
-  const { type, value, code, specs, onChange, ...other } = props;
+  const {
+    type,
+    title,
+    content,
+    code,
+    version,
+    versions,
+    versionTitle,
+    value,
+    specs,
+    onChange,
+    ...other
+  } = props;
 
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background pb-[var(--tab-lable-height)] inline-block"
+      className="bg-background inline-block"
       {...other}
     >
-      <ResizablePanel defaultSize={50} className="sm:flex">
-        <CodeEditor type="html" code={code}/>
+      <ResizablePanel defaultSize={60} className="sm:flex">
+        <CodeEditor type="html" code={code} />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={50}>
-        <ListEditor value={value} specs={specs}/>
+      <ResizablePanel defaultSize={40}>
+        <ListEditor
+          value={value}
+          specs={specs}
+          version={version}
+          versions={versions}
+          versionTitle={versionTitle}
+          onChange={onChange}
+        />
       </ResizablePanel>
     </ResizablePanelGroup>
   );

@@ -19,8 +19,8 @@ export interface Formula {
   style: FormulaPropType;
   isRedirect: boolean;
   unsavedChanges: number;
-  lastBuild: [FormulaPropType] | null;
-  runBuild: boolean;
+  build: FormulaPropType | null;
+  run: boolean;
   redirectResult: string | null;
 }
 
@@ -52,10 +52,10 @@ const initialState: FormulaPropType = {
   },
   paymentsDetailsRequest: {},
   style: {},
-  unsavedChanges: 0,
+  unsavedChanges: 4,
   isRedirect: false,
-  lastBuild: null,
-  runBuild: true,
+  build: null,
+  run: true,
   redirectResult: null,
 };
 
@@ -64,8 +64,9 @@ const formulaSlice = createSlice({
   name: "formula",
   initialState,
   reducers: {
-    updateRunBuild: (state) => {
-      state.runBuild = !state.runBuild;
+    updateRun: (state) => {
+      state.unsavedChanges = 0;
+      state.run = !state.run;
     },
     updateFormula: (state, action: PayloadAction<Partial<Formula>>) => {
       return { ...state, ...action.payload };
@@ -74,6 +75,7 @@ const formulaSlice = createSlice({
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
+      state.unsavedChanges += 1;
       state.checkoutConfiguration = action.payload;
     },
     addUnsavedChanges: (state) => {
@@ -86,9 +88,11 @@ const formulaSlice = createSlice({
       state,
       action: PayloadAction<"67" | "68" | "69" | "70">
     ) => {
+      state.unsavedChanges += 1;
       state.checkoutAPIVersion = action.payload;
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
+      state.unsavedChanges += 1;
       state.adyenWebVersion = action.payload;
     },
     updateIsRedirect: (state, action: PayloadAction<boolean>) => {
@@ -104,33 +108,39 @@ const formulaSlice = createSlice({
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
+      state.unsavedChanges += 1;
       state.txVariantConfiguration = action.payload;
     },
     updateSessionsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
+      state.unsavedChanges += 1;
       state.sessionsRequest = action.payload;
     },
     updatePaymentMethodsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
+      state.unsavedChanges += 1;
       state.paymentMethodsRequest = action.payload;
     },
     updatePaymentsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
+      state.unsavedChanges += 1;
       state.paymentsRequest = action.payload;
     },
     updatePaymentsDetailsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
+      state.unsavedChanges += 1;
       state.paymentsDetailsRequest = action.payload;
     },
     clearOnDeckInfo: (state) => {
+      state.unsavedChanges = 0;
       return { ...initialState };
     },
   },
