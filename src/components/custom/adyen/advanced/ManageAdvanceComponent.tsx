@@ -17,6 +17,10 @@ const { updateVariantState } = adyenVariantActions;
 const { updateSpecs } = specsActions;
 
 export const ManageAdvanceComponent = () => {
+  const { build, isRedirect, redirectResult } = useSelector(
+    (state: RootState) => state.formula
+  );
+
   const {
     checkoutConfiguration,
     checkoutAPIVersion,
@@ -25,9 +29,7 @@ export const ManageAdvanceComponent = () => {
     paymentMethodsRequest,
     paymentsRequest,
     paymentsDetailsRequest,
-    isRedirect,
-    redirectResult,
-  } = useSelector((state: RootState) => state.formula);
+  } = build;
 
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);

@@ -1,12 +1,12 @@
-import { ManageEditors } from "@/components/custom/sandbox/editors/manageEditors";
-import type { RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { formulaActions } from "@/store/reducers";
-import { createHtmlCode } from "@/lib/utils";
-import { useParams } from "next/navigation";
 import { WEBVERSIONS } from "@/assets/constants/constants";
+import { ManageEditors } from "@/components/custom/sandbox/editors/manageEditors";
+import { createHtmlCode } from "@/lib/utils";
+import { formulaActions } from "@/store/reducers";
+import type { RootState } from "@/store/store";
+import { useParams } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
 
-const { updateFormula } = formulaActions;
+const { updateAdyenWebVersion } = formulaActions;
 
 const HTML = () => {
   const { adyenWebVersion } = useSelector((state: RootState) => state.formula);
@@ -25,7 +25,10 @@ const HTML = () => {
       versionTitle="Adyen Web Version"
       specs={null}
       onChange={(value: any) => {
-        dispatch(updateFormula(value));
+        const { adyenWebVersion } = value;
+        if (adyenWebVersion) {
+          dispatch(updateAdyenWebVersion(adyenWebVersion));
+        }
       }}
     />
   );

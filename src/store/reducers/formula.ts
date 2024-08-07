@@ -19,7 +19,7 @@ export interface Formula {
   style: FormulaPropType;
   isRedirect: boolean;
   unsavedChanges: number;
-  build: FormulaPropType | null;
+  build: Formula | null;
   run: boolean;
   redirectResult: string | null;
 }
@@ -52,12 +52,15 @@ const initialState: FormulaPropType = {
   },
   paymentsDetailsRequest: {},
   style: {},
-  unsavedChanges: 4,
+  unsavedChanges: 0,
   isRedirect: false,
   build: null,
   run: true,
   redirectResult: null,
 };
+
+// Add the build key to the initial state
+initialState.build = { ...initialState };
 
 // Create the slice with typed reducers
 const formulaSlice = createSlice({
@@ -66,6 +69,7 @@ const formulaSlice = createSlice({
   reducers: {
     updateRun: (state) => {
       state.unsavedChanges = 0;
+      state.build = { ...state };
       state.run = !state.run;
     },
     updateFormula: (state, action: PayloadAction<Partial<Formula>>) => {
@@ -92,7 +96,12 @@ const formulaSlice = createSlice({
       state.checkoutAPIVersion = action.payload;
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
-      state.unsavedChanges += 1;
+      if (state.build.adyenWebVersion !== action.payload) {
+        state.unsavedChanges += 1;
+      } else {
+        state.unsavedChanges -= 1;
+      }
+
       state.adyenWebVersion = action.payload;
     },
     updateIsRedirect: (state, action: PayloadAction<boolean>) => {
@@ -111,10 +120,7 @@ const formulaSlice = createSlice({
       state.unsavedChanges += 1;
       state.txVariantConfiguration = action.payload;
     },
-    updateSessionsRequest: (
-      state,
-      action: PayloadAction<FormulaPropType>
-    ) => {
+    updateSessionsRequest: (state, action: PayloadAction<FormulaPropType>) => {
       state.unsavedChanges += 1;
       state.sessionsRequest = action.payload;
     },
@@ -125,10 +131,7 @@ const formulaSlice = createSlice({
       state.unsavedChanges += 1;
       state.paymentMethodsRequest = action.payload;
     },
-    updatePaymentsRequest: (
-      state,
-      action: PayloadAction<FormulaPropType>
-    ) => {
+    updatePaymentsRequest: (state, action: PayloadAction<FormulaPropType>) => {
       state.unsavedChanges += 1;
       state.paymentsRequest = action.payload;
     },
@@ -141,7 +144,8 @@ const formulaSlice = createSlice({
     },
     clearOnDeckInfo: (state) => {
       state.unsavedChanges = 0;
-      return { ...initialState };
+      const lastBuild = state.build;
+      state = { ...lastBuild };
     },
   },
 });

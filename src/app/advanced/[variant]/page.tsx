@@ -23,9 +23,8 @@ interface SectionType {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
-  const { run, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.formula
-  );
+  const { run, build } = useSelector((state: RootState) => state.formula);
+  const { checkoutAPIVersion } = build;
   const { variantState } = useSelector(
     (state: RootState) => state.adyenVariant
   );
@@ -70,9 +69,7 @@ const Page: any = () => {
       <Topbar />
       <Sandbox
         main={<Tabs titles={titles} contents={contents} key={section} />}
-        topRight={
-          <ManageAdvanceComponent key={run ? "run" : "default"} />
-        }
+        topRight={<ManageAdvanceComponent key={run ? "run" : "default"} />}
         bottomRight={
           <CodeEditor code={JSON.stringify(variantState)} type="json" />
         }
