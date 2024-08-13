@@ -143,9 +143,8 @@ const formulaSlice = createSlice({
       state.paymentsDetailsRequest = action.payload;
     },
     clearOnDeckInfo: (state) => {
-      state.unsavedChanges = 0;
       const lastBuild = state.build;
-      state = { ...lastBuild };
+      return { ...lastBuild, build: lastBuild, unsavedChanges: 0 };
     },
   },
 });

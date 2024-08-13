@@ -12,16 +12,13 @@ const ListEditor = (props: any) => {
 
   return (
     <div>
-      <p className="border-b-2 flex text-sm">
-        <span className="border-r-2 px-2 py-[1px]">version</span>
-      </p>
       <div className="px-2 py-3">
         <p className="text-sm pb-1 pl-1">{versionTitle}</p>
         <p className="text-sm pb-3 pl-1">
-          Find the release notes for the version you are usin here.
+          Find the release notes for the version you are using here.
         </p>
         <Select
-          defaultValue={version}
+          value={version}
           onValueChange={(value) => {
             onChange({
               adyenWebVersion: value,

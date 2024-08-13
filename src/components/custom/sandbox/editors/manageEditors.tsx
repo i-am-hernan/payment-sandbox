@@ -45,6 +45,9 @@ export const ManageEditors = (props: ManageEditorsProps) => {
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={40}>
+        <p className="border-b-2 flex text-sm">
+          <span className="border-r-2 px-2 py-[1px]">parameters</span>
+        </p>
         <ListEditor
           version={version}
           versions={versions}
