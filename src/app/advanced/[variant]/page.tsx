@@ -4,7 +4,7 @@ import CodeEditor from "@/components/custom/sandbox/editors/codeEditor";
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
 import API from "@/components/custom/sandbox/tabs/api";
 import CSS from "@/components/custom/sandbox/tabs/css";
-import HTML from "@/components/custom/sandbox/tabs/html";
+import Html from "@/components/custom/sandbox/tabs/html";
 import JS from "@/components/custom/sandbox/tabs/js";
 import Sandbox from "@/components/custom/sandbox/layout/sandbox";
 import Tabs from "@/components/custom/sandbox/layout/tabs";
@@ -43,7 +43,7 @@ const Page: any = () => {
       `${variant ? variant : "checkout"}.js`
     );
     contents.push(
-      <HTML key={"HTML"} />,
+      <Html key={"HTML"} />,
       <CSS key={"CSS"} />,
       <JS key={"JS"} />
     );

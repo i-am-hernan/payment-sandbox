@@ -20,12 +20,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 const { updateAdyenWebVersion } = formulaActions;
 
-const HTML = () => {
+const Html = () => {
   const { adyenWebVersion } = useSelector((state: RootState) => state.formula);
   const { variant } = useParams<{
     variant: string;
   }>();
   const dispatch = useDispatch();
+  const parameterTitle = "Adyen Web Version";
 
   return (
     <ResizablePanelGroup
@@ -50,14 +51,14 @@ const HTML = () => {
           defaultValue="select-version"
         >
           <AccordionItem value="select-version">
-            <AccordionTrigger>
-              <p className="text-sm pl-3">Adyen Web Version</p>
+            <AccordionTrigger className="px-3">
+              <p className="text-sm">{parameterTitle}</p>
             </AccordionTrigger>
             <AccordionContent>
               <Enum
                 version={adyenWebVersion}
                 versions={WEBVERSIONS}
-                versionTitle={"Adyen Web Version"}
+                versionTitle={parameterTitle}
                 onChange={(value: any) => {
                   const { adyenWebVersion } = value;
                   if (adyenWebVersion) {
@@ -73,4 +74,4 @@ const HTML = () => {
   );
 };
 
-export default HTML;
+export default Html;

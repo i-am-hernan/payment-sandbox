@@ -8,7 +8,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import CodeIcon from "@mui/icons-material/Code";
+import LanguageIcon from '@mui/icons-material/Language';
 import MenuIcon from "@mui/icons-material/Menu";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebhookIcon from "@mui/icons-material/Webhook";
@@ -16,7 +16,7 @@ import WebhookIcon from "@mui/icons-material/Webhook";
 const Sidebar = (props: any) => {
   const { section, setSection } = props;
   const buttons = [
-    { name: "client", icon: <CodeIcon /> },
+    { name: "client", icon: <LanguageIcon /> },
     { name: "server", icon: <StorageIcon /> },
     { name: "webhooks", icon: <WebhookIcon /> },
   ];

@@ -28,12 +28,13 @@ export const createHtmlCode: any = (version: string, variant: string) => {
 <head>
     <meta charset="UTF-8">
     <title>Payment Sandbox</title>
-    <script src="https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/${version}/adyen.js"></script>
+    <link rel="stylesheet" href="styles.css">
     <link href="https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/${version}/adyen.css" type="text/css" rel="stylesheet">
 </head>
 <body>
     <div id="${variant}"></div>
 </body>
+<script src="https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/${version}/adyen.js"></script>
 </html>
 `;
 };

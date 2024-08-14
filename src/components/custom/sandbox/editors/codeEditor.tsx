@@ -18,7 +18,7 @@ const CodeEditor = (props: any) => {
       const prettierVersion = prettier.format(uglyCode, {
         parser: type,
         plugins: [parserBabel, parserHtml, prettierPluginEstree],
-        tabWidth: 2,
+        tabWidth: 1,
         useTabs: false,
       });
       return prettierVersion;
