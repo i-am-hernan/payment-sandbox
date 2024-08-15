@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, model } from "mongoose";
+import mongoose, { Schema, Document, model, Model } from "mongoose";
 
 interface IFormula extends Document {
   stringifiedConfiguration: string;
@@ -46,5 +46,5 @@ const FormulaSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-const Formula = mongoose.models.Formula || mongoose.model("Formula", FormulaSchema);
+const Formula: Model<IFormula> = mongoose.models.Formula || mongoose.model("Formula", FormulaSchema);
 export default Formula;

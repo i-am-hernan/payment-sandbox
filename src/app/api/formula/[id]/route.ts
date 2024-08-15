@@ -17,12 +17,13 @@ export async function GET(request: NextRequest, { params }: Params) {
     console.log("DB Connected");
 
     let result = await Formula.findById(id);
+    if (!result) throw new Error("Result is null");
 
     console.log(`Successfully retrieved formula with id: ${result.id}`);
 
     return NextResponse.json({ data: result }, { status: 200 });
   } catch (error) {
-    console.error(`An error occurred when retrieving formula with id ${id}`);
+    console.error(`An error occurred when retrieving formula with id ${id}`, error);
     return NextResponse.json({ message: `An error occurred when retrieving formula with id ${id}` });
   }
 }
@@ -34,9 +35,9 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     await dbConnect();
     console.log("DB Connected");
-    let result = await Formula.findByIdAndDelete(id);
 
-    console.log(result);
+    let result = await Formula.findByIdAndDelete(id);
+    if (!result) throw new Error("Result is null");
 
     console.log(`Successfully deleted Formula with id: ${result.id}`);
     return NextResponse.json({ message: "formula deleted", id: result.id }, { status: 200 });
