@@ -47,11 +47,12 @@ export async function POST(request: Request) {
       description: requestBody.description,
       slug: requestBody.slug,
       link: `${BASE_URL}/${requestBody.slug}`,
+      ...requestBody,
       // createdBy: "testUser",
     });
 
     console.log(`Formula inserted with id: ${insertResult._id}`);
-    return NextResponse.json({ message: "formula inserted", id: insertResult._id }, { status: 201 });
+    return NextResponse.json({ message: "formula inserted", data: insertResult }, { status: 201 });
   } catch (error) {
     console.error("Error inserting formula", error);
 

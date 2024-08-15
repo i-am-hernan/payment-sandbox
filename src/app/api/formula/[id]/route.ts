@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: Params) {
 
     console.log(`Successfully retrieved formula with id: ${result.id}`);
 
-    return NextResponse.json({ result }, { status: 200 });
+    return NextResponse.json({ data: result }, { status: 200 });
   } catch (error) {
     console.error(`An error occurred when retrieving formula with id ${id}`);
     return NextResponse.json({ message: `An error occurred when retrieving formula with id ${id}` });
