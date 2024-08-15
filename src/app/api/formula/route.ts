@@ -51,9 +51,9 @@ export async function POST(request: Request) {
     });
 
     console.log(`Formula inserted with id: ${insertResult._id}`);
-    return NextResponse.json({ message: "formula inserted" }, { status: 201 });
+    return NextResponse.json({ message: "formula inserted", id: insertResult._id }, { status: 201 });
   } catch (error) {
-    console.log("Error inserting formula", error);
+    console.error("Error inserting formula", error);
 
     return NextResponse.json(
       { message: "An error occurred when inserting the formula", error: error },
