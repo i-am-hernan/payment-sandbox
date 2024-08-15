@@ -9,15 +9,31 @@ interface IFormula extends Document {
 
 const FormulaSchema: Schema = new Schema(
   {
+    //TODO: Consider breaking this down into HTML, CSS, and JS
     stringifiedConfiguration: {
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-      required: false,
-    },
+    sdkConfigurationObject: { type: String, required: false },
+    paymentRequest: { type: Schema.Types.Mixed, required: false },
+    checkoutAPIVersion: {},
+    adyenWebVersion: { type: String, required: false },
+    // TODO:
+    checkoutConfiguration: { type: String, required: false },
+    txVariant: { type: String, required: false },
+    txVariantConfiguration: { type: String, required: false },
+    sessionsRequest: { type: String, required: false },
+    paymentMethodsRequest: { type: String, required: false },
+    paymentsRequest: { type: String, required: false },
+    paymentsDetailsRequest: { type: String, required: false },
+    style: {},
+    description: { type: String, required: false },
     slug: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    link: {
       type: String,
       required: true,
       unique: true,
@@ -30,6 +46,5 @@ const FormulaSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-// export default mongoose.model<IFormula>("Formula", FormulaSchema);
 const Formula = mongoose.models.Formula || mongoose.model("Formula", FormulaSchema);
 export default Formula;

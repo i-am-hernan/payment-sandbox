@@ -28,6 +28,7 @@ export interface CurrentFormula {
 const initialState: CurrentFormula = {
   checkoutAPIVersion: "70",
   adyenWebVersion: "5.60.0",
+  // TODO:
   checkoutConfiguration: {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
     environment: "test",
@@ -70,10 +71,7 @@ const formulaSlice = createSlice({
     updateFormula: (state, action: PayloadAction<Partial<CurrentFormula>>) => {
       return { ...state, ...action.payload };
     },
-    updateCheckoutConfiguration: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
+    updateCheckoutConfiguration: (state, action: PayloadAction<CurrentFormulaPropType>) => {
       state.checkoutConfiguration = action.payload;
     },
     addUnsavedChanges: (state) => {
@@ -82,10 +80,7 @@ const formulaSlice = createSlice({
     resetUnsavedChanges: (state) => {
       state.unsavedChanges = 0;
     },
-    updateCheckoutAPIVersion: (
-      state,
-      action: PayloadAction<"67" | "68" | "69" | "70">
-    ) => {
+    updateCheckoutAPIVersion: (state, action: PayloadAction<"67" | "68" | "69" | "70">) => {
       state.checkoutAPIVersion = action.payload;
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
@@ -100,34 +95,19 @@ const formulaSlice = createSlice({
     updateTxVariant: (state, action: PayloadAction<string>) => {
       state.txVariant = action.payload;
     },
-    updateTxVariantConfiguration: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
+    updateTxVariantConfiguration: (state, action: PayloadAction<CurrentFormulaPropType>) => {
       state.txVariantConfiguration = action.payload;
     },
-    updateSessionsRequest: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
+    updateSessionsRequest: (state, action: PayloadAction<CurrentFormulaPropType>) => {
       state.sessionsRequest = action.payload;
     },
-    updatePaymentMethodsRequest: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
+    updatePaymentMethodsRequest: (state, action: PayloadAction<CurrentFormulaPropType>) => {
       state.paymentMethodsRequest = action.payload;
     },
-    updatePaymentsRequest: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
+    updatePaymentsRequest: (state, action: PayloadAction<CurrentFormulaPropType>) => {
       state.paymentsRequest = action.payload;
     },
-    updatePaymentsDetailsRequest: (
-      state,
-      action: PayloadAction<CurrentFormulaPropType>
-    ) => {
+    updatePaymentsDetailsRequest: (state, action: PayloadAction<CurrentFormulaPropType>) => {
       state.paymentsDetailsRequest = action.payload;
     },
     clearOnDeckInfo: (state) => {

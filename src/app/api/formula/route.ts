@@ -2,8 +2,10 @@ import dbConnect from "@/lib/db";
 import Formula from "@/schema/Formula";
 import { NextResponse } from "next/server";
 
+const BASE_URL = process.env.NEXT_PUBLIC_URL;
+
 //TODO: Move to constants file or configuration file
-const STARTER_FORMULA_SLUG = "asdf-formula";
+const STARTER_FORMULA_SLUG = "starter-formula";
 
 export async function GET(request: Request) {
   console.log("Request to GET Starter Formula");
@@ -44,6 +46,7 @@ export async function POST(request: Request) {
       stringifiedConfiguration: requestBody.stringifiedConfiguration,
       description: requestBody.description,
       slug: requestBody.slug,
+      link: `${BASE_URL}/${requestBody.slug}`,
       // createdBy: "testUser",
     });
 
