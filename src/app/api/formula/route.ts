@@ -22,11 +22,11 @@ export async function GET(request: Request) {
 
     console.log("Starter Formula retrieved");
 
-    return NextResponse.json({ message: "starter formula retrieved", data: formula }, { status: 200 });
+    return NextResponse.json({ message: "starter formula retrieved", success: true, data: formula }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { message: "An error occurred when retrieving the formula", error: error },
+      { message: "An error occurred when retrieving the formula", success: false, error: error },
       { status: 500 }
     );
   }
@@ -52,12 +52,12 @@ export async function POST(request: Request) {
     });
 
     console.log(`Formula inserted with id: ${insertResult._id}`);
-    return NextResponse.json({ message: "formula inserted", data: insertResult }, { status: 201 });
+    return NextResponse.json({ message: "formula inserted", success: true, data: insertResult }, { status: 201 });
   } catch (error) {
     console.error("Error inserting formula", error);
 
     return NextResponse.json(
-      { message: "An error occurred when inserting the formula", error: error },
+      { message: "An error occurred when inserting the formula", success: false, error: error },
       { status: 500 }
     );
   }
