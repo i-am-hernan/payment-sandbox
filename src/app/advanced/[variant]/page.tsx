@@ -7,7 +7,7 @@ import CSS from "@/components/custom/sandbox/tabs/css";
 import Html from "@/components/custom/sandbox/tabs/html";
 import JS from "@/components/custom/sandbox/tabs/js";
 import Sandbox from "@/components/custom/sandbox/layout/sandbox";
-import Tabs from "@/components/custom/sandbox/layout/tabs";
+import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import Sidebar from "@/components/custom/sandbox/navbars/sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/topbar";
 import Events from "@/components/custom/sandbox/tabs/events";
@@ -35,41 +35,48 @@ const Page: any = () => {
 
   let titles: any = [];
   let contents: any = [];
+  let values: any = [];
 
   if (section === "client") {
-    titles.push(
+    titles = [
       "checkout.html",
       "style.css",
-      `${variant ? variant : "checkout"}.js`
-    );
-    contents.push(
-      <Html key={"HTML"} />,
-      <CSS key={"CSS"} />,
-      <JS key={"JS"} />
-    );
+      `${variant ? variant : "checkout"}.js`,
+    ];
+    contents = [<Html key={"HTML"} />, <CSS key={"CSS"} />, <JS key={"JS"} />];
+    values = ["html", "css", "js"];
   } else if (section === "server") {
-    titles.push(
+    titles = [
       `/v${checkoutAPIVersion}/paymentMethods`,
       `/v${checkoutAPIVersion}/payments`,
-      `/v${checkoutAPIVersion}/payment/details`
-    );
-    contents.push(
+      `/v${checkoutAPIVersion}/payment/details`,
+    ];
+    contents = [
       <Api key="paymentmethods" schema="PaymentMethodsRequest" />,
       <Api key="payments" schema="PaymentRequest" />,
-      <Api key="paymentdetails" schema="PaymentDetailsRequest" />
-    );
+      <Api key="paymentdetails" schema="PaymentDetailsRequest" />,
+    ];
+
+    values = ["paymentmethods", "payments", "paymentdetails"];
   } else if (section === "webhooks") {
-    titles.push("Events");
-    contents.push(<Events key={"Events"} />);
+    titles = ["Events"];
+    contents = [<Events key={"Events"} />];
+    values = ["events"];
   }
-  console.log("rendering page.tsx");
-  console.log("run", run);
+
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
       <Sandbox
-        main={<Tabs titles={titles} contents={contents} key={section} />}
+        main={
+          <SandBoxTabs
+            titles={titles}
+            contents={contents}
+            key={section}
+            values={values}
+          />
+        }
         topRight={<ManageAdvanceComponent key={run ? "run" : "default"} />}
         bottomRight={
           <CodeEditor code={JSON.stringify(variantState)} type="json" />
