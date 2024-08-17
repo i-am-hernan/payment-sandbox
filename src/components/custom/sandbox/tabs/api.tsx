@@ -68,7 +68,7 @@ const Api = (props: any) => {
             <AccordionTrigger className="px-1 py-3">
               <p className="text-sm">{"Checkout API"}</p>
             </AccordionTrigger>
-            <AccordionContent className="px-2">
+            <AccordionContent>
               <p className="text-xs pb-2 px-1">
                 Find the release notes for the version you are using here.
               </p>
