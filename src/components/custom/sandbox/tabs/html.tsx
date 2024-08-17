@@ -50,7 +50,7 @@ const Html = () => {
           defaultValue="select-version"
         >
           <AccordionItem value="select-version" className="px-3">
-            <AccordionTrigger className="px-1">
+            <AccordionTrigger className="px-1 py-3">
               <p className="text-sm">{"Adyen Web"}</p>
             </AccordionTrigger>
             <AccordionContent>

@@ -43,8 +43,6 @@ const Api = (props: any) => {
           ? paymentsDetailsRequest
           : null;
 
-  console.log("Api -> request", request);
-
   if (!properties && !request) {
     return <div>loading...</div>;
   }
@@ -67,7 +65,7 @@ const Api = (props: any) => {
             <span className="border-r-2 px-2 py-[1px]">version</span>
           </p>
           <AccordionItem value="select-version" className="border-b-0 px-3">
-            <AccordionTrigger className="px-1">
+            <AccordionTrigger className="px-1 py-3">
               <p className="text-sm">{"Checkout API"}</p>
             </AccordionTrigger>
             <AccordionContent className="px-2">
@@ -87,7 +85,7 @@ const Api = (props: any) => {
               />
             </AccordionContent>
           </AccordionItem>
-          <p className="border-t-2 border-b-2 flex text-sm">
+          <p className="border-t-2 border-b-2 flex text-sm sticky top-0 bg-white z-10">
             <span className="border-r-2 px-2 py-[1px]">parameters</span>
           </p>
           {properties &&
@@ -97,7 +95,7 @@ const Api = (props: any) => {
                 value={property}
                 className="hover:no-underline px-3"
               >
-                <AccordionTrigger className="px-1">
+                <AccordionTrigger className="px-1 py-3">
                   <p className="text-sm">{property}</p>
                   <p className="font-mono text-xs flex-grow text-left pl-2">
                     {properties[property].type}
