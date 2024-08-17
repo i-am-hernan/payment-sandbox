@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
-import { githubLight } from "@uiw/codemirror-theme-github";
 import { EditorView } from "@codemirror/view";
-import * as prettier from "prettier/standalone";
+import { githubLight } from "@uiw/codemirror-theme-github";
+import CodeMirror from "@uiw/react-codemirror";
 import * as parserBabel from "prettier/parser-babel";
 import * as parserHtml from "prettier/parser-html";
 import * as prettierPluginEstree from "prettier/plugins/estree";
-import { html } from "@codemirror/lang-html";
+import * as prettier from "prettier/standalone";
+import { useEffect, useState } from "react";
 
 const CodeEditor = (props: any) => {
   const { code, type } = props;

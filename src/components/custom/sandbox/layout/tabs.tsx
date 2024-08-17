@@ -11,6 +11,8 @@ interface TabsProps {
 }
 
 const Tabs = ({ titles: Titles, contents: Contents }: TabsProps) => {
+  
+  console.log("Tabs -> Contents", Contents);
   return (
     <ShadTabs defaultValue={Titles[0]} className="w-full h-full flex flex-col">
       <span className="border-b-2 flex">
@@ -29,7 +31,7 @@ const Tabs = ({ titles: Titles, contents: Contents }: TabsProps) => {
           <TabsContent
             key={index}
             value={Titles[index]}
-            className="w-full flex-grow"
+            className="w-full flex-grow overflow-y-scroll"
           >
             {content}
           </TabsContent>

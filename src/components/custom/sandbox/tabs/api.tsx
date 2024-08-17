@@ -1,4 +1,6 @@
+import { APIVERSIONS } from "@/assets/constants/constants";
 import CodeEditor from "@/components/custom/sandbox/editors/codeEditor";
+import Enum from "@/components/custom/sandbox/editors/Enum";
 import {
   Accordion,
   AccordionContent,
@@ -12,59 +14,106 @@ import {
 } from "@/components/ui/resizable";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useParams } from "next/navigation";
-import { check } from "prettier";
 import { useDispatch, useSelector } from "react-redux";
+import { parseStringWithLinks } from "@/components/custom/utils/utilsComponents";
 
-const API = () => {
-  const { paymentMethodsRequest } = useSelector(
-    (state: RootState) => state.formula
-  );
+const { updateCheckoutAPIVersion } = formulaActions;
+
+const Api = (props: any) => {
+  const { schema } = props;
+  const {
+    paymentMethodsRequest,
+    paymentsRequest,
+    paymentsDetailsRequest,
+    checkoutAPIVersion,
+  } = useSelector((state: RootState) => state.formula);
+
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
-  const paymentMethodsRequestSpecs = checkoutApi
-    ? checkoutApi.components.schemas.PaymentMethodsRequest
-    : null;
-  const dispatch = useDispatch();
-  const parameterTitle = "Adyen Web Version";
+  const properties =
+    checkoutApi?.components?.schemas?.[schema]?.properties ?? null;
 
+  const dispatch = useDispatch();
+
+  const request =
+    schema === "PaymentMethodsRequest"
+      ? paymentMethodsRequest
+      : schema === "PaymentRequest"
+        ? paymentsRequest
+        : paymentsDetailsRequest
+          ? paymentsDetailsRequest
+          : null;
+
+  console.log("Api -> request", request);
+
+  if (!properties && !request) {
+    return <div>loading...</div>;
+  }
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block"
+      className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel defaultSize={60} className="sm:flex">
-        <CodeEditor type="json" code={JSON.stringify(paymentMethodsRequest)} />
+        <CodeEditor type="json" code={JSON.stringify(request)} />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={40}>
-        <p className="border-b-2 flex text-sm">
-          <span className="border-r-2 px-2 py-[1px]">parameters</span>
-        </p>
+      <ResizablePanel defaultSize={40} className="!overflow-y-scroll">
         <Accordion
           type="multiple"
           className="w-full"
-          defaultValue={["select-version"]}
+          defaultValue={Object.keys(request)}
         >
-          <AccordionItem value="select-version">
-            <AccordionTrigger className="px-3">
-              <p className="text-sm">{parameterTitle}</p>
+          <p className="border-b-2 flex text-sm">
+            <span className="border-r-2 px-2 py-[1px]">version</span>
+          </p>
+          <AccordionItem value="select-version" className="border-b-0 px-3">
+            <AccordionTrigger className="px-1">
+              <p className="text-sm">{"Checkout API"}</p>
             </AccordionTrigger>
-            <AccordionContent>lorem ipsum</AccordionContent>
+            <AccordionContent className="px-2">
+              <p className="text-xs pb-2 px-1">
+                Find the release notes for the version you are using here.
+              </p>
+              <Enum
+                value={checkoutAPIVersion}
+                set={APIVERSIONS}
+                title="Checkout API Version"
+                onChange={(value: any) => {
+                  const { adyenWebVersion } = value;
+                  if (adyenWebVersion) {
+                    dispatch(updateCheckoutAPIVersion(adyenWebVersion));
+                  }
+                }}
+              />
+            </AccordionContent>
           </AccordionItem>
-          {paymentMethodsRequestSpecs && Object.keys(paymentMethodsRequestSpecs.properties).map((property: any) => (
-            <AccordionItem key={property} value={property}>
-              <AccordionTrigger className="px-3">
-                <p className="text-sm">{property}</p>
-              </AccordionTrigger>
-              <AccordionContent>
-                <p>lorem ipsum</p>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
+          <p className="border-t-2 border-b-2 flex text-sm">
+            <span className="border-r-2 px-2 py-[1px]">parameters</span>
+          </p>
+          {properties &&
+            Object.keys(properties).map((property: any) => (
+              <AccordionItem
+                key={property}
+                value={property}
+                className="hover:no-underline px-3"
+              >
+                <AccordionTrigger className="px-1">
+                  <p className="text-sm">{property}</p>
+                  <p className="font-mono text-xs flex-grow text-left pl-2">
+                    {properties[property].type}
+                  </p>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-xs pb-2 px-1">
+                    {parseStringWithLinks(properties[property].description)}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
         </Accordion>
       </ResizablePanel>
     </ResizablePanelGroup>
   );
 };
 
-export default API;
+export default Api;

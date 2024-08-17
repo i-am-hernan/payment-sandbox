@@ -2,7 +2,7 @@
 
 import CodeEditor from "@/components/custom/sandbox/editors/codeEditor";
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
-import API from "@/components/custom/sandbox/tabs/api";
+import Api from "@/components/custom/sandbox/tabs/api";
 import CSS from "@/components/custom/sandbox/tabs/css";
 import Html from "@/components/custom/sandbox/tabs/html";
 import JS from "@/components/custom/sandbox/tabs/js";
@@ -54,15 +54,16 @@ const Page: any = () => {
       `/v${checkoutAPIVersion}/payment/details`
     );
     contents.push(
-      <API key={"paymentmethods"} />,
-      <API key={"payments"} />,
-      <API key={"paymentdetails"} />
+      <Api key="paymentmethods" schema="PaymentMethodsRequest" />,
+      <Api key="payments" schema="PaymentRequest" />,
+      <Api key="paymentdetails" schema="PaymentDetailsRequest" />
     );
   } else if (section === "webhooks") {
     titles.push("Events");
     contents.push(<Events key={"Events"} />);
   }
-
+  console.log("rendering page.tsx");
+  console.log("run", run);
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />

@@ -92,7 +92,16 @@ const formulaSlice = createSlice({
       state,
       action: PayloadAction<"67" | "68" | "69" | "70">
     ) => {
-      state.unsavedChanges += 1;
+      // what if action.payload !== state.checkoutAPIVersion
+      // and we already incremented unsavedChanges?
+      // Then we dont want to increment again
+      // We need to maintain a list of changes per tab, then sum the total to display
+      if (state.build.checkoutAPIVersion !== action.payload) {
+        state.unsavedChanges += 1;
+      } else {
+        state.unsavedChanges -= 1;
+      }
+
       state.checkoutAPIVersion = action.payload;
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
@@ -144,7 +153,7 @@ const formulaSlice = createSlice({
     },
     clearOnDeckInfo: (state) => {
       const lastBuild = state.build;
-      return { ...lastBuild, build: lastBuild, unsavedChanges: 0 };
+      return { ...lastBuild, build: lastBuild, run: state.run, unsavedChanges: 0 };
     },
   },
 });

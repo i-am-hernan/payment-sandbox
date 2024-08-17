@@ -26,12 +26,11 @@ const Html = () => {
     variant: string;
   }>();
   const dispatch = useDispatch();
-  const parameterTitle = "Adyen Web Version";
 
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block"
+      className="bg-background inline-block overflow-y-scroll"
     >
       <ResizablePanel defaultSize={60} className="sm:flex">
         <CodeEditor
@@ -42,7 +41,7 @@ const Html = () => {
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={40}>
         <p className="border-b-2 flex text-sm">
-          <span className="border-r-2 px-2 py-[1px]">parameters</span>
+          <span className="border-r-2 px-2 py-[1px]">version</span>
         </p>
         <Accordion
           type="single"
@@ -50,15 +49,18 @@ const Html = () => {
           className="w-full"
           defaultValue="select-version"
         >
-          <AccordionItem value="select-version">
-            <AccordionTrigger className="px-3">
-              <p className="text-sm">{parameterTitle}</p>
+          <AccordionItem value="select-version" className="px-3">
+            <AccordionTrigger className="px-1">
+              <p className="text-sm">{"Adyen Web"}</p>
             </AccordionTrigger>
             <AccordionContent>
+              <p className="text-xs pb-3 px-1">
+                Find the release notes for the version you are using here.
+              </p>
               <Enum
-                version={adyenWebVersion}
-                versions={WEBVERSIONS}
-                versionTitle={parameterTitle}
+                value={adyenWebVersion}
+                set={WEBVERSIONS}
+                title="Adyen Web"
                 onChange={(value: any) => {
                   const { adyenWebVersion } = value;
                   if (adyenWebVersion) {

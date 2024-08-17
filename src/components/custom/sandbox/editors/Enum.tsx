@@ -8,36 +8,31 @@ import {
 } from "@/components/ui/select";
 
 const Enum = (props: any) => {
-  const { versionTitle, version, versions, onChange } = props;
+  const { title, value, set, onChange } = props;
 
   return (
-    <div>
-      <div className="px-2">
-        <p className="text-sm pb-3 pl-1">
-          Find the release notes for the version you are using here.
-        </p>
-        <Select
-          value={version}
-          onValueChange={(value) => {
-            onChange({
-              adyenWebVersion: value,
-            });
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={versionTitle} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {versions.map((item: string) => (
-                <SelectItem key={item} value={item}>
-                  {item}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="p-1">
+      <Select
+        value={value}
+        onValueChange={(value) => {
+          onChange({
+            adyenWebVersion: value,
+          });
+        }}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder={title} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {set.map((item: string) => (
+              <SelectItem key={item} value={item}>
+                {item}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
   );
 };
