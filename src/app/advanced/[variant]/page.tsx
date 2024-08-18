@@ -23,8 +23,7 @@ interface SectionType {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
-  const { run, build } = useSelector((state: RootState) => state.formula);
-  const { checkoutAPIVersion } = build;
+  const { run, build, checkoutAPIVersion } = useSelector((state: RootState) => state.formula);
   const { variantState } = useSelector(
     (state: RootState) => state.adyenVariant
   );
@@ -63,7 +62,7 @@ const Page: any = () => {
     contents = [<Events key={"Events"} />];
     values = ["events"];
   }
-
+  console.log('checkoutAPIVersion',checkoutAPIVersion)
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />
