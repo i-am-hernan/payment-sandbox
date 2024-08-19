@@ -104,7 +104,7 @@ const Api = (props: any) => {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-xs pb-2 px-1">
-                  Find the release notes for the version you are using here.
+                  {`Change the version of ${api} to test different scenarios.`}
                 </p>
                 <Enum
                   value={checkoutAPIVersion[api]}
