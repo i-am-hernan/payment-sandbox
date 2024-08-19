@@ -34,11 +34,6 @@ export const ManageAdvanceComponent = () => {
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
 
-  const { data: apiSpecsData, error: apiSpecsError } = useApi(
-    `api/specs/checkout/CheckoutService-v${checkoutAPIVersion}`,
-    "GET"
-  );
-
   const { data: sdkSpecsData, error: sdkSpecsError } = useApi(
     `api/specs/adyen-web/WebComponents-v${adyenWebVersion.replaceAll(".", "_")}`,
     "GET"
@@ -64,14 +59,7 @@ export const ManageAdvanceComponent = () => {
         })
       );
     }
-    if (apiSpecsData) {
-      dispatch(
-        updateSpecs({
-          checkoutApi: apiSpecsData,
-        })
-      );
-    }
-  }, [redirectResultQueryParameter, isRedirect, sdkSpecsData, apiSpecsData]);
+  }, [redirectResultQueryParameter, isRedirect, sdkSpecsData]);
 
   if (loadingAdyenScript || !variant) {
     return (
@@ -85,7 +73,7 @@ export const ManageAdvanceComponent = () => {
     );
   }
 
-  if (adyenScriptError || apiSpecsError || sdkSpecsError) {
+  if (adyenScriptError || sdkSpecsError) {
     return <div>Error</div>;
   }
 

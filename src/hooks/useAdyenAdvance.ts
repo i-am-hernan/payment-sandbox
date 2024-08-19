@@ -7,7 +7,11 @@ interface AdyenAdvanceHook {
 
 export const useAdyenAdvance = (
   txVariant: string,
-  checkoutAPIVersion: string,
+  checkoutAPIVersion: {
+    paymentMethods: string;
+    payments: string;
+    paymentDetails: string;
+  },
   checkoutConfiguration: any,
   txVariantConfiguration: any,
   paymentMethodsResponse: any,
@@ -27,7 +31,7 @@ export const useAdyenAdvance = (
       },
       onAdditionalDetails: async (state: any, dropin: any) => {
         const response = await fetch(
-          `/api/checkout/v${checkoutAPIVersion}/payments/details`,
+          `/api/checkout/v${checkoutAPIVersion.paymentDetails}/payments/details`,
           {
             method: "POST",
             headers: {
@@ -50,7 +54,7 @@ export const useAdyenAdvance = (
       },
       onSubmit: async (state: any, dropin: any) => {
         const response = await fetch(
-          `/api/checkout/v${checkoutAPIVersion}/payments`,
+          `/api/checkout/v${checkoutAPIVersion.payments}/payments`,
           {
             method: "POST",
             headers: {

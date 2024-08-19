@@ -18,10 +18,10 @@ import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-const { updateAdyenWebVersion } = formulaActions;
+const { updateAdyenWebVersion, addUnsavedChanges } = formulaActions;
 
 const Html = () => {
-  const { adyenWebVersion } = useSelector((state: RootState) => state.formula);
+  const { adyenWebVersion, build } = useSelector((state: RootState) => state.formula);
   const { variant } = useParams<{
     variant: string;
   }>();
@@ -62,10 +62,10 @@ const Html = () => {
                 set={WEBVERSIONS}
                 title="Adyen Web"
                 onChange={(value: any) => {
-                  const { adyenWebVersion } = value;
-                  if (adyenWebVersion) {
-                    dispatch(updateAdyenWebVersion(adyenWebVersion));
-                  }
+                  dispatch(
+                    addUnsavedChanges({ html: build.adyenWebVersion !== value })
+                  );
+                  dispatch(updateAdyenWebVersion(value));
                 }}
               />
             </AccordionContent>

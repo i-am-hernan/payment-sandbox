@@ -25,7 +25,7 @@ export const InitAdvanceComponent = (props: any) => {
     loading: loadingPaymentMethods,
     error: paymentMethodsError,
   } = useApi(
-    `api/checkout/v${checkoutAPIVersion}/paymentMethods`,
+    `api/checkout/v${checkoutAPIVersion.paymentMethods}/paymentMethods`,
     "POST",
     paymentMethodsRequest
   );

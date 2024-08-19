@@ -9,6 +9,9 @@ const { updateRun, updateIsRedirect, clearOnDeckInfo } = formulaActions;
 const Topbar = (props: any) => {
   const { unsavedChanges } = useSelector((state: RootState) => state.formula);
   const dispatch = useDispatch();
+  const totalUnsavedChanges = Object.values(unsavedChanges).filter(
+    (value) => value
+  ).length;
 
   return (
     <span
@@ -17,7 +20,7 @@ const Topbar = (props: any) => {
     >
       <div className="mr-2 relative">
         <span className="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs rounded-full">
-          {unsavedChanges !== 0 && unsavedChanges}
+          {totalUnsavedChanges !== 0 && totalUnsavedChanges}
         </span>
         <Button
           key="run"

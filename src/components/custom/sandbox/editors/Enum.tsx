@@ -15,9 +15,7 @@ const Enum = (props: any) => {
       <Select
         value={value}
         onValueChange={(value) => {
-          onChange({
-            adyenWebVersion: value,
-          });
+          onChange(value);
         }}
       >
         <SelectTrigger>

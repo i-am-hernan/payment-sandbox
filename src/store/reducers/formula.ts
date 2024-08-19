@@ -8,7 +8,11 @@ export interface FormulaPropType {
 // Define the shape of the state
 export interface Formula {
   checkoutConfiguration: FormulaPropType;
-  checkoutAPIVersion: "67" | "68" | "69" | "70";
+  checkoutAPIVersion: {
+    paymentMethodsVersion: string;
+    paymentsVersion: string;
+    paymentsDetailsVersion: string;
+  };
   adyenWebVersion: string;
   txVariant: string;
   txVariantConfiguration: FormulaPropType;
@@ -18,7 +22,15 @@ export interface Formula {
   paymentsDetailsRequest: FormulaPropType;
   style: FormulaPropType;
   isRedirect: boolean;
-  unsavedChanges: number;
+  unsavedChanges: {
+    html: boolean;
+    style: boolean;
+    js: boolean;
+    paymentMethods: boolean;
+    payments: boolean;
+    paymentDetails: boolean;
+    events: boolean;
+  };
   build: Formula | null;
   run: boolean;
   redirectResult: string | null;
@@ -26,7 +38,11 @@ export interface Formula {
 
 // Define the initial state
 const initialState: FormulaPropType = {
-  checkoutAPIVersion: "70",
+  checkoutAPIVersion: {
+    paymentMethods: "70",
+    payments: "70",
+    paymentDetails: "70",
+  },
   adyenWebVersion: "5.66.1",
   checkoutConfiguration: {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
@@ -52,7 +68,15 @@ const initialState: FormulaPropType = {
   },
   paymentsDetailsRequest: {},
   style: {},
-  unsavedChanges: 0,
+  unsavedChanges: {
+    html: false,
+    style: false,
+    js: false,
+    paymentMethods: false,
+    payments: false,
+    paymentDetails: false,
+    events: false,
+  },
   isRedirect: false,
   build: null,
   run: true,
@@ -68,7 +92,6 @@ const formulaSlice = createSlice({
   initialState,
   reducers: {
     updateRun: (state) => {
-      state.unsavedChanges = 0;
       state.build = { ...state };
       state.run = !state.run;
     },
@@ -79,38 +102,32 @@ const formulaSlice = createSlice({
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.unsavedChanges += 1;
       state.checkoutConfiguration = action.payload;
     },
-    addUnsavedChanges: (state) => {
-      state.unsavedChanges += 1;
+    addUnsavedChanges: (state, action: PayloadAction<any>) => {
+      state.unsavedChanges = {
+        ...state.unsavedChanges,
+        ...action.payload,
+      };
     },
     resetUnsavedChanges: (state) => {
-      state.unsavedChanges = 0;
+      state.unsavedChanges = {
+        html: false,
+        style: false,
+        js: false,
+        paymentMethods: false,
+        payments: false,
+        paymentDetails: false,
+        events: false,
+      };
     },
-    updateCheckoutAPIVersion: (
-      state,
-      action: PayloadAction<"67" | "68" | "69" | "70">
-    ) => {
-      // what if action.payload !== state.checkoutAPIVersion
-      // and we already incremented unsavedChanges?
-      // Then we dont want to increment again
-      // We need to maintain a list of changes per tab, then sum the total to display
-      if (state.build.checkoutAPIVersion !== action.payload) {
-        state.unsavedChanges += 1;
-      } else {
-        state.unsavedChanges -= 1;
-      }
-
-      state.checkoutAPIVersion = action.payload;
+    updateCheckoutAPIVersion: (state, action: PayloadAction<any>) => {
+      state.checkoutAPIVersion = {
+        ...state.checkoutAPIVersion,
+        ...action.payload,
+      };
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
-      if (state.build.adyenWebVersion !== action.payload) {
-        state.unsavedChanges += 1;
-      } else {
-        state.unsavedChanges -= 1;
-      }
-
       state.adyenWebVersion = action.payload;
     },
     updateIsRedirect: (state, action: PayloadAction<boolean>) => {
@@ -126,34 +143,42 @@ const formulaSlice = createSlice({
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.unsavedChanges += 1;
       state.txVariantConfiguration = action.payload;
     },
     updateSessionsRequest: (state, action: PayloadAction<FormulaPropType>) => {
-      state.unsavedChanges += 1;
       state.sessionsRequest = action.payload;
     },
     updatePaymentMethodsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.unsavedChanges += 1;
       state.paymentMethodsRequest = action.payload;
     },
     updatePaymentsRequest: (state, action: PayloadAction<FormulaPropType>) => {
-      state.unsavedChanges += 1;
       state.paymentsRequest = action.payload;
     },
     updatePaymentsDetailsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.unsavedChanges += 1;
       state.paymentsDetailsRequest = action.payload;
     },
     clearOnDeckInfo: (state) => {
       const lastBuild = state.build;
-      return { ...lastBuild, build: lastBuild, run: state.run, unsavedChanges: 0 };
+      return {
+        ...lastBuild,
+        build: lastBuild,
+        run: state.run,
+        unsavedChanges: {
+          html: false,
+          style: false,
+          js: false,
+          paymentMethods: false,
+          payments: false,
+          paymentDetails: false,
+          events: false,
+        },
+      };
     },
   },
 });

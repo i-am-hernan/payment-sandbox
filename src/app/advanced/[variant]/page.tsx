@@ -23,7 +23,9 @@ interface SectionType {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
-  const { run, build, checkoutAPIVersion } = useSelector((state: RootState) => state.formula);
+  const { run, checkoutAPIVersion } = useSelector(
+    (state: RootState) => state.formula
+  );
   const { variantState } = useSelector(
     (state: RootState) => state.adyenVariant
   );
@@ -31,6 +33,9 @@ const Page: any = () => {
   const { variant } = useParams<{
     variant: string;
   }>();
+
+  const { paymentMethods, payments, paymentDetails } =
+    checkoutAPIVersion;
 
   let titles: any = [];
   let contents: any = [];
@@ -46,14 +51,14 @@ const Page: any = () => {
     values = ["html", "css", "js"];
   } else if (section === "server") {
     titles = [
-      `/v${checkoutAPIVersion}/paymentMethods`,
-      `/v${checkoutAPIVersion}/payments`,
-      `/v${checkoutAPIVersion}/payment/details`,
+      `/v${paymentMethods}/paymentMethods`,
+      `/v${payments}/payments`,
+      `/v${paymentDetails}/payment/details`,
     ];
     contents = [
-      <Api key="paymentmethods" schema="PaymentMethodsRequest" />,
-      <Api key="payments" schema="PaymentRequest" />,
-      <Api key="paymentdetails" schema="PaymentDetailsRequest" />,
+      <Api key="paymentMethods" api="paymentMethods" schema="PaymentMethodsRequest" />,
+      <Api key="payments" api="payments" schema="PaymentRequest" />,
+      <Api key="paymentDetails" api="paymentDetails" schema="PaymentDetailsRequest" />,
     ];
 
     values = ["paymentmethods", "payments", "paymentdetails"];
@@ -62,7 +67,6 @@ const Page: any = () => {
     contents = [<Events key={"Events"} />];
     values = ["events"];
   }
-  console.log('checkoutAPIVersion',checkoutAPIVersion)
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />
