@@ -32,10 +32,25 @@ const initialState: CurrentFormula = {
   checkoutConfiguration: {
     clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
     environment: "test",
+    // TODO: should we include all the required fields in this document:
+    // https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Web&integration=Drop-in&version=5.67.1&tab=1#add-drop-in
   },
   txVariant: "",
   txVariantConfiguration: {},
-  sessionsRequest: {},
+  sessionsRequest: {
+    countryCode: "NL",
+    amount: {
+      value: 10000,
+      currency: "EUR",
+    },
+    channel: "Web",
+    //TODO: Refactor this
+    returnUrl: "http://localhost:3000/sessions/dropin",
+    reference: "reference",
+    shopperLocale: "en_US",
+    //TODO: Fix this
+    merchantAccount: "SalespromptECOM",
+  },
   paymentMethodsRequest: {
     shopperReference: "Hernan",
   },

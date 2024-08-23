@@ -23,9 +23,7 @@ interface SectionType {
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
 
-  const { runBuild, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.currentFormula
-  );
+  const { runBuild, checkoutAPIVersion } = useSelector((state: RootState) => state.currentFormula);
 
   const { variant } = useParams<{
     variant: string;
@@ -35,23 +33,16 @@ const Page: any = () => {
   let contents: any = [];
 
   if (section === "client") {
-    titles.push(`${variant ? variant : 'checkout'}.js`, "style.css", "checkout.html");
-    contents.push(
-      <JS key={"JS"} />,
-      <CSS key={"CSS"} />,
-      <HTML key={"HTML"} />
-    );
+    titles.push(`${variant ? variant : "checkout"}.js`, "style.css", "checkout.html");
+    contents.push(<JS key={"JS"} />, <CSS key={"CSS"} />, <HTML key={"HTML"} />);
   } else if (section === "server") {
+    //TODO: Consider making this a mapping Table that can be used by the Custom API Component
     titles.push(
       `/v${checkoutAPIVersion}/paymentMethods`,
       `/v${checkoutAPIVersion}/payments`,
       `/v${checkoutAPIVersion}/payment/details`
     );
-    contents.push(
-      <API key={"paymentmethods"} />,
-      <API key={"payments"} />,
-      <API key={"paymentdetails"} />
-    );
+    contents.push(<API key={"paymentmethods"} />, <API key={"payments"} />, <API key={"paymentdetails"} />);
   } else if (section === "webhooks") {
     titles.push("Events");
     contents.push(<Events key={"Events"} />);
@@ -63,9 +54,7 @@ const Page: any = () => {
       <Topbar />
       <SandboxLayout
         main={<MainTabs titles={titles} contents={contents} key={section} />}
-        topRight={
-          <ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />
-        }
+        topRight={<ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />}
         bottomRight={<AdyenState />}
       />
     </div>

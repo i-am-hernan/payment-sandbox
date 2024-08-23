@@ -8,7 +8,8 @@ interface AdyenAdvanceHook {
 export const useAdyenAdvance = (
   txVariant: string,
   checkoutAPIVersion: string,
-  checkoutConfiguration: any,
+  checkoutConfiguration: any, //TODO: Strongly Type this in currentFormula
+  // It should contain clientKey and environment
   txVariantConfiguration: any,
   paymentMethodsResponse: any,
   paymentsRequest: any,
@@ -26,19 +27,16 @@ export const useAdyenAdvance = (
         setError(error);
       },
       onAdditionalDetails: async (state: any, dropin: any) => {
-        const response = await fetch(
-          `/api/checkout/v${checkoutAPIVersion}/payments/details`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...paymentsDetailsRequest,
-              details: state.data.details,
-            }),
-          }
-        );
+        const response = await fetch(`/api/checkout/v${checkoutAPIVersion}/payments/details`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...paymentsDetailsRequest,
+            details: state.data.details,
+          }),
+        });
         const paymentDetailsResponse = await response.json();
         if (paymentDetailsResponse.statusCode >= 400) {
           setError(paymentDetailsResponse);
@@ -49,19 +47,16 @@ export const useAdyenAdvance = (
         }
       },
       onSubmit: async (state: any, dropin: any) => {
-        const response = await fetch(
-          `/api/checkout/v${checkoutAPIVersion}/payments`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...paymentsRequest,
-              ...state.data,
-            }),
-          }
-        );
+        const response = await fetch(`/api/checkout/v${checkoutAPIVersion}/payments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...paymentsRequest,
+            ...state.data,
+          }),
+        });
         const paymentResponse = await response.json();
         if (paymentResponse.status >= 400) {
           setError(paymentResponse);

@@ -23,10 +23,7 @@ const variantSlice = createSlice({
     updateAdyenVariant: (state, action: PayloadAction<Partial<AdyenVariant>>) => {
       return { ...state, ...action.payload };
     },
-    updateVariantState: (
-      state,
-      action: PayloadAction<AdyenVariantPropType>
-    ) => {
+    updateVariantState: (state, action: PayloadAction<AdyenVariantPropType>) => {
       state.variantState = action.payload;
     },
     clearAdyenVariant: () => {
