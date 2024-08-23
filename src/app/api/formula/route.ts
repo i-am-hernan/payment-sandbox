@@ -2,6 +2,7 @@ import dbConnect from "@/lib/db";
 import Formula from "@/schema/Formula";
 import { NextResponse } from "next/server";
 
+//TODO: Change to NEXT_PUBLIC_API_URL
 const BASE_URL = process.env.NEXT_PUBLIC_URL;
 
 //TODO: Move to constants file or configuration file
