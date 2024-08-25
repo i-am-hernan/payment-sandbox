@@ -2,7 +2,7 @@
 
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
 import CodeEditor from "@/components/custom/sandbox/editors/CodeEdito";
-import Sandbox from "@/components/custom/sandbox/layout/Sandbo";
+import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";

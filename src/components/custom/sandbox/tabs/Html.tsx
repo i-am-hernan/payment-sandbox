@@ -32,14 +32,14 @@ const Html = () => {
       direction="horizontal"
       className="bg-background inline-block overflow-y-scroll"
     >
-      <ResizablePanel defaultSize={60} className="sm:flex">
+      <ResizablePanel defaultSize={50} className="sm:flex">
         <CodeEditor
           type="html"
           code={createHtmlCode(adyenWebVersion, variant)}
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={40}>
+      <ResizablePanel defaultSize={50}>
         <p className="border-b-2 flex text-sm">
           <span className="border-r-2 px-2 py-[1px]">version</span>
         </p>
