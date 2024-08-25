@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import LoopIcon from "@mui/icons-material/Loop";
 import { RootState } from "@/store/store";
 
-const { updateRun, updateIsRedirect, clearOnDeckInfo } = formulaActions;
+const { updateRun, updateIsRedirect, clearOnDeckInfo, resetUnsavedChanges } =
+  formulaActions;
 
 const Topbar = (props: any) => {
   const { unsavedChanges } = useSelector((state: RootState) => state.formula);
@@ -40,13 +41,17 @@ const Topbar = (props: any) => {
         size="sm"
         className="px-4"
         onClick={() => {
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-          );
+          const clearRedirectInfo = () => {
+            window.history.replaceState(
+              {},
+              document.title,
+              window.location.pathname
+            );
+          };
+          clearRedirectInfo();
           dispatch(updateIsRedirect(false));
           dispatch(updateRun());
+          dispatch(resetUnsavedChanges());
         }}
       >
         Run
