@@ -1,7 +1,7 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
-import CodeEditor from "@/components/custom/sandbox/editors/codeEditor";
+import CodeEditor from "@/components/custom/sandbox/editors/CodeEdito";
 import Enum from "@/components/custom/sandbox/editors/Enum";
-import { parseStringWithLinks } from "@/components/custom/utils/utilsComponents";
+import { parseStringWithLinks } from "@/components/custom/utils/Utils";
 import {
   Accordion,
   AccordionContent,
@@ -44,7 +44,7 @@ const Api = (props: any) => {
     loading: loadingApiSpecData,
     error: apiSpecsError,
   } = useApi(
-    `api/specs/checkout/CheckoutService-v${checkoutAPIVersion[api]}`,
+    `api/specs/checkout/CheckoutService-v${checkoutAPIVersion[api]}.json`,
     "GET"
   );
 

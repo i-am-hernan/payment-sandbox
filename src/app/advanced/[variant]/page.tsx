@@ -1,16 +1,16 @@
 "use client";
 
-import CodeEditor from "@/components/custom/sandbox/editors/codeEditor";
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
-import Api from "@/components/custom/sandbox/tabs/api";
-import CSS from "@/components/custom/sandbox/tabs/css";
-import Html from "@/components/custom/sandbox/tabs/html";
-import JS from "@/components/custom/sandbox/tabs/js";
-import Sandbox from "@/components/custom/sandbox/layout/sandbox";
+import CodeEditor from "@/components/custom/sandbox/editors/CodeEdito";
+import Sandbox from "@/components/custom/sandbox/layout/Sandbo";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
-import Sidebar from "@/components/custom/sandbox/navbars/sidebar";
-import Topbar from "@/components/custom/sandbox/navbars/topbar";
-import Events from "@/components/custom/sandbox/tabs/events";
+import Sidebar from "@/components/custom/sandbox/navbars/Sideba";
+import Topbar from "@/components/custom/sandbox/navbars/Topba";
+import Api from "@/components/custom/sandbox/tabs/Ap";
+import CSS from "@/components/custom/sandbox/tabs/Style";
+import Events from "@/components/custom/sandbox/tabs/Event";
+import Html from "@/components/custom/sandbox/tabs/Htm";
+import JS from "@/components/custom/sandbox/tabs/Script";
 
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
@@ -34,52 +34,65 @@ const Page: any = () => {
     variant: string;
   }>();
 
-  const { paymentMethods, payments, paymentDetails } =
-    checkoutAPIVersion;
+  const {
+    paymentMethods: paymentMethodsAPIVersion,
+    payments: paymentsAPIVersion,
+    paymentDetails: paymentDetailsAPIVersion,
+  } = checkoutAPIVersion;
 
-  let titles: any = [];
-  let contents: any = [];
-  let values: any = [];
+  let tabsMap: any = [];
 
   if (section === "client") {
-    titles = [
-      "checkout.html",
-      "style.css",
-      `${variant ? variant : "checkout"}.js`,
+    tabsMap = [
+      {
+        title: "checkout.html",
+        content: <Html key={"HTML"} />,
+        value: "html",
+      },
+      {
+        title: "style.css",
+        content: <CSS key={"CSS"} />,
+        value: "css",
+      },
+      {
+        title: `${variant ? variant : "checkout"}.js`,
+        content: <JS key={"JS"} />,
+        value: "js",
+      },
     ];
-    contents = [<Html key={"HTML"} />, <CSS key={"CSS"} />, <JS key={"JS"} />];
-    values = ["html", "css", "js"];
   } else if (section === "server") {
-    titles = [
-      `/v${paymentMethods}/paymentMethods`,
-      `/v${payments}/payments`,
-      `/v${paymentDetails}/payment/details`,
+    tabsMap = [
+      {
+        title: `/v${paymentMethodsAPIVersion}/paymentMethods`,
+        content: <Api api="paymentMethods" schema="PaymentMethodsRequest" />,
+        value: "paymentmethods",
+      },
+      {
+        title: `/v${paymentsAPIVersion}/payments`,
+        content: <Api api="payments" schema="PaymentRequest" />,
+        value: "payments",
+      },
+      {
+        title: `/v${paymentDetailsAPIVersion}/payment/details`,
+        content: <Api api="paymentDetails" schema="PaymentDetailsRequest" />,
+        value: "paymentdetails",
+      },
     ];
-    contents = [
-      <Api key="paymentMethods" api="paymentMethods" schema="PaymentMethodsRequest" />,
-      <Api key="payments" api="payments" schema="PaymentRequest" />,
-      <Api key="paymentDetails" api="paymentDetails" schema="PaymentDetailsRequest" />,
-    ];
-
-    values = ["paymentmethods", "payments", "paymentdetails"];
   } else if (section === "webhooks") {
-    titles = ["Events"];
-    contents = [<Events key={"Events"} />];
-    values = ["events"];
+    tabsMap = [
+      {
+        title: "Events",
+        content: <Events key={"Events"} />,
+        value: "events",
+      },
+    ];
   }
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
       <Sandbox
-        main={
-          <SandBoxTabs
-            titles={titles}
-            contents={contents}
-            key={section}
-            values={values}
-          />
-        }
+        main={<SandBoxTabs key={section} tabsMap={tabsMap} />}
         topRight={<ManageAdvanceComponent key={run ? "run" : "default"} />}
         bottomRight={
           <CodeEditor code={JSON.stringify(variantState)} type="json" />

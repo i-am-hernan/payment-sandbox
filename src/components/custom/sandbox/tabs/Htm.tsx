@@ -1,5 +1,5 @@
 import { WEBVERSIONS } from "@/assets/constants/constants";
-import CodeEditor from "@/components/custom/sandbox/editors/codeEditor";
+import CodeEditor from "@/components/custom/sandbox/editors/CodeEdito";
 import Enum from "@/components/custom/sandbox/editors/Enum";
 import {
   Accordion,
