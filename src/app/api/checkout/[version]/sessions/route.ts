@@ -20,6 +20,7 @@ export async function POST(request: Request, { params }: { params: { version: st
     const data = await response.json();
     return Response.json({ ...data });
   } catch (error: any) {
+    // TODO: Let's move this into a Error Handler
     if (error instanceof Response) {
       const data = await error.json();
       return new Response(JSON.stringify(data), {

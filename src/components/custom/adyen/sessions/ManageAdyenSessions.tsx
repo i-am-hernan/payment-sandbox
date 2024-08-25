@@ -8,8 +8,9 @@ import { useParams, useSearchParams } from "next/navigation";
 import { currentFormulaActions } from "@/store/reducers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InitSessionsComponent } from "./InitSessionsComponent";
+import { RedirectSessionsComponent } from "./RedirectSessionsComponent";
 
-const { updateIsRedirect, updateRedirectResult } = currentFormulaActions;
+const { updateIsRedirect, updateRedirectResult, updateSessionId } = currentFormulaActions;
 const { updateVariantState } = adyenVariantActions;
 
 export const ManageAdyenSessions = (props: any) => {
@@ -21,6 +22,7 @@ export const ManageAdyenSessions = (props: any) => {
     sessionsRequest,
     isRedirect,
     redirectResult,
+    sessionId,
   } = useSelector((state: RootState) => state.currentFormula);
 
   const { error: adyenScriptError, loading: loadingAdyenScript } = useAdyenScript(adyenWebVersion);
@@ -30,11 +32,17 @@ export const ManageAdyenSessions = (props: any) => {
   }>();
   const searchParams = useSearchParams();
   const redirectResultQueryParameter = searchParams.get("redirectResult");
+  const sessionIdQueryParameter = searchParams.get("sessionId");
+
+  console.log(`RedirectResult: ${redirectResultQueryParameter}`);
+  console.log(`SessionId: ${sessionIdQueryParameter}`);
 
   if (redirectResultQueryParameter && !isRedirect) {
     dispatch(updateIsRedirect(true));
     //need to remove query path parameters without refreshing
     dispatch(updateRedirectResult(redirectResultQueryParameter));
+    //TODO: I think we also need to update the sessionId in teh Redux State?
+    dispatch(updateSessionId(sessionIdQueryParameter));
   }
 
   if (loadingAdyenScript || !variant) {
@@ -56,6 +64,7 @@ export const ManageAdyenSessions = (props: any) => {
 
   return (
     <div>
+      {/* Non Redirect Handler */}
       {!isRedirect && (
         <InitSessionsComponent
           checkoutAPIVersion={checkoutAPIVersion}
@@ -68,20 +77,24 @@ export const ManageAdyenSessions = (props: any) => {
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}
           sessionsRequest={sessionsRequest}
-          //   paymentMethodsRequest={paymentMethodsRequest}
-          //   paymentsRequest={paymentsRequest}
-          //   paymentsDetailsRequest={paymentsDetailsRequest}
         />
       )}
 
-      {/* {isRedirect && redirectResult && (
-        // <RedirectSessionsComponent
-        //   variant={variant}
-        //   redirectResult={redirectResult}
-        //   checkoutAPIVersion={checkoutAPIVersion}
-        // //   paymentsDetailsRequest={paymentsDetailsRequest}
-        // />
-      )} */}
+      {/*  Redirect Handler */}
+      {isRedirect && redirectResult && (
+        <RedirectSessionsComponent
+          checkoutAPIVersion={checkoutAPIVersion}
+          checkoutConfiguration={{
+            ...checkoutConfiguration,
+            onChange: (state: any) => {
+              dispatch(updateVariantState(state));
+            },
+          }}
+          variant={variant}
+          redirectResult={redirectResult}
+          sessionId={sessionId}
+        />
+      )}
     </div>
   );
 };

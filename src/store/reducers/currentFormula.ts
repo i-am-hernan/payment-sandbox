@@ -22,7 +22,10 @@ export interface CurrentFormula {
   lastBuild: [CurrentFormula] | null;
   runBuild: boolean;
   redirectResult: string | null;
+  sessionId: string | null;
 }
+
+// TODO: Get the Initial State from the Formula
 
 // Define the initial state
 const initialState: CurrentFormula = {
@@ -45,7 +48,7 @@ const initialState: CurrentFormula = {
     },
     channel: "Web",
     //TODO: Refactor this
-    returnUrl: "http://localhost:3000/sessions/dropin",
+    returnUrl: "http://localhost:3000/sessions/ideal",
     reference: "reference",
     shopperLocale: "en_US",
     //TODO: Fix this
@@ -73,6 +76,7 @@ const initialState: CurrentFormula = {
   lastBuild: null,
   runBuild: true,
   redirectResult: null,
+  sessionId: null,
 };
 
 // Create the slice with typed reducers
@@ -106,6 +110,10 @@ const formulaSlice = createSlice({
     },
     updateRedirectResult: (state, action: PayloadAction<string>) => {
       state.redirectResult = action.payload;
+    },
+    //TODO: Removing this null gives me errors. Fix the type here.
+    updateSessionId: (state, action: PayloadAction<string | null>) => {
+      state.sessionId = action.payload;
     },
     updateTxVariant: (state, action: PayloadAction<string>) => {
       state.txVariant = action.payload;

@@ -24,22 +24,8 @@ export const InitSessionsComponent = (props: any) => {
     checkoutConfiguration,
     txVariantConfiguration,
     sessionsResponse,
-    // paymentsRequest,
-    // paymentsDetailsRequest,
     checkoutRef
   );
-
-  // TODO: Remove this
-  //   const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
-  //     variant,
-  //     checkoutAPIVersion,
-  //     checkoutConfiguration,
-  //     txVariantConfiguration,
-  //     paymentMethodsResponse,
-  //     paymentsRequest,
-  //     paymentsDetailsRequest,
-  //     checkoutRef
-  //   );
 
   const error = adyenSDKError || paymentMethodsError ? { ...adyenSDKError, ...paymentMethodsError } : null;
 
@@ -61,6 +47,4 @@ export const InitSessionsComponent = (props: any) => {
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && <div ref={checkoutRef}></div>}
     </div>
   );
-
-  return <>Test</>;
 };
