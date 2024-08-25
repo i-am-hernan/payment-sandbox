@@ -4,7 +4,6 @@
 
 @layer base {
   :root {
-
     /* --screen-sm: 640px;
     --screen-md: 768px;
     --screen-lg: 1024px;
@@ -31,6 +30,7 @@
 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
+    --color-warning: rgb(255, 149, 0);
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -47,6 +47,7 @@
     --grey: 210, 16.67%, 96.47%;
 
     --custom-accent: rgb(10, 191, 83);
+    --custom-accent-info: #01baef;
   }
 
   .dark {
@@ -84,7 +85,6 @@
 @layer base {
   * {
     @apply border-border;
-    
   }
   body {
     @apply bg-background text-foreground;
