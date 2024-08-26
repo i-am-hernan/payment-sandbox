@@ -50,21 +50,21 @@ const Page: any = () => {
     tabsMap = [
       {
         title: "checkout.html",
-        icon: <CodeIcon fontSize="small" />,
+        icon: <span className="font-semibold px-1 text-xxs">{"</>"}</span>,
         content: <Html key={"html"} />,
         value: "html",
         unsavedChanges: unsavedChanges.html,
       },
       {
         title: "style.css",
-        icon: <FormatColorFillIcon fontSize="small" />,
+        icon: <span className="font-semibold px-1 text-xxs">{"#"}</span>,
         content: <Style key={"stye"} />,
         value: "style",
         unsavedChanges: unsavedChanges.style,
       },
       {
         title: `${variant ? variant : "checkout"}.js`,
-        icon: <JavascriptIcon fontSize="small" />,
+        icon: <span className="font-semibold px-1 text-xxs">{"JS"}</span>,
         content: <Script key={"script"} />,
         value: "script",
         unsavedChanges: unsavedChanges.js,
@@ -75,7 +75,7 @@ const Page: any = () => {
       {
         title: `/v${paymentMethodsAPIVersion}/paymentMethods`,
         icon: (
-          <span className="font-semibold px-1 text-xs text-adyen">
+          <span className="font-semibold px-1 text-xxs text-adyen">
             {"POST"}
           </span>
         ),
@@ -86,7 +86,7 @@ const Page: any = () => {
       {
         title: `/v${paymentsAPIVersion}/payments`,
         icon: (
-          <span className="font-semibold px-1 text-xs text-adyen">
+          <span className="font-semibold px-1 text-xxs text-adyen">
             {"POST"}
           </span>
         ),
@@ -97,7 +97,7 @@ const Page: any = () => {
       {
         title: `/v${paymentDetailsAPIVersion}/payment/details`,
         icon: (
-          <span className="font-semibold px-1 text-xs text-adyen">
+          <span className="font-semibold px-1 text-xxs text-adyen">
             {"POST"}
           </span>
         ),

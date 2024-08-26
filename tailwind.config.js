@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      fontSize: {
+        xxs: "var(--custom-font-xxs)", // Example: 10px
+      },
       colors: {
         border: "hsl(var(--border))",
         adyen: "var(--custom-accent)",
