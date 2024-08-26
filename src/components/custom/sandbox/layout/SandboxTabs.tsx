@@ -1,4 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import React from "react";
+import { useState } from "react";
 
 interface Tab {
   title: string;
@@ -10,15 +20,18 @@ interface Tab {
 
 interface TabsProps {
   tabsMap: Tab[];
+  crumbs?: string[];
 }
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
-  const { tabsMap } = props;
+  const { tabsMap, crumbs } = props;
+  const [tabTitle, setTabTitle] = useState(tabsMap[0].value);
 
   return (
     <Tabs
-      defaultValue={tabsMap[0].value}
+      defaultValue={tabTitle}
       className="w-full h-full flex flex-col"
+      onValueChange={(value) => setTabTitle(value)}
     >
       <span className="border-b-2 flex">
         <TabsList className="justify-start">
@@ -37,6 +50,35 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
           ))}
         </TabsList>
       </span>
+      {crumbs && (
+        <span className="border-b-2 pl-3 flex">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">
+                  <span className="font-semibold px-0 text-xxs">{"home"}</span>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              {crumbs.map((crumb, index) => (
+                <React.Fragment>
+                  <BreadcrumbItem key={index}>
+                    <span className="font-semibold px-0 text-xxs">{crumb}</span>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                </React.Fragment>
+              ))}
+              <BreadcrumbItem>
+                <BreadcrumbPage>
+                  <span className="font-semibold px-0 text-xxs">
+                    {tabTitle}
+                  </span>
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </span>
+      )}
       {tabsMap.map((tab, index) => (
         <TabsContent
           key={index}

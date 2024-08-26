@@ -11,9 +11,6 @@ import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
 import Script from "@/components/custom/sandbox/tabs/Script";
 import Style from "@/components/custom/sandbox/tabs/Style";
-import CodeIcon from "@mui/icons-material/Code";
-import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
-import JavascriptIcon from "@mui/icons-material/Javascript";
 import WebhookIcon from "@mui/icons-material/Webhook";
 
 import type { RootState } from "@/store/store";
@@ -45,31 +42,47 @@ const Page: any = () => {
   } = checkoutAPIVersion;
 
   let tabsMap: any = [];
+  let crumbs: Array<string> = [];
 
   if (section === "client") {
     tabsMap = [
       {
-        title: "checkout.html",
-        icon: <span className="font-semibold px-1 text-xxs text-warning">{"</>"}</span>,
-        content: <Html key={"html"} />,
-        value: "html",
-        unsavedChanges: unsavedChanges.html,
+        title: `${variant ? variant : "checkout"}.js`,
+        icon: (
+          <span className="flex">
+            <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
+          </span>
+        ),
+        content: <Script key={"script"} />,
+        value: `${variant}.js`,
+        unsavedChanges: unsavedChanges.js,
       },
       {
         title: "style.css",
-        icon: <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>,
+        icon: (
+          <span className="flex">
+            <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>
+          </span>
+        ),
         content: <Style key={"stye"} />,
-        value: "style",
+        value: "style.css",
         unsavedChanges: unsavedChanges.style,
       },
       {
-        title: `${variant ? variant : "checkout"}.js`,
-        icon: <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>,
-        content: <Script key={"script"} />,
-        value: "script",
-        unsavedChanges: unsavedChanges.js,
+        title: "checkout.html",
+        icon: (
+          <span className="flex">
+            <span className="font-semibold px-1 text-xxs text-warning">
+              {"</>"}
+            </span>
+          </span>
+        ),
+        content: <Html key={"html"} />,
+        value: "checkout.html (read only)",
+        unsavedChanges: unsavedChanges.html,
       },
     ];
+    crumbs = ["advanced", variant, "client"];
   } else if (section === "server") {
     tabsMap = [
       {
@@ -106,22 +119,28 @@ const Page: any = () => {
         unsavedChanges: unsavedChanges.paymentDetails,
       },
     ];
+    crumbs = ["advanced", variant, "server"];
   } else if (section === "webhooks") {
     tabsMap = [
       {
-        title: "Events",
-        icon: <WebhookIcon />,
+        title: "webhooks",
+        icon: (
+          <span className="font-semibold px-1 text-xxs text-info">
+            {"event"}
+          </span>
+        ),
         content: <Events key={"Events"} />,
         value: "events",
       },
     ];
+    crumbs = ["advanced", variant];
   }
   return (
     <div>
       <Sidebar section={section} setSection={setSection} />
       <Topbar />
       <Sandbox
-        main={<SandBoxTabs key={section} tabsMap={tabsMap} />}
+        main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
         topRight={<ManageAdvanceComponent key={run ? "run" : "default"} />}
         bottomRight={
           <CodeEditor code={JSON.stringify(variantState)} type="json" />
