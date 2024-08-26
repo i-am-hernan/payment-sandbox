@@ -63,6 +63,9 @@ module.exports = {
         info: {
           DEFAULT: "var(--custom-accent-info)",
         },
+        js: {
+          DEFAULT: "var(--color-js-icon)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

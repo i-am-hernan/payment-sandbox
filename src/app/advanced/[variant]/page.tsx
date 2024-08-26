@@ -50,21 +50,21 @@ const Page: any = () => {
     tabsMap = [
       {
         title: "checkout.html",
-        icon: <span className="font-semibold px-1 text-xxs">{"</>"}</span>,
+        icon: <span className="font-semibold px-1 text-xxs text-warning">{"</>"}</span>,
         content: <Html key={"html"} />,
         value: "html",
         unsavedChanges: unsavedChanges.html,
       },
       {
         title: "style.css",
-        icon: <span className="font-semibold px-1 text-xxs">{"#"}</span>,
+        icon: <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>,
         content: <Style key={"stye"} />,
         value: "style",
         unsavedChanges: unsavedChanges.style,
       },
       {
         title: `${variant ? variant : "checkout"}.js`,
-        icon: <span className="font-semibold px-1 text-xxs">{"JS"}</span>,
+        icon: <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>,
         content: <Script key={"script"} />,
         value: "script",
         unsavedChanges: unsavedChanges.js,
