@@ -135,9 +135,10 @@ const Page: any = () => {
     ];
     crumbs = ["advanced", variant];
   }
+  // Make the bottom right corner also a tab with API logs and state of the variant
   return (
     <div>
-      <Sidebar section={section} setSection={setSection} />
+      <Sidebar section={section} setSection={setSection} unsavedChanges={unsavedChanges}/>
       <Topbar />
       <Sandbox
         main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}

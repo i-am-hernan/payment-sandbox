@@ -8,6 +8,7 @@ import * as prettierPluginEstree from "prettier/plugins/estree";
 import * as prettier from "prettier/standalone";
 import { useEffect, useState } from "react";
 
+// Needs a read only mode, and write mode
 const CodeEditor = (props: any) => {
   const { code, type } = props;
   const [formattedCode, setFormattedCode] = useState<string>("");
