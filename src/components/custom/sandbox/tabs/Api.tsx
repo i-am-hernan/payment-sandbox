@@ -77,9 +77,9 @@ const Api = (props: any) => {
       className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel defaultSize={50} className="sm:flex">
-        <Ide type="json" code={JSON.stringify(request)} readOnly={false}/>
+        <Ide type="json" code={JSON.stringify(request)} readOnly={false} />
       </ResizablePanel>
-      <ResizableHandle withHandle />
+      <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
         {loadingApiSpecData && (
           <div className="flex justify-center space-x-2 items-center text-center h-[100%]">

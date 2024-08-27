@@ -24,35 +24,19 @@ const Sandbox = ({
       direction="horizontal"
       className="bg-background !h-[180vh] sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)]"
     >
-      <ResizablePanel
-        defaultSize={60}
-        minSize={50}
-        maxSize={70}
-      >
+      <ResizablePanel defaultSize={60} minSize={50} maxSize={90}>
         <div className="items-center justify-center flex w-full h-full">
           {Main}
         </div>
       </ResizablePanel>
-      <ResizableHandle withHandle/>
+      <ResizableHandle />
       <ResizablePanel defaultSize={40}>
         <ResizablePanelGroup direction="vertical">
-          <ResizablePanel defaultSize={50} minSize={30} maxSize={70}>
-            <p className="border-b-2 leading-7 flex text-sm">
-              <span className="border-r-2 px-4 py-[2px]">{`${variant ? variant : "loading"}`}</span>
-            </p>
-            <div className="h-full items-center justify-center p-6 overflow-auto">
-              <span>{TopRight}</span>
-            </div>
-          </ResizablePanel>
-          <ResizableHandle/>
           <ResizablePanel defaultSize={50}>
-            <p className="border-b-2 leading-7 flex text-sm">
-              <span className="border-r-2 px-4 py-[2px]">state</span>
-            </p>
-            <div className="h-full flex">
-              <span className="h-full flex">{BottomRight}</span>
-            </div>
+            {TopRight}
           </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={50}>{BottomRight}</ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>
     </ResizablePanelGroup>

@@ -21,7 +21,9 @@ import { useDispatch, useSelector } from "react-redux";
 const { updateAdyenWebVersion, addUnsavedChanges } = formulaActions;
 
 const Html = () => {
-  const { adyenWebVersion, build } = useSelector((state: RootState) => state.formula);
+  const { adyenWebVersion, build } = useSelector(
+    (state: RootState) => state.formula
+  );
   const { variant } = useParams<{
     variant: string;
   }>();
@@ -36,10 +38,10 @@ const Html = () => {
         <Ide
           type="html"
           code={createHtmlCode(adyenWebVersion, variant)}
-          readOnly={false}
+          readOnly={true}
         />
       </ResizablePanel>
-      <ResizableHandle withHandle />
+      <ResizableHandle />
       <ResizablePanel defaultSize={50}>
         <p className="border-b-2 flex text-sm">
           <span className="border-r-2 px-2 py-[1px]">version</span>

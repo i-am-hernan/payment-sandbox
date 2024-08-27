@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 const Ide = (props: any) => {
   const { code, type, readOnly } = props;
   const [formattedCode, setFormattedCode] = useState<string>("");
-
+  const extensions = [javascript({ jsx: true }), EditorView.lineWrapping];
   const prettify = async (uglyCode: any): Promise<string> => {
     try {
       const prettierVersion = prettier.format(uglyCode, {
@@ -36,6 +36,26 @@ const Ide = (props: any) => {
     formatCode();
   }, [code]);
 
+  // if(!readOnly){
+  //   extensions.push(EditorView.updateListener.of((update) => {
+  //     if (update.docChanged) {
+  //       prettify(update.state.doc.toString()).then((formatted) => {
+  //         setFormattedCode(formatted);
+  //       });
+  //     }
+  //   }));
+  // }
+
+  if (readOnly) {
+    extensions.push(
+      EditorView.theme({
+        ".cm-content": {
+          caretColor: "transparent",
+        },
+      })
+    );
+  }
+
   return (
     <div className="flex">
       <div className="flex codemirror-wrapper pb-5">
@@ -44,7 +64,7 @@ const Ide = (props: any) => {
           height="100%"
           readOnly={readOnly}
           theme={githubLight}
-          extensions={[javascript({ jsx: true }), EditorView.lineWrapping]}
+          extensions={extensions}
         />
       </div>
     </div>

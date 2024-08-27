@@ -43,6 +43,35 @@ const Page: any = () => {
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
+  let topRightTabsMap: any = [
+    {
+      title: `${variant}`,
+      icon: (
+        <span className="flex">
+          <span className="font-semibold px-1 text-xxs text-adyen">
+            preview
+          </span>
+        </span>
+      ),
+      content: <ManageAdvanceComponent key={run ? "run" : "default"} />,
+      value: variant,
+    },
+  ];
+
+  let bottomRightTabsMap: any = [
+    {
+      title: `${variant}`,
+      icon: (
+        <span className="flex">
+          <span className="font-semibold px-1 text-xxs text-info">state</span>
+        </span>
+      ),
+      content: (
+        <Ide code={JSON.stringify(variantState)} type="json" readOnly={true} />
+      ),
+      value: "state",
+    },
+  ];
 
   if (section === "client") {
     tabsMap = [
@@ -69,7 +98,7 @@ const Page: any = () => {
         unsavedChanges: unsavedChanges.style,
       },
       {
-        title: "checkout.html",
+        title: "checkout.html (read only)",
         icon: (
           <span className="flex">
             <span className="font-semibold px-1 text-xxs text-warning">
@@ -78,7 +107,7 @@ const Page: any = () => {
           </span>
         ),
         content: <Html key={"html"} />,
-        value: "checkout.html (read only)",
+        value: "checkout.html",
         unsavedChanges: unsavedChanges.html,
       },
     ];
@@ -138,13 +167,17 @@ const Page: any = () => {
   // Make the bottom right corner also a tab with API logs and state of the variant
   return (
     <div>
-      <Sidebar section={section} setSection={setSection} unsavedChanges={unsavedChanges}/>
+      <Sidebar
+        section={section}
+        setSection={setSection}
+        unsavedChanges={unsavedChanges}
+      />
       <Topbar />
       <Sandbox
         main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
-        topRight={<ManageAdvanceComponent key={run ? "run" : "default"} />}
+        topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
         bottomRight={
-          <Ide code={JSON.stringify(variantState)} type="json" readOnly={true}/>
+          <SandBoxTabs tabsMap={bottomRightTabsMap} />
         }
       />
     </div>

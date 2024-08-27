@@ -15,7 +15,7 @@ interface Tab {
   icon: JSX.Element;
   content: JSX.Element;
   value: string;
-  unsavedChanges: boolean;
+  unsavedChanges?: boolean;
 }
 
 interface TabsProps {
@@ -42,7 +42,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               className=" flex px-2 py-[2px] justify-space-between"
             >
               <span>{tab.icon}</span>
-              <p className="px-1">{tab.title}</p>
+              <p className="px-1 text-xs">{tab.title}</p>
               {tab.unsavedChanges && (
                 <span className="ml-1 w-2 h-2 bg-grey border border-primary rounded-full inline-block"></span>
               )}
