@@ -1,5 +1,5 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
-import CodeEditor from "@/components/custom/sandbox/editors/CodeEdito";
+import Ide from "@/components/custom/sandbox/editors/Ide";
 import Enum from "@/components/custom/sandbox/editors/Enum";
 import { parseStringWithLinks } from "@/components/custom/utils/Utils";
 import {
@@ -77,7 +77,7 @@ const Api = (props: any) => {
       className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel defaultSize={50} className="sm:flex">
-        <CodeEditor type="json" code={JSON.stringify(request)} />
+        <Ide type="json" code={JSON.stringify(request)} readOnly={false}/>
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">

@@ -1,7 +1,7 @@
 "use client";
 
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
-import CodeEditor from "@/components/custom/sandbox/editors/CodeEdito";
+import Ide from "@/components/custom/sandbox/editors/Ide";
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
@@ -144,7 +144,7 @@ const Page: any = () => {
         main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
         topRight={<ManageAdvanceComponent key={run ? "run" : "default"} />}
         bottomRight={
-          <CodeEditor code={JSON.stringify(variantState)} type="json" />
+          <Ide code={JSON.stringify(variantState)} type="json" readOnly={true}/>
         }
       />
     </div>

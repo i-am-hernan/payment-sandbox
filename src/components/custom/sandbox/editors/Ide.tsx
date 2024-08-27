@@ -9,8 +9,8 @@ import * as prettier from "prettier/standalone";
 import { useEffect, useState } from "react";
 
 // Needs a read only mode, and write mode
-const CodeEditor = (props: any) => {
-  const { code, type } = props;
+const Ide = (props: any) => {
+  const { code, type, readOnly } = props;
   const [formattedCode, setFormattedCode] = useState<string>("");
 
   const prettify = async (uglyCode: any): Promise<string> => {
@@ -42,7 +42,7 @@ const CodeEditor = (props: any) => {
         <CodeMirror
           value={formattedCode}
           height="100%"
-          readOnly={true}
+          readOnly={readOnly}
           theme={githubLight}
           extensions={[javascript({ jsx: true }), EditorView.lineWrapping]}
         />
@@ -51,4 +51,4 @@ const CodeEditor = (props: any) => {
   );
 };
 
-export default CodeEditor;
+export default Ide;
