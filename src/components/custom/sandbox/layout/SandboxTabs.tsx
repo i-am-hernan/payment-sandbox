@@ -61,7 +61,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               {crumbs.map((crumb, index) => (
-                <React.Fragment>
+                <React.Fragment key={index}>
                   <BreadcrumbItem key={index}>
                     <span className="font-semibold px-0 text-xxs">{crumb}</span>
                   </BreadcrumbItem>

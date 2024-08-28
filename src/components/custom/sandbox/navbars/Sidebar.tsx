@@ -79,8 +79,8 @@ const Sidebar = (props: any) => {
         </Drawer>
       </span>
       <div className="mt-1">
-        {sideTabs.map((tab): any => (
-          <span className="relative">
+        {sideTabs.map((tab, index): any => (
+          <span className="relative" key={index}>
             <Button
               key={tab.name}
               variant="ghost"
