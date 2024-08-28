@@ -40,7 +40,6 @@ export const InitSessionsComponent = (props: any) => {
       {adyenResult && (
         <Alert variant="default" className="border-primary">
           <AlertTitle>{adyenResult.resultCode}</AlertTitle>
-          <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
       {loadingSessions && <Skeleton className="w-[100px] h-[20px] rounded-full" />}

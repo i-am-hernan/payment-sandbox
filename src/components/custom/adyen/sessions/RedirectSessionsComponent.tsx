@@ -33,7 +33,6 @@ export const RedirectSessionsComponent = (props: any) => {
       {result && (
         <Alert variant="default" className="border-primary">
           <AlertTitle>{result.resultCode}</AlertTitle>
-          {/* TODO: PSP Reference is not returned in Sessions Flow */}
         </Alert>
       )}
       {loading && (
