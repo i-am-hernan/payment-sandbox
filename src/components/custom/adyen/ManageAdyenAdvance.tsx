@@ -27,8 +27,7 @@ export const ManageAdyenAdvance = () => {
     redirectResult,
   } = useSelector((state: RootState) => state.currentFormula);
 
-  const { error: adyenScriptError, loading: loadingAdyenScript } =
-    useAdyenScript(adyenWebVersion);
+  const { error: adyenScriptError, loading: loadingAdyenScript } = useAdyenScript(adyenWebVersion);
   const dispatch = useDispatch();
   const { variant } = useParams<{
     variant: string;
@@ -55,7 +54,7 @@ export const ManageAdyenAdvance = () => {
   }
 
   if (adyenScriptError) {
-    return <div>Loading...</div>;
+    return <div>Error...</div>;
   }
 
   return (

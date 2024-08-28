@@ -11,8 +11,8 @@ export const InitSessionsComponent = (props: any) => {
 
   const {
     data: sessionsResponse,
-    loading: loadingPaymentMethods,
-    error: paymentMethodsError,
+    loading: loadingSessions,
+    error: sessionError,
   } = useApi(`api/checkout/v${checkoutAPIVersion}/sessions`, "POST", sessionsRequest);
 
   const checkoutRef = useRef(null);
@@ -27,7 +27,7 @@ export const InitSessionsComponent = (props: any) => {
     checkoutRef
   );
 
-  const error = adyenSDKError || paymentMethodsError ? { ...adyenSDKError, ...paymentMethodsError } : null;
+  const error = adyenSDKError || sessionError ? { ...adyenSDKError, ...sessionError } : null;
 
   return (
     <div>
@@ -43,8 +43,8 @@ export const InitSessionsComponent = (props: any) => {
           <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods && <Skeleton className="w-[100px] h-[20px] rounded-full" />}
-      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && <div ref={checkoutRef}></div>}
+      {loadingSessions && <Skeleton className="w-[100px] h-[20px] rounded-full" />}
+      {!adyenSDKError && !adyenResult && !loadingSessions && <div ref={checkoutRef}></div>}
     </div>
   );
 };

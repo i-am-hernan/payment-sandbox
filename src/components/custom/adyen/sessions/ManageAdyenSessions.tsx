@@ -34,14 +34,10 @@ export const ManageAdyenSessions = (props: any) => {
   const redirectResultQueryParameter = searchParams.get("redirectResult");
   const sessionIdQueryParameter = searchParams.get("sessionId");
 
-  console.log(`RedirectResult: ${redirectResultQueryParameter}`);
-  console.log(`SessionId: ${sessionIdQueryParameter}`);
-
   if (redirectResultQueryParameter && !isRedirect) {
     dispatch(updateIsRedirect(true));
     //need to remove query path parameters without refreshing
     dispatch(updateRedirectResult(redirectResultQueryParameter));
-    //TODO: I think we also need to update the sessionId in teh Redux State?
     dispatch(updateSessionId(sessionIdQueryParameter));
   }
 
@@ -81,7 +77,7 @@ export const ManageAdyenSessions = (props: any) => {
       )}
 
       {/*  Redirect Handler */}
-      {isRedirect && redirectResult && (
+      {isRedirect && redirectResult && sessionId && (
         <RedirectSessionsComponent
           checkoutAPIVersion={checkoutAPIVersion}
           checkoutConfiguration={{

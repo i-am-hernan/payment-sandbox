@@ -49,9 +49,7 @@ const Page: any = () => {
       <Topbar />
       <SandboxLayout
         main={<MainTabs titles={titles} contents={contents} key={section} />}
-        // TODO: Are we using the key Prop here? Consider removing?
-        // topRight={<ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />}
-        topRight={<ManageAdyenSessions />}
+        topRight={<ManageAdyenSessions key={runBuild ? "runBuild" : "default"} />}
         bottomRight={<AdyenState />}
       />
     </div>

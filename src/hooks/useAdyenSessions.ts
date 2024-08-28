@@ -16,17 +16,21 @@ export const useAdyenSessions = (
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
 
-  console.log(sessionsResponse);
-
   useEffect(() => {
     let configuration: any = {
       ...checkoutConfiguration,
       session: sessionsResponse,
       showPayButton: true,
       onPaymentCompleted: (result: any, component: any) => {
+        console.log(result);
+        //TODO: handle the result
+        setResult(result);
         console.log("-------PAYMENT COMPLETED WITH SESSIONS------");
       },
-      onPaymentFailed: (result: any, component: any) => {
+      onPaymentFailed: (error: any, component: any) => {
+        console.log(error);
+        //TODO: handle the error
+        setError(error);
         console.log("-------UH OH .. PAYMENT FAILED----");
       },
     };

@@ -11,15 +11,6 @@ import { useAdyenSessionsRedirect } from "@/hooks/useAdyenSessionsRedirect";
 
 export const RedirectSessionsComponent = (props: any) => {
   const { redirectResult, sessionId, checkoutConfiguration } = props;
-
-  //   const { result, error, loading }: any = useAdyenAdvanceRedirect(
-  //     variant,
-  //     checkoutAPIVersion,
-  //     redirectResult
-  //   );
-
-  //TODO: Should we load DropIn again as the docs here suggest instead of just simply showing the redirectResult and sessionId?
-  // https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Web&integration=Drop-in&version=5.67.1#handle-the-redirect
   const { result, error, loading }: any = useAdyenSessionsRedirect(checkoutConfiguration, sessionId, redirectResult);
 
   console.log(result);
