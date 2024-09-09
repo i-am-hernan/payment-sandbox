@@ -1,5 +1,5 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
-import Ide from "@/components/custom/sandbox/editors/Ide";
+import Code from "@/components/custom/sandbox/editors/Code";
 import Enum from "@/components/custom/sandbox/editors/Enum";
 import { parseStringWithLinks } from "@/components/custom/utils/Utils";
 import {
@@ -20,7 +20,13 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const { updateCheckoutAPIVersion, addUnsavedChanges } = formulaActions;
+const {
+  updatePaymentMethodsRequest,
+  updatePaymentsRequest,
+  updatePaymentsDetailsRequest,
+  updateCheckoutAPIVersion,
+  addUnsavedChanges,
+} = formulaActions;
 const { updateSpecs } = specsActions;
 
 const Api = (props: any) => {
@@ -57,6 +63,15 @@ const Api = (props: any) => {
           ? paymentsDetailsRequest
           : null;
 
+  const updateRequest: any =
+    schema === "PaymentMethodsRequest"
+      ? updatePaymentMethodsRequest
+      : schema === "PaymentRequest"
+        ? updatePaymentsRequest
+        : schema === paymentsDetailsRequest
+          ? updatePaymentsDetailsRequest
+          : null;
+
   useEffect(() => {
     if (apiSpecsData) {
       dispatch(
@@ -77,7 +92,14 @@ const Api = (props: any) => {
       className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel defaultSize={50} className="sm:flex">
-        <Ide type="json" code={JSON.stringify(request)} readOnly={false} />
+        <Code
+          type="json"
+          code={JSON.stringify(request)}
+          readOnly={false}
+          onChange={(value: any) => {
+            dispatch(updateRequest(value));
+          }}
+        />
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
@@ -93,7 +115,7 @@ const Api = (props: any) => {
           <Accordion
             type="multiple"
             className="w-full"
-            defaultValue={Object.keys(request)}
+            value={Object.keys(request)}
           >
             <p className="border-b-2 flex text-sm">
               <span className="border-r-2 px-2 py-[1px]">version</span>

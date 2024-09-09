@@ -26,6 +26,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@babel/parser": "^7.25.6",
     "@codemirror/lang-html": "^6.4.9",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/lang-json": "^6.0.1",
@@ -44,6 +45,7 @@
     "@uiw/react-codemirror": "^4.22.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "jsonc-parser": "^3.3.1",
     "next": "^14.2.3",
     "prettier": "^3.3.2",
     "react": "^18.3.1",

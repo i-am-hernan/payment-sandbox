@@ -1,7 +1,7 @@
 "use client";
 
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
-import Ide from "@/components/custom/sandbox/editors/Ide";
+import Code from "@/components/custom/sandbox/editors/Code";
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
@@ -41,6 +41,8 @@ const Page: any = () => {
     paymentDetails: paymentDetailsAPIVersion,
   } = checkoutAPIVersion;
 
+  // Change path to advance instead of advcanced
+
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
   let topRightTabsMap: any = [
@@ -60,14 +62,14 @@ const Page: any = () => {
 
   let bottomRightTabsMap: any = [
     {
-      title: `${variant}`,
+      title: `${variant} (read-only)`,
       icon: (
         <span className="flex">
           <span className="font-semibold px-1 text-xxs text-info">state</span>
         </span>
       ),
       content: (
-        <Ide code={JSON.stringify(variantState)} type="json" readOnly={true} />
+        <Code code={JSON.stringify(variantState)} type="json" readOnly={true} />
       ),
       value: "state",
     },
@@ -98,7 +100,7 @@ const Page: any = () => {
         unsavedChanges: unsavedChanges.style,
       },
       {
-        title: "checkout.html (read only)",
+        title: "checkout.html (read-only)",
         icon: (
           <span className="flex">
             <span className="font-semibold px-1 text-xxs text-warning">

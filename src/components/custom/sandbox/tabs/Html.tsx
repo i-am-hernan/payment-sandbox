@@ -1,5 +1,5 @@
 import { WEBVERSIONS } from "@/assets/constants/constants";
-import Ide from "@/components/custom/sandbox/editors/Ide";
+import Code from "@/components/custom/sandbox/editors/Code";
 import Enum from "@/components/custom/sandbox/editors/Enum";
 import {
   Accordion,
@@ -35,7 +35,7 @@ const Html = () => {
       className="bg-background inline-block overflow-y-scroll"
     >
       <ResizablePanel defaultSize={50} className="sm:flex">
-        <Ide
+        <Code
           type="html"
           code={createHtmlCode(adyenWebVersion, variant)}
           readOnly={true}
