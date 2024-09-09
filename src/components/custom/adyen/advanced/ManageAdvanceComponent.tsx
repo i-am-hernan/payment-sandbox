@@ -26,10 +26,10 @@ export const ManageAdvanceComponent = () => {
     checkoutAPIVersion,
     adyenWebVersion,
     txVariantConfiguration,
-    paymentMethodsRequest,
-    paymentsRequest,
-    paymentsDetailsRequest,
+    request,
   } = build;
+  const { paymentMethods, payments, paymentsDetails } =
+    request;
 
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
@@ -90,9 +90,9 @@ export const ManageAdvanceComponent = () => {
           }}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}
-          paymentMethodsRequest={paymentMethodsRequest}
-          paymentsRequest={paymentsRequest}
-          paymentsDetailsRequest={paymentsDetailsRequest}
+          paymentMethodsRequest={paymentMethods}
+          paymentsRequest={payments}
+          paymentsDetailsRequest={paymentsDetails}
         />
       )}
 
@@ -101,7 +101,7 @@ export const ManageAdvanceComponent = () => {
           variant={variant}
           redirectResult={redirectResult}
           checkoutAPIVersion={checkoutAPIVersion}
-          paymentsDetailsRequest={paymentsDetailsRequest}
+          paymentsDetailsRequest={paymentsDetails}
         />
       )}
     </div>

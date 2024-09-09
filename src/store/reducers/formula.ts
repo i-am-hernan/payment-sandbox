@@ -9,17 +9,19 @@ export interface FormulaPropType {
 export interface Formula {
   checkoutConfiguration: FormulaPropType;
   checkoutAPIVersion: {
-    paymentMethodsVersion: string;
-    paymentsVersion: string;
-    paymentsDetailsVersion: string;
+    paymentMethods: string;
+    payments: string;
+    paymentsDetails: string;
   };
   adyenWebVersion: string;
   txVariant: string;
   txVariantConfiguration: FormulaPropType;
-  sessionsRequest: FormulaPropType;
-  paymentMethodsRequest: FormulaPropType;
-  paymentsRequest: FormulaPropType;
-  paymentsDetailsRequest: FormulaPropType;
+  request: {
+    sessions: FormulaPropType;
+    paymentMethods: FormulaPropType;
+    payments: FormulaPropType;
+    paymentsDetails: FormulaPropType;
+  };
   style: FormulaPropType;
   isRedirect: boolean;
   unsavedChanges: {
@@ -50,23 +52,25 @@ const initialState: FormulaPropType = {
   },
   txVariant: "",
   txVariantConfiguration: {},
-  sessionsRequest: {},
-  paymentMethodsRequest: {
-    shopperReference: "Hernan",
-  },
-  paymentsRequest: {
-    countryCode: "NL",
-    amount: {
-      value: 10000,
-      currency: "EUR",
+  sessions: {},
+  request: {
+    paymentMethods: {
+      shopperReference: "Hernan",
     },
-    channel: "Web",
-    returnUrl: "http://localhost:3000/advanced/dropin",
-    reference: "reference",
-    shopperLocale: "en_US",
-    merchantAccount: "HernanChalco",
+    payments: {
+      countryCode: "NL",
+      amount: {
+        value: 10000,
+        currency: "EUR",
+      },
+      channel: "Web",
+      returnUrl: "http://localhost:3000/advanced/dropin",
+      reference: "reference",
+      shopperLocale: "en_US",
+      merchantAccount: "HernanChalco",
+    },
+    paymentsDetails: {},
   },
-  paymentsDetailsRequest: {},
   style: {},
   unsavedChanges: {
     html: false,
@@ -146,22 +150,22 @@ const formulaSlice = createSlice({
       state.txVariantConfiguration = action.payload;
     },
     updateSessionsRequest: (state, action: PayloadAction<FormulaPropType>) => {
-      state.sessionsRequest = action.payload;
+      state.request.sessions = action.payload;
     },
     updatePaymentMethodsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.paymentMethodsRequest = action.payload;
+      state.request.paymentMethods = action.payload;
     },
     updatePaymentsRequest: (state, action: PayloadAction<FormulaPropType>) => {
-      state.paymentsRequest = action.payload;
+      state.request.payments = action.payload;
     },
     updatePaymentsDetailsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.paymentsDetailsRequest = action.payload;
+      state.request.paymentsDetails = action.payload;
     },
     clearOnDeckInfo: (state) => {
       const lastBuild = state.build;

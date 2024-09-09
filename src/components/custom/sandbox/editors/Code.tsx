@@ -141,7 +141,7 @@ const Code = (props: any) => {
 
   return (
     <div className="flex">
-      <div className="flex codemirror-wrapper pb-5">
+      <div className="flex codemirror-wrapper">
         <CodeMirror
           value={formattedCode}
           height="100%"

@@ -2,6 +2,7 @@ import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Enum from "@/components/custom/sandbox/editors/Enum";
 import { parseStringWithLinks } from "@/components/custom/utils/Utils";
+import { deepEqual } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -32,12 +33,11 @@ const { updateSpecs } = specsActions;
 const Api = (props: any) => {
   const { schema, api } = props;
   const {
-    paymentMethodsRequest,
-    paymentsRequest,
-    paymentsDetailsRequest,
+    request: formulaRequest,
     checkoutAPIVersion,
     build,
   } = useSelector((state: RootState) => state.formula);
+  const { paymentMethods, payments, paymentsDetails } = formulaRequest;
 
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
   const properties =
@@ -56,11 +56,11 @@ const Api = (props: any) => {
 
   const request =
     schema === "PaymentMethodsRequest"
-      ? paymentMethodsRequest
+      ? paymentMethods
       : schema === "PaymentRequest"
-        ? paymentsRequest
-        : paymentsDetailsRequest
-          ? paymentsDetailsRequest
+        ? payments
+        : schema === "PaymentDetailsRequest"
+          ? paymentsDetails
           : null;
 
   const updateRequest: any =
@@ -68,7 +68,7 @@ const Api = (props: any) => {
       ? updatePaymentMethodsRequest
       : schema === "PaymentRequest"
         ? updatePaymentsRequest
-        : schema === paymentsDetailsRequest
+        : schema === "PaymentDetailsRequest"
           ? updatePaymentsDetailsRequest
           : null;
 
@@ -97,7 +97,13 @@ const Api = (props: any) => {
           code={JSON.stringify(request)}
           readOnly={false}
           onChange={(value: any) => {
+            const isEqual = deepEqual(build.request[api], value);
             dispatch(updateRequest(value));
+            dispatch(
+              addUnsavedChanges({
+                [api]: !isEqual,
+              })
+            );
           }}
         />
       </ResizablePanel>
@@ -115,7 +121,7 @@ const Api = (props: any) => {
           <Accordion
             type="multiple"
             className="w-full"
-            value={Object.keys(request)}
+            value={["select-version", ...Object.keys(request)]}
           >
             <p className="border-b-2 flex text-sm">
               <span className="border-r-2 px-2 py-[1px]">version</span>
