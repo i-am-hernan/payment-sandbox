@@ -18,8 +18,9 @@ import { useApi } from "@/hooks/useApi";
 import { formulaActions, specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { String } from "@/components/custom/sandbox/editors/String";
 
 const {
   updatePaymentMethodsRequest,
@@ -38,7 +39,7 @@ const Api = (props: any) => {
     build,
   } = useSelector((state: RootState) => state.formula);
   const { paymentMethods, payments, paymentsDetails } = formulaRequest;
-
+  const [accordianProperties, setAccordianProperties] = useState([]);
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
   const properties =
     checkoutApi?.components?.schemas?.[schema]?.properties ?? null;
@@ -82,6 +83,14 @@ const Api = (props: any) => {
     }
   }, [apiSpecsData]);
 
+  useEffect(() => {
+    let updatedValues: any = [];
+    if (request) {
+      updatedValues = ["select-version", ...Object.keys(request)];
+      setAccordianProperties(updatedValues);
+    }
+  }, [request]);
+
   if (apiSpecsError) {
     return <div>Error</div>;
   }
@@ -121,12 +130,24 @@ const Api = (props: any) => {
           <Accordion
             type="multiple"
             className="w-full"
-            value={["select-version", ...Object.keys(request)]}
+            value={accordianProperties}
+            onValueChange={(value: any) => {
+              const latestKey = value[value.length - 1];
+              const latestValue = properties[latestKey];
+              let newProperty = null;
+              if (latestValue.type === "string") {
+                newProperty = { [latestKey]: "" };
+                dispatch(updateRequest(newProperty));
+              } else if (latestValue.type === "boolean") {
+                newProperty = { [latestKey]: true };
+                dispatch(updateRequest(newProperty));
+              }
+            }}
           >
             <p className="border-b-2 flex text-sm">
               <span className="border-r-2 px-2 py-[1px]">version</span>
             </p>
-            <AccordionItem value="select-version" className="border-b-0 px-3">
+            <AccordionItem disabled={true} value="select-version" className="border-b-0 px-3">
               <AccordionTrigger className="px-1 py-3">
                 <p className="text-sm">{`Checkout API v${checkoutAPIVersion[api]}`}</p>
               </AccordionTrigger>
@@ -170,6 +191,7 @@ const Api = (props: any) => {
                     <p className="text-xs pb-2 px-1">
                       {parseStringWithLinks(properties[property].description)}
                     </p>
+                    {/* {properties[property].type === "string" && <String />} */}
                   </AccordionContent>
                 </AccordionItem>
               ))}

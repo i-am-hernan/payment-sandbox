@@ -72,7 +72,7 @@ const Code = (props: any) => {
     } catch (error) {
       console.error("Error in handleChange:", error);
     }
-  }, 3000); // Adjust the debounce delay as needed
+  }, 1500); // Adjust the debounce delay as needed
 
   const jsonLinter = async (view: any) => {
     const diagnostics: Diagnostic[] = [];

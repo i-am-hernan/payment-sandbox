@@ -45,7 +45,7 @@ const Page: any = () => {
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
-  let topRightTabsMap: any = [
+  let topRightTabsMap = [
     {
       title: `${variant}`,
       icon: (
@@ -60,7 +60,7 @@ const Page: any = () => {
     },
   ];
 
-  let bottomRightTabsMap: any = [
+  let bottomRightTabsMap = [
     {
       title: `${variant} (read-only)`,
       icon: (

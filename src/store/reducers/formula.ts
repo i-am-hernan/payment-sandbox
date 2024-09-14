@@ -9,6 +9,7 @@ export interface FormulaPropType {
 export interface Formula {
   checkoutConfiguration: FormulaPropType;
   checkoutAPIVersion: {
+    sessions: string;
     paymentMethods: string;
     payments: string;
     paymentsDetails: string;
@@ -150,22 +151,62 @@ const formulaSlice = createSlice({
       state.txVariantConfiguration = action.payload;
     },
     updateSessionsRequest: (state, action: PayloadAction<FormulaPropType>) => {
-      state.request.sessions = action.payload;
+      const updatedRequest = {
+        ...state.request.sessions,
+        ...action.payload,
+      };
+      return {
+        ...state,
+        request: {
+          ...state.request,
+          sessions: updatedRequest,
+        },
+      };
     },
     updatePaymentMethodsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.request.paymentMethods = action.payload;
+      const updatedRequest = {
+        ...state.request.paymentMethods,
+        ...action.payload,
+      };
+      return {
+        ...state,
+        request: {
+          ...state.request,
+          paymentMethods: updatedRequest,
+        },
+      };
     },
     updatePaymentsRequest: (state, action: PayloadAction<FormulaPropType>) => {
-      state.request.payments = action.payload;
+      const updatedRequest = {
+        ...state.request.payments,
+        ...action.payload,
+      };
+      return {
+        ...state,
+        request: {
+          ...state.request,
+          payments: updatedRequest,
+        },
+      };
     },
     updatePaymentsDetailsRequest: (
       state,
       action: PayloadAction<FormulaPropType>
     ) => {
-      state.request.paymentsDetails = action.payload;
+      const updatedRequest = {
+        ...state.request.paymentsDetails,
+        ...action.payload,
+      };
+      return {
+        ...state,
+        request: {
+          ...state.request,
+          paymentsDetails: updatedRequest,
+        },
+      };
     },
     clearOnDeckInfo: (state) => {
       const lastBuild = state.build;
