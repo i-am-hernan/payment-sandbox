@@ -132,22 +132,39 @@ const Api = (props: any) => {
             className="w-full"
             value={accordianProperties}
             onValueChange={(value: any) => {
-              const latestKey = value[value.length - 1];
-              const latestValue = properties[latestKey];
-              let newProperty = null;
-              if (latestValue.type === "string") {
-                newProperty = { [latestKey]: "" };
-                dispatch(updateRequest(newProperty));
-              } else if (latestValue.type === "boolean") {
-                newProperty = { [latestKey]: true };
-                dispatch(updateRequest(newProperty));
+              const isNewProperty =
+                Object.keys(request).length < value.length - 1;
+
+              if (isNewProperty) {
+                const latestKey = value[value.length - 1];
+                const latestValue = properties[latestKey];
+                let newProperty = null;
+                if (latestValue.type === "string") {
+                  newProperty = { [latestKey]: "" };
+                  dispatch(updateRequest(newProperty));
+                } else if (latestValue.type === "boolean") {
+                  newProperty = { [latestKey]: true };
+                  dispatch(updateRequest(newProperty));
+                } else if (latestValue.type === "array") {
+                  newProperty = { [latestKey]: [] };
+                  dispatch(updateRequest(newProperty));
+                }
+              }else{
+                const removedKey = value.filter((x: any) => !request[x]);
+                if(removedKey.length > 0){
+                  console.log(removedKey)
+                }
               }
             }}
           >
             <p className="border-b-2 flex text-sm">
               <span className="border-r-2 px-2 py-[1px]">version</span>
             </p>
-            <AccordionItem disabled={true} value="select-version" className="border-b-0 px-3">
+            <AccordionItem
+              disabled={true}
+              value="select-version"
+              className="border-b-0 px-3"
+            >
               <AccordionTrigger className="px-1 py-3">
                 <p className="text-sm">{`Checkout API v${checkoutAPIVersion[api]}`}</p>
               </AccordionTrigger>
