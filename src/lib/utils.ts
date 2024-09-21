@@ -68,3 +68,11 @@ export const deepEqual: any = (obj1: any, obj2: any): boolean => {
 
   return true;
 };
+
+export const debounce = (func: (...args: any[]) => void, wait: number) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+};

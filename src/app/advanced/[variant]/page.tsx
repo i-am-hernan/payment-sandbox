@@ -11,7 +11,7 @@ import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
 import Script from "@/components/custom/sandbox/tabs/Script";
 import Style from "@/components/custom/sandbox/tabs/Style";
-import WebhookIcon from "@mui/icons-material/Webhook";
+import { formulaActions } from "@/store/reducers";
 
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
@@ -22,11 +22,19 @@ interface SectionType {
   section: "client" | "server" | "webhooks";
 }
 
+const {
+  updatePaymentMethodsRequest,
+  updatePaymentsRequest,
+  updatePaymentsDetailsRequest,
+  updateCheckoutAPIVersion,
+  addUnsavedChanges,
+} = formulaActions;
+
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("client");
-  const { run, checkoutAPIVersion, unsavedChanges } = useSelector(
-    (state: RootState) => state.formula
-  );
+  const { run, unsavedChanges, reset, request, checkoutAPIVersion, build } =
+    useSelector((state: RootState) => state.formula);
+  const { paymentMethods, payments, paymentsDetails } = request;
   const { variantState } = useSelector(
     (state: RootState) => state.adyenVariant
   );
@@ -38,7 +46,7 @@ const Page: any = () => {
   const {
     paymentMethods: paymentMethodsAPIVersion,
     payments: paymentsAPIVersion,
-    paymentDetails: paymentDetailsAPIVersion,
+    paymentsDetails: paymentsDetailsAPIVersion,
   } = checkoutAPIVersion;
 
   // Change path to advance instead of advcanced
@@ -74,7 +82,6 @@ const Page: any = () => {
       value: "state",
     },
   ];
-
   if (section === "client") {
     tabsMap = [
       {
@@ -123,7 +130,19 @@ const Page: any = () => {
             {"POST"}
           </span>
         ),
-        content: <Api api="paymentMethods" schema="PaymentMethodsRequest" />,
+        content: (
+          <Api
+            api="paymentMethods"
+            schema="PaymentMethodsRequest"
+            build={build}
+            checkoutAPIVersion={checkoutAPIVersion}
+            request={paymentMethods}
+            updateRequest={updatePaymentMethodsRequest}
+            updateCheckoutAPIVersion={updateCheckoutAPIVersion}
+            addUnsavedChanges={addUnsavedChanges}
+            key={reset ? "run" : "default"}
+          />
+        ),
         value: "paymentmethods",
         unsavedChanges: unsavedChanges.paymentMethods,
       },
@@ -134,20 +153,44 @@ const Page: any = () => {
             {"POST"}
           </span>
         ),
-        content: <Api api="payments" schema="PaymentRequest" />,
+        content: (
+          <Api
+            api="payments"
+            schema="PaymentRequest"
+            build={build}
+            checkoutAPIVersion={checkoutAPIVersion}
+            request={payments}
+            updateRequest={updatePaymentsRequest}
+            updateCheckoutAPIVersion={updateCheckoutAPIVersion}
+            addUnsavedChanges={addUnsavedChanges}
+            key={reset ? "run" : "default"}
+          />
+        ),
         value: "payments",
         unsavedChanges: unsavedChanges.payments,
       },
       {
-        title: `/v${paymentDetailsAPIVersion}/payment/details`,
+        title: `/v${paymentsDetailsAPIVersion}/payment/details`,
         icon: (
           <span className="font-semibold px-1 text-xxs text-adyen">
             {"POST"}
           </span>
         ),
-        content: <Api api="paymentDetails" schema="PaymentDetailsRequest" />,
-        value: "paymentdetails",
-        unsavedChanges: unsavedChanges.paymentDetails,
+        content: (
+          <Api
+            api="paymentsDetails"
+            schema="PaymentDetailsRequest"
+            build={build}
+            checkoutAPIVersion={checkoutAPIVersion}
+            request={paymentsDetails}
+            updateRequest={updatePaymentsDetailsRequest}
+            updateCheckoutAPIVersion={updateCheckoutAPIVersion}
+            addUnsavedChanges={addUnsavedChanges}
+            key={reset ? "run" : "default"}
+          />
+        ),
+        value: "paymentsDetails",
+        unsavedChanges: unsavedChanges.paymentsDetails,
       },
     ];
     crumbs = ["advanced", variant, "server"];
@@ -179,7 +222,9 @@ const Page: any = () => {
         main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
         topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
         bottomRight={
-          <SandBoxTabs tabsMap={bottomRightTabsMap} />
+          <SandBoxTabs
+            tabsMap={bottomRightTabsMap}
+          />
         }
       />
     </div>

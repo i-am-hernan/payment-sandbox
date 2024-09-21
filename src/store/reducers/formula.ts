@@ -31,11 +31,12 @@ export interface Formula {
     js: boolean;
     paymentMethods: boolean;
     payments: boolean;
-    paymentDetails: boolean;
+    paymentsDetails: boolean;
     events: boolean;
   };
   build: Formula | null;
   run: boolean;
+  reset: boolean;
   redirectResult: string | null;
 }
 
@@ -44,7 +45,7 @@ const initialState: FormulaPropType = {
   checkoutAPIVersion: {
     paymentMethods: "70",
     payments: "70",
-    paymentDetails: "70",
+    paymentsDetails: "70",
   },
   adyenWebVersion: "5.66.1",
   checkoutConfiguration: {
@@ -79,12 +80,13 @@ const initialState: FormulaPropType = {
     js: false,
     paymentMethods: false,
     payments: false,
-    paymentDetails: false,
+    paymentsDetails: false,
     events: false,
   },
   isRedirect: false,
   build: null,
   run: true,
+  reset: false,
   redirectResult: null,
 };
 
@@ -115,6 +117,9 @@ const formulaSlice = createSlice({
         ...action.payload,
       };
     },
+    updateReset: (state) => {
+      state.reset = !state.reset;
+    },
     resetUnsavedChanges: (state) => {
       state.unsavedChanges = {
         html: false,
@@ -122,7 +127,7 @@ const formulaSlice = createSlice({
         js: false,
         paymentMethods: false,
         payments: false,
-        paymentDetails: false,
+        paymentsDetails: false,
         events: false,
       };
     },
@@ -210,13 +215,14 @@ const formulaSlice = createSlice({
         ...lastBuild,
         build: lastBuild,
         run: state.run,
+        reset: state.reset,
         unsavedChanges: {
           html: false,
           style: false,
           js: false,
           paymentMethods: false,
           payments: false,
-          paymentDetails: false,
+          paymentsDetails: false,
           events: false,
         },
       };

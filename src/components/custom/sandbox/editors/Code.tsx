@@ -39,15 +39,7 @@ const Code = (props: any) => {
     formatCode();
   }, [code]);
 
-  const debounce = (func: (...args: any[]) => void, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-  };
-
-  const handleChange = debounce(async (value: string, type: string) => {
+  const handleChange = async (value: string, type: string) => {
     try {
       // Linter logic
       let diagnostics: Diagnostic[] = [];
@@ -56,23 +48,23 @@ const Code = (props: any) => {
         diagnostics = await jsonLinter({
           state: { doc: { toString: () => value } },
         });
-        parsedValue = diagnostics.length === 0 ? jsonc.parse(value): null;
+        parsedValue = diagnostics.length === 0 ? jsonc.parse(value) : null;
       } else if (type === "javascript") {
         diagnostics = await javascriptLinter({
           state: { doc: { toString: () => value } },
         });
-        parsedValue = diagnostics.length === 0 ? parse(value, { sourceType: "module" }): null;
+        parsedValue =
+          diagnostics.length === 0
+            ? parse(value, { sourceType: "module" })
+            : null;
       }
-
-      // Update global state if no linter error
-      // I need the value to be the parsed version of the string
       if (parsedValue) {
         onChange(parsedValue);
       }
     } catch (error) {
       console.error("Error in handleChange:", error);
     }
-  }, 1500); // Adjust the debounce delay as needed
+  };
 
   const jsonLinter = async (view: any) => {
     const diagnostics: Diagnostic[] = [];
@@ -124,7 +116,6 @@ const Code = (props: any) => {
     extensions.push(
       EditorView.updateListener.of((update: ViewUpdate) => {
         if (update.docChanged) {
-          console.log("update:: ", update);
           handleChange(update.state.doc.toString(), type);
         }
       }),

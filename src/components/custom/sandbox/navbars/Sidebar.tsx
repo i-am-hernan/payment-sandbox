@@ -27,7 +27,7 @@ const Sidebar = (props: any) => {
     js: jsUnsavedChanges,
     paymentMethods: paymentMethodsUnsavedChanges,
     payments: paymentsUnsavedChanges,
-    paymentDetails: paymentDetailsUnsavedChanges,
+    paymentsDetails: paymentsDetailsUnsavedChanges,
     events: eventsUnsavedChanges,
   } = unsavedChanges;
 
@@ -47,7 +47,7 @@ const Sidebar = (props: any) => {
       unsavedChanges: {
         paymentMethodsUnsavedChanges,
         paymentsUnsavedChanges,
-        paymentDetailsUnsavedChanges,
+        paymentsDetailsUnsavedChanges,
       },
     },
     {

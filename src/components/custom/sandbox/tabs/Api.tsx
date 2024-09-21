@@ -1,51 +1,38 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Enum from "@/components/custom/sandbox/editors/Enum";
-import { parseStringWithLinks } from "@/components/custom/utils/Utils";
-import { deepEqual } from "@/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import List from "@/components/custom/sandbox/editors/List";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
-import { formulaActions, specsActions } from "@/store/reducers";
+import { debounce, deepEqual } from "@/lib/utils";
+import { specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { String } from "@/components/custom/sandbox/editors/String";
 
-const {
-  updatePaymentMethodsRequest,
-  updatePaymentsRequest,
-  updatePaymentsDetailsRequest,
-  updateCheckoutAPIVersion,
-  addUnsavedChanges,
-} = formulaActions;
 const { updateSpecs } = specsActions;
 
 const Api = (props: any) => {
-  const { schema, api } = props;
   const {
-    request: formulaRequest,
-    checkoutAPIVersion,
+    schema,
+    api,
     build,
-  } = useSelector((state: RootState) => state.formula);
-  const { paymentMethods, payments, paymentsDetails } = formulaRequest;
-  const [accordianProperties, setAccordianProperties] = useState([]);
+    checkoutAPIVersion,
+    request: globalRequest,
+    updateRequest,
+    updateCheckoutAPIVersion,
+    addUnsavedChanges,
+  } = props;
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
   const properties =
     checkoutApi?.components?.schemas?.[schema]?.properties ?? null;
-
+  const [request, setRequest] = useState(globalRequest);
   const dispatch = useDispatch();
-
   const {
     data: apiSpecsData,
     loading: loadingApiSpecData,
@@ -54,24 +41,6 @@ const Api = (props: any) => {
     `api/specs/checkout/CheckoutService-v${checkoutAPIVersion[api]}.json`,
     "GET"
   );
-
-  const request =
-    schema === "PaymentMethodsRequest"
-      ? paymentMethods
-      : schema === "PaymentRequest"
-        ? payments
-        : schema === "PaymentDetailsRequest"
-          ? paymentsDetails
-          : null;
-
-  const updateRequest: any =
-    schema === "PaymentMethodsRequest"
-      ? updatePaymentMethodsRequest
-      : schema === "PaymentRequest"
-        ? updatePaymentsRequest
-        : schema === "PaymentDetailsRequest"
-          ? updatePaymentsDetailsRequest
-          : null;
 
   useEffect(() => {
     if (apiSpecsData) {
@@ -82,18 +51,18 @@ const Api = (props: any) => {
       );
     }
   }, [apiSpecsData]);
-// It may be better to set accordian properties within the accordian onChange and then use the effect to update the global state. We can even add a debounce function here to update the global state
-// Also, what if it also changes the unsaved changes
-// If we update the request, the code editor will call the onchange which updates the global state to the same value with different object
-// The issue is that if you double click the accordian, then it calls the handle change twice in quick succession
-// we then debounce an async function, each of which in turn updates the global state request to a different value, then calling the onchange
-// We could debounce any changes to the accordian, but that will also mean that it will debounce that change
+
   useEffect(() => {
-    let updatedValues: any = [];
-    if (request) {
-      updatedValues = [...Object.keys(request)];
-      setAccordianProperties(updatedValues);
-    }
+    const syncGlobalState = debounce((localState: any, build: any) => {
+      const isEqual = deepEqual(build.request[api], localState);
+      dispatch(updateRequest(localState));
+      dispatch(
+        addUnsavedChanges({
+          [api]: !isEqual,
+        })
+      );
+    }, 1000);
+    syncGlobalState(request, build);
   }, [request]);
 
   if (apiSpecsError) {
@@ -111,13 +80,7 @@ const Api = (props: any) => {
           code={JSON.stringify(request)}
           readOnly={false}
           onChange={(value: any) => {
-            const isEqual = deepEqual(build.request[api], value);
-            dispatch(updateRequest(value));
-            dispatch(
-              addUnsavedChanges({
-                [api]: !isEqual,
-              })
-            );
+            setRequest(value);
           }}
         />
       </ResizablePanel>
@@ -154,11 +117,10 @@ const Api = (props: any) => {
           />
         </div>
         {!loadingApiSpecData && (
-          <Accordion
-            type="multiple"
-            className="w-full"
-            value={accordianProperties}
-            onValueChange={(value: any) => {
+          <List
+            list={properties}
+            values={Object.keys(request)}
+            onChange={(value: any) => {
               const requestParameters = Object.keys(request);
               const isNewProperty = requestParameters.length < value.length;
               if (isNewProperty) {
@@ -167,52 +129,27 @@ const Api = (props: any) => {
                 let newProperty = null;
                 if (latestValue.type === "string") {
                   newProperty = { [latestKey]: "" };
-                  dispatch(updateRequest({ ...request, ...newProperty }));
+                  setRequest({ ...request, ...newProperty });
                 } else if (latestValue.type === "boolean") {
                   newProperty = { [latestKey]: true };
-                  dispatch(updateRequest({ ...request, ...newProperty }));
+                  setRequest({ ...request, ...newProperty });
                 } else if (latestValue.type === "array") {
                   newProperty = { [latestKey]: [] };
-                  dispatch(updateRequest({ ...request, ...newProperty }));
+                  setRequest({ ...request, ...newProperty });
                 }
               } else {
                 const removedProperties: any = requestParameters.filter((i) => {
-                  return value.indexOf(i);
+                  return value.indexOf(i) < 0;
                 });
                 if (removedProperties.length > 0) {
                   let updatedRequest = { ...request };
                   let removedProperty = removedProperties.pop();
                   delete updatedRequest[removedProperty];
-                  dispatch(updateRequest(updatedRequest));
+                  setRequest(updatedRequest);
                 }
               }
             }}
-          >
-            <p className="border-t-2 border-b-2 flex text-sm sticky top-0 bg-white z-10">
-              <span className="border-r-2 px-2 py-[1px]">parameters</span>
-            </p>
-            {properties &&
-              Object.keys(properties).map((property: any) => (
-                <AccordionItem
-                  key={property}
-                  value={property}
-                  className="hover:no-underline px-3"
-                >
-                  <AccordionTrigger className="px-1 py-3">
-                    <p className="text-sm">{property}</p>
-                    <p className="font-mono text-xs flex-grow text-left pl-2">
-                      {properties[property].type}
-                    </p>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <p className="text-xs pb-2 px-1">
-                      {parseStringWithLinks(properties[property].description)}
-                    </p>
-                    {/* {properties[property].type === "string" && <String />} */}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-          </Accordion>
+          />
         )}
       </ResizablePanel>
     </ResizablePanelGroup>
