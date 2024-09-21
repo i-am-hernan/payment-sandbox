@@ -152,7 +152,6 @@ const formulaSlice = createSlice({
     },
     updateSessionsRequest: (state, action: PayloadAction<FormulaPropType>) => {
       const updatedRequest = {
-        ...state.request.sessions,
         ...action.payload,
       };
       return {
@@ -168,7 +167,6 @@ const formulaSlice = createSlice({
       action: PayloadAction<FormulaPropType>
     ) => {
       const updatedRequest = {
-        ...state.request.paymentMethods,
         ...action.payload,
       };
       return {
@@ -181,7 +179,6 @@ const formulaSlice = createSlice({
     },
     updatePaymentsRequest: (state, action: PayloadAction<FormulaPropType>) => {
       const updatedRequest = {
-        ...state.request.payments,
         ...action.payload,
       };
       return {
@@ -197,7 +194,6 @@ const formulaSlice = createSlice({
       action: PayloadAction<FormulaPropType>
     ) => {
       const updatedRequest = {
-        ...state.request.paymentsDetails,
         ...action.payload,
       };
       return {

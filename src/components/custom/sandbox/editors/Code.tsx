@@ -124,6 +124,7 @@ const Code = (props: any) => {
     extensions.push(
       EditorView.updateListener.of((update: ViewUpdate) => {
         if (update.docChanged) {
+          console.log("update:: ", update);
           handleChange(update.state.doc.toString(), type);
         }
       }),

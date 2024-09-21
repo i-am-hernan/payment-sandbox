@@ -82,11 +82,16 @@ const Api = (props: any) => {
       );
     }
   }, [apiSpecsData]);
-
+// It may be better to set accordian properties within the accordian onChange and then use the effect to update the global state. We can even add a debounce function here to update the global state
+// Also, what if it also changes the unsaved changes
+// If we update the request, the code editor will call the onchange which updates the global state to the same value with different object
+// The issue is that if you double click the accordian, then it calls the handle change twice in quick succession
+// we then debounce an async function, each of which in turn updates the global state request to a different value, then calling the onchange
+// We could debounce any changes to the accordian, but that will also mean that it will debounce that change
   useEffect(() => {
     let updatedValues: any = [];
     if (request) {
-      updatedValues = ["select-version", ...Object.keys(request)];
+      updatedValues = [...Object.keys(request)];
       setAccordianProperties(updatedValues);
     }
   }, [request]);
@@ -126,68 +131,63 @@ const Api = (props: any) => {
             <div className="text-xs">loading...</div>
           </div>
         )}
+        <p className="border-b-2 flex text-sm">
+          <span className="border-r-2 px-2 py-[1px]">version</span>
+        </p>
+        <div className="px-1 py-3">
+          <p className="text-xs pb-2 px-1">
+            {`Change the version of ${api} to test different scenarios.`}
+          </p>
+          <Enum
+            value={checkoutAPIVersion[api]}
+            set={APIVERSIONS}
+            title="Checkout API Version"
+            onChange={(value: any) => {
+              dispatch(
+                addUnsavedChanges({
+                  [api]: build.checkoutAPIVersion[api] !== value,
+                })
+              );
+              dispatch(updateSpecs(api));
+              dispatch(updateCheckoutAPIVersion({ [api]: value }));
+            }}
+          />
+        </div>
         {!loadingApiSpecData && (
           <Accordion
             type="multiple"
             className="w-full"
             value={accordianProperties}
             onValueChange={(value: any) => {
-              const isNewProperty =
-                Object.keys(request).length < value.length - 1;
-
+              const requestParameters = Object.keys(request);
+              const isNewProperty = requestParameters.length < value.length;
               if (isNewProperty) {
                 const latestKey = value[value.length - 1];
                 const latestValue = properties[latestKey];
                 let newProperty = null;
                 if (latestValue.type === "string") {
                   newProperty = { [latestKey]: "" };
-                  dispatch(updateRequest(newProperty));
+                  dispatch(updateRequest({ ...request, ...newProperty }));
                 } else if (latestValue.type === "boolean") {
                   newProperty = { [latestKey]: true };
-                  dispatch(updateRequest(newProperty));
+                  dispatch(updateRequest({ ...request, ...newProperty }));
                 } else if (latestValue.type === "array") {
                   newProperty = { [latestKey]: [] };
-                  dispatch(updateRequest(newProperty));
+                  dispatch(updateRequest({ ...request, ...newProperty }));
                 }
-              }else{
-                const removedKey = value.filter((x: any) => !request[x]);
-                if(removedKey.length > 0){
-                  console.log(removedKey)
+              } else {
+                const removedProperties: any = requestParameters.filter((i) => {
+                  return value.indexOf(i);
+                });
+                if (removedProperties.length > 0) {
+                  let updatedRequest = { ...request };
+                  let removedProperty = removedProperties.pop();
+                  delete updatedRequest[removedProperty];
+                  dispatch(updateRequest(updatedRequest));
                 }
               }
             }}
           >
-            <p className="border-b-2 flex text-sm">
-              <span className="border-r-2 px-2 py-[1px]">version</span>
-            </p>
-            <AccordionItem
-              disabled={true}
-              value="select-version"
-              className="border-b-0 px-3"
-            >
-              <AccordionTrigger className="px-1 py-3">
-                <p className="text-sm">{`Checkout API v${checkoutAPIVersion[api]}`}</p>
-              </AccordionTrigger>
-              <AccordionContent>
-                <p className="text-xs pb-2 px-1">
-                  {`Change the version of ${api} to test different scenarios.`}
-                </p>
-                <Enum
-                  value={checkoutAPIVersion[api]}
-                  set={APIVERSIONS}
-                  title="Checkout API Version"
-                  onChange={(value: any) => {
-                    dispatch(
-                      addUnsavedChanges({
-                        [api]: build.checkoutAPIVersion[api] !== value,
-                      })
-                    );
-                    dispatch(updateSpecs(api));
-                    dispatch(updateCheckoutAPIVersion({ [api]: value }));
-                  }}
-                />
-              </AccordionContent>
-            </AccordionItem>
             <p className="border-t-2 border-b-2 flex text-sm sticky top-0 bg-white z-10">
               <span className="border-r-2 px-2 py-[1px]">parameters</span>
             </p>
