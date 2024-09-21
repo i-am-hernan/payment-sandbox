@@ -57,18 +57,16 @@ const initialState: FormulaPropType = {
   sessions: {},
   request: {
     paymentMethods: {
-      shopperReference: "Hernan",
+      merchantAccount: "HernanChalco",
     },
     payments: {
-      countryCode: "NL",
+      countryCode: "US",
       amount: {
         value: 10000,
-        currency: "EUR",
+        currency: "USD",
       },
-      channel: "Web",
       returnUrl: "http://localhost:3000/advanced/dropin",
-      reference: "reference",
-      shopperLocale: "en_US",
+      reference: "merchant-reference",
       merchantAccount: "HernanChalco",
     },
     paymentsDetails: {},

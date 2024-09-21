@@ -130,6 +130,12 @@ const Api = (props: any) => {
                 } else if (latestValue.type === "array") {
                   newProperty = { [latestKey]: [] };
                   setRequest({ ...request, ...newProperty });
+                } else if (!latestValue.type) {
+                  newProperty = { [latestKey]: {} };
+                  setRequest({ ...request, ...newProperty });
+                } else if (latestValue.type === "object") {
+                  newProperty = { [latestKey]: {} };
+                  setRequest({ ...request, ...newProperty });
                 }
               } else {
                 const removedProperties: any = requestParameters.filter((i) => {

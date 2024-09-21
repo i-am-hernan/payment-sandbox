@@ -16,7 +16,7 @@ const List = (props: any) => {
     onChange,
     required,
   } = props;
-
+  console.log("properties:: ", properties);
   return (
     <Accordion
       type="multiple"
@@ -41,6 +41,9 @@ const List = (props: any) => {
                   <span className="pl-2 text-grey">
                     {properties[property].type}
                   </span>
+                )}
+                {!properties[property].type && (
+                  <span className="pl-2 text-grey">{"object"}</span>
                 )}
                 {required.indexOf(property) > -1 && (
                   <span className="pl-2 text-warning">Required</span>
