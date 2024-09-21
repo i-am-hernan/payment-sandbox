@@ -1,7 +1,8 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
-import Enum from "@/components/custom/sandbox/editors/Enum";
 import List from "@/components/custom/sandbox/editors/List";
+import Version from "@/components/custom/sandbox/editors/Version";
+import Loading from "@/components/custom/utils/Loading";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -11,7 +12,6 @@ import { useApi } from "@/hooks/useApi";
 import { debounce, deepEqual } from "@/lib/utils";
 import { specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -86,40 +86,29 @@ const Api = (props: any) => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
-        {loadingApiSpecData && (
-          <div className="flex justify-center space-x-2 items-center text-center h-[100%]">
-            <div className="animate-spin text-xs">
-              <AutorenewIcon className="w-3 h-3" />
-            </div>
-            <div className="text-xs">loading...</div>
-          </div>
-        )}
-        <p className="border-b-2 flex text-sm">
-          <span className="border-r-2 px-2 py-[1px]">version</span>
-        </p>
-        <div className="px-1 py-3">
-          <p className="text-xs pb-2 px-1">
-            {`Change the version of ${api} to test different scenarios.`}
-          </p>
-          <Enum
-            value={checkoutAPIVersion[api]}
-            set={APIVERSIONS}
-            title="Checkout API Version"
-            onChange={(value: any) => {
-              dispatch(
-                addUnsavedChanges({
-                  [api]: build.checkoutAPIVersion[api] !== value,
-                })
-              );
-              dispatch(updateSpecs(api));
-              dispatch(updateCheckoutAPIVersion({ [api]: value }));
-            }}
-          />
-        </div>
+        {loadingApiSpecData && <Loading />}
+        <Version
+          label={api}
+          value={checkoutAPIVersion[api]}
+          options={APIVERSIONS}
+          onChange={(value: any) => {
+            dispatch(
+              addUnsavedChanges({
+                [api]: build.checkoutAPIVersion[api] !== value,
+              })
+            );
+            dispatch(updateSpecs(api));
+            dispatch(updateCheckoutAPIVersion({ [api]: value }));
+          }}
+        />
         {!loadingApiSpecData && (
           <List
-            list={properties}
-            values={Object.keys(request)}
+            properties={properties}
+            selectedProperties={Object.keys(request)}
+            values={request}
+            setValues={(value: any) => {
+              setRequest(value);
+            }}
             onChange={(value: any) => {
               const requestParameters = Object.keys(request);
               const isNewProperty = requestParameters.length < value.length;
@@ -132,6 +121,9 @@ const Api = (props: any) => {
                   setRequest({ ...request, ...newProperty });
                 } else if (latestValue.type === "boolean") {
                   newProperty = { [latestKey]: true };
+                  setRequest({ ...request, ...newProperty });
+                } else if (latestValue.type === "integer") {
+                  newProperty = { [latestKey]: 0 };
                   setRequest({ ...request, ...newProperty });
                 } else if (latestValue.type === "array") {
                   newProperty = { [latestKey]: [] };

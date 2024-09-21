@@ -31,7 +31,7 @@ const {
 } = formulaActions;
 
 const Page: any = () => {
-  const [section, setSection] = useState<SectionType["section"]>("client");
+  const [section, setSection] = useState<SectionType["section"]>("server");
   const { run, unsavedChanges, reset, request, checkoutAPIVersion, build } =
     useSelector((state: RootState) => state.formula);
   const { paymentMethods, payments, paymentsDetails } = request;
@@ -58,7 +58,7 @@ const Page: any = () => {
       title: `${variant}`,
       icon: (
         <span className="flex">
-          <span className="font-semibold px-1 text-xxs text-adyen">
+          <span className="font-semibold px-1 text-xxs text-preview">
             preview
           </span>
         </span>

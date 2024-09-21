@@ -66,6 +66,9 @@ module.exports = {
         js: {
           DEFAULT: "var(--color-js-icon)",
         },
+        preview: {
+          DEFAULT: "var(--color-preview-icon)",
+        }
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -33,21 +33,21 @@ const Sidebar = (props: any) => {
 
   const sideTabs: Array<SideTab> = [
     {
-      name: "client",
-      icon: <LanguageIcon />,
-      unsavedChanges: {
-        htmlUnsavedChanges,
-        styleUnsavedChanges,
-        jsUnsavedChanges,
-      },
-    },
-    {
       name: "server",
       icon: <StorageIcon />,
       unsavedChanges: {
         paymentMethodsUnsavedChanges,
         paymentsUnsavedChanges,
         paymentsDetailsUnsavedChanges,
+      },
+    },
+    {
+      name: "client",
+      icon: <LanguageIcon />,
+      unsavedChanges: {
+        htmlUnsavedChanges,
+        styleUnsavedChanges,
+        jsUnsavedChanges,
       },
     },
     {
