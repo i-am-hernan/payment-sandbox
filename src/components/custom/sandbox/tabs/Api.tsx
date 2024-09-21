@@ -31,6 +31,7 @@ const Api = (props: any) => {
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
   const properties =
     checkoutApi?.components?.schemas?.[schema]?.properties ?? null;
+  const required = checkoutApi?.components?.schemas?.[schema]?.required ?? null;
   const [request, setRequest] = useState(globalRequest);
   const dispatch = useDispatch();
   const {
@@ -104,6 +105,7 @@ const Api = (props: any) => {
         {!loadingApiSpecData && (
           <List
             properties={properties}
+            required={required}
             selectedProperties={Object.keys(request)}
             values={request}
             setValues={(value: any) => {

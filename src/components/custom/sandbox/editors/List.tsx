@@ -1,3 +1,5 @@
+import Enum from "@/components/custom/sandbox/editors/Enum";
+import { String } from "@/components/custom/sandbox/editors/String";
 import { parseStringWithLinks } from "@/components/custom/utils/Utils";
 import {
   Accordion,
@@ -5,10 +7,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { String } from "@/components/custom/sandbox/editors/String";
-
 const List = (props: any) => {
-  const { properties, selectedProperties, values, setValues, onChange } = props;
+  const {
+    properties,
+    selectedProperties,
+    values,
+    setValues,
+    onChange,
+    required,
+  } = props;
+
   return (
     <Accordion
       type="multiple"
@@ -28,26 +36,50 @@ const List = (props: any) => {
           >
             <AccordionTrigger className="px-1 py-3">
               <p className="text-sm">{property}</p>
-              <p className="font-mono text-xs flex-grow text-left pl-2">
-                {properties[property].type}
+              <p className="font-mono text-xs flex-grow text-left">
+                {properties[property].type && (
+                  <span className="pl-2 text-grey">
+                    {properties[property].type}
+                  </span>
+                )}
+                {required.indexOf(property) > -1 && (
+                  <span className="pl-2 text-warning">Required</span>
+                )}
               </p>
             </AccordionTrigger>
             <AccordionContent>
               <p className="text-xs pb-2 px-1">
                 {parseStringWithLinks(properties[property].description)}
               </p>
-              {properties[property].type === "string" && (
-                <String
-                  value={values[property] ? values[property] : ""}
-                  onChange={(value: any) => {
-                    if (value) {
-                      setValues({ ...values, [property]: value });
-                    } else {
-                      setValues({ ...values, [property]: "" });
+              {properties[property].type === "string" &&
+                !properties[property].enum && (
+                  <String
+                    value={values[property] ? values[property] : ""}
+                    onChange={(value: any) => {
+                      if (value) {
+                        setValues({ ...values, [property]: value });
+                      } else {
+                        setValues({ ...values, [property]: "" });
+                      }
+                    }}
+                  />
+                )}
+              {properties[property].type === "string" &&
+                properties[property].enum && (
+                  <Enum
+                    value={
+                      values[property] !== undefined ? values[property] : ""
                     }
-                  }}
-                />
-              )}
+                    onChange={(value: any) => {
+                      if (value) {
+                        setValues({ ...values, [property]: value });
+                      } else {
+                        setValues({ ...values, [property]: "" });
+                      }
+                    }}
+                    set={properties[property].enum}
+                  />
+                )}
               {properties[property].type === "integer" && (
                 <String
                   value={values[property] ? values[property] : 0}
@@ -60,14 +92,22 @@ const List = (props: any) => {
                   }}
                 />
               )}
-              {/* {properties[property].type === "array" && (
-                <String
-                  value={values[property]}
+              {properties[property].type === "boolean" && (
+                <Enum
+                  value={
+                    values[property] !== undefined
+                      ? values[property].toString()
+                      : ""
+                  }
                   onChange={(value: any) => {
-                    setValues({ ...values, [property]: value });
+                    setValues({
+                      ...values,
+                      [property]: value === "true" ? true : false,
+                    });
                   }}
+                  set={["true", "false"]}
                 />
-              )} */}
+              )}
             </AccordionContent>
           </AccordionItem>
         ))}

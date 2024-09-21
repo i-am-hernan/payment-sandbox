@@ -23,9 +23,9 @@ const Enum = (props: any) => {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {set.map((item: string) => (
-              <SelectItem key={item} value={item}>
-                {item}
+            {set.map((value: any) => (
+              <SelectItem key={value} value={value}>
+                {value}
               </SelectItem>
             ))}
           </SelectGroup>
