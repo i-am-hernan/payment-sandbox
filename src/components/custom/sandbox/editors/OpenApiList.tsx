@@ -129,9 +129,6 @@ const OpenApiList = (props: any) => {
                           : []
                       }
                       selectedProperties={
-                        // this will only work for one level deep, unless we pass sub properties
-                        // at layer two it should be values[outerproperty][property]
-                        // or I pass the sub values as well
                         values &&
                         values[property] &&
                         Object.keys(values[property])
@@ -223,12 +220,15 @@ const OpenApiList = (props: any) => {
                             requestParameters.filter((i) => {
                               return value.indexOf(i) < 0;
                             });
-                            console.log('removedProperties', removedProperties);
+                          console.log("removedProperties", removedProperties);
                           if (removedProperties.length > 0) {
                             let updatedRequest = { ...values[property] };
                             let removedProperty = removedProperties.pop();
                             delete updatedRequest[removedProperty];
-                            setValues(updatedRequest);
+                            setValues({
+                              ...values,
+                              [property]: updatedRequest,
+                            });
                           }
                         }
                       }}

@@ -132,16 +132,14 @@ const Code = (props: any) => {
   }
 
   return (
-    <div className="flex">
-      <div className="flex codemirror-wrapper">
-        <CodeMirror
-          value={formattedCode}
-          height="100%"
-          readOnly={readOnly}
-          theme={githubLight}
-          extensions={extensions}
-        />
-      </div>
+    <div className="flex h-[100%] codemirror-wrapper">
+      <CodeMirror
+        value={formattedCode}
+        height="100%"
+        readOnly={readOnly}
+        theme={githubLight}
+        extensions={extensions}
+      />
     </div>
   );
 };

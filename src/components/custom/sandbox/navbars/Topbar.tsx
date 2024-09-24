@@ -54,7 +54,7 @@ const Topbar = (props: any) => {
             className="px-2 pt-0 pb-0"
             onClick={() => {
               dispatch(clearOnDeckInfo());
-              dispatch(updateReset());
+              dispatch(updateReset(true));
             }}
           >
             <RestoreIcon sx={{ fontSize: "16px" }} />

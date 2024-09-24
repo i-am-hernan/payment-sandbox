@@ -20,13 +20,16 @@ const { updateSpecs } = specsActions;
 const Api = (props: any) => {
   const {
     schema,
+    reset,
     api,
     build,
     checkoutAPIVersion,
     request: globalRequest,
     updateRequest,
+    clearOnDeckInfo,
     updateCheckoutAPIVersion,
     addUnsavedChanges,
+    updateReset,
   } = props;
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
   const schemas = checkoutApi?.components?.schemas ?? null;
@@ -54,7 +57,7 @@ const Api = (props: any) => {
   }, [apiSpecsData]);
 
   useEffect(() => {
-    const syncGlobalState = debounce((localState: any, build: any) => {
+    const syncGlobalState: any = debounce((localState: any, build: any) => {
       const isEqual = deepEqual(build.request[api], localState);
       dispatch(updateRequest(localState));
       dispatch(
@@ -63,8 +66,18 @@ const Api = (props: any) => {
         })
       );
     }, 1000);
-    syncGlobalState(request, build);
-  }, [request]);
+
+    const syncLocalState = () => {
+      setRequest(globalRequest);
+      dispatch(updateReset(false));
+    };
+
+    if (reset) {
+      syncLocalState();
+    } else {
+      syncGlobalState(request, build);
+    }
+  }, [request, reset]);
 
   if (apiSpecsError) {
     return <div>Error</div>;

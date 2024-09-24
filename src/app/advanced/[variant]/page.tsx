@@ -28,6 +28,8 @@ const {
   updatePaymentsDetailsRequest,
   updateCheckoutAPIVersion,
   addUnsavedChanges,
+  clearOnDeckInfo,
+  updateReset,
 } = formulaActions;
 
 const Page: any = () => {
@@ -140,7 +142,9 @@ const Page: any = () => {
             updateRequest={updatePaymentMethodsRequest}
             updateCheckoutAPIVersion={updateCheckoutAPIVersion}
             addUnsavedChanges={addUnsavedChanges}
-            key={reset ? "run" : "default"}
+            reset={reset}
+            clearOnDeckInfo={clearOnDeckInfo}
+            updateReset={updateReset}
           />
         ),
         value: "paymentmethods",
@@ -163,7 +167,9 @@ const Page: any = () => {
             updateRequest={updatePaymentsRequest}
             updateCheckoutAPIVersion={updateCheckoutAPIVersion}
             addUnsavedChanges={addUnsavedChanges}
-            key={reset ? "run" : "default"}
+            reset={reset}
+            clearOnDeckInfo={clearOnDeckInfo}
+            updateReset={updateReset}
           />
         ),
         value: "payments",
@@ -186,7 +192,9 @@ const Page: any = () => {
             updateRequest={updatePaymentsDetailsRequest}
             updateCheckoutAPIVersion={updateCheckoutAPIVersion}
             addUnsavedChanges={addUnsavedChanges}
-            key={reset ? "run" : "default"}
+            reset={reset}
+            clearOnDeckInfo={clearOnDeckInfo}
+            updateReset={updateReset}
           />
         ),
         value: "paymentsDetails",
@@ -221,11 +229,7 @@ const Page: any = () => {
       <Sandbox
         main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
         topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
-        bottomRight={
-          <SandBoxTabs
-            tabsMap={bottomRightTabsMap}
-          />
-        }
+        bottomRight={<SandBoxTabs tabsMap={bottomRightTabsMap} />}
       />
     </div>
   );
