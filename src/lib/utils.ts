@@ -76,3 +76,16 @@ export const debounce = (func: (...args: any[]) => void, wait: number) => {
     timeout = setTimeout(() => func.apply(this, args), wait);
   };
 };
+
+export const resolveRef = (json: any, ref: string) => {
+  // console.log("json, ref ", json, ref);
+  const path = ref.split("/").slice(1); // Split and remove the initial '#'
+  let result = json;
+  for (const segment of path) {
+    result = result[segment];
+    if (result === undefined) {
+      throw new Error(`Reference ${ref} not found in JSON`);
+    }
+  }
+  return result;
+};

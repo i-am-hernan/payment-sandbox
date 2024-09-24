@@ -1,6 +1,6 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
-import List from "@/components/custom/sandbox/editors/List";
+import OpenApiList from "@/components/custom/sandbox/editors/OpenApiList";
 import Version from "@/components/custom/sandbox/editors/Version";
 import Loading from "@/components/custom/utils/Loading";
 import {
@@ -29,9 +29,9 @@ const Api = (props: any) => {
     addUnsavedChanges,
   } = props;
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
-  const properties =
-    checkoutApi?.components?.schemas?.[schema]?.properties ?? null;
-  const required = checkoutApi?.components?.schemas?.[schema]?.required ?? null;
+  const schemas = checkoutApi?.components?.schemas ?? null;
+  const properties = schemas?.[schema]?.properties ?? null;
+  const required = schemas?.[schema]?.required ?? null;
   const [request, setRequest] = useState(globalRequest);
   const dispatch = useDispatch();
   const {
@@ -102,8 +102,12 @@ const Api = (props: any) => {
             dispatch(updateCheckoutAPIVersion({ [api]: value }));
           }}
         />
+        <p className="border-b-2 flex text-sm sticky top-0 bg-white z-10">
+          <span className="border-r-2 px-2 py-[1px]">parameters</span>
+        </p>
         {!loadingApiSpecData && (
-          <List
+          <OpenApiList
+            openApi={checkoutApi}
             properties={properties}
             required={required}
             selectedProperties={Object.keys(request)}
