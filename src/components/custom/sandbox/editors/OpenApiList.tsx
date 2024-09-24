@@ -1,5 +1,6 @@
 import Enum from "@/components/custom/sandbox/editors/Enum";
 import { String } from "@/components/custom/sandbox/editors/String";
+import Array from "@/components/custom/sandbox/editors/Array";
 import { parseStringWithLinks } from "@/components/custom/utils/Utils";
 import {
   Accordion,
@@ -113,6 +114,7 @@ const OpenApiList = (props: any) => {
                     set={["true", "false"]}
                   />
                 )}
+                {properties[property].type === "array" && <Array />}
                 {properties[property]["$ref"] && (
                   <div className="border-l-[1px]">
                     <OpenApiList
@@ -120,6 +122,9 @@ const OpenApiList = (props: any) => {
                       properties={
                         resolveRef(openApi, properties[property]["$ref"])
                           .properties
+                          ? resolveRef(openApi, properties[property]["$ref"])
+                              .properties
+                          : []
                       }
                       required={
                         resolveRef(openApi, properties[property]["$ref"])
@@ -156,71 +161,30 @@ const OpenApiList = (props: any) => {
                           let mergedProperties = null;
                           if (latestValue.type === "string") {
                             newProperty = { [latestKey]: "" };
-                            mergedProperties = {
-                              ...values[property],
-                              ...newProperty,
-                            };
-                            setValues({
-                              ...values,
-                              [property]: mergedProperties,
-                            });
                           } else if (latestValue.type === "boolean") {
                             newProperty = { [latestKey]: true };
-                            mergedProperties = {
-                              ...values[property],
-                              ...newProperty,
-                            };
-                            setValues({
-                              ...values,
-                              [property]: mergedProperties,
-                            });
                           } else if (latestValue.type === "integer") {
                             newProperty = { [latestKey]: 0 };
-                            mergedProperties = {
-                              ...values[property],
-                              ...newProperty,
-                            };
-                            setValues({
-                              ...values,
-                              [property]: mergedProperties,
-                            });
                           } else if (latestValue.type === "array") {
                             newProperty = { [latestKey]: [] };
-                            mergedProperties = {
-                              ...values[property],
-                              ...newProperty,
-                            };
-                            setValues({
-                              ...values,
-                              [property]: mergedProperties,
-                            });
                           } else if (!latestValue.type) {
                             newProperty = { [latestKey]: {} };
-                            mergedProperties = {
-                              ...values[property],
-                              ...newProperty,
-                            };
-                            setValues({
-                              ...values,
-                              [property]: mergedProperties,
-                            });
                           } else if (latestValue.type === "object") {
                             newProperty = { [latestKey]: {} };
-                            mergedProperties = {
-                              ...values[property],
-                              ...newProperty,
-                            };
-                            setValues({
-                              ...values,
-                              [property]: mergedProperties,
-                            });
                           }
+                          mergedProperties = {
+                            ...values[property],
+                            ...newProperty,
+                          };
+                          setValues({
+                            ...values,
+                            [property]: mergedProperties,
+                          });
                         } else {
                           const removedProperties: any =
-                            requestParameters.filter((i) => {
+                            requestParameters.filter((i: any) => {
                               return value.indexOf(i) < 0;
                             });
-                          console.log("removedProperties", removedProperties);
                           if (removedProperties.length > 0) {
                             let updatedRequest = { ...values[property] };
                             let removedProperty = removedProperties.pop();

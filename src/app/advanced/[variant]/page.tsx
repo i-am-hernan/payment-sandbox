@@ -143,7 +143,6 @@ const Page: any = () => {
             updateCheckoutAPIVersion={updateCheckoutAPIVersion}
             addUnsavedChanges={addUnsavedChanges}
             reset={reset}
-            clearOnDeckInfo={clearOnDeckInfo}
             updateReset={updateReset}
           />
         ),
@@ -168,7 +167,6 @@ const Page: any = () => {
             updateCheckoutAPIVersion={updateCheckoutAPIVersion}
             addUnsavedChanges={addUnsavedChanges}
             reset={reset}
-            clearOnDeckInfo={clearOnDeckInfo}
             updateReset={updateReset}
           />
         ),
@@ -193,7 +191,6 @@ const Page: any = () => {
             updateCheckoutAPIVersion={updateCheckoutAPIVersion}
             addUnsavedChanges={addUnsavedChanges}
             reset={reset}
-            clearOnDeckInfo={clearOnDeckInfo}
             updateReset={updateReset}
           />
         ),

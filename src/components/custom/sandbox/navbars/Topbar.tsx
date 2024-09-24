@@ -28,7 +28,7 @@ const Topbar = (props: any) => {
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
     >
       <div className="mr-2 relative">
-        <Tooltip title="Reset back to base configuration">
+        <Tooltip title="Reset back to base.">
           <Button
             key="run"
             variant="outline"
@@ -46,7 +46,7 @@ const Topbar = (props: any) => {
         <span className="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs rounded-full">
           {totalUnsavedChanges !== 0 && totalUnsavedChanges}
         </span>
-        <Tooltip title="Reset back to last build's configuration">
+        <Tooltip title="Reset back to last build.">
           <Button
             key="run"
             variant="outline"

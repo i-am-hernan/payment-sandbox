@@ -28,8 +28,7 @@ export const ManageAdvanceComponent = () => {
     txVariantConfiguration,
     request,
   } = build;
-  const { paymentMethods, payments, paymentsDetails } =
-    request;
+  const { paymentMethods, payments, paymentsDetails } = request;
 
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
@@ -63,12 +62,10 @@ export const ManageAdvanceComponent = () => {
 
   if (loadingAdyenScript || !variant) {
     return (
-      <div className="flex flex-col space-y-3 items-center m-4">
-        <Skeleton className="h-[180px] w-[250px] rounded-xl bg-border" />
-        <div className="space-y-2">
-          <Skeleton className="h-7 w-[250px] bg-border" />
-          <Skeleton className="h-7 w-[250px] bg-border" />
-        </div>
+      <div className="flex flex-col h-[100%] space-y-3 items-center p-2">
+        <Skeleton className="h-[100%] w-[100%] rounded-xl bg-border" />
+        <Skeleton className="h-7 w-[100%] bg-border" />
+        <Skeleton className="h-7 w-[100%] bg-border" />
       </div>
     );
   }
@@ -78,7 +75,7 @@ export const ManageAdvanceComponent = () => {
   }
 
   return (
-    <div>
+    <div className="p-2">
       {!isRedirect && (
         <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}

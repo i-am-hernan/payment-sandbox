@@ -26,7 +26,6 @@ const Api = (props: any) => {
     checkoutAPIVersion,
     request: globalRequest,
     updateRequest,
-    clearOnDeckInfo,
     updateCheckoutAPIVersion,
     addUnsavedChanges,
     updateReset,
