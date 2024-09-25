@@ -5,6 +5,7 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import { useDispatch, useSelector } from "react-redux";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Tooltip from "@mui/material/Tooltip";
+import { useEffect, useRef } from "react";
 
 const {
   updateRun,
@@ -21,6 +22,35 @@ const Topbar = (props: any) => {
     (value) => value
   ).length;
 
+  const clearButtonRef = useRef<HTMLButtonElement>(null);
+  const runButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.shiftKey &&
+        event.key === "l"
+      ) {
+        event.preventDefault();
+        if (clearButtonRef.current) {
+          clearButtonRef.current.click();
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        event.preventDefault();
+        if (runButtonRef.current) {
+          runButtonRef.current.click();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   // Set the merchant account name in the top left corner, with the ability to edit the value. This will change the merchant account across all of the API requests. Although the user can always change it later. If the merchanat accounts are different than what is set then we throw a warning
   return (
     <span
@@ -30,7 +60,7 @@ const Topbar = (props: any) => {
       <div className="mr-2 relative">
         <Tooltip title="Reset back to base.">
           <Button
-            key="run"
+            key="reset"
             variant="outline"
             size="sm"
             className="px-2 pt-0 pb-0"
@@ -43,12 +73,12 @@ const Topbar = (props: any) => {
         </Tooltip>
       </div>
       <div className="mr-2 relative">
-        <span className="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs rounded-full">
+        <span className="absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs rounded-full">
           {totalUnsavedChanges !== 0 && totalUnsavedChanges}
         </span>
         <Tooltip title="Reset back to last build.">
           <Button
-            key="run"
+            key="clear"
             variant="outline"
             size="sm"
             className="px-2 pt-0 pb-0"
@@ -56,6 +86,7 @@ const Topbar = (props: any) => {
               dispatch(clearOnDeckInfo());
               dispatch(updateReset(true));
             }}
+            ref={clearButtonRef}
           >
             <RestoreIcon sx={{ fontSize: "16px" }} />
           </Button>
@@ -79,6 +110,7 @@ const Topbar = (props: any) => {
           dispatch(updateRun());
           dispatch(resetUnsavedChanges());
         }}
+        ref={runButtonRef}
       >
         Run
       </Button>

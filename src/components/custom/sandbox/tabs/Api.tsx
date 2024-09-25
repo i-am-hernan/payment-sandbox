@@ -1,6 +1,7 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import OpenApiList from "@/components/custom/sandbox/editors/OpenApiList";
+import OpenApiSearch from "@/components/custom/sandbox/editors/OpenApiSearch";
 import Version from "@/components/custom/sandbox/editors/Version";
 import Loading from "@/components/custom/utils/Loading";
 import {
@@ -35,6 +36,8 @@ const Api = (props: any) => {
   const properties = schemas?.[schema]?.properties ?? null;
   const required = schemas?.[schema]?.required ?? null;
   const [request, setRequest] = useState(globalRequest);
+  const [search, setSearch] = useState("");
+  const [filteredProperties, setFilteredProperties] = useState(properties);
   const dispatch = useDispatch();
   const {
     data: apiSpecsData,
@@ -56,6 +59,22 @@ const Api = (props: any) => {
   }, [apiSpecsData]);
 
   useEffect(() => {
+    if (search) {
+      const filtered = Object.keys(properties).filter((key) =>
+        key.toLowerCase().includes(search.toLowerCase())
+      );
+      setFilteredProperties(
+        filtered.reduce((obj: any, key) => {
+          obj[key] = properties[key];
+          return obj;
+        }, {})
+      );
+    } else {
+      setFilteredProperties(properties);
+    }
+  }, [search, properties]);
+
+  useEffect(() => {
     const syncGlobalState: any = debounce((localState: any, build: any) => {
       const isEqual = deepEqual(build.request[api], localState);
       dispatch(updateRequest(localState));
@@ -64,7 +83,7 @@ const Api = (props: any) => {
           [api]: !isEqual,
         })
       );
-    }, 1000);
+    }, 500);
 
     const syncLocalState = () => {
       setRequest(globalRequest);
@@ -110,17 +129,21 @@ const Api = (props: any) => {
                 [api]: build.checkoutAPIVersion[api] !== value,
               })
             );
-            dispatch(updateSpecs(api));
+            dispatch(updateSpecs(api)); // 
             dispatch(updateCheckoutAPIVersion({ [api]: value }));
           }}
         />
-        <p className="border-b-2 flex text-sm sticky top-0 bg-white z-10">
-          <span className="border-r-2 px-2 py-[1px]">parameters</span>
-        </p>
-        {!loadingApiSpecData && (
+        {
+          <OpenApiSearch
+            onChange={(e: any) => {
+              setSearch(e.target.value);
+            }}
+          />
+        }
+        {!loadingApiSpecData && apiSpecsData && (
           <OpenApiList
-            openApi={checkoutApi}
-            properties={properties}
+            openApi={apiSpecsData}
+            properties={filteredProperties} // this is where we will filter the properties
             required={required}
             selectedProperties={Object.keys(request)}
             values={request}

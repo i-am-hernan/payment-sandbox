@@ -50,15 +50,7 @@ export const ManageAdvanceComponent = () => {
       dispatch(updateIsRedirect(true));
       dispatch(updateRedirectResult(redirectResultQueryParameter));
     }
-
-    if (sdkSpecsData) {
-      dispatch(
-        updateSpecs({
-          adyenWeb: sdkSpecsData,
-        })
-      );
-    }
-  }, [redirectResultQueryParameter, isRedirect, sdkSpecsData]);
+  }, [redirectResultQueryParameter, isRedirect]);
 
   if (loadingAdyenScript || !variant) {
     return (

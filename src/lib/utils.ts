@@ -84,7 +84,7 @@ export const resolveRef = (json: any, ref: string) => {
   for (const segment of path) {
     result = result[segment];
     if (result === undefined) {
-      throw new Error(`Reference ${ref} not found in JSON`);
+      return null;
     }
   }
   return result;

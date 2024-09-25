@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import React from "react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface Tab {
   title: string;
@@ -26,6 +26,37 @@ interface TabsProps {
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   const { tabsMap, crumbs } = props;
   const [tabTitle, setTabTitle] = useState(tabsMap[0].value);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (tabsMap.length > 1) {
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          const currentIndex = tabsMap.findIndex(
+            (tab) => tab.value === tabTitle
+          );
+          const nextIndex = (currentIndex + 1) % tabsMap.length;
+          setTabTitle(tabsMap[nextIndex].value);
+          tabRefs.current[nextIndex]?.focus();
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          const currentIndex = tabsMap.findIndex(
+            (tab) => tab.value === tabTitle
+          );
+          const prevIndex =
+            (currentIndex - 1 + tabsMap.length) % tabsMap.length;
+          setTabTitle(tabsMap[prevIndex].value);
+          tabRefs.current[prevIndex]?.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [tabTitle, tabsMap]);
 
   return (
     <Tabs
@@ -40,6 +71,9 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               key={index}
               value={tab.value}
               className=" flex px-2 py-[2px] justify-space-between"
+              ref={(el) => {
+                tabRefs.current[index] = el;
+              }}
             >
               <span>{tab.icon}</span>
               <p className="px-1 text-xs">{tab.title}</p>
