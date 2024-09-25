@@ -29,14 +29,14 @@ const OpenApiSearch = (props: any) => {
           <span className="border-r-2 px-2 py-[1px]">parameters</span>
         </p>
       </div>
-      <div className="flex py-2 px-3">
+      <div className="flex py-2 px-4">
         <Input
           className="text-xs py-0 rounded-r-none"
           ref={inputRef}
           type="search"
           placeholder="search"
           onChange={onChange}
-        ></Input>
+        />
         <Button
           key="run"
           variant="default"

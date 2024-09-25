@@ -33,6 +33,7 @@ export const ManageAdvanceComponent = () => {
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
 
+    // we are going to have to move this to then component that will download the sdk specs
   const { data: sdkSpecsData, error: sdkSpecsError } = useApi(
     `api/specs/adyen-web/WebComponents-v${adyenWebVersion.replaceAll(".", "_")}`,
     "GET"
@@ -63,6 +64,7 @@ export const ManageAdvanceComponent = () => {
   }
 
   if (adyenScriptError || sdkSpecsError) {
+    // Need to add an error that we are not able to download adyen script or the specs
     return <div>Error</div>;
   }
 

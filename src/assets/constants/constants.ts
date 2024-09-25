@@ -1,4 +1,4 @@
-export const WEBVERSIONS = ["5.66.1", "5.66.0"];
+export const WEBVERSIONS = ["5.66.1", "5.66.0", "6.2.0"];
 export const APIVERSIONS = [
   "37",
   "40",

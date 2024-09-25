@@ -20,7 +20,7 @@ const OpenApiList = (props: any) => {
     onChange,
     required,
   } = props;
-  
+
   return (
     <div>
       <Accordion
@@ -115,7 +115,18 @@ const OpenApiList = (props: any) => {
                       set={["true", "false"]}
                     />
                   )}
-                  {properties[property].type === "array" && <Array />}
+                  {properties[property].type === "array" && (
+                    <Array
+                      value={values[property] ? values[property] : []}
+                      onChange={(value: any) => {
+                        if (value) {
+                          setValues({ ...values, [property]: value });
+                        } else {
+                          setValues({ ...values, [property]: [] });
+                        }
+                      }}
+                    />
+                  )}
                   {properties[property]["$ref"] && openApi && (
                     <div className="border-l-[1px]">
                       <OpenApiList
