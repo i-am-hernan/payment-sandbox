@@ -20,7 +20,7 @@ const OpenApiList = (props: any) => {
     onChange,
     required,
   } = props;
-  console.log("openApi", openApi);
+  
   return (
     <div>
       <Accordion

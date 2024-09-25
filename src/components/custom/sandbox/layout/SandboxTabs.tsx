@@ -31,7 +31,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (tabsMap.length > 1) {
-        if (event.key === "ArrowRight") {
+        if (event.shiftKey && event.key === "ArrowRight") {
           event.preventDefault();
           const currentIndex = tabsMap.findIndex(
             (tab) => tab.value === tabTitle
@@ -39,7 +39,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
           const nextIndex = (currentIndex + 1) % tabsMap.length;
           setTabTitle(tabsMap[nextIndex].value);
           tabRefs.current[nextIndex]?.focus();
-        } else if (event.key === "ArrowLeft") {
+        } else if (event.shiftKey && event.key === "ArrowLeft") {
           event.preventDefault();
           const currentIndex = tabsMap.findIndex(
             (tab) => tab.value === tabTitle
