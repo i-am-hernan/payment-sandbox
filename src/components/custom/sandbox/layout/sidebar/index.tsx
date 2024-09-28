@@ -47,7 +47,11 @@ const Sidebar = (props: any) => {
             <div className="space-y-2">
               {paymentMethodsResponse &&
                 paymentMethodsResponse.paymentMethods.map((paymentMethod: any) => (
-                  <ExpandableCards key={paymentMethod.type} paymentMethod={paymentMethod.name} />
+                  <ExpandableCards
+                    key={paymentMethod.type}
+                    paymentMethodName={paymentMethod.name}
+                    paymentMethodType={paymentMethod.type}
+                  />
                 ))}
             </div>
 
