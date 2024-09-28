@@ -1,6 +1,7 @@
 export async function POST(request: Request, { params }: { params: { version: string } }) {
   try {
-    const requestBody = await request.json();
+    // TODO: Had to change this from request.json() to request.body.
+    const requestBody = request.body;
     const response = await fetch(`https://checkout-test.adyen.com/${params.version}/paymentMethods`, {
       method: "POST",
       headers: {
