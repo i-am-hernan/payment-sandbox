@@ -34,7 +34,7 @@ const Sidebar = (props: any) => {
   const sideTabs: Array<SideTab> = [
     {
       name: "server",
-      icon: <StorageIcon />,
+      icon: <StorageIcon sx={{ fontSize: "20px" }}/>,
       unsavedChanges: {
         paymentMethodsUnsavedChanges,
         paymentsUnsavedChanges,
@@ -43,7 +43,7 @@ const Sidebar = (props: any) => {
     },
     {
       name: "client",
-      icon: <LanguageIcon />,
+      icon: <LanguageIcon sx={{ fontSize: "20px" }}/>,
       unsavedChanges: {
         htmlUnsavedChanges,
         styleUnsavedChanges,
@@ -52,7 +52,7 @@ const Sidebar = (props: any) => {
     },
     {
       name: "webhooks",
-      icon: <WebhookIcon />,
+      icon: <WebhookIcon sx={{ fontSize: "20px" }}/>,
       unsavedChanges: {
         eventsUnsavedChanges,
       },
