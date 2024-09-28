@@ -1,3 +1,4 @@
+import { ExpandableCards } from "@/components/custom/expandable-cards";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -43,19 +44,12 @@ const Sidebar = (props: any) => {
               <DrawerTitle>Online Payments</DrawerTitle>
               <DrawerDescription>Components</DrawerDescription>
             </DrawerHeader>
-
-            {paymentMethodsResponse && (
-              <div>
-                <DrawerFooter>Payment Methods</DrawerFooter>
-                <div className="flex flex-col space-y-3">
-                  {paymentMethodsResponse.paymentMethods.map((paymentMethod: any) => (
-                    <Button key={paymentMethod.type}>
-                      <span>{paymentMethod.name}</span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
+            <div className="space-y-2">
+              {paymentMethodsResponse &&
+                paymentMethodsResponse.paymentMethods.map((paymentMethod: any) => (
+                  <ExpandableCards key={paymentMethod.type} paymentMethod={paymentMethod.name} />
+                ))}
+            </div>
 
             <DrawerFooter>Theme switch</DrawerFooter>
           </DrawerContent>
