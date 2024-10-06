@@ -19,7 +19,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 interface SectionType {
-  section: "client" | "server" | "webhooks";
+  section: "Client" | "Server" | "Webhooks";
 }
 
 const {
@@ -29,7 +29,7 @@ const {
 } = formulaActions;
 
 const Page: any = () => {
-  const [section, setSection] = useState<SectionType["section"]>("server");
+  const [section, setSection] = useState<SectionType["section"]>("Server");
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
@@ -79,7 +79,7 @@ const Page: any = () => {
       value: "state",
     },
   ];
-  if (section === "client") {
+  if (section === "Client") {
     tabsMap = [
       {
         title: `${variant ? variant : "checkout"}.js`,
@@ -118,7 +118,7 @@ const Page: any = () => {
       },
     ];
     crumbs = ["advanced", variant, "client"];
-  } else if (section === "server") {
+  } else if (section === "Server") {
     tabsMap = [
       {
         title: `/v${paymentMethodsAPIVersion}/paymentMethods`,
@@ -174,7 +174,7 @@ const Page: any = () => {
       },
     ];
     crumbs = ["advanced", variant, "server"];
-  } else if (section === "webhooks") {
+  } else if (section === "Webhooks") {
     tabsMap = [
       {
         title: "webhooks",

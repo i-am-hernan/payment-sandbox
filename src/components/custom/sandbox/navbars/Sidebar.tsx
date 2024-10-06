@@ -12,11 +12,15 @@ import LanguageIcon from "@mui/icons-material/Language";
 import MenuIcon from "@mui/icons-material/Menu";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebhookIcon from "@mui/icons-material/Webhook";
+import Tooltip from "@mui/material/Tooltip";
+import { useEffect, useRef } from "react";
 
 interface SideTab {
   name: string;
   icon: JSX.Element;
   unsavedChanges: any;
+  hotKey: string;
+  ref: any;
 }
 
 const Sidebar = (props: any) => {
@@ -31,31 +35,68 @@ const Sidebar = (props: any) => {
     events: eventsUnsavedChanges,
   } = unsavedChanges;
 
+  const serverButtonRef = useRef<HTMLButtonElement>(null);
+  const clientButtonRef = useRef<HTMLButtonElement>(null);
+  const webhookButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "i") {
+        event.preventDefault();
+        if (serverButtonRef.current) {
+          serverButtonRef.current.click();
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key === "j") {
+        event.preventDefault();
+        if (clientButtonRef.current) {
+          clientButtonRef.current.click();
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key === "k") {
+        event.preventDefault();
+        if (webhookButtonRef.current) {
+          webhookButtonRef.current.click();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const sideTabs: Array<SideTab> = [
     {
-      name: "server",
-      icon: <StorageIcon sx={{ fontSize: "20px" }}/>,
+      name: "Server",
+      hotKey: "⌘ + i",
+      icon: <StorageIcon sx={{ fontSize: "20px" }} />,
       unsavedChanges: {
         paymentMethodsUnsavedChanges,
         paymentsUnsavedChanges,
         paymentsDetailsUnsavedChanges,
       },
+      ref: serverButtonRef,
     },
     {
-      name: "client",
-      icon: <LanguageIcon sx={{ fontSize: "20px" }}/>,
+      name: "Client",
+      hotKey: "⌘ + j",
+      icon: <LanguageIcon sx={{ fontSize: "20px" }} />,
       unsavedChanges: {
         htmlUnsavedChanges,
         styleUnsavedChanges,
         jsUnsavedChanges,
       },
+      ref: clientButtonRef,
     },
     {
-      name: "webhooks",
-      icon: <WebhookIcon sx={{ fontSize: "20px" }}/>,
+      name: "Webhooks",
+      hotKey: "⌘ + k",
+      icon: <WebhookIcon sx={{ fontSize: "20px" }} />,
       unsavedChanges: {
         eventsUnsavedChanges,
       },
+      ref: webhookButtonRef,
     },
   ];
 
@@ -81,19 +122,22 @@ const Sidebar = (props: any) => {
       <div className="mt-1">
         {sideTabs.map((tab, index): any => (
           <span className="relative" key={index}>
-            <Button
-              key={tab.name}
-              variant="ghost"
-              size="icon"
-              className={`mt-2 rounded-none ${
-                section === tab.name
-                  ? "border-[1px] border-adyen "
-                  : "hover:border-[1px] hover:border-adyen hover:border-dotted"
-              }`}
-              onClick={() => setSection(tab.name)}
-            >
-              {tab.icon}
-            </Button>
+            <Tooltip title={`${tab.name} (${tab.hotKey})`}>
+              <Button
+                key={tab.name}
+                variant="ghost"
+                size="icon"
+                ref={tab.ref}
+                className={`mt-2 rounded-none ${
+                  section === tab.name
+                    ? "border-[1px] border-adyen "
+                    : "hover:border-[1px] hover:border-adyen hover:border-dotted"
+                }`}
+                onClick={() => setSection(tab.name)}
+              >
+                {tab.icon}
+              </Button>
+            </Tooltip>
             {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
               <div className="w-4 h-4 border border-black rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-white text-black text-xxs">
                 {totalUnsavedChanges(tab.unsavedChanges)}

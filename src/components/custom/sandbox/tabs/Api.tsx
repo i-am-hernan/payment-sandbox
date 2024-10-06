@@ -73,7 +73,7 @@ const Api = (props: any) => {
           [api]: !isEqual,
         })
       );
-    }, 500);
+    }, 250);
 
     const syncLocalState = () => {
       setRequest(globalRequest);

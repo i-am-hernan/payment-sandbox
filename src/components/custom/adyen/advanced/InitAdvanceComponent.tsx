@@ -7,8 +7,6 @@ import { useRef } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-// import { ReactComponent as AdyenIdkIcon } from "@/assets/adyen-idk-icon.svg"
-
 export const InitAdvanceComponent = (props: any) => {
   const {
     checkoutConfiguration,

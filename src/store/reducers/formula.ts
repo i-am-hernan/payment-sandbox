@@ -214,25 +214,10 @@ const formulaSlice = createSlice({
     resetFormula: (state) => {
       console.log("resetFormula");
       const baseConfiguration = state.base;
-      console.log({
-        ...baseConfiguration,
-        base: baseConfiguration,
-        run: !state.run,
-        reset: state.reset,
-        unsavedChanges: {
-          html: false,
-          style: false,
-          js: false,
-          paymentMethods: false,
-          payments: false,
-          paymentsDetails: false,
-          events: false,
-        },
-      });
       return {
         ...baseConfiguration,
         base: baseConfiguration,
-        run: state.run,
+        run: !state.run,
         reset: state.reset,
         unsavedChanges: {
           html: false,

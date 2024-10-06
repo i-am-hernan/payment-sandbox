@@ -40,11 +40,7 @@ const Topbar = (props: any) => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        (event.ctrlKey || event.metaKey) &&
-        event.shiftKey &&
-        event.key === "l"
-      ) {
+      if ((event.ctrlKey || event.metaKey) && event.key === "b") {
         event.preventDefault();
         if (clearButtonRef.current) {
           clearButtonRef.current.click();
@@ -54,7 +50,10 @@ const Topbar = (props: any) => {
         if (runButtonRef.current) {
           runButtonRef.current.click();
         }
-      } else if (event.key === "Backspace" || event.key === "Delete") {
+      } else if (
+        ((event.ctrlKey || event.metaKey) && event.key === "Backspace") ||
+        event.key === "Delete"
+      ) {
         event.preventDefault();
         if (resetButtonRef.current) {
           resetButtonRef.current.click();
@@ -70,6 +69,7 @@ const Topbar = (props: any) => {
   }, []);
 
   // Set the merchant account name in the top left corner, with the ability to edit the value. This will change the merchant account across all of the API requests. Although the user can always change it later. If the merchanat accounts are different than what is set then we throw a warning
+  // I can set some of the event properties instead
   return (
     <span
       className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-b-2 flex items-center justify-end pr-2"
@@ -77,7 +77,7 @@ const Topbar = (props: any) => {
     >
       <div className="mr-2 relative">
         <AlertDialog>
-          <Tooltip title="Reset back to base">
+          <Tooltip title="Reset (⌘ + delete)">
             <AlertDialogTrigger asChild>
               <Button
                 key="reset"
@@ -117,7 +117,7 @@ const Topbar = (props: any) => {
         <span className="absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs rounded-full">
           {totalUnsavedChanges !== 0 && totalUnsavedChanges}
         </span>
-        <Tooltip title="Reset back to last build">
+        <Tooltip title="Last Build (⌘ + b)">
           <Button
             key="clear"
             variant="outline"
@@ -133,28 +133,30 @@ const Topbar = (props: any) => {
           </Button>
         </Tooltip>
       </div>
-      <Button
-        key="run"
-        variant="default"
-        size="sm"
-        className="px-4"
-        onClick={() => {
-          const clearRedirectInfo = () => {
-            window.history.replaceState(
-              {},
-              document.title,
-              window.location.pathname
-            );
-          };
-          clearRedirectInfo();
-          dispatch(updateIsRedirect(false));
-          dispatch(updateRun());
-          dispatch(resetUnsavedChanges());
-        }}
-        ref={runButtonRef}
-      >
-        Run
-      </Button>
+      <Tooltip title="Run (⌘ + enter)">
+        <Button
+          key="run"
+          variant="default"
+          size="sm"
+          className="px-4"
+          onClick={() => {
+            const clearRedirectInfo = () => {
+              window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+              );
+            };
+            clearRedirectInfo();
+            dispatch(updateIsRedirect(false));
+            dispatch(updateRun());
+            dispatch(resetUnsavedChanges());
+          }}
+          ref={runButtonRef}
+        >
+          Run
+        </Button>
+      </Tooltip>
     </span>
   );
 };
