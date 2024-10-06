@@ -26,16 +26,13 @@ const {
   updatePaymentMethodsRequest,
   updatePaymentsRequest,
   updatePaymentsDetailsRequest,
-  updateCheckoutAPIVersion,
-  addUnsavedChanges,
-  clearOnDeckInfo,
-  updateReset,
 } = formulaActions;
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("server");
-  const { run, unsavedChanges, reset, request, checkoutAPIVersion, build } =
-    useSelector((state: RootState) => state.formula);
+  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
+    (state: RootState) => state.formula
+  );
   const { paymentMethods, payments, paymentsDetails } = request;
   const { variantState } = useSelector(
     (state: RootState) => state.adyenVariant
@@ -50,8 +47,6 @@ const Page: any = () => {
     payments: paymentsAPIVersion,
     paymentsDetails: paymentsDetailsAPIVersion,
   } = checkoutAPIVersion;
-
-  // Change path to advance instead of advcanced
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
@@ -136,18 +131,11 @@ const Page: any = () => {
           <Api
             api="paymentMethods"
             schema="PaymentMethodsRequest"
-            build={build}
-            checkoutAPIVersion={checkoutAPIVersion}
             request={paymentMethods}
             updateRequest={updatePaymentMethodsRequest}
-            updateCheckoutAPIVersion={updateCheckoutAPIVersion}
-            addUnsavedChanges={addUnsavedChanges}
-            reset={reset}
-            updateReset={updateReset}
           />
         ),
         value: "paymentmethods",
-        unsavedChanges: unsavedChanges.paymentMethods,
       },
       {
         title: `/v${paymentsAPIVersion}/payments`,
@@ -160,18 +148,11 @@ const Page: any = () => {
           <Api
             api="payments"
             schema="PaymentRequest"
-            build={build}
-            checkoutAPIVersion={checkoutAPIVersion}
             request={payments}
             updateRequest={updatePaymentsRequest}
-            updateCheckoutAPIVersion={updateCheckoutAPIVersion}
-            addUnsavedChanges={addUnsavedChanges}
-            reset={reset}
-            updateReset={updateReset}
           />
         ),
         value: "payments",
-        unsavedChanges: unsavedChanges.payments,
       },
       {
         title: `/v${paymentsDetailsAPIVersion}/payment/details`,
@@ -184,14 +165,8 @@ const Page: any = () => {
           <Api
             api="paymentsDetails"
             schema="PaymentDetailsRequest"
-            build={build}
-            checkoutAPIVersion={checkoutAPIVersion}
             request={paymentsDetails}
             updateRequest={updatePaymentsDetailsRequest}
-            updateCheckoutAPIVersion={updateCheckoutAPIVersion}
-            addUnsavedChanges={addUnsavedChanges}
-            reset={reset}
-            updateReset={updateReset}
           />
         ),
         value: "paymentsDetails",
@@ -214,7 +189,7 @@ const Page: any = () => {
     ];
     crumbs = ["advanced", variant];
   }
-  // Make the bottom right corner also a tab with API logs and state of the variant
+
   return (
     <div>
       <Sidebar

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { basename } from "path";
 
 // Define the types for properties that can be of any shape
 export interface FormulaPropType {
@@ -35,6 +36,7 @@ export interface Formula {
     events: boolean;
   };
   build: Formula | null;
+  base: Formula | null;
   run: boolean;
   reset: boolean;
   redirectResult: string | null;
@@ -83,6 +85,7 @@ const initialState: FormulaPropType = {
   },
   isRedirect: false,
   build: null,
+  base: null,
   run: true,
   reset: false,
   redirectResult: null,
@@ -90,6 +93,7 @@ const initialState: FormulaPropType = {
 
 // Add the build key to the initial state
 initialState.build = { ...initialState };
+initialState.base = { ...initialState };
 
 // Create the slice with typed reducers
 const formulaSlice = createSlice({
@@ -204,6 +208,40 @@ const formulaSlice = createSlice({
         request: {
           ...state.request,
           paymentsDetails: updatedRequest,
+        },
+      };
+    },
+    resetFormula: (state) => {
+      console.log("resetFormula");
+      const baseConfiguration = state.base;
+      console.log({
+        ...baseConfiguration,
+        base: baseConfiguration,
+        run: !state.run,
+        reset: state.reset,
+        unsavedChanges: {
+          html: false,
+          style: false,
+          js: false,
+          paymentMethods: false,
+          payments: false,
+          paymentsDetails: false,
+          events: false,
+        },
+      });
+      return {
+        ...baseConfiguration,
+        base: baseConfiguration,
+        run: state.run,
+        reset: state.reset,
+        unsavedChanges: {
+          html: false,
+          style: false,
+          js: false,
+          paymentMethods: false,
+          payments: false,
+          paymentsDetails: false,
+          events: false,
         },
       };
     },

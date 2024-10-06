@@ -6,10 +6,22 @@ import { useDispatch, useSelector } from "react-redux";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const {
   updateRun,
   updateReset,
+  resetFormula,
   updateIsRedirect,
   clearOnDeckInfo,
   resetUnsavedChanges,
@@ -22,6 +34,7 @@ const Topbar = (props: any) => {
     (value) => value
   ).length;
 
+  const resetButtonRef = useRef<HTMLButtonElement>(null);
   const clearButtonRef = useRef<HTMLButtonElement>(null);
   const runButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -41,6 +54,11 @@ const Topbar = (props: any) => {
         if (runButtonRef.current) {
           runButtonRef.current.click();
         }
+      } else if (event.key === "Backspace" || event.key === "Delete") {
+        event.preventDefault();
+        if (resetButtonRef.current) {
+          resetButtonRef.current.click();
+        }
       }
     };
 
@@ -58,25 +76,48 @@ const Topbar = (props: any) => {
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
     >
       <div className="mr-2 relative">
-        <Tooltip title="Reset back to base.">
-          <Button
-            key="reset"
-            variant="outline"
-            size="sm"
-            className="px-2 pt-0 pb-0"
-            onClick={() => {
-              console.log("reset button clicked");
-            }}
-          >
-            <RestartAltIcon sx={{ fontSize: "16px" }} />
-          </Button>
-        </Tooltip>
+        <AlertDialog>
+          <Tooltip title="Reset back to base">
+            <AlertDialogTrigger asChild>
+              <Button
+                key="reset"
+                variant="outline"
+                size="sm"
+                className="px-2 pt-0 pb-0"
+                ref={resetButtonRef}
+              >
+                <RestartAltIcon sx={{ fontSize: "16px" }} />
+              </Button>
+            </AlertDialogTrigger>
+          </Tooltip>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription className="text-xs">
+                This action will permanently delete your configuration and reset
+                back to the component's base configuration. This action cannot
+                be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  dispatch(resetFormula());
+                  dispatch(updateReset(true));
+                }}
+              >
+                Reset
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
       <div className="mr-2 relative">
         <span className="absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs rounded-full">
           {totalUnsavedChanges !== 0 && totalUnsavedChanges}
         </span>
-        <Tooltip title="Reset back to last build.">
+        <Tooltip title="Reset back to last build">
           <Button
             key="clear"
             variant="outline"

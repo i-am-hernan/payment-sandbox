@@ -65,7 +65,7 @@ export const InitAdvanceComponent = (props: any) => {
           </AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods && (
+      {(!adyenResult || loadingPaymentMethods) && (
         <Skeleton className="w-[100px] h-[20px] rounded-full" />
       )}
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (

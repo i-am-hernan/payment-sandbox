@@ -11,32 +11,34 @@ import {
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
 import { debounce, deepEqual } from "@/lib/utils";
-import { specsActions } from "@/store/reducers";
+import { formulaActions, specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const { updateSpecs } = specsActions;
+const {
+  updateReset,
+  addUnsavedChanges,
+  updateCheckoutAPIVersion
+} = formulaActions;
 
 const Api = (props: any) => {
   const {
     schema,
-    reset,
     api,
-    build,
-    checkoutAPIVersion,
     request: globalRequest,
     updateRequest,
-    updateCheckoutAPIVersion,
-    addUnsavedChanges,
-    updateReset,
   } = props;
+
+  const { reset, checkoutAPIVersion, build } = useSelector(
+    (state: RootState) => state.formula
+  );
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
   const schemas = checkoutApi?.components?.schemas ?? null;
   const properties = schemas?.[schema]?.properties ?? null;
   const required = schemas?.[schema]?.required ?? null;
   const [request, setRequest] = useState(globalRequest);
-  const [search, setSearch] = useState("");
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const dispatch = useDispatch();
   const {
@@ -59,20 +61,8 @@ const Api = (props: any) => {
   }, [apiSpecsData]);
 
   useEffect(() => {
-    if (search) {
-      const filtered = Object.keys(properties).filter((key) =>
-        key.toLowerCase().includes(search.toLowerCase())
-      );
-      setFilteredProperties(
-        filtered.reduce((obj: any, key) => {
-          obj[key] = properties[key];
-          return obj;
-        }, {})
-      );
-    } else {
-      setFilteredProperties(properties);
-    }
-  }, [search, properties]);
+    setFilteredProperties(properties);
+  }, [properties]);
 
   useEffect(() => {
     const syncGlobalState: any = debounce((localState: any, build: any) => {
@@ -129,21 +119,22 @@ const Api = (props: any) => {
                 [api]: build.checkoutAPIVersion[api] !== value,
               })
             );
-            dispatch(updateSpecs(api)); // 
+            dispatch(updateSpecs(api)); //
             dispatch(updateCheckoutAPIVersion({ [api]: value }));
           }}
         />
         {
           <OpenApiSearch
-            onChange={(e: any) => {
-              setSearch(e.target.value);
+            properties={properties}
+            onChange={(filteredProperties: any) => {
+              setFilteredProperties(filteredProperties);
             }}
           />
         }
         {!loadingApiSpecData && apiSpecsData && (
           <OpenApiList
             openApi={apiSpecsData}
-            properties={filteredProperties} // this is where we will filter the properties
+            properties={filteredProperties}
             required={required}
             selectedProperties={Object.keys(request)}
             values={request}

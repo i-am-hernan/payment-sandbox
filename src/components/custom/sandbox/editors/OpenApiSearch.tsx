@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import React, { useRef, useEffect } from "react";
 
 const OpenApiSearch = (props: any) => {
-  const { onChange } = props;
+  const { onChange, properties } = props;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -35,7 +35,22 @@ const OpenApiSearch = (props: any) => {
           ref={inputRef}
           type="search"
           placeholder="search"
-          onChange={onChange}
+          onChange={(e: any) => {
+            let search = e.target.value;
+            if (search) {
+              const filtered = Object.keys(properties).filter((key) =>
+                key.toLowerCase().includes(search.toLowerCase())
+              );
+              onChange(
+                filtered.reduce((obj: any, key) => {
+                  obj[key] = properties[key];
+                  return obj;
+                }, {})
+              );
+            } else {
+              onChange(properties);
+            }
+          }}
         />
         <Button
           key="run"
