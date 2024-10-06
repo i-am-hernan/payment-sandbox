@@ -17,6 +17,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import TuneIcon from "@mui/icons-material/Tune";
 
 const {
   updateRun,
@@ -68,13 +80,44 @@ const Topbar = (props: any) => {
     };
   }, []);
 
-  // Set the merchant account name in the top left corner, with the ability to edit the value. This will change the merchant account across all of the API requests. Although the user can always change it later. If the merchanat accounts are different than what is set then we throw a warning
-  // I can set some of the event properties instead
   return (
     <span
       className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-b-2 flex items-center justify-end pr-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
     >
+      <div className="flex-1 text-center">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm" className="w-[50%]">
+              <TuneIcon sx={{ fontSize: "14px" }} />
+              <span className="px-1 text-xs">{`${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`}</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Update merchant account</DialogTitle>
+              <DialogDescription>
+                Update merchant account populated throughout the configuration.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Account
+                </Label>
+                <Input
+                  id="name"
+                  defaultValue={`${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`}
+                  className="col-span-3"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
       <div className="mr-2 relative">
         <AlertDialog>
           <Tooltip title="Reset (⌘ + delete)">

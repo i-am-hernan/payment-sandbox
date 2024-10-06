@@ -9,7 +9,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import LanguageIcon from "@mui/icons-material/Language";
-import MenuIcon from "@mui/icons-material/Menu";
+import WidgetsIcon from "@mui/icons-material/Widgets";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebhookIcon from "@mui/icons-material/Webhook";
 import Tooltip from "@mui/material/Tooltip";
@@ -108,7 +108,7 @@ const Sidebar = (props: any) => {
       <span>
         <Drawer direction="left">
           <DrawerTrigger>
-            <MenuIcon />
+            <WidgetsIcon sx={{ fontSize: "20px" }} />
           </DrawerTrigger>
           <DrawerContent className="h-full w-[20vw]">
             <DrawerHeader>

@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { basename } from "path";
 
 // Define the types for properties that can be of any shape
 export interface FormulaPropType {
@@ -59,7 +58,7 @@ const initialState: FormulaPropType = {
   sessions: {},
   request: {
     paymentMethods: {
-      merchantAccount: "HernanChalco",
+      merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
     },
     payments: {
       countryCode: "US",
@@ -67,7 +66,7 @@ const initialState: FormulaPropType = {
         value: 10000,
         currency: "USD",
       },
-      returnUrl: "http://localhost:3000/advanced/dropin",
+      returnUrl: `${process.env.NEXT_PUBLIC_CLIENT_URL}/advanced/dropin`,
       reference: "merchant-reference",
       merchantAccount: "HernanChalco",
     },
