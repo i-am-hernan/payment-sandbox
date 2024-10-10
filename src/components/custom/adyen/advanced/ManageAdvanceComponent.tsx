@@ -4,7 +4,7 @@ import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdv
 import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
-import { adyenVariantActions, formulaActions } from "@/store/reducers";
+import { componentActions, formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ import { specsActions } from "@/store/reducers";
 import { useEffect } from "react";
 
 const { updateIsRedirect, updateRedirectResult } = formulaActions;
-const { updateVariantState } = adyenVariantActions;
+const { updateComponentState } = componentActions;
 const { updateSpecs } = specsActions;
 
 export const ManageAdvanceComponent = () => {
@@ -76,7 +76,7 @@ export const ManageAdvanceComponent = () => {
           checkoutConfiguration={{
             ...checkoutConfiguration,
             onChange: (state: any) => {
-              dispatch(updateVariantState(state));
+              dispatch(updateComponentState(state));
             },
           }}
           variant={variant}

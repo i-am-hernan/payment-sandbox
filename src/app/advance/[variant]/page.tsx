@@ -12,11 +12,11 @@ import Html from "@/components/custom/sandbox/tabs/Html";
 import Script from "@/components/custom/sandbox/tabs/Script";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import { formulaActions } from "@/store/reducers";
-
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import MerchantCookie from "@/components/custom/adyen/account/MerchantCookie";
 
 interface SectionType {
   section: "Client" | "Server" | "Webhooks";
@@ -30,13 +30,12 @@ const {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
+
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
   const { paymentMethods, payments, paymentsDetails } = request;
-  const { variantState } = useSelector(
-    (state: RootState) => state.adyenVariant
-  );
+  const { componentState } = useSelector((state: RootState) => state.component);
 
   const { variant } = useParams<{
     variant: string;
@@ -74,7 +73,11 @@ const Page: any = () => {
         </span>
       ),
       content: (
-        <Code code={JSON.stringify(variantState)} type="json" readOnly={true} />
+        <Code
+          code={JSON.stringify(componentState)}
+          type="json"
+          readOnly={true}
+        />
       ),
       value: "state",
     },
@@ -192,6 +195,7 @@ const Page: any = () => {
 
   return (
     <div>
+      <MerchantCookie />
       <Sidebar
         section={section}
         setSection={setSection}

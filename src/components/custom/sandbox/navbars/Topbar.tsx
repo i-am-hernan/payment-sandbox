@@ -176,7 +176,7 @@ const Topbar = (props: any) => {
           </Button>
         </Tooltip>
       </div>
-      <Tooltip title="Run (⌘ + enter)">
+      <Tooltip title="Build (⌘ + enter)">
         <Button
           key="run"
           variant="default"
@@ -197,7 +197,7 @@ const Topbar = (props: any) => {
           }}
           ref={runButtonRef}
         >
-          Run
+          Build
         </Button>
       </Tooltip>
     </span>

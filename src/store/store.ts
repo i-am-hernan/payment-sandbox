@@ -1,17 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {
   specsReducer,
-  adyenVariantReducer,
+  componentReducer,
   formulaReducer,
   sandboxReducer,
+  userReducer,
 } from "./reducers";
 
 export const store = configureStore({
   reducer: {
     formula: formulaReducer,
     specs: specsReducer,
-    adyenVariant: adyenVariantReducer,
+    component: componentReducer,
     sandbox: sandboxReducer,
+    user: userReducer,
   },
 });
 

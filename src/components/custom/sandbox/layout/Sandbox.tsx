@@ -18,7 +18,6 @@ const Sandbox = ({
   topRight: TopRight,
   bottomRight: BottomRight,
 }: SandboxContentProps) => {
-  const { variant } = useParams<{ variant: string }>();
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -32,9 +31,7 @@ const Sandbox = ({
       <ResizableHandle />
       <ResizablePanel defaultSize={40}>
         <ResizablePanelGroup direction="vertical">
-          <ResizablePanel defaultSize={50}>
-            {TopRight}
-          </ResizablePanel>
+          <ResizablePanel defaultSize={50}>{TopRight}</ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={50}>{BottomRight}</ResizablePanel>
         </ResizablePanelGroup>

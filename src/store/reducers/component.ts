@@ -1,35 +1,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the types for properties that can be of any shape
-export interface AdyenVariantPropType {
+export interface ComponentPropType {
   [key: string]: any;
 }
 
 // Define the shape of the state
-export interface AdyenVariant {
-  variantState: AdyenVariantPropType;
+export interface Component {
+  componentState: ComponentPropType;
 }
 
 // Define the initial state
-const initialState: AdyenVariant = {
-  variantState: {},
+const initialState: Component = {
+  componentState: {},
 };
 
 // Create the slice with typed reducers
 const variantSlice = createSlice({
-  name: "AdyenVariant",
+  name: "Component",
   initialState,
   reducers: {
-    updateAdyenVariant: (state, action: PayloadAction<Partial<AdyenVariant>>) => {
+    updateComponent: (state, action: PayloadAction<Partial<Component>>) => {
       return { ...state, ...action.payload };
     },
-    updateVariantState: (
+    updateComponentState: (
       state,
-      action: PayloadAction<AdyenVariantPropType>
+      action: PayloadAction<ComponentPropType>
     ) => {
-      state.variantState = action.payload;
+      state.componentState = action.payload;
     },
-    clearAdyenVariant: () => {
+    clearComponent: () => {
       return { ...initialState };
     },
   },
