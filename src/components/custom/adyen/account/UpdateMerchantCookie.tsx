@@ -1,20 +1,21 @@
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { userActions } from "@/store/reducers";
 import TuneIcon from "@mui/icons-material/Tune";
 import Cookies from "js-cookie";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const { updateMerchantAccount } = userActions;
 
@@ -24,6 +25,18 @@ const UpdateMerchantCookie = () => {
   const [isLoading, setIsLoading] = useState(false); // New state variable
   const [merchantAccountLocal, setMerchantAccountLocal] = useState("");
   const dispatch = useDispatch();
+  const { defaultMerchantAccount, merchantAccount } = useSelector(
+    (state: RootState) => state.user
+  );
+
+  useEffect(() => {
+    const merchantAccountCookie = Cookies.get("merchantAccount");
+    if (!merchantAccountCookie) {
+      setOpen(true);
+    } else {
+      dispatch(updateMerchantAccount(merchantAccountCookie));
+    }
+  }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +66,12 @@ const UpdateMerchantCookie = () => {
       open={open}
       onOpenChange={(open) => {
         if (!open) {
+          if (!Cookies.get("merchantAccount")) {
+            Cookies.set("merchantAccount", defaultMerchantAccount, {
+              expires: 365,
+            });
+            dispatch(updateMerchantAccount(defaultMerchantAccount));
+          }
           setOpen(false);
         }
       }}
@@ -69,7 +88,7 @@ const UpdateMerchantCookie = () => {
           }}
         >
           <TuneIcon sx={{ fontSize: "14px" }} />
-          <span className="px-1 text-xs">{`${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`}</span>
+          <span className="px-1 text-xs">{merchantAccount}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -77,7 +96,7 @@ const UpdateMerchantCookie = () => {
           <DialogTitle className="text-[16px]">
             Choose Your Merchant Account
           </DialogTitle>
-          <DialogDescription className="text-[12px]">
+          <DialogDescription className="text-[13px]">
             Select the merchant account you want to submit the payment with.
           </DialogDescription>
         </DialogHeader>

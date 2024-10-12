@@ -13,7 +13,7 @@ export interface User {
 
 // Define the initial state
 const initialState: FormulaPropType = {
-  merchantAccount: "HernanTest",
+  merchantAccount: "test",
   defaultMerchantAccount: "test",
 };
 

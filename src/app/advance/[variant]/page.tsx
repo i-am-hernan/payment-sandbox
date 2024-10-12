@@ -16,7 +16,6 @@ import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import SetMerchantCookie from "@/components/custom/adyen/account/SetMerchantCookie";
 
 interface SectionType {
   section: "Client" | "Server" | "Webhooks";
@@ -195,7 +194,6 @@ const Page: any = () => {
 
   return (
     <div>
-      <SetMerchantCookie />
       <Sidebar
         section={section}
         setSection={setSection}
