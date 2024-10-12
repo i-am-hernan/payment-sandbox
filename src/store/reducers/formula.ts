@@ -211,7 +211,6 @@ const formulaSlice = createSlice({
       };
     },
     resetFormula: (state) => {
-      console.log("resetFormula");
       const baseConfiguration = state.base;
       return {
         ...baseConfiguration,

@@ -1,41 +1,39 @@
-export async function POST(
-    request: Request,
-    { params }: { params: { version: string } }
-  ) {
-    try {
-      const requestBody = await request.json();
-      const response = await fetch(
-        `https://checkout-test.adyen.com/${params.version}/paymentMethods`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-Key": `${process.env.ADYEN_API_KEY}`,
-          },
-          body: JSON.stringify({
-            ...requestBody,
-            merchantAccount: `${process.env.ADYEN_MERCHANT_ACCOUNT}`,
-          }),
-        }
-      );
-  
-      if (!response.ok) {
-        throw response;
+import { NextRequest } from "next/server";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { merchantId: string } }
+) {
+  const { merchantId } = params;
+  try {
+    const response = await fetch(
+      `https://management-test.adyen.com/v3/merchants/${merchantId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-Key": `${process.env.ADYEN_API_KEY}`,
+        },
       }
-  
-      const data = await response.json();
-      return Response.json({ ...data });
-    } catch (error: any) {
-      if (error instanceof Response) {
-        const data = await error.json();
-        return new Response(JSON.stringify(data), {
-          status: error.status,
-        });
-      } else {
-        return new Response(JSON.stringify({ error: error.message }), {
-          status: 500,
-        });
-      }
+    );
+
+    if (!response.ok) {
+      throw response;
+    }
+
+    const data = await response.json();
+    console.log("data", data);
+    return Response.json({ ...data });
+  } catch (error: any) {
+    if (error instanceof Response) {
+      const data = await error.json();
+      return new Response(JSON.stringify(data), {
+        status: error.status,
+      });
+    } else {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 500,
+      });
     }
   }
-  
+}

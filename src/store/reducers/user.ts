@@ -8,11 +8,13 @@ export interface FormulaPropType {
 // Define the shape of the state
 export interface User {
   merchantAccount: FormulaPropType;
+  defaultMerchantAccount: FormulaPropType;
 }
 
 // Define the initial state
 const initialState: FormulaPropType = {
-  merchantAccount: null,
+  merchantAccount: "HernanTest",
+  defaultMerchantAccount: "test",
 };
 
 // Create the slice with typed reducers
