@@ -97,7 +97,7 @@ const Topbar = (props: any) => {
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription className="text-xs">
                 This action will permanently delete your configuration and reset
-                back to the component's base configuration. This action cannot
+                back to the components base configuration. This action cannot
                 be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
