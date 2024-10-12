@@ -1,11 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { formulaActions } from "@/store/reducers";
-import { RootState } from "@/store/store";
-import RestoreIcon from "@mui/icons-material/Restore";
-import { useDispatch, useSelector } from "react-redux";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import Tooltip from "@mui/material/Tooltip";
-import { useEffect, useRef } from "react";
+import UpdateMerchantCookie from "@/components/custom/adyen/account/UpdateMerchantCookie";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,18 +10,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import TuneIcon from "@mui/icons-material/Tune";
+import { Button } from "@/components/ui/button";
+import { formulaActions } from "@/store/reducers";
+import { RootState } from "@/store/store";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import RestoreIcon from "@mui/icons-material/Restore";
+import Tooltip from "@mui/material/Tooltip";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const {
   updateRun,
@@ -86,37 +75,7 @@ const Topbar = (props: any) => {
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
     >
       <div className="flex-1 text-center">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="w-[50%]">
-              <TuneIcon sx={{ fontSize: "14px" }} />
-              <span className="px-1 text-xs">{`${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`}</span>
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Update merchant account</DialogTitle>
-              <DialogDescription>
-                Update merchant account populated throughout the configuration.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Account
-                </Label>
-                <Input
-                  id="name"
-                  defaultValue={`${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`}
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <UpdateMerchantCookie />
       </div>
       <div className="mr-2 relative">
         <AlertDialog>

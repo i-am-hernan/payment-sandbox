@@ -34,7 +34,6 @@ const SetMerchantCookie = () => {
     } else {
       dispatch(updateMerchantAccount(merchantAccountCookie));
     }
-    console.log("merchantAccountCookie", merchantAccountCookie);
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
