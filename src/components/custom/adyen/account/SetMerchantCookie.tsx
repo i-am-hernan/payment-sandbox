@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const { updateMerchantAccount } = userActions;
 
-const MerchantCookie = () => {
+const SetMerchantCookie = () => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false); // New state variable
@@ -107,4 +107,4 @@ const MerchantCookie = () => {
   );
 };
 
-export default MerchantCookie;
+export default SetMerchantCookie;
