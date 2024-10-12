@@ -9,6 +9,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import React from "react";
 import { useState, useRef, useEffect } from "react";
+import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import { Button } from "@/components/ui/button";
 
 interface Tab {
   title: string;
@@ -21,12 +24,15 @@ interface Tab {
 interface TabsProps {
   tabsMap: Tab[];
   crumbs?: string[];
+  onExpand?: () => void;
+  onContract?: () => void;
 }
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
-  const { tabsMap, crumbs } = props;
+  const { tabsMap, crumbs, onExpand, onContract } = props;
   const [tabTitle, setTabTitle] = useState(tabsMap[0].value);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [hasExpanded, setHasExpanded] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: any) => {
@@ -64,8 +70,8 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
       className="w-full h-full flex flex-col"
       onValueChange={(value) => setTabTitle(value)}
     >
-      <span className="border-b-2 flex">
-        <TabsList className="justify-start">
+      <span className="border-b-2 flex justify-between">
+        <TabsList>
           {tabsMap.map((tab, index) => (
             <TabsTrigger
               key={index}
@@ -83,6 +89,40 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
             </TabsTrigger>
           ))}
         </TabsList>
+        <div>
+          {!hasExpanded && (
+            <Button
+              key="clear"
+              variant="outline"
+              size="sm"
+              className="shadow-none px-2 mb-0 pt-0 pb-0 border-r-0 border-t-0 border-b-0 rounded-none border-l-[2px]"
+              onClick={(e) => {
+                if (onExpand) {
+                  onExpand();
+                  setHasExpanded(!hasExpanded);
+                }
+              }}
+            >
+              <OpenInFullIcon className="text-primary !text-xs" />
+            </Button>
+          )}
+          {hasExpanded && (
+            <Button
+              key="clear"
+              variant="outline"
+              size="sm"
+              className="shadow-none px-2 mb-0 pt-0 pb-0 border-r-0 border-t-0 border-b-0 rounded-none border-l-[2px]"
+              onClick={(e) => {
+                if (onContract) {
+                  onContract();
+                  setHasExpanded(!hasExpanded);
+                }
+              }}
+            >
+              <CloseFullscreenIcon className="text-primary !text-xs" />
+            </Button>
+          )}
+        </div>
       </span>
       {crumbs && (
         <span className="border-b-2 pl-3 flex">
