@@ -67,7 +67,7 @@ export const InitAdvanceComponent = (props: any) => {
         <Skeleton className="w-[100px] h-[20px] rounded-full" />
       )}
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div ref={checkoutRef}></div>
+        <div className="!bg-background" ref={checkoutRef}></div>
       )}
     </div>
   );

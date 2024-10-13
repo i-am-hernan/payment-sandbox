@@ -88,7 +88,7 @@ const Topbar = (props: any) => {
                 className="px-2 pt-0 pb-0"
                 ref={resetButtonRef}
               >
-                <RestartAltIcon sx={{ fontSize: "16px" }} />
+                <RestartAltIcon className="!text-foreground !text-[16px]" />
               </Button>
             </AlertDialogTrigger>
           </Tooltip>
@@ -97,8 +97,8 @@ const Topbar = (props: any) => {
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription className="text-xs">
                 This action will permanently delete your configuration and reset
-                back to the components base configuration. This action cannot
-                be undone.
+                back to the components base configuration. This action cannot be
+                undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -116,7 +116,7 @@ const Topbar = (props: any) => {
         </AlertDialog>
       </div>
       <div className="mr-2 relative">
-        <span className="absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs rounded-full">
+        <span className="absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-background text-foreground text-xs rounded-full">
           {totalUnsavedChanges !== 0 && totalUnsavedChanges}
         </span>
         <Tooltip title="Last Build (⌘ + b)">
@@ -131,7 +131,7 @@ const Topbar = (props: any) => {
             }}
             ref={clearButtonRef}
           >
-            <RestoreIcon sx={{ fontSize: "16px" }} />
+            <RestoreIcon className="!text-foreground !text-[16px]" />
           </Button>
         </Tooltip>
       </div>

@@ -1,3 +1,18 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -13,6 +28,10 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebhookIcon from "@mui/icons-material/Webhook";
 import Tooltip from "@mui/material/Tooltip";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import ShortcutIcon from "@mui/icons-material/Shortcut";
 import { useEffect, useRef } from "react";
 
 interface SideTab {
@@ -70,7 +89,7 @@ const Sidebar = (props: any) => {
     {
       name: "Server",
       hotKey: "⌘ + i",
-      icon: <StorageIcon sx={{ fontSize: "20px" }} />,
+      icon: <StorageIcon className="!text-foreground !text-[20px]" />,
       unsavedChanges: {
         paymentMethodsUnsavedChanges,
         paymentsUnsavedChanges,
@@ -81,7 +100,7 @@ const Sidebar = (props: any) => {
     {
       name: "Client",
       hotKey: "⌘ + j",
-      icon: <LanguageIcon sx={{ fontSize: "20px" }} />,
+      icon: <LanguageIcon className="!text-foreground !text-[20px]" />,
       unsavedChanges: {
         htmlUnsavedChanges,
         styleUnsavedChanges,
@@ -92,7 +111,7 @@ const Sidebar = (props: any) => {
     {
       name: "Webhooks",
       hotKey: "⌘ + k",
-      icon: <WebhookIcon sx={{ fontSize: "20px" }} />,
+      icon: <WebhookIcon className="!text-foreground !text-[20px]" />,
       unsavedChanges: {
         eventsUnsavedChanges,
       },
@@ -104,49 +123,105 @@ const Sidebar = (props: any) => {
     return Object.values(unsavedChanges).filter((value) => value).length;
   };
   return (
-    <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-full border-2 text-center pt-3">
-      <span>
-        <Drawer direction="left">
-          <DrawerTrigger>
-            <WidgetsIcon sx={{ fontSize: "20px" }} />
-          </DrawerTrigger>
-          <DrawerContent className="h-full w-[20vw]">
-            <DrawerHeader>
-              <DrawerTitle>Online Payments</DrawerTitle>
-              <DrawerDescription>Components</DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>Theme switch</DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+    <div>
+      <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-2 border-b-0 text-center">
+        <div className="flex flex-col justify-between h-full">
+          <div>
+            <div>
+              <Drawer direction="left">
+                <DrawerTrigger className="pt-3">
+                  <WidgetsIcon className="!text-foreground !text-[20px]" />
+                </DrawerTrigger>
+                <DrawerContent className="h-full w-[20vw]">
+                  <DrawerHeader>
+                    <DrawerTitle>Online Payments</DrawerTitle>
+                    <DrawerDescription>Components</DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerFooter>Theme switch</DrawerFooter>
+                </DrawerContent>
+              </Drawer>
+            </div>
+            {sideTabs.map((tab, index): any => (
+              <span className="relative" key={index}>
+                <Tooltip title={`${tab.name} (${tab.hotKey})`}>
+                  <Button
+                    key={tab.name}
+                    variant="ghost"
+                    size="icon"
+                    ref={tab.ref}
+                    className={`mt-2 rounded-none ${
+                      section === tab.name
+                        ? "border-[1px] border-adyen "
+                        : "hover:border-[1px] hover:border-adyen hover:border-dotted"
+                    }`}
+                    onClick={() => setSection(tab.name)}
+                  >
+                    {tab.icon}
+                  </Button>
+                </Tooltip>
+                {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
+                  <div className="w-4 h-4 border border-foreground rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-background text-foreground text-xxs">
+                    {totalUnsavedChanges(tab.unsavedChanges)}
+                  </div>
+                )}
+              </span>
+            ))}
+          </div>
+          <div className="pb-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="mt-2 rounded-none border-none hover:border-[1px] hover:border-adyen hover:border-dotted"
+                >
+                  <SettingsIcon className="!text-foreground !text-[20px]" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>Setting</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <ShortcutIcon className="text-[18px]" />
+                    <p className="pl-1 text-sm">Shortcuts</p>
+                    <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <DarkModeIcon className="text-[18px]" />
+                      <p className="pl-1 text-sm">Theme</p>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuItem>
+                          <span>Dark</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span>Light</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <span>Tech</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                  <DropdownMenuItem>
+                    <ManageAccountsIcon className="text-[18px]" />
+                    <p className="pl-1 text-sm">Merchant Account</p>
+                    <DropdownMenuShortcut>⇧⌘M</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </span>
-      <div className="mt-1">
-        {sideTabs.map((tab, index): any => (
-          <span className="relative" key={index}>
-            <Tooltip title={`${tab.name} (${tab.hotKey})`}>
-              <Button
-                key={tab.name}
-                variant="ghost"
-                size="icon"
-                ref={tab.ref}
-                className={`mt-2 rounded-none ${
-                  section === tab.name
-                    ? "border-[1px] border-adyen "
-                    : "hover:border-[1px] hover:border-adyen hover:border-dotted"
-                }`}
-                onClick={() => setSection(tab.name)}
-              >
-                {tab.icon}
-              </Button>
-            </Tooltip>
-            {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
-              <div className="w-4 h-4 border border-black rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-white text-black text-xxs">
-                {totalUnsavedChanges(tab.unsavedChanges)}
-              </div>
-            )}
-          </span>
-        ))}
-      </div>
-    </span>
+    </div>
   );
 };
 

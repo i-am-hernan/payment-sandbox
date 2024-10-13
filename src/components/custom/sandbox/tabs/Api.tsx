@@ -35,6 +35,7 @@ const Api = (props: any) => {
     (state: RootState) => state.formula
   );
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
+  const { theme } = useSelector((state: RootState) => state.user);
   const schemas = checkoutApi?.components?.schemas ?? null;
   const properties = schemas?.[schema]?.properties ?? null;
   const required = schemas?.[schema]?.required ?? null;
@@ -101,6 +102,7 @@ const Api = (props: any) => {
           type="json"
           code={JSON.stringify(request)}
           readOnly={false}
+          theme={theme}
           onChange={(value: any) => {
             setRequest(value);
           }}

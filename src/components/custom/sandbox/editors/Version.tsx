@@ -5,10 +5,10 @@ const Version = (props: any) => {
   return (
     <div>
       <p className="border-b-2 flex text-sm">
-        <span className="border-r-2 px-2 py-[1px]">version</span>
+        <span className="border-r-2 px-2 py-[1px] text-foreground">version</span>
       </p>
       <div className="border-b-2 px-1 py-3">
-        <p className="text-xs pb-2 px-1">
+        <p className="text-xs pb-2 px-1 text-foreground">
           {`Change the version of ${label} to test different scenarios.`}
         </p>
         <Enum

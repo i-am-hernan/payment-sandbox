@@ -33,6 +33,7 @@ const Page: any = () => {
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
+  const { theme } = useSelector((state: RootState) => state.user);
   const { paymentMethods, payments, paymentsDetails } = request;
   const { componentState } = useSelector((state: RootState) => state.component);
 
@@ -193,7 +194,7 @@ const Page: any = () => {
   }
 
   return (
-    <div>
+    <div className={`${theme}`}>
       <Sidebar
         section={section}
         setSection={setSection}

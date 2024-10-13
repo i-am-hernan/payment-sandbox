@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import { Button } from "@/components/ui/button";
 
 interface Tab {
@@ -82,7 +82,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               }}
             >
               <span>{tab.icon}</span>
-              <p className="px-1 text-xs">{tab.title}</p>
+              <p className="px-1 text-xs text-foreground">{tab.title}</p>
               {tab.unsavedChanges && (
                 <span className="ml-1 w-2 h-2 bg-background border border-primary rounded-full inline-block"></span>
               )}
@@ -144,9 +144,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               ))}
               <BreadcrumbItem>
                 <BreadcrumbPage>
-                  <span className="font-semibold px-0 text-xxs">
-                    {tabTitle}
-                  </span>
+                  <p className="font-semibold px-0 text-xxs">{tabTitle}</p>
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>

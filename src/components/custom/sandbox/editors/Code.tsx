@@ -2,6 +2,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { EditorView, ViewUpdate } from "@codemirror/view";
 import { githubLight } from "@uiw/codemirror-theme-github";
+import { abyss } from "@uiw/codemirror-theme-abyss";
 import CodeMirror from "@uiw/react-codemirror";
 import * as parserBabel from "prettier/parser-babel";
 import * as parserHtml from "prettier/parser-html";
@@ -13,7 +14,7 @@ import { parse } from "@babel/parser"; // Import a JavaScript parser
 import * as jsonc from "jsonc-parser"; // Import jsonc-parser
 
 const Code = (props: any) => {
-  const { code, type, readOnly, onChange } = props;
+  const { code, type, readOnly, onChange, theme } = props;
   const [formattedCode, setFormattedCode] = useState<string>("");
 
   const prettify = async (uglyCode: string, type: string): Promise<string> => {
@@ -101,18 +102,7 @@ const Code = (props: any) => {
 
   const extensions = [];
 
-  if (readOnly) {
-    extensions.push(
-      EditorView.theme({
-        ".cm-content": {
-          caretColor: "transparent", // Hides the caret (cursor)
-        },
-        ".cm-line": {
-          userSelect: "none", // Prevents text selection
-        },
-      })
-    );
-  } else {
+  if (!readOnly) {
     extensions.push(
       EditorView.updateListener.of((update: ViewUpdate) => {
         if (update.docChanged) {
@@ -132,12 +122,12 @@ const Code = (props: any) => {
   }
 
   return (
-    <div className="flex h-[100%] codemirror-wrapper">
+    <div className="flex h-[100%] w-[100%] codemirror-wrapper">
       <CodeMirror
         value={formattedCode}
         height="100%"
         readOnly={readOnly}
-        theme={githubLight}
+        theme={theme === "light" ? githubLight : abyss}
         extensions={extensions}
       />
     </div>
@@ -145,3 +135,22 @@ const Code = (props: any) => {
 };
 
 export default Code;
+
+/**
+ * 
+ *     EditorView.theme({
+      "&": {
+        backgroundColor: "yellow",
+      },
+      ".codemirror-wrapper": { width: "100%" },
+      ".cm-theme": {
+        width: "100%", // Hides the caret (cursor)
+      },
+      ".cm-content": {
+        caretColor: "transparent", // Hides the caret (cursor)
+      },
+      ".cm-line": {
+        userSelect: "none", // Prevents text selection
+      },
+    }),
+ */

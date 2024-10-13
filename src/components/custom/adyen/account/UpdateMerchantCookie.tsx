@@ -87,8 +87,10 @@ const UpdateMerchantCookie = () => {
             setError("");
           }}
         >
-          <TuneIcon sx={{ fontSize: "14px" }} />
-          <span className="px-1 text-xs">{merchantAccount}</span>
+          <TuneIcon className="!text-foreground !text-[14px]" />
+          <span className="px-1 !text-xs !text-foreground">
+            {merchantAccount}
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

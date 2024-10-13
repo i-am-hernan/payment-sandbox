@@ -23,9 +23,9 @@ const OpenApiSearch = (props: any) => {
   }, []);
 
   return (
-    <div className="border-b-2 z-10 sticky top-0 bg-white">
+    <div className="border-b-2 z-10 sticky top-0 bg-background">
       <div>
-        <p className="border-b-2 flex text-sm">
+        <p className="border-b-2 flex text-sm text-foreground">
           <span className="border-r-2 px-2 py-[1px]">parameters</span>
         </p>
       </div>
