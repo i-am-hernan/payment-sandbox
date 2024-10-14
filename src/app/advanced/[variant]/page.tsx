@@ -1,7 +1,7 @@
 "use client";
 
 import AdyenState from "@/components/custom/adyen/AdyenState";
-import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAdyenSessions";
+import { ManageAdyenAdvance } from "@/components/custom/adyen/ManageAdyenAdvance";
 import API from "@/components/custom/sandbox/backend/API";
 import CSS from "@/components/custom/sandbox/frontend/CSS";
 import HTML from "@/components/custom/sandbox/frontend/HTML";
@@ -36,8 +36,13 @@ const Page: any = () => {
     titles.push(`${variant ? variant : "checkout"}.js`, "style.css", "checkout.html");
     contents.push(<JS key={"JS"} />, <CSS key={"CSS"} />, <HTML key={"HTML"} />);
   } else if (section === "server") {
-    titles.push(`/v${checkoutAPIVersion}/sessions`);
-    contents.push(<API key={"sessions"} />);
+    //TODO: Consider making this a mapping Table that can be used by the Custom API Component
+    titles.push(
+      `/v${checkoutAPIVersion}/paymentMethods`,
+      `/v${checkoutAPIVersion}/payments`,
+      `/v${checkoutAPIVersion}/payment/details`
+    );
+    contents.push(<API key={"paymentmethods"} />, <API key={"payments"} />, <API key={"paymentdetails"} />);
   } else if (section === "webhooks") {
     titles.push("Events");
     contents.push(<Events key={"Events"} />);
@@ -49,7 +54,7 @@ const Page: any = () => {
       <Topbar />
       <SandboxLayout
         main={<MainTabs titles={titles} contents={contents} key={section} />}
-        topRight={<ManageAdyenSessions key={runBuild ? "runBuild" : "default"} />}
+        topRight={<ManageAdyenAdvance key={runBuild ? "runBuild" : "default"} />}
         bottomRight={<AdyenState />}
       />
     </div>

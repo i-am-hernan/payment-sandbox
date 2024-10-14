@@ -1,7 +1,7 @@
 export async function POST(request: Request, { params }: { params: { version: string } }) {
   try {
     const requestBody = await request.json();
-    const response = await fetch(`https://checkout-test.adyen.com/${params.version}/payments`, {
+    const response = await fetch(`https://checkout-test.adyen.com/${params.version}/sessions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,6 @@ export async function POST(request: Request, { params }: { params: { version: st
     return Response.json({ ...data });
   } catch (error: any) {
     // TODO: Let's move this into a Error Handler
-
     if (error instanceof Response) {
       const data = await error.json();
       return new Response(JSON.stringify(data), {

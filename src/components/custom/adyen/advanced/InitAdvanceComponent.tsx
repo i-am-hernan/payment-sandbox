@@ -42,10 +42,7 @@ export const InitAdvanceComponent = (props: any) => {
     checkoutRef
   );
 
-  const error =
-    adyenSDKError || paymentMethodsError
-      ? { ...adyenSDKError, ...paymentMethodsError }
-      : null;
+  const error = adyenSDKError || paymentMethodsError ? { ...adyenSDKError, ...paymentMethodsError } : null;
 
   return (
     <div>
@@ -58,17 +55,11 @@ export const InitAdvanceComponent = (props: any) => {
       {adyenResult && (
         <Alert variant="default" className="border-primary">
           <AlertTitle>{adyenResult.resultCode}</AlertTitle>
-          <AlertDescription>
-            {`PSP Reference: ${adyenResult.pspReference}`}
-          </AlertDescription>
+          <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods && (
-        <Skeleton className="w-[100px] h-[20px] rounded-full" />
-      )}
-      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div ref={checkoutRef}></div>
-      )}
+      {loadingPaymentMethods && <Skeleton className="w-[100px] h-[20px] rounded-full" />}
+      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && <div ref={checkoutRef}></div>}
     </div>
   );
 };

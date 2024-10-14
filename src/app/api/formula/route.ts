@@ -1,45 +1,65 @@
+import dbConnect from "@/lib/db";
+import Formula from "@/schema/Formula";
 import { NextResponse } from "next/server";
 
+//TODO: Change to NEXT_PUBLIC_API_URL
+const BASE_URL = process.env.NEXT_PUBLIC_URL;
+
+//TODO: Move to constants file or configuration file
+const STARTER_FORMULA_SLUG = "starter-formula";
+
 export async function GET(request: Request) {
-  console.log("Getting a Formuala");
-  return NextResponse.json(
-    {
-      stringifiedConfiguration: `const configuration = {
-    environment: 'test', // Change to 'live' for the live environment.
-    clientKey: 'test_870be2...', // Public key used for client-side authentication: https://docs.adyen.com/development-resources/client-side-authentication
-    analytics: {
-      enabled: true // Set to false to not send analytics data to Adyen.
-    },
-    session: {
-      id: 'CSD9CAC3...', // Unique identifier for the payment session.
-      sessionData: 'Ab02b4c...' // The payment session data.
-    },
-    onPaymentCompleted: (result, component) => {
-        console.info(result, component);
-    },
-    onError: (error, component) => {
-        console.error(error.name, error.message, error.stack, component);
-    },
-    // Any payment method specific configuration. Find the configuration specific to each payment method:  https://docs.adyen.com/payment-methods
-    // For example, this is 3D Secure configuration for cards:
-    paymentMethodsConfiguration: {
-      card: {
-        hasHolderName: true,
-        holderNameRequired: true,
-        billingAddressRequired: true
-      }
+  console.log("Request to GET Starter Formula");
+
+  try {
+    await dbConnect();
+    console.log("DB Connected");
+
+    let formula = await Formula.findOne({ slug: STARTER_FORMULA_SLUG });
+
+    if (!formula) {
+      throw new Error(`Starter Formula not found. Starter Formula Slug attempted: ${STARTER_FORMULA_SLUG}`);
     }
-  };`,
-      date: new Date().toISOString(),
-      createdBy: "mustafa.hoda",
-      _id: "60f3b3b3c9f3b0001f1f3b3b",
-    },
-    { status: 200 }
-  );
+
+    console.log("Starter Formula retrieved");
+
+    return NextResponse.json({ message: "starter formula retrieved", success: true, data: formula }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "An error occurred when retrieving the formula", success: false, error: error },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
-  console.log("Creating a Formula");
-  //   return new Response({ test: "test" }, { status: 201 });
-  return NextResponse.json({ message: "formula inserted" }, { status: 201 });
+  console.log("Request to POST a Formula");
+
+  try {
+    // TODO: Add validation
+    const requestBody = await request.json();
+
+    await dbConnect();
+    console.log("DB Connected");
+
+    let insertResult = await Formula.create({
+      stringifiedConfiguration: requestBody.stringifiedConfiguration,
+      description: requestBody.description,
+      slug: requestBody.slug,
+      link: `${BASE_URL}/${requestBody.slug}`,
+      ...requestBody,
+      // createdBy: "testUser",
+    });
+
+    console.log(`Formula inserted with id: ${insertResult._id}`);
+    return NextResponse.json({ message: "formula inserted", success: true, data: insertResult }, { status: 201 });
+  } catch (error) {
+    console.error("Error inserting formula", error);
+
+    return NextResponse.json(
+      { message: "An error occurred when inserting the formula", success: false, error: error },
+      { status: 500 }
+    );
+  }
 }
