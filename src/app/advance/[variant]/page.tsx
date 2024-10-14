@@ -75,6 +75,7 @@ const Page: any = () => {
       content: (
         <Code
           code={JSON.stringify(componentState)}
+          theme={theme}
           type="json"
           readOnly={true}
         />
@@ -194,19 +195,25 @@ const Page: any = () => {
   }
 
   return (
-    <div className={`${theme}`}>
-      <Sidebar
-        section={section}
-        setSection={setSection}
-        unsavedChanges={unsavedChanges}
-      />
-      <Topbar />
-      <Sandbox
-        main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
-        topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
-        bottomRight={<SandBoxTabs tabsMap={bottomRightTabsMap} />}
-      />
-    </div>
+    <body className={`${theme}`}>
+      <header>
+        <Topbar />
+      </header>
+      <main>
+        <Sandbox
+          main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
+          topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
+          bottomRight={<SandBoxTabs tabsMap={bottomRightTabsMap} />}
+        />
+      </main>
+      <footer>
+        <Sidebar
+          section={section}
+          setSection={setSection}
+          unsavedChanges={unsavedChanges}
+        />
+      </footer>
+    </body>
   );
 };
 

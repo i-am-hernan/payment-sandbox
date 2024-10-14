@@ -56,8 +56,7 @@
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
+    --custom-accent-code: 260, 100%, 100% --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -93,6 +92,20 @@
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
   }
+}
+
+.adyen-checkout__payment-method {
+  @apply !bg-code;
+}
+.adyen-checkout__label__text {
+  @apply !text-foreground;
+}
+.adyen-checkout__payment-method__name {
+  @apply !text-foreground;
+}
+
+.cm-theme{
+  @apply w-[100%] h-[100%];
 }
 
 /* main, nav {

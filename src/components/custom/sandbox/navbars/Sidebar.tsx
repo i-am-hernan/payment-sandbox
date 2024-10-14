@@ -33,6 +33,8 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
 import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { userActions } from "@/store/reducers";
 
 interface SideTab {
   name: string;
@@ -41,6 +43,8 @@ interface SideTab {
   hotKey: string;
   ref: any;
 }
+
+const { updateTheme } = userActions;
 
 const Sidebar = (props: any) => {
   const { section, setSection, unsavedChanges } = props;
@@ -57,6 +61,7 @@ const Sidebar = (props: any) => {
   const serverButtonRef = useRef<HTMLButtonElement>(null);
   const clientButtonRef = useRef<HTMLButtonElement>(null);
   const webhookButtonRef = useRef<HTMLButtonElement>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -169,52 +174,47 @@ const Sidebar = (props: any) => {
           </div>
           <div className="pb-3">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="mt-2 rounded-none border-none hover:border-[1px] hover:border-adyen hover:border-dotted"
-                >
-                  <SettingsIcon className="!text-foreground !text-[20px]" />
-                </Button>
+              <DropdownMenuTrigger className="p-2 pt-1 rounded-none border-none hover:border-[1px] hover:border-adyen hover:border-dotted">
+                <SettingsIcon className="!text-foreground !text-[20px]" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
+              <DropdownMenuContent className="">
                 <DropdownMenuLabel>Setting</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <ShortcutIcon className="text-[18px]" />
-                    <p className="pl-1 text-sm">Shortcuts</p>
+                  <DropdownMenuItem className="text-xs">
+                    <ShortcutIcon className="text-sm" />
+                    <p className="px-2">Shortcuts</p>
                     <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <DarkModeIcon className="text-[18px]" />
-                      <p className="pl-1 text-sm">Theme</p>
+                    <DropdownMenuSubTrigger className="text-xs">
+                      <DarkModeIcon className="text-sm" />
+                      <p className="px-2">Theme</p>
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
-                      <DropdownMenuSubContent>
-                        <DropdownMenuItem>
+                      <DropdownMenuSubContent className="">
+                        <DropdownMenuItem
+                          className="text-xs"
+                          onClick={() => {
+                            dispatch(updateTheme("dark"));
+                          }}
+                        >
                           <span>Dark</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-xs"
+                          onClick={() => {
+                            dispatch(updateTheme("light"));
+                          }}
+                        >
                           <span>Light</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <span>Tech</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
-                  <DropdownMenuItem>
-                    <ManageAccountsIcon className="text-[18px]" />
-                    <p className="pl-1 text-sm">Merchant Account</p>
-                    <DropdownMenuShortcut>⇧⌘M</DropdownMenuShortcut>
-                  </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>

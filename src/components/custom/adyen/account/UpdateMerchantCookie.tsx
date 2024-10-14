@@ -95,7 +95,7 @@ const UpdateMerchantCookie = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-[16px]">
+          <DialogTitle className="text-[16px] text-foreground">
             Choose Your Merchant Account
           </DialogTitle>
           <DialogDescription className="text-[13px]">

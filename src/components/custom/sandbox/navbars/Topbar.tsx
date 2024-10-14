@@ -92,7 +92,7 @@ const Topbar = (props: any) => {
               </Button>
             </AlertDialogTrigger>
           </Tooltip>
-          <AlertDialogContent>
+          <AlertDialogContent className="text-foreground">
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription className="text-xs">
