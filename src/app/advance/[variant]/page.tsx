@@ -30,17 +30,16 @@ const {
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
 
-  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.formula
-  );
-  const { theme } = useSelector((state: RootState) => state.user);
-  const { paymentMethods, payments, paymentsDetails } = request;
   const { componentState } = useSelector((state: RootState) => state.component);
-
+  const { theme } = useSelector((state: RootState) => state.user);
   const { variant } = useParams<{
     variant: string;
   }>();
 
+  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
+    (state: RootState) => state.formula
+  );
+  const { paymentMethods, payments, paymentsDetails } = request;
   const {
     paymentMethods: paymentMethodsAPIVersion,
     payments: paymentsAPIVersion,

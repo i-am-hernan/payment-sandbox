@@ -4,15 +4,14 @@ import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdv
 import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
-import { adyenVariantActions } from "@/store/reducers";
+import { componentActions, formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams, useSearchParams } from "next/navigation";
-import { currentFormulaActions } from "@/store/reducers";
+import { useDispatch, useSelector } from "react-redux";
 
-const { updateIsRedirect, updateRedirectResult } = currentFormulaActions;
+const { updateIsRedirect, updateRedirectResult } = formulaActions;
 
-const { updateVariantState } = adyenVariantActions;
+const { updateComponentState } = componentActions;
 
 export const ManageAdyenAdvance = () => {
   const {
@@ -25,7 +24,7 @@ export const ManageAdyenAdvance = () => {
     paymentsDetailsRequest,
     isRedirect,
     redirectResult,
-  } = useSelector((state: RootState) => state.currentFormula);
+  } = useSelector((state: RootState) => state.formula);
 
   const { error: adyenScriptError, loading: loadingAdyenScript } = useAdyenScript(adyenWebVersion);
   const dispatch = useDispatch();
@@ -65,7 +64,7 @@ export const ManageAdyenAdvance = () => {
           checkoutConfiguration={{
             ...checkoutConfiguration,
             onChange: (state: any) => {
-              dispatch(updateVariantState(state));
+              dispatch(updateComponentState(state));
             },
           }}
           variant={variant}

@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
 import { useApi } from "@/hooks/useApi";
 import { useRef } from "react";
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export const InitAdvanceComponent = (props: any) => {
@@ -42,10 +41,13 @@ export const InitAdvanceComponent = (props: any) => {
     checkoutRef
   );
 
-  const error = adyenSDKError || paymentMethodsError ? { ...adyenSDKError, ...paymentMethodsError } : null;
+  const error =
+    adyenSDKError || paymentMethodsError
+      ? { ...adyenSDKError, ...paymentMethodsError }
+      : null;
 
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-screen">
       {error && (
         <Alert variant="destructive">
           <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>
@@ -58,8 +60,14 @@ export const InitAdvanceComponent = (props: any) => {
           <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods && <Skeleton className="w-[100px] h-[20px] rounded-full" />}
-      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && <div ref={checkoutRef}></div>}
+      {loadingPaymentMethods && (
+        <Skeleton className="w-[100px] h-[20px] rounded-full" />
+      )}
+      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
+        <div className="!max-w-[45vw]">
+          <div className="px-auto" ref={checkoutRef}></div>
+        </div>
+      )}
     </div>
   );
 };

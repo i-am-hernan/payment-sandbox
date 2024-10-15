@@ -2,30 +2,36 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { adyenVariantActions } from "@/store/reducers";
+import { componentActions, formulaActions } from "@/store/reducers";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import { useParams, useSearchParams } from "next/navigation";
-import { currentFormulaActions } from "@/store/reducers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InitSessionsComponent } from "./InitSessionsComponent";
 import { RedirectSessionsComponent } from "./RedirectSessionsComponent";
+import { useEffect } from "react";
 
-const { updateIsRedirect, updateRedirectResult, updateSessionId } = currentFormulaActions;
-const { updateVariantState } = adyenVariantActions;
+const { updateIsRedirect, updateRedirectResult, updateSessionId } =
+  formulaActions;
+const { updateComponentState } = componentActions;
 
 export const ManageAdyenSessions = (props: any) => {
+  const { build, isRedirect, redirectResult, sessionId } = useSelector(
+    (state: RootState) => state.formula
+  );
+
   const {
     checkoutConfiguration,
     checkoutAPIVersion,
     adyenWebVersion,
     txVariantConfiguration,
-    sessionsRequest,
-    isRedirect,
-    redirectResult,
-    sessionId,
-  } = useSelector((state: RootState) => state.currentFormula);
+    request,
+  } = build;
 
-  const { error: adyenScriptError, loading: loadingAdyenScript } = useAdyenScript(adyenWebVersion);
+  const { sessions } = request;
+
+  const { error: adyenScriptError, loading: loadingAdyenScript } =
+    useAdyenScript(adyenWebVersion);
+
   const dispatch = useDispatch();
   const { variant } = useParams<{
     variant: string;
@@ -34,12 +40,14 @@ export const ManageAdyenSessions = (props: any) => {
   const redirectResultQueryParameter = searchParams.get("redirectResult");
   const sessionIdQueryParameter = searchParams.get("sessionId");
 
-  if (redirectResultQueryParameter && !isRedirect) {
-    dispatch(updateIsRedirect(true));
-    //need to remove query path parameters without refreshing
-    dispatch(updateRedirectResult(redirectResultQueryParameter));
-    dispatch(updateSessionId(sessionIdQueryParameter));
-  }
+  useEffect(() => {
+    if (redirectResultQueryParameter && !isRedirect) {
+      dispatch(updateIsRedirect(true));
+      //need to remove query path parameters without refreshing
+      dispatch(updateRedirectResult(redirectResultQueryParameter));
+      dispatch(updateSessionId(sessionIdQueryParameter));
+    }
+  }, [redirectResultQueryParameter, isRedirect]);
 
   if (loadingAdyenScript || !variant) {
     return (
@@ -67,12 +75,12 @@ export const ManageAdyenSessions = (props: any) => {
           checkoutConfiguration={{
             ...checkoutConfiguration,
             onChange: (state: any) => {
-              dispatch(updateVariantState(state));
+              dispatch(updateComponentState(state));
             },
           }}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}
-          sessionsRequest={sessionsRequest}
+          sessionsRequest={sessions}
         />
       )}
 
@@ -83,7 +91,7 @@ export const ManageAdyenSessions = (props: any) => {
           checkoutConfiguration={{
             ...checkoutConfiguration,
             onChange: (state: any) => {
-              dispatch(updateVariantState(state));
+              dispatch(updateComponentState(state));
             },
           }}
           variant={variant}

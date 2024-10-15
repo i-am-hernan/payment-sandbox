@@ -17,19 +17,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const { updateSpecs } = specsActions;
-const {
-  updateReset,
-  addUnsavedChanges,
-  updateCheckoutAPIVersion
-} = formulaActions;
+const { updateReset, addUnsavedChanges, updateCheckoutAPIVersion } =
+  formulaActions;
 
 const Api = (props: any) => {
-  const {
-    schema,
-    api,
-    request: globalRequest,
-    updateRequest,
-  } = props;
+  const { schema, api, request: globalRequest, updateRequest } = props;
 
   const { reset, checkoutAPIVersion, build } = useSelector(
     (state: RootState) => state.formula
@@ -50,7 +42,7 @@ const Api = (props: any) => {
     `api/specs/checkout/CheckoutService-v${checkoutAPIVersion[api]}.json`,
     "GET"
   );
-
+  console.log("globalRequest", globalRequest);
   useEffect(() => {
     if (apiSpecsData) {
       dispatch(

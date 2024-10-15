@@ -32,6 +32,7 @@ export interface Formula {
     paymentMethods: boolean;
     payments: boolean;
     paymentsDetails: boolean;
+    sessions: boolean;
     events: boolean;
   };
   build: Formula | null;
@@ -39,6 +40,7 @@ export interface Formula {
   run: boolean;
   reset: boolean;
   redirectResult: string | null;
+  sessionId: string | null;
 }
 
 // Define the initial state
@@ -47,6 +49,7 @@ const initialState: FormulaPropType = {
     paymentMethods: "70",
     payments: "70",
     paymentsDetails: "70",
+    sessions: "70",
   },
   adyenWebVersion: "5.66.1",
   checkoutConfiguration: {
@@ -55,7 +58,6 @@ const initialState: FormulaPropType = {
   },
   txVariant: "",
   txVariantConfiguration: {},
-  sessions: {},
   request: {
     paymentMethods: {
       merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
@@ -71,6 +73,20 @@ const initialState: FormulaPropType = {
       merchantAccount: "HernanChalco",
     },
     paymentsDetails: {},
+    sessions: {
+      countryCode: "US",
+      amount: {
+        value: 10000,
+        currency: "USD",
+      },
+      channel: "Web",
+      //TODO: Refactor this
+      returnUrl: "http://localhost:3000/sessions/ideal",
+      reference: "reference",
+      shopperLocale: "en_US",
+      //TODO: Fix this
+      merchantAccount: "HernanChalco",
+    },
   },
   style: {},
   unsavedChanges: {
@@ -80,6 +96,7 @@ const initialState: FormulaPropType = {
     paymentMethods: false,
     payments: false,
     paymentsDetails: false,
+    sessions: false,
     events: false,
   },
   isRedirect: false,
@@ -88,6 +105,7 @@ const initialState: FormulaPropType = {
   run: true,
   reset: false,
   redirectResult: null,
+  sessionId: null,
 };
 
 // Add the build key to the initial state
@@ -129,6 +147,7 @@ const formulaSlice = createSlice({
         paymentMethods: false,
         payments: false,
         paymentsDetails: false,
+        sessions: false,
         events: false,
       };
     },
@@ -146,6 +165,9 @@ const formulaSlice = createSlice({
     },
     updateRedirectResult: (state, action: PayloadAction<string>) => {
       state.redirectResult = action.payload;
+    },
+    updateSessionId: (state, action: PayloadAction<string | null>) => {
+      state.sessionId = action.payload;
     },
     updateTxVariant: (state, action: PayloadAction<string>) => {
       state.txVariant = action.payload;
@@ -224,6 +246,7 @@ const formulaSlice = createSlice({
           paymentMethods: false,
           payments: false,
           paymentsDetails: false,
+          sessions: false,
           events: false,
         },
       };
@@ -242,6 +265,7 @@ const formulaSlice = createSlice({
           paymentMethods: false,
           payments: false,
           paymentsDetails: false,
+          sessions: false,
           events: false,
         },
       };
