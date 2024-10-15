@@ -1,8 +1,8 @@
 "use client";
+import Link from "next/link";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { ChevronDown, ChevronUp, CreditCard, Clock, BarChart2, SquareTerminal } from "lucide-react";
 
 interface ExpandableCardsProps {
@@ -28,16 +28,16 @@ export function ExpandableCards(props: ExpandableCardsProps) {
       {isExpanded && (
         <div className="mt-4 flex sm:flex-col md:flex-row justify-center">
           <Button variant="ghost" className="h-auto py-2" asChild>
-            <a href={`/sessions/${props.paymentMethodType}`} className="flex flex-col items-center">
+            <Link href={`/sessions/${props.paymentMethodType}`} className="flex flex-col items-center">
               <Clock className="h-4 w-4 mb-1" />
               <span className="text-xs">Sessions</span>
-            </a>
+            </Link>
           </Button>
           <Button variant="ghost" className=" h-auto py-2" asChild>
-            <a href={`/advanced/${props.paymentMethodType}`} className="flex flex-col items-center">
+            <Link href={`/advanced/${props.paymentMethodType}`} className="flex flex-col items-center">
               <SquareTerminal className="h-4 w-4 mb-1" />
               <span className="text-xs">Advanced</span>
-            </a>
+            </Link>
           </Button>
         </div>
       )}

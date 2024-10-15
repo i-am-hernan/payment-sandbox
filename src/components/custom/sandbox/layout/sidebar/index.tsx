@@ -30,6 +30,7 @@ const Sidebar = (props: any) => {
     loading: loadingPaymentMethods,
     error: paymentMethodsError,
   } = useApi(`api/checkout/v71/paymentMethods`, "POST");
+  console.log("---------");
   console.log(paymentMethodsResponse);
 
   return (
@@ -45,17 +46,19 @@ const Sidebar = (props: any) => {
               <DrawerDescription>Components</DrawerDescription>
             </DrawerHeader>
             <div className="space-y-2">
-              {paymentMethodsResponse &&
+              {!paymentMethodsResponse ? (
+                <h1> no response </h1>
+              ) : (
+                paymentMethodsResponse &&
                 paymentMethodsResponse.paymentMethods.map((paymentMethod: any) => (
                   <ExpandableCards
                     key={paymentMethod.type}
                     paymentMethodName={paymentMethod.name}
                     paymentMethodType={paymentMethod.type}
                   />
-                ))}
+                ))
+              )}
             </div>
-
-            <DrawerFooter>Theme switch</DrawerFooter>
           </DrawerContent>
         </Drawer>
       </span>
