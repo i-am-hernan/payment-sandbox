@@ -40,7 +40,7 @@ const Page: any = () => {
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
-  console.log("sessions", sessions);
+
   let topRightTabsMap = [
     {
       title: `${variant}`,

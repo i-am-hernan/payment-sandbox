@@ -42,7 +42,7 @@ const Api = (props: any) => {
     `api/specs/checkout/CheckoutService-v${checkoutAPIVersion[api]}.json`,
     "GET"
   );
-  console.log("globalRequest", globalRequest);
+
   useEffect(() => {
     if (apiSpecsData) {
       dispatch(

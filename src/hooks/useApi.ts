@@ -16,10 +16,6 @@ export const useApi: UseApi = (endpoint, method, payload) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log(endpoint);
-  console.log(method);
-  console.log(payload);
-
   useEffect(() => {
     const requestOptions: RequestOptions = {
       method,

@@ -257,6 +257,7 @@ const formulaSlice = createSlice({
         ...lastBuild,
         build: lastBuild,
         run: state.run,
+        base: state.base,
         reset: state.reset,
         unsavedChanges: {
           html: false,

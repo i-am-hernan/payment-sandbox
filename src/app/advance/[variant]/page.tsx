@@ -39,6 +39,7 @@ const Page: any = () => {
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
+
   const { paymentMethods, payments, paymentsDetails } = request;
   const {
     paymentMethods: paymentMethodsAPIVersion,

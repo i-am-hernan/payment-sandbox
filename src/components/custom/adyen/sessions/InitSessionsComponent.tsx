@@ -41,7 +41,7 @@ export const InitSessionsComponent = (props: any) => {
     adyenSDKError || sessionError
       ? { ...adyenSDKError, ...sessionError }
       : null;
-  console.log("sessionsRequest", sessionsRequest);
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       {error && (
@@ -59,8 +59,8 @@ export const InitSessionsComponent = (props: any) => {
         <Skeleton className="w-[100px] h-[20px] rounded-full" />
       )}
       {!adyenSDKError && !adyenResult && !loadingSessions && (
-        <div className="!max-w-[45vw]">
-          <div className="px-auto" ref={checkoutRef}></div>
+        <div >
+          <div ref={checkoutRef}></div>
         </div>
       )}
     </div>
