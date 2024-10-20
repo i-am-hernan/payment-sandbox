@@ -36,9 +36,13 @@ const Page: any = () => {
     variant: string;
   }>();
 
-  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.formula
-  );
+  const {
+    run,
+    unsavedChanges,
+    request,
+    checkoutAPIVersion,
+    checkoutConfiguration,
+  } = useSelector((state: RootState) => state.formula);
 
   const { paymentMethods, payments, paymentsDetails } = request;
   const {

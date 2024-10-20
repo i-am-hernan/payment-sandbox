@@ -4,17 +4,18 @@ import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdv
 import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
-import { componentActions, formulaActions } from "@/store/reducers";
+import {
+  componentActions,
+  formulaActions,
+  specsActions,
+} from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { useApi } from "@/hooks/useApi";
-import { specsActions } from "@/store/reducers";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const { updateIsRedirect, updateRedirectResult } = formulaActions;
 const { updateComponentState } = componentActions;
-const { updateSpecs } = specsActions;
 
 export const ManageAdvanceComponent = () => {
   const { build, isRedirect, redirectResult } = useSelector(
@@ -32,12 +33,6 @@ export const ManageAdvanceComponent = () => {
 
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
-
-    // we are going to have to move this to then component that will download the sdk specs
-  const { data: sdkSpecsData, error: sdkSpecsError } = useApi(
-    `api/specs/adyen-web/WebComponents-v${adyenWebVersion.replaceAll(".", "_")}`,
-    "GET"
-  );
 
   const dispatch = useDispatch();
   const { variant } = useParams<{
@@ -63,7 +58,7 @@ export const ManageAdvanceComponent = () => {
     );
   }
 
-  if (adyenScriptError || sdkSpecsError) {
+  if (adyenScriptError) {
     // Need to add an error that we are not able to download adyen script or the specs
     return <div>Error</div>;
   }
