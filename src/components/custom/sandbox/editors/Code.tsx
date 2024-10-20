@@ -21,7 +21,7 @@ const Code = (props: any) => {
     try {
       const prettierVersion = prettier.format(uglyCode, {
         parser: type,
-        plugins: [parserBabel, parserHtml, prettierPluginEstree],
+        plugins: [parserBabel, parserHtml, prettierPluginEstree, jsonc],
         tabWidth: 1,
         useTabs: false,
       });
@@ -33,9 +33,19 @@ const Code = (props: any) => {
   };
 
   useEffect(() => {
-    const formatCode = async () => {
-      const formatted = await prettify(code, type);
+    const formatCode: any = async () => {
+      let prettifyType = type;
+      if (type === "html") {
+        prettifyType = "parserBabel";
+      } else if(type === "json") {
+        prettifyType = "json";
+      } else if (type === "javascript") {
+        prettifyType = "jsonc";
+      }
+
+      const formatted = await prettify(code, prettifyType);
       setFormattedCode(formatted);
+
     };
     formatCode();
   }, [code]);

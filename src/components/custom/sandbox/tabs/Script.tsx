@@ -53,7 +53,13 @@ const Script = () => {
       className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel defaultSize={50} className="sm:flex">
-        hello
+        <Code
+          type="javascript"
+          code={""}
+          readOnly={false}
+          theme={theme}
+          onChange={(value: any) => {}}
+        />
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
