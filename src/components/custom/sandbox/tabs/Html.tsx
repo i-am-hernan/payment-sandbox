@@ -12,7 +12,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { createHtmlCode } from "@/lib/utils";
+import { createHtmlCode } from "@/utils/utils";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";

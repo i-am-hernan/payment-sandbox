@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { resolveRef } from "@/lib/utils";
+import { resolveRef } from "@/utils/utils";
 
 const OpenApiList = (props: any) => {
   const {

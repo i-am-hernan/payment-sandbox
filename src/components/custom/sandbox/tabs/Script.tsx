@@ -9,7 +9,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import Code from "@/components/custom/sandbox/editors/Code";
-import { debounce, deepEqual } from "@/lib/utils";
+import { debounce, deepEqual } from "@/utils/utils";
 
 const { updateSpecs } = specsActions;
 const {
@@ -52,14 +52,34 @@ const Script = () => {
       direction="horizontal"
       className="bg-background inline-block !overflow-y-scroll"
     >
-      <ResizablePanel defaultSize={50} className="sm:flex">
-        <Code
-          type="javascript"
-          code={""}
-          readOnly={false}
-          theme={theme}
-          onChange={(value: any) => {}}
-        />
+      <ResizablePanel defaultSize={50} className="sm:flex bg-code">
+        <div className="flex flex-col w-[100%]">
+          <Code
+            type="javascript"
+            code={`// create a configuration object \n\nvar checkoutConfiguration = ${JSON.stringify(checkoutConfiguration, null, 4)};`}
+            readOnly={false}
+            theme={theme}
+            onChange={(value: any) => {}}
+          />
+          <div className="text-[13px] text-grey pl-7 font-mono overflow-hidden">
+            <div className="text-reserved pb-2">
+              {"// create an instance of checkout"}
+            </div>
+            <div className="break-words">
+              <span className="text-reserved">{"var "}</span>
+              <span className="text-variable">{"checkout"}</span>
+              <span className="text-reserved">{" = "}</span>
+              <span className="text-reserved">{" new "}</span>
+              <span className="text-variable">{"window"}</span>
+              <span className="text-reserved">{"."}</span>
+              <span className="text-property">{"AdyenCheckout"}</span>
+              <span className="text-reserved">{"("}</span>
+              <span className="text-variable">{"checkoutConfiguration"}</span>
+              <span className="text-reserved">{")"}</span>
+              <span className="text-variable">{";"}</span>
+            </div>
+          </div>
+        </div>
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">

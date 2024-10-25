@@ -56,8 +56,13 @@
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --custom-accent-code: 260, 100%, 100% --card: 222.2 84% 4.9%;
+    --custom-accent-code: 210, 100%, 4.7%;
+    --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
+
+    --code-variable: #2277ff;
+    --code-property: #9966b8;
+    --code-reserved: #225588;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
@@ -95,7 +100,7 @@
 }
 
 .adyen-checkout__payment-method {
-  @apply !bg-code;
+  @apply !bg-code border !border-border rounded-lg;
 }
 .adyen-checkout__label__text {
   @apply !text-foreground;

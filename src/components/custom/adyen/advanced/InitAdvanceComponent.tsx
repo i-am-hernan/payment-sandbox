@@ -65,7 +65,7 @@ export const InitAdvanceComponent = (props: any) => {
       )}
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
         <div className="!max-w-[45vw]">
-          <div className="px-auto" ref={checkoutRef}></div>
+          <div className="px-auto !border-red" ref={checkoutRef}></div>
         </div>
       )}
     </div>

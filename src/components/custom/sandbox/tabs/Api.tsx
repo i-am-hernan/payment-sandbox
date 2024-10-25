@@ -10,7 +10,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
-import { debounce, deepEqual } from "@/lib/utils";
+import { debounce, deepEqual } from "@/utils/utils";
 import { formulaActions, specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
@@ -66,7 +66,7 @@ const Api = (props: any) => {
           [api]: !isEqual,
         })
       );
-    }, 250);
+    }, 1800);
 
     const syncLocalState = () => {
       setRequest(globalRequest);

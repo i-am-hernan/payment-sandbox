@@ -36,11 +36,11 @@ const Code = (props: any) => {
     const formatCode: any = async () => {
       let prettifyType = type;
       if (type === "html") {
-        prettifyType = "parserBabel";
+        prettifyType = "html";
       } else if(type === "json") {
         prettifyType = "json";
       } else if (type === "javascript") {
-        prettifyType = "jsonc";
+        prettifyType = "babel";
       }
 
       const formatted = await prettify(code, prettifyType);
@@ -132,7 +132,7 @@ const Code = (props: any) => {
   }
 
   return (
-    <div className="flex h-[100%] w-[100%] codemirror-wrapper">
+    <div className="flex w-[100%] codemirror-wrapper">
       <CodeMirror
         value={formattedCode}
         height="100%"
@@ -145,22 +145,3 @@ const Code = (props: any) => {
 };
 
 export default Code;
-
-/**
- * 
- *     EditorView.theme({
-      "&": {
-        backgroundColor: "yellow",
-      },
-      ".codemirror-wrapper": { width: "100%" },
-      ".cm-theme": {
-        width: "100%", // Hides the caret (cursor)
-      },
-      ".cm-content": {
-        caretColor: "transparent", // Hides the caret (cursor)
-      },
-      ".cm-line": {
-        userSelect: "none", // Prevents text selection
-      },
-    }),
- */

@@ -23,7 +23,10 @@ module.exports = {
       colors: {
         border: "hsl(var(--border))",
         adyen: "var(--custom-accent)",
-        code: "var(--custom-accent-code)",
+        code: "hsl(var(--custom-accent-code))",
+        variable: "var(--code-variable)",
+        property: "var(--code-property)",
+        reserved: "var(--code-reserved)",
         grey: "hsl(var(--grey))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -53,6 +53,8 @@ export const useAdyenAdvance = (
         }
       },
       onSubmit: async (state: any, dropin: any) => {
+        //what if here I call the javascript that was in the 
+        // So we put this in a function
         const response = await fetch(
           `/api/checkout/v${checkoutAPIVersion.payments}/payments`,
           {
