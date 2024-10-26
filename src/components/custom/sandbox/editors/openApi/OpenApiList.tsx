@@ -76,7 +76,6 @@ const OpenApiList = (props: any) => {
                         values[property] !== undefined ? values[property] : ""
                       }
                       onChange={(value: any) => {
-                        console.log("value", value);
                         if (value) {
                           setValues({ ...values, [property]: value });
                         } else {

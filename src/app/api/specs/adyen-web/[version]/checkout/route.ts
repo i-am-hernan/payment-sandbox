@@ -9,7 +9,7 @@ interface ParsedProperty {
   type: string;
   strictType: string;
   required: boolean;
-  additionalProperties?: ParsedProperty[];
+  additionalProperties?: { [name: string]: ParsedProperty };
   values?: string[];
   description?: string;
 }
@@ -51,12 +51,12 @@ export async function GET(
       // Create a TypeChecker using a dummy program (no need to reference actual files)
       const program = ts.createProgram(["fetchedFile.ts"], {});
       const checker = program.getTypeChecker();
-      const result: ParsedProperty[] = [];
+      const result: { [name: string]: ParsedProperty } = {};
 
       const setAdditionalProperties = function (
         member: ts.PropertySignature | ts.MethodSignature
       ) {
-        let additionalProperties: ParsedProperty[] = [];
+        let additionalProperties: { [name: string]: ParsedProperty } = {};
 
         member.forEachChild((child) => {
           let strictType = "string";
@@ -91,7 +91,8 @@ export async function GET(
                 strictType = typeName;
                 type = "object";
               }
-              additionalProperties?.push(property);
+              // additionalProperties?.push(property);
+              additionalProperties[property.name] = property;
             }
           });
         });
@@ -112,8 +113,9 @@ export async function GET(
               const required = !member.questionToken;
               let typeString = "any";
               let strictType = "any";
-              let additionalProperties: ParsedProperty[] | undefined =
-                undefined;
+              let additionalProperties:
+                | { [name: string]: ParsedProperty }
+                | any = {};
               let values: string[] | undefined = undefined;
 
               if (member.type) {
@@ -125,7 +127,8 @@ export async function GET(
                 if (member.type.kind === ts.SyntaxKind.TypeLiteral) {
                   typeString = "object";
                   strictType = "object";
-                  additionalProperties = setAdditionalProperties(member);
+                  additionalProperties[name] = setAdditionalProperties(member);
+                  // additionalProperties = setAdditionalProperties(member);
                 } else if (member.type.kind === ts.SyntaxKind.ArrayType) {
                   typeString = "array";
                 } else if (member.type.kind === ts.SyntaxKind.UnionType) {
@@ -188,7 +191,16 @@ export async function GET(
                 }
               }
 
-              result.push({
+              // result.push({
+              //   name,
+              //   type: typeString,
+              //   strictType,
+              //   required,
+              //   values,
+              //   description: map[name] ? map[name] : "",
+              //   additionalProperties,
+              // });
+              result[name] = {
                 name,
                 type: typeString,
                 strictType,
@@ -196,7 +208,7 @@ export async function GET(
                 values,
                 description: map[name] ? map[name] : "",
                 additionalProperties,
-              });
+              };
             }
           });
         } else {
@@ -208,7 +220,6 @@ export async function GET(
     };
 
     const result = structureAdyenWebTypes();
-
     return Response.json({ checkout: result });
   } catch (error: any) {
     if (error instanceof Response) {

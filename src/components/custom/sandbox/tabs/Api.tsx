@@ -116,14 +116,12 @@ const Api = (props: any) => {
             dispatch(updateCheckoutAPIVersion({ [api]: value }));
           }}
         />
-        {
-          <OpenApiSearch
-            properties={properties}
-            onChange={(filteredProperties: any) => {
-              setFilteredProperties(filteredProperties);
-            }}
-          />
-        }
+        <OpenApiSearch
+          properties={properties}
+          onChange={(filteredProperties: any) => {
+            setFilteredProperties(filteredProperties);
+          }}
+        />
         {!loadingApiSpecData && apiSpecsData && (
           <OpenApiList
             openApi={apiSpecsData}
