@@ -1,7 +1,7 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
-import OpenApiList from "@/components/custom/sandbox/editors/OpenApiList";
-import OpenApiSearch from "@/components/custom/sandbox/editors/OpenApiSearch";
+import OpenApiList from "@/components/custom/sandbox/editors/openApi/OpenApiList";
+import OpenApiSearch from "@/components/custom/sandbox/editors/openApi/OpenApiSearch";
 import Version from "@/components/custom/sandbox/editors/Version";
 import Loading from "@/components/custom/utils/Loading";
 import {
@@ -113,7 +113,6 @@ const Api = (props: any) => {
                 [api]: build.checkoutAPIVersion[api] !== value,
               })
             );
-            dispatch(updateSpecs(api)); //
             dispatch(updateCheckoutAPIVersion({ [api]: value }));
           }}
         />

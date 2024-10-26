@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/resizable";
 import Code from "@/components/custom/sandbox/editors/Code";
 import { debounce, deepEqual } from "@/utils/utils";
+import Loading from "@/components/custom/utils/Loading";
+import Version from "@/components/custom/sandbox/editors/Version";
+import { WEBVERSIONS } from "@/assets/constants/constants";
+import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 
 const { updateSpecs } = specsActions;
 const {
@@ -24,18 +28,27 @@ const Script = () => {
   const {
     reset,
     build,
-    checkoutConfiguration,
+    checkoutConfiguration: globalCheckoutConfiguration,
     txVariantConfiguration,
     adyenWebVersion,
   } = useSelector((state: RootState) => state.formula);
 
   const { adyenWeb }: any = useSelector((state: RootState) => state.specs);
   const { theme } = useSelector((state: RootState) => state.user);
+  const properties = adyenWeb?.checkout ?? null;
   const dispatch = useDispatch();
-  const { data: sdkSpecsData, error: sdkSpecsError } = useApi(
+  const [checkoutConfiguration, setCheckoutConfiguration] = useState(
+    globalCheckoutConfiguration
+  );
+  const {
+    data: sdkSpecsData,
+    loading: loadingSdkSpecData,
+    error: sdkSpecsError,
+  } = useApi(
     `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/checkout`,
     "GET"
   );
+  const [filteredProperties, setFilteredProperties] = useState(properties);
 
   useEffect(() => {
     if (sdkSpecsData) {
@@ -46,6 +59,14 @@ const Script = () => {
       );
     }
   }, [sdkSpecsData]);
+
+  useEffect(() => {
+    setFilteredProperties(properties);
+  }, [properties]);
+
+  if (sdkSpecsError) {
+    return <div>Error</div>;
+  }
 
   return (
     <ResizablePanelGroup
@@ -83,7 +104,34 @@ const Script = () => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
-        world
+        {loadingSdkSpecData && <Loading />}
+        <Version
+          label={"Adyen Web"}
+          value={adyenWebVersion}
+          options={WEBVERSIONS}
+          onChange={(value: any) => {
+            dispatch(
+              addUnsavedChanges({
+                js: adyenWebVersion !== value,
+              })
+            );
+            dispatch(updateAdyenWebVersion(value));
+          }}
+        />
+        {!loadingSdkSpecData && sdkSpecsData && (
+          <OpenSdkList
+            openSdk={sdkSpecsData}
+            properties={filteredProperties}
+            selectedProperties={Object.keys(checkoutConfiguration)}
+            values={checkoutConfiguration}
+            setValues={(value: any) => {
+              setCheckoutConfiguration(value);
+            }}
+            onChange={(value: any) => {
+              console.log("value", value);
+            }}
+          />
+        )}
       </ResizablePanel>
     </ResizablePanelGroup>
   );
