@@ -78,6 +78,18 @@ const Script = () => {
     });
   }
 
+  const stringifyObject = (obj: any) => {
+    const entries = [];
+    for (const [key, value] of Object.entries(obj)) {
+      if (typeof value === "function") {
+        entries.push(`${key}: ${value.toString()}`);
+      } else {
+        entries.push(`${key}: ${JSON.stringify(value)}`);
+      }
+    }
+    return `{${entries.join(", ")}}`;
+  };
+
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -87,10 +99,12 @@ const Script = () => {
         <div className="flex flex-col w-[100%]">
           <Code
             type="javascript"
-            code={`// create a configuration object \n\nvar checkoutConfiguration = ${serializeWithFunctions(checkoutConfiguration)};`}
+            code={`// create a configuration object \n\nvar checkoutConfiguration = ${stringifyObject(checkoutConfiguration)};`}
             readOnly={false}
             theme={theme}
-            onChange={(value: any) => {}}
+            onChange={(value: any) => {
+              setCheckoutConfiguration(value);
+            }}
           />
           <div className="text-[13px] text-grey pl-7 font-mono overflow-hidden">
             <div className="text-reserved pb-2">
@@ -148,7 +162,6 @@ const Script = () => {
               const isNewProperty = checkoutParameters.length < value.length;
               if (isNewProperty) {
                 const latestKey = value[value.length - 1];
-                // We are using a key to get the value of the property, but its an aarray
 
                 const latestValue = properties[latestKey];
                 let newProperty = null;

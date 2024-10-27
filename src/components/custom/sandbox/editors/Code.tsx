@@ -11,12 +11,16 @@ import * as prettier from "prettier/standalone";
 import { useEffect, useState } from "react";
 import { linter, Diagnostic } from "@codemirror/lint";
 import { parse } from "@babel/parser"; // Import a JavaScript parser
+import traverse from "@babel/traverse";
+import generate from "@babel/generator";
+import * as t from "@babel/types";
 import * as jsonc from "jsonc-parser"; // Import jsonc-parser
 
 const Code = (props: any) => {
   const { code, type, readOnly, onChange, theme } = props;
   const [formattedCode, setFormattedCode] = useState<string>("");
 
+  // Need to prettify when user presses format button
   const prettify = async (uglyCode: string, type: string): Promise<string> => {
     try {
       const prettierVersion = prettier.format(uglyCode, {
@@ -32,12 +36,37 @@ const Code = (props: any) => {
     }
   };
 
+  const getVariableValueFromAST = (code: string, variableName: string) => {
+    // Parse the code to get the AST
+    const ast = parse(code, { sourceType: "module" });
+
+    let variableValue = null;
+
+    // Traverse the AST to find the variable declaration
+    traverse(ast, {
+      VariableDeclarator(path: any) {
+        if (t.isIdentifier(path.node.id, { name: variableName })) {
+          // Evaluate the value of the variable
+          variableValue = path.node.init;
+          path.stop();
+        }
+      },
+    });
+    // Generate code from the AST node
+    const { code: valueCode } = generate(variableValue);
+
+    // Use eval to get the JavaScript object representation
+    const evaluatedValue = eval(`(${valueCode})`);
+
+    return evaluatedValue;
+  };
+
   useEffect(() => {
     const formatCode: any = async () => {
       let prettifyType = type;
       if (type === "html") {
         prettifyType = "html";
-      } else if(type === "json") {
+      } else if (type === "json") {
         prettifyType = "json";
       } else if (type === "javascript") {
         prettifyType = "babel";
@@ -45,7 +74,6 @@ const Code = (props: any) => {
 
       const formatted = await prettify(code, prettifyType);
       setFormattedCode(formatted);
-
     };
     formatCode();
   }, [code]);
@@ -54,23 +82,20 @@ const Code = (props: any) => {
     try {
       // Linter logic
       let diagnostics: Diagnostic[] = [];
-      let parsedValue = null;
       if (type === "json") {
         diagnostics = await jsonLinter({
           state: { doc: { toString: () => value } },
         });
-        parsedValue = diagnostics.length === 0 ? jsonc.parse(value) : null;
+        if (diagnostics.length === 0) {
+          onChange(jsonc.parse(value));
+        }
       } else if (type === "javascript") {
         diagnostics = await javascriptLinter({
           state: { doc: { toString: () => value } },
         });
-        parsedValue =
-          diagnostics.length === 0
-            ? parse(value, { sourceType: "module" })
-            : null;
-      }
-      if (parsedValue) {
-        onChange(parsedValue);
+        if (diagnostics.length === 0) {
+          onChange(getVariableValueFromAST(value, "checkoutConfiguration"));
+        }
       }
     } catch (error) {
       console.error("Error in handleChange:", error);
@@ -100,14 +125,30 @@ const Code = (props: any) => {
     try {
       const ast = parse(code, { sourceType: "module" });
     } catch (error: any) {
+      // Extract location information if available
+      const from = error.loc
+        ? getCharacterPosition(code, error.loc.line, error.loc.column)
+        : 0;
+      const to = from; // Assuming the error is at a single point
       diagnostics.push({
-        from: error.loc.start.column,
-        to: error.loc.end.column,
+        from,
+        to,
         severity: "error",
         message: error.message,
       });
     }
     return diagnostics;
+  };
+
+  // Helper function to convert line and column to character position
+  const getCharacterPosition = (code: string, line: number, column: number) => {
+    const lines = code.split("\n");
+    let position = 0;
+    for (let i = 0; i < line - 1; i++) {
+      position += lines[i].length + 1; // +1 for the newline character
+    }
+    position += column;
+    return position;
   };
 
   const extensions = [];
