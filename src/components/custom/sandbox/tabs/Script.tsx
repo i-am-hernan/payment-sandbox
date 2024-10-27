@@ -65,6 +65,29 @@ const Script = () => {
     setFilteredProperties(properties);
   }, [properties]);
 
+  // useEffect(() => {
+  //   const syncGlobalState: any = debounce((localState: any, build: any) => {
+  //     const isEqual = deepEqual(build.request[api], localState);
+  //     dispatch(updateRequest(localState));
+  //     dispatch(
+  //       addUnsavedChanges({
+  //         [api]: !isEqual,
+  //       })
+  //     );
+  //   }, 1800);
+
+  //   const syncLocalState = () => {
+  //     setRequest(globalRequest);
+  //     dispatch(updateReset(false));
+  //   };
+
+  //   if (reset) {
+  //     syncLocalState();
+  //   } else {
+  //     syncGlobalState(request, build);
+  //   }
+  // }, [request, reset]);
+
   if (sdkSpecsError) {
     return <div>Error</div>;
   }
