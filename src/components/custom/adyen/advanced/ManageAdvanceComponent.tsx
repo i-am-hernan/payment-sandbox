@@ -13,8 +13,10 @@ import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { unstringifyObject, stringifyObject } from "@/utils/utils";
 
-const { updateIsRedirect, updateRedirectResult } = formulaActions;
+const { updateIsRedirect, updateRedirectResult, updateCheckoutConfiguration } =
+  formulaActions;
 const { updateComponentState } = componentActions;
 
 export const ManageAdvanceComponent = () => {
@@ -30,7 +32,6 @@ export const ManageAdvanceComponent = () => {
     request,
   } = build;
   const { paymentMethods, payments, paymentsDetails } = request;
-
   const { error: adyenScriptError, loading: loadingAdyenScript } =
     useAdyenScript(adyenWebVersion);
 
@@ -68,17 +69,25 @@ export const ManageAdvanceComponent = () => {
       {!isRedirect && (
         <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}
-          checkoutConfiguration={{
-            ...checkoutConfiguration,
-            onChange: (state: any) => {
-              dispatch(updateComponentState(state));
-            },
-          }}
+          checkoutConfiguration={checkoutConfiguration}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}
           paymentMethodsRequest={paymentMethods}
           paymentsRequest={payments}
           paymentsDetailsRequest={paymentsDetails}
+          onPaymentMethodsResponse={(response: any) => {
+            if (response) {
+              let objectString = stringifyObject(response).slice(1, -1);
+              objectString = "paymentMethodsResponse: {" + objectString + "}";
+              const checkoutConfigurationString = checkoutConfiguration.slice(
+                1,
+                -1
+              );
+              const combinedConfiguration = `{${objectString},${checkoutConfigurationString}}`;
+              // console.log("combinedConfiguration", combinedConfiguration);
+              updateCheckoutConfiguration(combinedConfiguration);
+            }
+          }}
         />
       )}
 
@@ -93,3 +102,11 @@ export const ManageAdvanceComponent = () => {
     </div>
   );
 };
+
+/*
+,
+            onChange: (state: any) => {
+              dispatch(updateComponentState(state));
+            },
+            Need to add this somewhere
+*/

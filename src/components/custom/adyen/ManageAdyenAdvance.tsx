@@ -8,6 +8,7 @@ import { componentActions, formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { unstringifyObject } from "@/utils/utils";
 
 const { updateIsRedirect, updateRedirectResult } = formulaActions;
 
@@ -25,15 +26,15 @@ export const ManageAdyenAdvance = () => {
     isRedirect,
     redirectResult,
   } = useSelector((state: RootState) => state.formula);
-
-  const { error: adyenScriptError, loading: loadingAdyenScript } = useAdyenScript(adyenWebVersion);
+  const parsedCheckoutConfiguration = unstringifyObject(checkoutConfiguration);
+  const { error: adyenScriptError, loading: loadingAdyenScript } =
+    useAdyenScript(adyenWebVersion);
   const dispatch = useDispatch();
   const { variant } = useParams<{
     variant: string;
   }>();
   const searchParams = useSearchParams();
   const redirectResultQueryParameter = searchParams.get("redirectResult");
-
   if (redirectResultQueryParameter && !isRedirect) {
     dispatch(updateIsRedirect(true));
     //need to remove query path parameters without refreshing
@@ -55,14 +56,14 @@ export const ManageAdyenAdvance = () => {
   if (adyenScriptError) {
     return <div>Error...</div>;
   }
-
+  console.log("manage:: checkoutConfiguration", checkoutConfiguration);
   return (
     <div>
       {!isRedirect && (
         <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}
           checkoutConfiguration={{
-            ...checkoutConfiguration,
+            ...parsedCheckoutConfiguration,
             onChange: (state: any) => {
               dispatch(updateComponentState(state));
             },

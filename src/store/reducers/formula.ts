@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { sanitizeString } from "@/utils/utils";
 
 // Define the types for properties that can be of any shape
 export interface FormulaPropType {
@@ -7,7 +8,7 @@ export interface FormulaPropType {
 
 // Define the shape of the state
 export interface Formula {
-  checkoutConfiguration: FormulaPropType;
+  checkoutConfiguration: string;
   checkoutAPIVersion: {
     sessions: string;
     paymentMethods: string;
@@ -44,6 +45,7 @@ export interface Formula {
 }
 
 // Define the initial state
+
 const initialState: FormulaPropType = {
   checkoutAPIVersion: {
     paymentMethods: "70",
@@ -52,10 +54,9 @@ const initialState: FormulaPropType = {
     sessions: "70",
   },
   adyenWebVersion: "5.66.1",
-  checkoutConfiguration: {
-    clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY,
-    environment: "test",
-  },
+  checkoutConfiguration: sanitizeString(
+    `{clientKey: "test_747LMAMEOFBGRIEKENIJNYWAZM34XT5N", environment: "test", onError: function(error){handleError(error);}, onAdditionalDetails: function(state,dropin){handleAdditionalDetails(state,dropin);}, onSubmit: function(state,dropin){handleSubmit(state,dropin);}}`
+  ),
   txVariant: "",
   txVariantConfiguration: {},
   request: {
@@ -124,10 +125,7 @@ const formulaSlice = createSlice({
     updateFormula: (state, action: PayloadAction<Partial<Formula>>) => {
       return { ...state, ...action.payload };
     },
-    updateCheckoutConfiguration: (
-      state,
-      action: PayloadAction<FormulaPropType>
-    ) => {
+    updateCheckoutConfiguration: (state, action: PayloadAction<string>) => {
       state.checkoutConfiguration = action.payload;
     },
     addUnsavedChanges: (state, action: PayloadAction<any>) => {

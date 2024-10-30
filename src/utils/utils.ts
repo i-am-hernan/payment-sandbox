@@ -89,3 +89,31 @@ export const resolveRef = (json: any, ref: string) => {
   }
   return result;
 };
+
+export const stringifyObject = (obj: any) => {
+  const entries = [];
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === "function") {
+      entries.push(`${key}: ${value.toString()}`);
+    } else {
+      entries.push(`${key}: ${JSON.stringify(value)}`);
+    }
+  }
+  return `{${entries.join(", ")}}`;
+};
+export const unstringifyObject = (str: string) => {
+  try {
+    // Remove the surrounding curly braces
+    const objectString = str.slice(1, -1);
+    // Create a new function to evaluate the string as JavaScript code
+    const obj = new Function(`return {${objectString}}`)();
+    return obj;
+  } catch (error) {
+    console.error("Failed to unstringify object:", error);
+    return null;
+  }
+};
+
+export const sanitizeString = (str: string) => {
+  return str.replace(/[\n\t\s]/g, "");
+};

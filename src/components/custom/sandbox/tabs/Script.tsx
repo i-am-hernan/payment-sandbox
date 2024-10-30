@@ -9,12 +9,19 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import Code from "@/components/custom/sandbox/editors/Code";
-import { debounce, deepEqual } from "@/utils/utils";
+import {
+  debounce,
+  deepEqual,
+  sanitizeString,
+  stringifyObject,
+  unstringifyObject,
+} from "@/utils/utils";
 import Loading from "@/components/custom/utils/Loading";
 import Version from "@/components/custom/sandbox/editors/Version";
 import { WEBVERSIONS } from "@/assets/constants/constants";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 import OpenApiSearch from "@/components/custom/sandbox/editors/openApi/OpenApiSearch";
+import { useParams } from "next/navigation";
 
 const { updateSpecs } = specsActions;
 const {
@@ -36,10 +43,13 @@ const Script = () => {
 
   const { adyenWeb }: any = useSelector((state: RootState) => state.specs);
   const { theme } = useSelector((state: RootState) => state.user);
+  const { variant } = useParams<{
+    variant: string;
+  }>();
   const properties = adyenWeb?.checkout ?? null;
   const dispatch = useDispatch();
   const [checkoutConfiguration, setCheckoutConfiguration] = useState(
-    globalCheckoutConfiguration
+    unstringifyObject(globalCheckoutConfiguration)
   );
   const {
     data: sdkSpecsData,
@@ -50,7 +60,6 @@ const Script = () => {
     "GET"
   );
   const [filteredProperties, setFilteredProperties] = useState(properties);
-
   useEffect(() => {
     if (sdkSpecsData) {
       dispatch(
@@ -65,53 +74,49 @@ const Script = () => {
     setFilteredProperties(properties);
   }, [properties]);
 
-  // useEffect(() => {
-  //   const syncGlobalState: any = debounce((localState: any, build: any) => {
-  //     const isEqual = deepEqual(build.request[api], localState);
-  //     dispatch(updateRequest(localState));
-  //     dispatch(
-  //       addUnsavedChanges({
-  //         [api]: !isEqual,
-  //       })
-  //     );
-  //   }, 1800);
+  useEffect(() => {
+    const syncGlobalState: any = debounce((localState: any, build: any) => {
+      let stringifiedLocalState = stringifyObject(localState);
 
-  //   const syncLocalState = () => {
-  //     setRequest(globalRequest);
-  //     dispatch(updateReset(false));
-  //   };
+      const isEqual =
+        sanitizeString(build.checkoutConfiguration) ===
+        sanitizeString(stringifiedLocalState);
 
-  //   if (reset) {
-  //     syncLocalState();
-  //   } else {
-  //     syncGlobalState(request, build);
-  //   }
-  // }, [request, reset]);
+      // console.log(
+      //   "sanitized build.checkoutConfiguration",
+      //   sanitizeString(build.checkoutConfiguration)
+      // );
+      // console.log(
+      //   "sanitized stringifiedLocalState",
+      //   sanitizeString(stringifiedLocalState)
+      // );
+      // console.log("isEqual", isEqual);
+
+      if (!isEqual) {
+        dispatch(updateCheckoutConfiguration(stringifiedLocalState));
+      }
+      dispatch(
+        addUnsavedChanges({
+          js: !isEqual,
+        })
+      );
+    }, 1800);
+
+    const syncLocalState = () => {
+      setCheckoutConfiguration(unstringifyObject(globalCheckoutConfiguration));
+      dispatch(updateReset(false));
+    };
+
+    if (reset) {
+      syncLocalState();
+    } else {
+      syncGlobalState(checkoutConfiguration, build);
+    }
+  }, [checkoutConfiguration, reset]);
 
   if (sdkSpecsError) {
     return <div>Error</div>;
   }
-
-  function serializeWithFunctions(obj: any) {
-    return JSON.stringify(obj, (key, value) => {
-      if (typeof value === "function") {
-        return value.toString();
-      }
-      return value;
-    });
-  }
-
-  const stringifyObject = (obj: any) => {
-    const entries = [];
-    for (const [key, value] of Object.entries(obj)) {
-      if (typeof value === "function") {
-        entries.push(`${key}: ${value.toString()}`);
-      } else {
-        entries.push(`${key}: ${JSON.stringify(value)}`);
-      }
-    }
-    return `{${entries.join(", ")}}`;
-  };
 
   return (
     <ResizablePanelGroup
@@ -120,20 +125,25 @@ const Script = () => {
     >
       <ResizablePanel defaultSize={50} className="sm:flex bg-code">
         <div className="flex flex-col w-[100%]">
+          <div className="text-[13px] text-grey pl-10 font-mono overflow-hidden">
+            <div className="text-reserved">
+              {"// create a configuration object"}
+            </div>
+          </div>
           <Code
             type="javascript"
-            code={`// create a configuration object \n\nvar checkoutConfiguration = ${stringifyObject(checkoutConfiguration)};`}
+            code={`var checkoutConfiguration = ${stringifyObject(checkoutConfiguration)};`}
             readOnly={false}
             theme={theme}
             onChange={(value: any) => {
               setCheckoutConfiguration(value);
             }}
           />
-          <div className="text-[13px] text-grey pl-7 font-mono overflow-hidden">
-            <div className="text-reserved pb-2">
+          <div className="text-[13px] text-grey pl-10 font-mono overflow-hidden cursor-not-allowed">
+            <div className="text-reserved">
               {"// create an instance of checkout"}
             </div>
-            <div className="break-words">
+            <div className="break-words pb-2">
               <span className="text-reserved">{"var "}</span>
               <span className="text-variable">{"checkout"}</span>
               <span className="text-reserved">{" = "}</span>
@@ -143,6 +153,37 @@ const Script = () => {
               <span className="text-property">{"AdyenCheckout"}</span>
               <span className="text-reserved">{"("}</span>
               <span className="text-variable">{"checkoutConfiguration"}</span>
+              <span className="text-reserved">{")"}</span>
+              <span className="text-variable">{";"}</span>
+            </div>
+            <div className="text-reserved pt-2">
+              {`// create a ${variant} configuration object`}
+            </div>
+          </div>
+
+          <Code
+            type="javascript"
+            code={`var ${variant}Configuration = {};`}
+            readOnly={false}
+            theme={theme}
+            onChange={(value: any) => {
+              console.log(value);
+            }}
+          />
+          <div className="text-[13px] text-grey pl-7 font-mono overflow-hidden cursor-not-allowed">
+            <div className="text-reserved">
+              {"// create and mount component"}
+            </div>
+            <div className="break-words">
+              <span className="text-reserved">{"var "}</span>
+              <span className="text-variable">{variant}</span>
+              <span className="text-reserved">{" = "}</span>
+              <span className="text-variable">{" checkout"}</span>
+              <span className="text-reserved">{"."}</span>
+              <span className="text-property">{"create"}</span>
+              <span className="text-reserved">{"("}</span>
+              <span className="text-variable">{`'${variant}'`}</span>
+              <span className="text-variable">{`, ${variant}Configuration`}</span>
               <span className="text-reserved">{")"}</span>
               <span className="text-variable">{";"}</span>
             </div>

@@ -3,7 +3,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
 import { useApi } from "@/hooks/useApi";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export const InitAdvanceComponent = (props: any) => {
@@ -15,6 +15,7 @@ export const InitAdvanceComponent = (props: any) => {
     paymentMethodsRequest,
     paymentsRequest,
     paymentsDetailsRequest,
+    onPaymentMethodsResponse
   } = props;
 
   const {
@@ -28,7 +29,10 @@ export const InitAdvanceComponent = (props: any) => {
   );
 
   const checkoutRef = useRef(null);
-  // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
+
+  useEffect(() => {
+    onPaymentMethodsResponse(paymentMethodsResponse)
+  }, [paymentMethodsResponse]);
 
   const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
     variant,

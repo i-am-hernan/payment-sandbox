@@ -35,39 +35,6 @@ const Topbar = (props: any) => {
     (value) => value
   ).length;
 
-  const resetButtonRef = useRef<HTMLButtonElement>(null);
-  const clearButtonRef = useRef<HTMLButtonElement>(null);
-  const runButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === "b") {
-        event.preventDefault();
-        if (clearButtonRef.current) {
-          clearButtonRef.current.click();
-        }
-      } else if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
-        event.preventDefault();
-        if (runButtonRef.current) {
-          runButtonRef.current.click();
-        }
-      } else if (
-        ((event.ctrlKey || event.metaKey) && event.key === "Backspace") ||
-        event.key === "Delete"
-      ) {
-        event.preventDefault();
-        if (resetButtonRef.current) {
-          resetButtonRef.current.click();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
 
   return (
     <span
@@ -86,7 +53,6 @@ const Topbar = (props: any) => {
                 variant="outline"
                 size="sm"
                 className="px-2 pt-0 pb-0"
-                ref={resetButtonRef}
               >
                 <RestartAltIcon className="!text-foreground !text-[16px]" />
               </Button>
@@ -129,7 +95,6 @@ const Topbar = (props: any) => {
               dispatch(clearOnDeckInfo());
               dispatch(updateReset(true));
             }}
-            ref={clearButtonRef}
           >
             <RestoreIcon className="!text-foreground !text-[16px]" />
           </Button>
@@ -154,7 +119,6 @@ const Topbar = (props: any) => {
             dispatch(updateRun());
             dispatch(resetUnsavedChanges());
           }}
-          ref={runButtonRef}
         >
           Build
         </Button>

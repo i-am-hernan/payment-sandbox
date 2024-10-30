@@ -94,6 +94,7 @@ const Code = (props: any) => {
           state: { doc: { toString: () => value } },
         });
         if (diagnostics.length === 0) {
+          // Bug: What if the user doesn't have any bugs but also doesnt have checkout configuration in the code, we should still throw an error
           onChange(getVariableValueFromAST(value, "checkoutConfiguration"));
         }
       }

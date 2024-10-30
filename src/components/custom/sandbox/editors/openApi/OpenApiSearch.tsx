@@ -9,7 +9,7 @@ const OpenApiSearch = (props: any) => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "/") {
+      if ((event.ctrlKey || event.metaKey) && event.key === "/") {
         event.preventDefault();
         if (inputRef.current) {
           inputRef.current.focus();
