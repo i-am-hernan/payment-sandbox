@@ -1,27 +1,26 @@
-import { useApi } from "@/hooks/useApi";
-import { formulaActions, specsActions } from "@/store/reducers";
-import type { RootState } from "@/store/store";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { WEBVERSIONS } from "@/assets/constants/constants";
+import Code from "@/components/custom/sandbox/editors/Code";
+import OpenApiSearch from "@/components/custom/sandbox/editors/openApi/OpenApiSearch";
+import Version from "@/components/custom/sandbox/editors/Version";
+import Loading from "@/components/custom/utils/Loading";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import Code from "@/components/custom/sandbox/editors/Code";
+import { useApi } from "@/hooks/useApi";
+import { formulaActions, specsActions } from "@/store/reducers";
+import type { RootState } from "@/store/store";
 import {
   debounce,
-  deepEqual,
   sanitizeString,
   stringifyObject,
-  unstringifyObject,
+  unstringifyObject
 } from "@/utils/utils";
-import Loading from "@/components/custom/utils/Loading";
-import Version from "@/components/custom/sandbox/editors/Version";
-import { WEBVERSIONS } from "@/assets/constants/constants";
-import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
-import OpenApiSearch from "@/components/custom/sandbox/editors/openApi/OpenApiSearch";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 
 const { updateSpecs } = specsActions;
 const {
@@ -60,6 +59,8 @@ const Script = () => {
     "GET"
   );
   const [filteredProperties, setFilteredProperties] = useState(properties);
+  const checkoutConfigurationVar = "checkoutConfiguration";
+  const variantConfigurationVar = `${variant}Configuration`;
   useEffect(() => {
     if (sdkSpecsData) {
       dispatch(
@@ -81,16 +82,6 @@ const Script = () => {
       const isEqual =
         sanitizeString(build.checkoutConfiguration) ===
         sanitizeString(stringifiedLocalState);
-
-      // console.log(
-      //   "sanitized build.checkoutConfiguration",
-      //   sanitizeString(build.checkoutConfiguration)
-      // );
-      // console.log(
-      //   "sanitized stringifiedLocalState",
-      //   sanitizeString(stringifiedLocalState)
-      // );
-      // console.log("isEqual", isEqual);
 
       if (!isEqual) {
         dispatch(updateCheckoutConfiguration(stringifiedLocalState));
@@ -132,12 +123,13 @@ const Script = () => {
           </div>
           <Code
             type="javascript"
-            code={`var checkoutConfiguration = ${stringifyObject(checkoutConfiguration)};`}
+            code={`var ${checkoutConfigurationVar} = ${stringifyObject(checkoutConfiguration)};`}
             readOnly={false}
             theme={theme}
             onChange={(value: any) => {
               setCheckoutConfiguration(value);
             }}
+            jsVariable={checkoutConfigurationVar}
           />
           <div className="text-[13px] text-grey pl-10 font-mono overflow-hidden cursor-not-allowed">
             <div className="text-reserved">
@@ -163,12 +155,13 @@ const Script = () => {
 
           <Code
             type="javascript"
-            code={`var ${variant}Configuration = {};`}
+            code={`var ${variantConfigurationVar} = {};`}
             readOnly={false}
             theme={theme}
             onChange={(value: any) => {
               console.log(value);
             }}
+            jsVariable={variantConfigurationVar}
           />
           <div className="text-[13px] text-grey pl-7 font-mono overflow-hidden cursor-not-allowed">
             <div className="text-reserved">
