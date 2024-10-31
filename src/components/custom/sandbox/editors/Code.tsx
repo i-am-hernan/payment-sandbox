@@ -37,12 +37,9 @@ const Code = (props: any) => {
     }
   };
 
-  const getVariableValueFromAST = (
-    code: string | null,
-    variableName: string
-  ) => {
+  const getVariableValueFromAST = (code: string, variableName: string) => {
     // Parse the code to get the AST
-    const ast = code && parse(code, { sourceType: "module" });
+    const ast = parse(code, { sourceType: "module" });
 
     let variableValue = null;
 
@@ -57,12 +54,8 @@ const Code = (props: any) => {
       },
     });
     // Generate code from the AST node
-
-    if (variableValue === null) {
-      return null;
-    }
-
     const { code: valueCode } = generate(variableValue);
+
     // Use eval to get the JavaScript object representation
     const evaluatedValue = eval(`(${valueCode})`);
 
@@ -84,11 +77,8 @@ const Code = (props: any) => {
       setFormattedCode(formatted);
     };
 
-    if (prettifyCounter.current < 2) {
-      formatCode();
-      prettifyCounter.current += 1;
-    }
-  }, [code, type]);
+    formatCode();
+  }, [code]);
 
   const handleChange = async (value: string, type: string) => {
     try {
@@ -186,7 +176,9 @@ const Code = (props: any) => {
   }
 
   return (
-    <div className="flex w-[100%] codemirror-wrapper">
+    <div
+      className={`flex w-[100%] codemirror-wrapper ${readOnly ? "cursor-not-allowed" : ""}`}
+    >
       <CodeMirror
         value={formattedCode}
         height="100%"

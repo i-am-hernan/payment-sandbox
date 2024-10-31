@@ -15,7 +15,7 @@ import {
   debounce,
   sanitizeString,
   stringifyObject,
-  unstringifyObject
+  unstringifyObject,
 } from "@/utils/utils";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -115,8 +115,13 @@ const Script = () => {
       className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel defaultSize={50} className="sm:flex bg-code">
-        <div className="flex flex-col w-[100%]">
-          <div className="text-[13px] text-grey pl-10 font-mono overflow-hidden">
+        <div className="flex flex-col w-[100%] pt-1">
+          <div className="text-[13px] text-grey pl-2 font-mono overflow-hidden cursor-not-allowed">
+            <div className="text-reserved">
+              {`/* modify the variables ${checkoutConfigurationVar} and ${variantConfigurationVar} */`}
+            </div>
+          </div>
+          <div className="text-[13px] text-grey font-mono overflow-hidden pt-6 pl-2 cursor-not-allowed">
             <div className="text-reserved">
               {"// create a configuration object"}
             </div>
@@ -131,11 +136,11 @@ const Script = () => {
             }}
             jsVariable={checkoutConfigurationVar}
           />
-          <div className="text-[13px] text-grey pl-10 font-mono overflow-hidden cursor-not-allowed">
+          <div className="text-[13px] text-grey pl-2 pt-6 font-mono overflow-hidden cursor-not-allowed">
             <div className="text-reserved">
               {"// create an instance of checkout"}
             </div>
-            <div className="break-words pb-2">
+            <div className="break-words">
               <span className="text-reserved">{"var "}</span>
               <span className="text-variable">{"checkout"}</span>
               <span className="text-reserved">{" = "}</span>
@@ -148,12 +153,11 @@ const Script = () => {
               <span className="text-reserved">{")"}</span>
               <span className="text-variable">{";"}</span>
             </div>
-            <div className="text-reserved pt-2">
+            <div className="text-reserved pt-6">
               {`// create a ${variant} configuration object`}
             </div>
           </div>
-
-          <Code
+          {/* <Code
             type="javascript"
             code={`var ${variantConfigurationVar} = {};`}
             readOnly={false}
@@ -162,10 +166,10 @@ const Script = () => {
               console.log(value);
             }}
             jsVariable={variantConfigurationVar}
-          />
-          <div className="text-[13px] text-grey pl-7 font-mono overflow-hidden cursor-not-allowed">
+          /> */}
+          <div className="text-[13px] text-grey pl-2 pt-6 font-mono overflow-hidden cursor-not-allowed">
             <div className="text-reserved">
-              {"// create and mount component"}
+              {`// create and mount ${variant}`}
             </div>
             <div className="break-words">
               <span className="text-reserved">{"var "}</span>
@@ -175,8 +179,8 @@ const Script = () => {
               <span className="text-reserved">{"."}</span>
               <span className="text-property">{"create"}</span>
               <span className="text-reserved">{"("}</span>
-              <span className="text-variable">{`'${variant}'`}</span>
-              <span className="text-variable">{`, ${variant}Configuration`}</span>
+              <span className="text-adyen">{`'${variant}'`}</span>
+              <span className="text-variable">{`, ${variantConfigurationVar}`}</span>
               <span className="text-reserved">{")"}</span>
               <span className="text-variable">{";"}</span>
             </div>

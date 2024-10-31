@@ -148,7 +148,7 @@ const Sidebar = (props: any) => {
             </div>
             {sideTabs.map((tab, index): any => (
               <span className="relative" key={index}>
-                <Tooltip title={`${tab.name} (${tab.hotKey})`}>
+                <Tooltip title={`${tab.name} (${tab.hotKey})`} placement="right-start">
                   <Button
                     key={tab.name}
                     variant="ghost"
