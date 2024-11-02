@@ -13,43 +13,45 @@ import { formulaActions, specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   debounce,
+  prettify,
+  replaceKeyValue,
   sanitizeString,
   stringifyObject,
   unstringifyObject,
 } from "@/utils/utils";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
+import { Button } from "@/components/ui/button";
 
 const { updateSpecs } = specsActions;
 const {
   updateReset,
   addUnsavedChanges,
   updateAdyenWebVersion,
-  updateTxVariantConfiguration,
   updateCheckoutConfiguration,
 } = formulaActions;
+
+const formatJsString = (code: any, varName: string) => {
+  return `var ${varName} = ${code};`;
+};
 
 const Script = () => {
   const {
     reset,
     build,
     checkoutConfiguration: globalCheckoutConfiguration,
-    txVariantConfiguration,
     adyenWebVersion,
   } = useSelector((state: RootState) => state.formula);
-
   const { adyenWeb }: any = useSelector((state: RootState) => state.specs);
   const { theme } = useSelector((state: RootState) => state.user);
-  const { variant } = useParams<{
-    variant: string;
-  }>();
   const properties = adyenWeb?.checkout ?? null;
+  const [checkoutConfiguration, setCheckoutConfiguration] = useState<any>(null);
+  const [
+    stringifiedCheckoutConfiguration,
+    setStringifiedCheckoutConfiguration,
+  ] = useState("");
   const dispatch = useDispatch();
-  const [checkoutConfiguration, setCheckoutConfiguration] = useState(
-    unstringifyObject(globalCheckoutConfiguration)
-  );
   const {
     data: sdkSpecsData,
     loading: loadingSdkSpecData,
@@ -60,7 +62,7 @@ const Script = () => {
   );
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const checkoutConfigurationVar = "checkoutConfiguration";
-  const variantConfigurationVar = `${variant}Configuration`;
+
   useEffect(() => {
     if (sdkSpecsData) {
       dispatch(
@@ -91,14 +93,19 @@ const Script = () => {
           js: !isEqual,
         })
       );
-    }, 1800);
+    }, 1000);
 
-    const syncLocalState = () => {
+    const syncLocalState = async () => {
+      let prettifiedString = await prettify(
+        formatJsString(globalCheckoutConfiguration, checkoutConfigurationVar),
+        "babel"
+      );
       setCheckoutConfiguration(unstringifyObject(globalCheckoutConfiguration));
+      setStringifiedCheckoutConfiguration(prettifiedString);
       dispatch(updateReset(false));
     };
 
-    if (reset) {
+    if (checkoutConfiguration === null || reset) {
       syncLocalState();
     } else {
       syncGlobalState(checkoutConfiguration, build);
@@ -114,77 +121,38 @@ const Script = () => {
       direction="horizontal"
       className="bg-background inline-block !overflow-y-scroll"
     >
-      <ResizablePanel defaultSize={50} className="sm:flex bg-code">
-        <div className="flex flex-col w-[100%] pt-1">
-          <div className="text-[13px] text-grey pl-2 font-mono overflow-hidden cursor-not-allowed">
-            <div className="text-reserved">
-              {`/* modify the variables ${checkoutConfigurationVar} and ${variantConfigurationVar} */`}
-            </div>
-          </div>
-          <div className="text-[13px] text-grey font-mono overflow-hidden pt-6 pl-2 cursor-not-allowed">
-            <div className="text-reserved">
-              {"// create a configuration object"}
-            </div>
-          </div>
-          <Code
-            type="javascript"
-            code={`var ${checkoutConfigurationVar} = ${stringifyObject(checkoutConfiguration)};`}
-            readOnly={false}
-            theme={theme}
-            onChange={(value: any) => {
-              setCheckoutConfiguration(value);
+      <ResizablePanel defaultSize={50} className="sm:flex bg-code flex-col">
+        <Code
+          type="babel"
+          code={stringifiedCheckoutConfiguration}
+          readOnly={false}
+          theme={theme}
+          onChange={(jsValue: any, stringValue: string) => {
+            setCheckoutConfiguration(jsValue);
+            setStringifiedCheckoutConfiguration(stringValue);
+          }}
+          jsVariable={checkoutConfigurationVar}
+        />
+        <div className={`flex justify-end border-y-[1px] bg-background`}>
+          <Button
+            key={"prettify"}
+            variant="ghost"
+            size="icon"
+            className={`rounded-none border-l-[1px] h-5`}
+            onClick={async () => {
+              try {
+                let prettifiedString = await prettify(
+                  stringifiedCheckoutConfiguration,
+                  "babel"
+                );
+                setStringifiedCheckoutConfiguration(prettifiedString);
+              } catch (e) {
+                console.error(e);
+              }
             }}
-            jsVariable={checkoutConfigurationVar}
-          />
-          <div className="text-[13px] text-grey pl-2 pt-6 font-mono overflow-hidden cursor-not-allowed">
-            <div className="text-reserved">
-              {"// create an instance of checkout"}
-            </div>
-            <div className="break-words">
-              <span className="text-reserved">{"var "}</span>
-              <span className="text-variable">{"checkout"}</span>
-              <span className="text-reserved">{" = "}</span>
-              <span className="text-reserved">{" new "}</span>
-              <span className="text-variable">{"window"}</span>
-              <span className="text-reserved">{"."}</span>
-              <span className="text-property">{"AdyenCheckout"}</span>
-              <span className="text-reserved">{"("}</span>
-              <span className="text-variable">{"checkoutConfiguration"}</span>
-              <span className="text-reserved">{")"}</span>
-              <span className="text-variable">{";"}</span>
-            </div>
-            <div className="text-reserved pt-6">
-              {`// create a ${variant} configuration object`}
-            </div>
-          </div>
-          {/* <Code
-            type="javascript"
-            code={`var ${variantConfigurationVar} = {};`}
-            readOnly={false}
-            theme={theme}
-            onChange={(value: any) => {
-              console.log(value);
-            }}
-            jsVariable={variantConfigurationVar}
-          /> */}
-          <div className="text-[13px] text-grey pl-2 pt-6 font-mono overflow-hidden cursor-not-allowed">
-            <div className="text-reserved">
-              {`// create and mount ${variant}`}
-            </div>
-            <div className="break-words">
-              <span className="text-reserved">{"var "}</span>
-              <span className="text-variable">{variant}</span>
-              <span className="text-reserved">{" = "}</span>
-              <span className="text-variable">{" checkout"}</span>
-              <span className="text-reserved">{"."}</span>
-              <span className="text-property">{"create"}</span>
-              <span className="text-reserved">{"("}</span>
-              <span className="text-adyen">{`'${variant}'`}</span>
-              <span className="text-variable">{`, ${variantConfigurationVar}`}</span>
-              <span className="text-reserved">{")"}</span>
-              <span className="text-variable">{";"}</span>
-            </div>
-          </div>
+          >
+            <span className="font-semibold text-xxs text-warning">{"{}"}</span>
+          </Button>
         </div>
       </ResizablePanel>
       <ResizableHandle />
@@ -209,66 +177,65 @@ const Script = () => {
             setFilteredProperties(filteredProperties);
           }}
         />
-        {!loadingSdkSpecData && sdkSpecsData && (
+        {!loadingSdkSpecData && sdkSpecsData && checkoutConfiguration && (
           <OpenSdkList
             openSdk={sdkSpecsData}
             properties={filteredProperties}
             selectedProperties={Object.keys(checkoutConfiguration)}
             values={checkoutConfiguration}
-            setValues={(value: any) => {
+            setValues={async (
+              value: any,
+              keyString: any,
+              keyValue: any,
+              type: string
+            ) => {
               setCheckoutConfiguration(value);
+              setStringifiedCheckoutConfiguration(
+                replaceKeyValue(
+                  stringifiedCheckoutConfiguration,
+                  keyString,
+                  JSON.stringify(keyValue),
+                  type
+                )
+              );
             }}
-            onChange={(value: any) => {
+            onChange={async (value: any) => {
               const checkoutParameters = Object.keys(checkoutConfiguration);
               const isNewProperty = checkoutParameters.length < value.length;
               if (isNewProperty) {
                 const latestKey = value[value.length - 1];
-
                 const latestValue = properties[latestKey];
                 let newProperty = null;
                 if (latestValue.type === "string") {
                   newProperty = { [latestKey]: "" };
-                  setCheckoutConfiguration({
-                    ...checkoutConfiguration,
-                    ...newProperty,
-                  });
                 } else if (latestValue.type === "boolean") {
                   newProperty = { [latestKey]: true };
-                  setCheckoutConfiguration({
-                    ...checkoutConfiguration,
-                    ...newProperty,
-                  });
                 } else if (latestValue.type === "integer") {
                   newProperty = { [latestKey]: 0 };
-                  setCheckoutConfiguration({
-                    ...checkoutConfiguration,
-                    ...newProperty,
-                  });
                 } else if (latestValue.type === "array") {
                   newProperty = { [latestKey]: [] };
-                  setCheckoutConfiguration({
-                    ...checkoutConfiguration,
-                    ...newProperty,
-                  });
+                } else if (latestValue.type === "enum") {
+                  newProperty = { [latestKey]: "" };
                 } else if (!latestValue.type) {
                   newProperty = { [latestKey]: {} };
-                  setCheckoutConfiguration({
-                    ...checkoutConfiguration,
-                    ...newProperty,
-                  });
                 } else if (latestValue.type === "object") {
                   newProperty = { [latestKey]: {} };
-                  setCheckoutConfiguration({
-                    ...checkoutConfiguration,
-                    ...newProperty,
-                  });
                 } else if (latestValue.type === "function") {
                   newProperty = { [latestKey]: function () {} };
-                  setCheckoutConfiguration({
-                    ...checkoutConfiguration,
-                    ...newProperty,
-                  });
                 }
+                let newObject = {
+                  ...checkoutConfiguration,
+                  ...newProperty,
+                };
+                setCheckoutConfiguration(newObject);
+                let prettifiedNewObject = await prettify(
+                  formatJsString(
+                    stringifyObject(newObject),
+                    checkoutConfigurationVar
+                  ),
+                  "babel"
+                );
+                setStringifiedCheckoutConfiguration(prettifiedNewObject);
               } else {
                 const removedProperties: any = checkoutParameters.filter(
                   (i) => {
@@ -280,6 +247,14 @@ const Script = () => {
                   let removedProperty = removedProperties.pop();
                   delete updatedRequest[removedProperty];
                   setCheckoutConfiguration(updatedRequest);
+                  let prettifiedNewObject = await prettify(
+                    formatJsString(
+                      stringifyObject(updatedRequest),
+                      checkoutConfigurationVar
+                    ),
+                    "babel"
+                  );
+                  setStringifiedCheckoutConfiguration(prettifiedNewObject);
                 }
               }
             }}

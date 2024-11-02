@@ -116,7 +116,7 @@ const UpdateMerchantCookie = () => {
                 className="rounded-r-none"
               />
             </div>
-            <Button className="w-24 rounded-l-none text-xs" type="submit">
+            <Button className="w-24 rounded-l-none text-xs  text-background" type="submit">
               {isLoading && <Loading />}
               {!isLoading && <p>Save</p>}
             </Button>

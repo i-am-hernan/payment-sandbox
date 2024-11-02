@@ -77,12 +77,14 @@ const Page: any = () => {
         </span>
       ),
       content: (
-        <Code
-          code={JSON.stringify(componentState)}
-          theme={theme}
-          type="json"
-          readOnly={true}
-        />
+        <div className="flex h-[100%]">
+          <Code
+            code={JSON.stringify(componentState)}
+            theme={theme}
+            type="json"
+            readOnly={true}
+          />
+        </div>
       ),
       value: "state",
     },
@@ -90,7 +92,7 @@ const Page: any = () => {
   if (section === "Client") {
     tabsMap = [
       {
-        title: `${variant ? variant : "checkout"}.js`,
+        title: "checkout.js",
         icon: (
           <span className="flex">
             <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>

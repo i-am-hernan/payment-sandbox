@@ -1,5 +1,10 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import * as parserBabel from "prettier/parser-babel";
+import * as parserHtml from "prettier/parser-html";
+import * as prettierPluginEstree from "prettier/plugins/estree";
+import * as prettier from "prettier/standalone";
+import * as jsonc from "jsonc-parser";
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
@@ -101,6 +106,7 @@ export const stringifyObject = (obj: any) => {
   }
   return `{${entries.join(", ")}}`;
 };
+
 export const unstringifyObject = (str: string) => {
   try {
     // Remove the surrounding curly braces
@@ -116,4 +122,46 @@ export const unstringifyObject = (str: string) => {
 
 export const sanitizeString = (str: string) => {
   return str.replace(/[\n\t\s]/g, "");
+};
+
+export const prettify = async (
+  uglyCode: string,
+  type: string
+): Promise<string> => {
+  try {
+    const prettierVersion = prettier.format(uglyCode, {
+      parser: type,
+      plugins: [parserBabel, parserHtml, prettierPluginEstree, jsonc],
+      tabWidth: 1,
+      useTabs: false,
+    });
+    return prettierVersion;
+  } catch (error) {
+    console.error("Prettier formatting error: ", error);
+    return JSON.stringify(uglyCode, null, 4); // Fallback to basic formatting
+  }
+};
+
+export const replaceKeyValue = (
+  strObj: string,
+  key: string,
+  newValue: string,
+  type: string
+) => {
+  // For nested objects, we need to find the closing curly brace of the object
+  let regex = null;
+
+  if (type === "string") {
+    regex = new RegExp(`(${key}\\s*:\\s*)("[^"]*")`, "g");
+  } else if (type === "boolean") {
+    regex = new RegExp(`(${key}\\s*:\\s*)(true|false)`, "g");
+  } else if (type === "integer") {
+    regex = new RegExp(`(${key}\\s*:\\s*)(\\d+)`, "g");
+  } else if (type === "array") {
+    regex = new RegExp(`(${key}\\s*:\\s*)(\\[.*\\])`, "g");
+  } else if (type === "object") {
+    regex = new RegExp(`(${key}\\s*:\\s*)(\\{.*\\})`, "g");
+  }
+
+  return regex ? strObj.replace(regex, `$1${newValue}`) : strObj;
 };

@@ -38,7 +38,7 @@ const Topbar = (props: any) => {
 
   return (
     <span
-      className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-b-2 flex items-center justify-end pr-2"
+      className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-2 flex items-center justify-end pr-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
     >
       <div className="flex-1 text-center">

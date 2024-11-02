@@ -64,9 +64,9 @@ export const ManageAdyenAdvance = () => {
           checkoutAPIVersion={checkoutAPIVersion}
           checkoutConfiguration={{
             ...parsedCheckoutConfiguration,
-            onChange: (state: any) => {
-              dispatch(updateComponentState(state));
-            },
+          }}
+          onChange={(state: any) => {
+            dispatch(updateComponentState(state));
           }}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}

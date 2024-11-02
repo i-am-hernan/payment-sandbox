@@ -1,41 +1,18 @@
-import { javascript } from "@codemirror/lang-javascript";
-import { json } from "@codemirror/lang-json";
-import { EditorView, ViewUpdate } from "@codemirror/view";
-import { githubLight } from "@uiw/codemirror-theme-github";
-import { abyss } from "@uiw/codemirror-theme-abyss";
-import CodeMirror from "@uiw/react-codemirror";
-import * as parserBabel from "prettier/parser-babel";
-import * as parserHtml from "prettier/parser-html";
-import * as prettierPluginEstree from "prettier/plugins/estree";
-import * as prettier from "prettier/standalone";
-import { useEffect, useState, useRef } from "react";
-import { linter, Diagnostic } from "@codemirror/lint";
+import generate from "@babel/generator";
 import { parse } from "@babel/parser"; // Import a JavaScript parser
 import traverse from "@babel/traverse";
-import generate from "@babel/generator";
 import * as t from "@babel/types";
+import { javascript } from "@codemirror/lang-javascript";
+import { json } from "@codemirror/lang-json";
+import { Diagnostic, linter } from "@codemirror/lint";
+import { EditorView, ViewUpdate } from "@codemirror/view";
+import { abyss } from "@uiw/codemirror-theme-abyss";
+import { githubLight } from "@uiw/codemirror-theme-github";
+import CodeMirror from "@uiw/react-codemirror";
 import * as jsonc from "jsonc-parser"; // Import jsonc-parser
 
 const Code = (props: any) => {
   const { code, type, readOnly, onChange, theme, jsVariable } = props;
-  const [formattedCode, setFormattedCode] = useState<string>("");
-  const prettifyCounter = useRef(0);
-
-  // Need to prettify when user presses format button
-  const prettify = async (uglyCode: string, type: string): Promise<string> => {
-    try {
-      const prettierVersion = prettier.format(uglyCode, {
-        parser: type,
-        plugins: [parserBabel, parserHtml, prettierPluginEstree, jsonc],
-        tabWidth: 1,
-        useTabs: false,
-      });
-      return prettierVersion;
-    } catch (error) {
-      console.error("Prettier formatting error: ", error);
-      return JSON.stringify(uglyCode, null, 4); // Fallback to basic formatting
-    }
-  };
 
   const getVariableValueFromAST = (code: string, variableName: string) => {
     // Parse the code to get the AST
@@ -55,30 +32,10 @@ const Code = (props: any) => {
     });
     // Generate code from the AST node
     const { code: valueCode } = generate(variableValue);
-
     // Use eval to get the JavaScript object representation
     const evaluatedValue = eval(`(${valueCode})`);
-
     return evaluatedValue;
   };
-
-  useEffect(() => {
-    const formatCode: any = async () => {
-      let prettifyType = type;
-      if (type === "html") {
-        prettifyType = "html";
-      } else if (type === "json") {
-        prettifyType = "json";
-      } else if (type === "javascript") {
-        prettifyType = "babel";
-      }
-
-      const formatted = await prettify(code, prettifyType);
-      setFormattedCode(formatted);
-    };
-
-    formatCode();
-  }, [code]);
 
   const handleChange = async (value: string, type: string) => {
     try {
@@ -89,15 +46,15 @@ const Code = (props: any) => {
           state: { doc: { toString: () => value } },
         });
         if (diagnostics.length === 0) {
-          onChange(jsonc.parse(value));
+          onChange(jsonc.parse(value), value);
         }
-      } else if (type === "javascript") {
+      } else if (type === "babel") {
         diagnostics = await javascriptLinter({
           state: { doc: { toString: () => value } },
         });
         if (diagnostics.length === 0) {
           // Bug: What if the user doesn't have any bugs but also doesnt have checkout configuration in the code, we should still throw an error
-          onChange(getVariableValueFromAST(value, jsVariable));
+          onChange(getVariableValueFromAST(value, jsVariable), value);
         }
       }
     } catch (error) {
@@ -171,16 +128,16 @@ const Code = (props: any) => {
     extensions.push(javascript({ jsx: true }));
   } else if (type === "json") {
     extensions.push(json(), linter(jsonLinter));
-  } else if (type === "javascript") {
+  } else if (type === "babel") {
     extensions.push(javascript(), linter(javascriptLinter));
   }
 
   return (
     <div
-      className={`flex w-[100%] codemirror-wrapper ${readOnly ? "cursor-not-allowed" : ""}`}
+      className={`flex w-[100%] h-[100%] flex-col codemirror-wrapper border-t-[1px] ${readOnly ? "cursor-not-allowed" : ""}`}
     >
       <CodeMirror
-        value={formattedCode}
+        value={code}
         height="100%"
         readOnly={readOnly}
         theme={theme === "light" ? githubLight : abyss}
