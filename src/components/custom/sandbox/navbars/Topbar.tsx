@@ -72,7 +72,7 @@ const Topbar = (props: any) => {
               <AlertDialogAction
                 onClick={() => {
                   dispatch(resetFormula());
-                  dispatch(updateReset(true));
+                  dispatch(updateReset());
                 }}
               >
                 Reset
@@ -93,7 +93,7 @@ const Topbar = (props: any) => {
             className="px-2 pt-0 pb-0"
             onClick={() => {
               dispatch(clearOnDeckInfo());
-              dispatch(updateReset(true));
+              dispatch(updateReset());
             }}
           >
             <RestoreIcon className="!text-foreground !text-[16px]" />

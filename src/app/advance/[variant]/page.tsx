@@ -1,7 +1,6 @@
 "use client";
 
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
-import Code from "@/components/custom/sandbox/editors/Code";
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
@@ -10,6 +9,7 @@ import Api from "@/components/custom/sandbox/tabs/Api";
 import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
 import Script from "@/components/custom/sandbox/tabs/Script";
+import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
@@ -29,20 +29,14 @@ const {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
-
-  const { componentState } = useSelector((state: RootState) => state.component);
   const { theme } = useSelector((state: RootState) => state.user);
   const { variant } = useParams<{
     variant: string;
   }>();
 
-  const {
-    run,
-    unsavedChanges,
-    request,
-    checkoutAPIVersion,
-    checkoutConfiguration,
-  } = useSelector((state: RootState) => state.formula);
+  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
+    (state: RootState) => state.formula
+  );
 
   const { paymentMethods, payments, paymentsDetails } = request;
   const {
@@ -50,7 +44,7 @@ const Page: any = () => {
     payments: paymentsAPIVersion,
     paymentsDetails: paymentsDetailsAPIVersion,
   } = checkoutAPIVersion;
-
+  console.log("Page -> checkoutAPIVersion");
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
   let topRightTabsMap = [
@@ -76,16 +70,7 @@ const Page: any = () => {
           <span className="font-semibold px-1 text-xxs text-info">state</span>
         </span>
       ),
-      content: (
-        <div className="flex h-[100%]">
-          <Code
-            code={JSON.stringify(componentState)}
-            theme={theme}
-            type="json"
-            readOnly={true}
-          />
-        </div>
-      ),
+      content: <StateData theme={theme} />,
       value: "state",
     },
   ];

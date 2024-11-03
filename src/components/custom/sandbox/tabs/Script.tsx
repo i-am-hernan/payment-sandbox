@@ -20,13 +20,12 @@ import {
   stringifyObject,
   unstringifyObject,
 } from "@/utils/utils";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 
 const { updateSpecs } = specsActions;
 const {
-  updateReset,
   addUnsavedChanges,
   updateAdyenWebVersion,
   updateCheckoutConfiguration,
@@ -34,6 +33,27 @@ const {
 
 const formatJsString = (code: any, varName: string) => {
   return `var ${varName} = ${code};`;
+};
+
+const initialState = {
+  parsed: null,
+  stringified: "",
+};
+
+const checkoutConfigReducer = (state: any, action: any) => {
+  switch (action.type) {
+    case "SET_PARSED":
+      return { ...state, parsed: action.payload };
+    case "SET_STRINGIFIED":
+      return { ...state, stringified: action.payload };
+    case "SET_BOTH":
+      return {
+        parsed: action.payload.parsed,
+        stringified: action.payload.stringified,
+      };
+    default:
+      return state;
+  }
 };
 
 const Script = () => {
@@ -48,11 +68,12 @@ const Script = () => {
   const { theme } = useSelector((state: RootState) => state.user);
   const { paymentMethods } = response;
   const properties = adyenWeb?.checkout ?? null;
-  const [checkoutConfiguration, setCheckoutConfiguration] = useState<any>(null);
-  const [
-    stringifiedCheckoutConfiguration,
-    setStringifiedCheckoutConfiguration,
-  ] = useState("");
+
+  const [checkoutConfig, dispatchCheckoutConfig] = useReducer(
+    checkoutConfigReducer,
+    initialState
+  );
+
   const dispatch = useDispatch();
   const {
     data: sdkSpecsData,
@@ -64,41 +85,49 @@ const Script = () => {
   );
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const checkoutConfigurationVar = "checkoutConfiguration";
+  console.log("rendered script");
+  const syncGlobalState: any = useCallback(
+    debounce((localState: any, build: any) => {
+      let stringifiedLocalState = stringifyObject(localState);
+      // console.log("syncGlobalState", stringifiedLocalState);
+      if (
+        sanitizeString(build.checkoutConfiguration) !==
+        sanitizeString(stringifiedLocalState)
+      ) {
+        dispatch(updateCheckoutConfiguration(stringifiedLocalState));
+        dispatch(
+          addUnsavedChanges({
+            js: true,
+          })
+        );
+      } else {
+        dispatch(
+          addUnsavedChanges({
+            js: false,
+          })
+        );
+      }
+    }, 1000),
+    [dispatch]
+  );
 
-  const syncGlobalState: any = debounce((localState: any, build: any) => {
-    let stringifiedLocalState = stringifyObject(localState);
-
-    if (
-      sanitizeString(build.checkoutConfiguration) !==
-      sanitizeString(stringifiedLocalState)
-    ) {
-      dispatch(updateCheckoutConfiguration(stringifiedLocalState));
-      dispatch(
-        addUnsavedChanges({
-          js: true,
-        })
+  const syncLocalState = useCallback(
+    async (globalCheckoutConfiguration: any, checkoutConfigurationVar: any) => {
+      let prettifiedString = await prettify(
+        formatJsString(globalCheckoutConfiguration, checkoutConfigurationVar),
+        "babel"
       );
-    } else {
-      dispatch(
-        addUnsavedChanges({
-          js: false,
-        })
-      );
-    }
-  }, 1000);
-
-  const syncLocalState = async (
-    globalCheckoutConfiguration: any,
-    checkoutConfigurationVar: any
-  ) => {
-    let prettifiedString = await prettify(
-      formatJsString(globalCheckoutConfiguration, checkoutConfigurationVar),
-      "babel"
-    );
-    setCheckoutConfiguration(unstringifyObject(globalCheckoutConfiguration));
-    setStringifiedCheckoutConfiguration(prettifiedString);
-    dispatch(updateReset(false));
-  };
+      console.log("dispatch 1");
+      dispatchCheckoutConfig({
+        type: "SET_BOTH",
+        payload: {
+          parsed: unstringifyObject(globalCheckoutConfiguration),
+          stringified: prettifiedString,
+        },
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     if (sdkSpecsData) {
@@ -115,20 +144,121 @@ const Script = () => {
   }, [properties]);
 
   useEffect(() => {
-    if (checkoutConfiguration !== null) {
-      syncGlobalState(checkoutConfiguration, build);
+    if (checkoutConfig.parsed !== null) {
+      syncGlobalState(checkoutConfig.parsed, build);
     }
-  }, [checkoutConfiguration]);
+  }, [checkoutConfig.stringified]);
 
   useEffect(() => {
-    if (reset) {
-      syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
-    }
+    syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
   }, [reset]);
 
   useEffect(() => {
     syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
-  }, [paymentMethods]);
+  }, [paymentMethods, syncLocalState]);
+
+  const handlePrettify = useCallback(async () => {
+    try {
+      let prettifiedString = await prettify(
+        checkoutConfig.stringified,
+        "babel"
+      );
+      console.log("dispatch 2");
+      dispatchCheckoutConfig({
+        type: "SET_STRINGIFIED",
+        payload: prettifiedString,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, [checkoutConfig.stringified]);
+
+  const handleVersionChange = useCallback(
+    (value: any) => {
+      dispatch(
+        addUnsavedChanges({
+          js: adyenWebVersion !== value,
+        })
+      );
+      dispatch(updateAdyenWebVersion(value));
+    },
+    [adyenWebVersion, dispatch]
+  );
+
+  const handleOpenApiSearchChange = useCallback((filteredProperties: any) => {
+    setFilteredProperties(filteredProperties);
+  }, []);
+
+  const handleOpenSdkListChange = useCallback(
+    async (value: any) => {
+      const checkoutParameters = Object.keys(checkoutConfig.parsed);
+      const isNewProperty = checkoutParameters.length < value.length;
+      if (isNewProperty) {
+        const latestKey = value[value.length - 1];
+        const latestValue = properties[latestKey];
+        let newProperty = null;
+        if (latestValue.type === "string") {
+          newProperty = { [latestKey]: "" };
+        } else if (latestValue.type === "boolean") {
+          newProperty = { [latestKey]: true };
+        } else if (latestValue.type === "integer") {
+          newProperty = { [latestKey]: 0 };
+        } else if (latestValue.type === "array") {
+          newProperty = { [latestKey]: [] };
+        } else if (latestValue.type === "enum") {
+          newProperty = { [latestKey]: "" };
+        } else if (!latestValue.type) {
+          newProperty = { [latestKey]: {} };
+        } else if (latestValue.type === "object") {
+          newProperty = { [latestKey]: {} };
+        } else if (latestValue.type === "function") {
+          newProperty = { [latestKey]: function () {} };
+        }
+        let newObject = {
+          ...checkoutConfig.parsed,
+          ...newProperty,
+        };
+        console.log("dispatch 3");
+        dispatchCheckoutConfig({
+          type: "SET_BOTH",
+          payload: {
+            parsed: newObject,
+            stringified: await prettify(
+              formatJsString(
+                stringifyObject(newObject),
+                checkoutConfigurationVar
+              ),
+              "babel"
+            ),
+          },
+        });
+      } else {
+        const removedProperties: any = checkoutParameters.filter((i) => {
+          return value.indexOf(i) < 0;
+        });
+        if (removedProperties.length > 0) {
+          let updatedRequest = { ...checkoutConfig.parsed };
+          let removedProperty = removedProperties.pop();
+          delete updatedRequest[removedProperty];
+          console.log("dispatch 4");
+          dispatchCheckoutConfig({
+            type: "SET_BOTH",
+            payload: {
+              parsed: updatedRequest,
+              stringified: await prettify(
+                formatJsString(
+                  stringifyObject(updatedRequest),
+                  checkoutConfigurationVar
+                ),
+                "babel"
+              ),
+            },
+          });
+        }
+      }
+    },
+    [checkoutConfig.parsed, properties, checkoutConfigurationVar]
+  );
 
   if (sdkSpecsError) {
     return <div>Error</div>;
@@ -142,12 +272,22 @@ const Script = () => {
       <ResizablePanel defaultSize={50} className="sm:flex bg-code flex-col">
         <Code
           type="babel"
-          code={stringifiedCheckoutConfiguration}
+          code={checkoutConfig.stringified}
           readOnly={false}
           theme={theme}
           onChange={(jsValue: any, stringValue: string) => {
-            setCheckoutConfiguration(jsValue);
-            setStringifiedCheckoutConfiguration(stringValue);
+            if (stringValue === checkoutConfig.stringified) {
+              return;
+            } else {
+              console.log("dispatch 5");
+              dispatchCheckoutConfig({
+                type: "SET_BOTH",
+                payload: {
+                  parsed: jsValue,
+                  stringified: stringValue,
+                },
+              });
+            }
           }}
           jsVariable={checkoutConfigurationVar}
         />
@@ -157,17 +297,7 @@ const Script = () => {
             variant="ghost"
             size="icon"
             className={`rounded-none border-l-[1px] h-5`}
-            onClick={async () => {
-              try {
-                let prettifiedString = await prettify(
-                  stringifiedCheckoutConfiguration,
-                  "babel"
-                );
-                setStringifiedCheckoutConfiguration(prettifiedString);
-              } catch (e) {
-                console.error(e);
-              }
-            }}
+            onClick={handlePrettify}
           >
             <span className="font-semibold text-xxs text-warning">{"{}"}</span>
           </Button>
@@ -180,107 +310,46 @@ const Script = () => {
           label={"Adyen Web"}
           value={adyenWebVersion}
           options={WEBVERSIONS}
-          onChange={(value: any) => {
-            dispatch(
-              addUnsavedChanges({
-                js: adyenWebVersion !== value,
-              })
-            );
-            dispatch(updateAdyenWebVersion(value));
-          }}
+          onChange={handleVersionChange}
         />
         <OpenApiSearch
           properties={properties}
-          onChange={(filteredProperties: any) => {
-            setFilteredProperties(filteredProperties);
-          }}
+          onChange={handleOpenApiSearchChange}
         />
-        {!loadingSdkSpecData && sdkSpecsData && checkoutConfiguration && (
-          <OpenSdkList
+        {!loadingSdkSpecData && sdkSpecsData && checkoutConfig.parsed && (
+          <MemoizedOpenSdkList
             openSdk={sdkSpecsData}
             properties={filteredProperties}
-            selectedProperties={Object.keys(checkoutConfiguration)}
-            values={checkoutConfiguration}
-            setValues={async (
+            selectedProperties={Object.keys(checkoutConfig.parsed)}
+            values={checkoutConfig.parsed}
+            setValues={(
               value: any,
               keyString: any,
               keyValue: any,
               type: string
             ) => {
-              setCheckoutConfiguration(value);
-              setStringifiedCheckoutConfiguration(
-                replaceKeyValue(
-                  stringifiedCheckoutConfiguration,
-                  keyString,
-                  JSON.stringify(keyValue),
-                  type
-                )
-              );
-            }}
-            onChange={async (value: any) => {
-              const checkoutParameters = Object.keys(checkoutConfiguration);
-              const isNewProperty = checkoutParameters.length < value.length;
-              if (isNewProperty) {
-                const latestKey = value[value.length - 1];
-                const latestValue = properties[latestKey];
-                let newProperty = null;
-                if (latestValue.type === "string") {
-                  newProperty = { [latestKey]: "" };
-                } else if (latestValue.type === "boolean") {
-                  newProperty = { [latestKey]: true };
-                } else if (latestValue.type === "integer") {
-                  newProperty = { [latestKey]: 0 };
-                } else if (latestValue.type === "array") {
-                  newProperty = { [latestKey]: [] };
-                } else if (latestValue.type === "enum") {
-                  newProperty = { [latestKey]: "" };
-                } else if (!latestValue.type) {
-                  newProperty = { [latestKey]: {} };
-                } else if (latestValue.type === "object") {
-                  newProperty = { [latestKey]: {} };
-                } else if (latestValue.type === "function") {
-                  newProperty = { [latestKey]: function () {} };
-                }
-                let newObject = {
-                  ...checkoutConfiguration,
-                  ...newProperty,
-                };
-                setCheckoutConfiguration(newObject);
-                let prettifiedNewObject = await prettify(
-                  formatJsString(
-                    stringifyObject(newObject),
-                    checkoutConfigurationVar
+              console.log("dispatch 6");
+              dispatchCheckoutConfig({
+                type: "SET_BOTH",
+                payload: {
+                  parsed: value,
+                  stringified: replaceKeyValue(
+                    checkoutConfig.stringified,
+                    keyString,
+                    JSON.stringify(keyValue),
+                    type
                   ),
-                  "babel"
-                );
-                setStringifiedCheckoutConfiguration(prettifiedNewObject);
-              } else {
-                const removedProperties: any = checkoutParameters.filter(
-                  (i) => {
-                    return value.indexOf(i) < 0;
-                  }
-                );
-                if (removedProperties.length > 0) {
-                  let updatedRequest = { ...checkoutConfiguration };
-                  let removedProperty = removedProperties.pop();
-                  delete updatedRequest[removedProperty];
-                  setCheckoutConfiguration(updatedRequest);
-                  let prettifiedNewObject = await prettify(
-                    formatJsString(
-                      stringifyObject(updatedRequest),
-                      checkoutConfigurationVar
-                    ),
-                    "babel"
-                  );
-                  setStringifiedCheckoutConfiguration(prettifiedNewObject);
-                }
-              }
+                },
+              });
             }}
+            onChange={handleOpenSdkListChange}
           />
         )}
       </ResizablePanel>
     </ResizablePanelGroup>
   );
 };
+
+const MemoizedOpenSdkList = memo(OpenSdkList);
 
 export default Script;
