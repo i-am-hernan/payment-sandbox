@@ -186,7 +186,7 @@ const Page: any = () => {
   }
 
   return (
-    <body className={`${theme}`}>
+    <body className={`${theme} border-r-2`}>
       <header>
         <Topbar />
       </header>

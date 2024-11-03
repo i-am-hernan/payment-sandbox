@@ -129,7 +129,7 @@ const Sidebar = (props: any) => {
   };
   return (
     <div>
-      <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-2 border-b-0 text-center">
+      <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-2 text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>

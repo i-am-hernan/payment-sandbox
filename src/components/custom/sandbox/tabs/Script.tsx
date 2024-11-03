@@ -85,11 +85,10 @@ const Script = () => {
   );
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const checkoutConfigurationVar = "checkoutConfiguration";
-  console.log("rendered script");
   const syncGlobalState: any = useCallback(
     debounce((localState: any, build: any) => {
       let stringifiedLocalState = stringifyObject(localState);
-      // console.log("syncGlobalState", stringifiedLocalState);
+
       if (
         sanitizeString(build.checkoutConfiguration) !==
         sanitizeString(stringifiedLocalState)
@@ -117,7 +116,6 @@ const Script = () => {
         formatJsString(globalCheckoutConfiguration, checkoutConfigurationVar),
         "babel"
       );
-      console.log("dispatch 1");
       dispatchCheckoutConfig({
         type: "SET_BOTH",
         payload: {
@@ -163,7 +161,6 @@ const Script = () => {
         checkoutConfig.stringified,
         "babel"
       );
-      console.log("dispatch 2");
       dispatchCheckoutConfig({
         type: "SET_STRINGIFIED",
         payload: prettifiedString,
@@ -218,7 +215,6 @@ const Script = () => {
           ...checkoutConfig.parsed,
           ...newProperty,
         };
-        console.log("dispatch 3");
         dispatchCheckoutConfig({
           type: "SET_BOTH",
           payload: {
@@ -240,7 +236,6 @@ const Script = () => {
           let updatedRequest = { ...checkoutConfig.parsed };
           let removedProperty = removedProperties.pop();
           delete updatedRequest[removedProperty];
-          console.log("dispatch 4");
           dispatchCheckoutConfig({
             type: "SET_BOTH",
             payload: {
@@ -279,7 +274,6 @@ const Script = () => {
             if (stringValue === checkoutConfig.stringified) {
               return;
             } else {
-              console.log("dispatch 5");
               dispatchCheckoutConfig({
                 type: "SET_BOTH",
                 payload: {
@@ -291,7 +285,7 @@ const Script = () => {
           }}
           jsVariable={checkoutConfigurationVar}
         />
-        <div className={`flex justify-end border-y-[1px] bg-background`}>
+        <div className={`flex justify-end border-y-2 bg-background`}>
           <Button
             key={"prettify"}
             variant="ghost"
@@ -328,7 +322,6 @@ const Script = () => {
               keyValue: any,
               type: string
             ) => {
-              console.log("dispatch 6");
               dispatchCheckoutConfig({
                 type: "SET_BOTH",
                 payload: {
