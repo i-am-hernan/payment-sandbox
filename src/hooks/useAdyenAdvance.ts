@@ -17,7 +17,8 @@ export const useAdyenAdvance = (
   paymentMethodsResponse: any,
   paymentsRequest: any,
   paymentsDetailsRequest: any,
-  checkoutRef: any
+  checkoutRef: any,
+  onChange: any
 ): AdyenAdvanceHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
@@ -74,12 +75,17 @@ export const useAdyenAdvance = (
       setError(error);
     };
 
+    const handleChange = (state: any) => {
+      onChange(state);
+    };
+
     const executeConfiguration = new Function(
       "handleSubmit",
       "handleAdditionalDetails",
       "handleError",
+      "handleChange",
       `return ${checkoutConfiguration}`
-    )(handleSubmit, handleAdditionalDetails, handleError);
+    )(handleSubmit, handleAdditionalDetails, handleError, handleChange);
 
     let configuration: any = {
       ...executeConfiguration,

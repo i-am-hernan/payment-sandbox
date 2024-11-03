@@ -82,17 +82,18 @@ export const ManageAdvanceComponent = () => {
           txVariantConfiguration={txVariantConfiguration}
           paymentMethodsRequest={paymentMethods}
           paymentsRequest={payments}
+          onChange={(state: any) => {
+            dispatch(updateComponentState(state));
+          }}
           paymentsDetailsRequest={paymentsDetails}
           onPaymentMethodsResponse={(response: any) => {
             if (response) {
               let evaluatedCheckoutConfiguration = unstringifyObject(
                 checkoutConfiguration
               );
-
               evaluatedCheckoutConfiguration.paymentMethodsResponse = {
                 ...response,
               };
-
               dispatch(
                 updateBuildCheckoutConfiguration(
                   stringifyObject(evaluatedCheckoutConfiguration)
@@ -120,11 +121,3 @@ export const ManageAdvanceComponent = () => {
     </div>
   );
 };
-
-/*
-,
-            onChange: (state: any) => {
-              dispatch(updateComponentState(state));
-            },
-            Need to add this somewhere
-*/

@@ -16,6 +16,7 @@ export const InitAdvanceComponent = (props: any) => {
     paymentsRequest,
     paymentsDetailsRequest,
     onPaymentMethodsResponse,
+    onChange
   } = props;
 
   const {
@@ -42,7 +43,8 @@ export const InitAdvanceComponent = (props: any) => {
     paymentMethodsResponse,
     paymentsRequest,
     paymentsDetailsRequest,
-    checkoutRef
+    checkoutRef,
+    onChange
   );
 
   const error =
