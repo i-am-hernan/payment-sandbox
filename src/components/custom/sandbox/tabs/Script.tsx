@@ -72,15 +72,6 @@ const Script = () => {
       sanitizeString(build.checkoutConfiguration) !==
       sanitizeString(stringifiedLocalState)
     ) {
-      console.log("Not equal");
-      console.log(
-        "sanitizeString(build.checkoutConfiguration)",
-        sanitizeString(build.checkoutConfiguration)
-      );
-      console.log(
-        "sanitizeString(stringifiedLocalState)",
-        sanitizeString(stringifiedLocalState)
-      );
       dispatch(updateCheckoutConfiguration(stringifiedLocalState));
       dispatch(
         addUnsavedChanges({
@@ -134,9 +125,8 @@ const Script = () => {
       syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
     }
   }, [reset]);
-  // Issue is either here
+
   useEffect(() => {
-    // console.log("about to sync local state", globalCheckoutConfiguration);
     syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
   }, [paymentMethods]);
 

@@ -165,14 +165,7 @@ const formulaSlice = createSlice({
       state,
       action: PayloadAction<string>
     ) => {
-      let buildCheckoutConfiguration = action.payload;
-      return {
-        ...state,
-        build: {
-          ...state.build,
-          checkoutConfiguration: buildCheckoutConfiguration,
-        },
-      };
+      state.build.checkoutConfiguration = action.payload;
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
       state.adyenWebVersion = action.payload;
