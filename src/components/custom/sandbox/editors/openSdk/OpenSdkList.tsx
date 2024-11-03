@@ -107,7 +107,7 @@ export const OpenSdkList = (props: any) => {
                         : ""
                     }
                     onChange={(value: any) => {
-                      let tidyValue = value === true ? true : false;
+                      let tidyValue = value === "true" ? true : false;
                       setValues(
                         { ...values, [property]: tidyValue },
                         property,

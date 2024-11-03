@@ -148,7 +148,27 @@ export const replaceKeyValue = (
   newValue: string,
   type: string
 ) => {
-  // For nested objects, we need to find the closing curly brace of the object
+
+  const replaceObjectKeyValue = (
+    strObj: string,
+    key: string,
+    newValue: string
+  ) => {
+    const regex = new RegExp(`(${key}\\s*:\\s*)(\\{[^]*?\\})(,?)`, "g");
+    const match = strObj.match(regex);
+
+    if (match) {
+      return strObj.replace(regex, `$1${newValue}$3`);
+    } else {
+      const insertionPoint = strObj.lastIndexOf("}");
+      return (
+        strObj.slice(0, insertionPoint) +
+        `, ${key}: ${newValue}` +
+        strObj.slice(insertionPoint)
+      );
+    }
+  };
+
   let regex = null;
 
   if (type === "string") {
@@ -160,7 +180,7 @@ export const replaceKeyValue = (
   } else if (type === "array") {
     regex = new RegExp(`(${key}\\s*:\\s*)(\\[.*\\])`, "g");
   } else if (type === "object") {
-    regex = new RegExp(`(${key}\\s*:\\s*)(\\{.*\\})`, "g");
+    return replaceObjectKeyValue(strObj, key, newValue);
   }
 
   return regex ? strObj.replace(regex, `$1${newValue}`) : strObj;

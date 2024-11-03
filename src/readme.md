@@ -35,3 +35,4 @@ Open Items:
 6. Host with dedicated company account.
 7. Add functionality that updates the merchant account on all of the requests.
 8. Decide what happens with code outside of checkoutConfiguration
+9. Add some context to the javascript components

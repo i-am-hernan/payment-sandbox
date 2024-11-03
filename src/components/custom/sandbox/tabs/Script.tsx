@@ -3,6 +3,7 @@ import Code from "@/components/custom/sandbox/editors/Code";
 import OpenApiSearch from "@/components/custom/sandbox/editors/openApi/OpenApiSearch";
 import Version from "@/components/custom/sandbox/editors/Version";
 import Loading from "@/components/custom/utils/Loading";
+import { Button } from "@/components/ui/button";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -22,7 +23,6 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
-import { Button } from "@/components/ui/button";
 
 const { updateSpecs } = specsActions;
 const {
@@ -44,7 +44,9 @@ const Script = () => {
     adyenWebVersion,
   } = useSelector((state: RootState) => state.formula);
   const { adyenWeb }: any = useSelector((state: RootState) => state.specs);
+  const { response }: any = useSelector((state: RootState) => state.component);
   const { theme } = useSelector((state: RootState) => state.user);
+  const { paymentMethods } = response;
   const properties = adyenWeb?.checkout ?? null;
   const [checkoutConfiguration, setCheckoutConfiguration] = useState<any>(null);
   const [
@@ -63,6 +65,35 @@ const Script = () => {
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const checkoutConfigurationVar = "checkoutConfiguration";
 
+  const syncGlobalState: any = debounce((localState: any, build: any) => {
+    let stringifiedLocalState = stringifyObject(localState);
+
+    if (
+      sanitizeString(build.checkoutConfiguration) !==
+      sanitizeString(stringifiedLocalState)
+    ) {
+      dispatch(updateCheckoutConfiguration(stringifiedLocalState));
+      dispatch(
+        addUnsavedChanges({
+          js: true,
+        })
+      );
+    }
+  }, 1000);
+
+  const syncLocalState = async (
+    globalCheckoutConfiguration: any,
+    checkoutConfigurationVar: any
+  ) => {
+    let prettifiedString = await prettify(
+      formatJsString(globalCheckoutConfiguration, checkoutConfigurationVar),
+      "babel"
+    );
+    setCheckoutConfiguration(unstringifyObject(globalCheckoutConfiguration));
+    setStringifiedCheckoutConfiguration(prettifiedString);
+    dispatch(updateReset(false));
+  };
+
   useEffect(() => {
     if (sdkSpecsData) {
       dispatch(
@@ -78,39 +109,20 @@ const Script = () => {
   }, [properties]);
 
   useEffect(() => {
-    const syncGlobalState: any = debounce((localState: any, build: any) => {
-      let stringifiedLocalState = stringifyObject(localState);
-
-      const isEqual =
-        sanitizeString(build.checkoutConfiguration) ===
-        sanitizeString(stringifiedLocalState);
-
-      if (!isEqual) {
-        dispatch(updateCheckoutConfiguration(stringifiedLocalState));
-      }
-      dispatch(
-        addUnsavedChanges({
-          js: !isEqual,
-        })
-      );
-    }, 1000);
-
-    const syncLocalState = async () => {
-      let prettifiedString = await prettify(
-        formatJsString(globalCheckoutConfiguration, checkoutConfigurationVar),
-        "babel"
-      );
-      setCheckoutConfiguration(unstringifyObject(globalCheckoutConfiguration));
-      setStringifiedCheckoutConfiguration(prettifiedString);
-      dispatch(updateReset(false));
-    };
-
-    if (checkoutConfiguration === null || reset) {
-      syncLocalState();
-    } else {
+    if (checkoutConfiguration !== null) {
       syncGlobalState(checkoutConfiguration, build);
     }
-  }, [checkoutConfiguration, reset]);
+  }, [checkoutConfiguration]);
+
+  useEffect(() => {
+    if (reset) {
+      syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
+    }
+  }, [reset]);
+
+  useEffect(() => {
+    syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
+  }, [paymentMethods]);
 
   if (sdkSpecsError) {
     return <div>Error</div>;

@@ -15,7 +15,7 @@ export const InitAdvanceComponent = (props: any) => {
     paymentMethodsRequest,
     paymentsRequest,
     paymentsDetailsRequest,
-    onPaymentMethodsResponse
+    onPaymentMethodsResponse,
   } = props;
 
   const {
@@ -31,8 +31,10 @@ export const InitAdvanceComponent = (props: any) => {
   const checkoutRef = useRef(null);
 
   useEffect(() => {
-    onPaymentMethodsResponse(paymentMethodsResponse)
+    console.log("paymentMethodsResponse hook", paymentMethodsResponse);
+    onPaymentMethodsResponse(paymentMethodsResponse);
   }, [paymentMethodsResponse]);
+  // console.log("init:: typeof checkoutConfiguration", typeof checkoutConfiguration);
 
   const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
     variant,

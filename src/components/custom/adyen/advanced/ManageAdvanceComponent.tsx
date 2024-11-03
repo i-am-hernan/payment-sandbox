@@ -13,11 +13,15 @@ import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { unstringifyObject, stringifyObject } from "@/utils/utils";
+import {
+  unstringifyObject,
+  stringifyObject,
+  replaceKeyValue,
+} from "@/utils/utils";
 
 const { updateIsRedirect, updateRedirectResult, updateCheckoutConfiguration } =
   formulaActions;
-const { updateComponentState } = componentActions;
+const { updateComponentState, updateResponse } = componentActions;
 
 export const ManageAdvanceComponent = () => {
   const { build, isRedirect, redirectResult } = useSelector(
@@ -77,15 +81,20 @@ export const ManageAdvanceComponent = () => {
           paymentsDetailsRequest={paymentsDetails}
           onPaymentMethodsResponse={(response: any) => {
             if (response) {
-              let objectString = stringifyObject(response).slice(1, -1);
-              objectString = "paymentMethodsResponse: {" + objectString + "}";
-              const checkoutConfigurationString = checkoutConfiguration.slice(
-                1,
-                -1
+              let updatedCheckoutConfiguration = replaceKeyValue(
+                checkoutConfiguration,
+                "paymentMethodsResponse",
+                stringifyObject({ ...response }),
+                "object"
               );
-              const combinedConfiguration = `{${objectString},${checkoutConfigurationString}}`;
-              // console.log("combinedConfiguration", combinedConfiguration);
-              updateCheckoutConfiguration(combinedConfiguration);
+              // console.log("new updated checkout configuration: ", updatedCheckoutConfiguration);
+              dispatch(
+                updateCheckoutConfiguration(updatedCheckoutConfiguration)
+              );
+              dispatch(updateResponse({ paymentMethods: { ...response } }));
+              // what if we dont want to increase by one unsaved change when we update payment methods response
+              // dispatch(addUnsavedChanges({ paymentMethods: true }));
+              // We need to push payment methods to the build state
             }
           }}
         />

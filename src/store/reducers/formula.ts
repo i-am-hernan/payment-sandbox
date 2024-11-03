@@ -24,6 +24,12 @@ export interface Formula {
     payments: FormulaPropType;
     paymentsDetails: FormulaPropType;
   };
+  response: {
+    sessions: FormulaPropType;
+    paymentMethods: FormulaPropType;
+    payments: FormulaPropType;
+    paymentsDetails: FormulaPropType;
+  }
   style: FormulaPropType;
   isRedirect: boolean;
   unsavedChanges: {
@@ -55,7 +61,7 @@ const initialState: FormulaPropType = {
   },
   adyenWebVersion: "5.66.1",
   checkoutConfiguration: sanitizeString(
-    `{clientKey: "test_747LMAMEOFBGRIEKENIJNYWAZM34XT5N", environment: "test", onError: function(error){handleError(error);}, onAdditionalDetails: function(state,dropin){handleAdditionalDetails(state,dropin);}, onSubmit: function(state,dropin){handleSubmit(state,dropin);}}`
+    `{clientKey: "test_747LMAMEOFBGRIEKENIJNYWAZM34XT5N", environment: "test", onChange: function(state){}, onError: function(error){handleError(error);}, onAdditionalDetails: function(state,dropin){handleAdditionalDetails(state,dropin);}, onSubmit: function(state,dropin){handleSubmit(state,dropin);}}`
   ),
   txVariant: "",
   txVariantConfiguration: {},
