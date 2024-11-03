@@ -73,8 +73,7 @@ export const useAdyenAdvance = (
     const handleError = (error: any) => {
       setError(error);
     };
-    // console.log("checkoutConfiguration", typeof checkoutConfiguration);
-    // Execute the string as JavaScript
+
     const executeConfiguration = new Function(
       "handleSubmit",
       "handleAdditionalDetails",
@@ -86,6 +85,7 @@ export const useAdyenAdvance = (
       ...executeConfiguration,
       paymentMethodsResponse: paymentMethodsResponse,
     };
+
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);

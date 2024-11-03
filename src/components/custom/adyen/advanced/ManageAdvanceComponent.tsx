@@ -19,8 +19,12 @@ import {
   replaceKeyValue,
 } from "@/utils/utils";
 
-const { updateIsRedirect, updateRedirectResult, updateCheckoutConfiguration } =
-  formulaActions;
+const {
+  updateIsRedirect,
+  updateRedirectResult,
+  updateCheckoutConfiguration,
+  updateBuildCheckoutConfiguration,
+} = formulaActions;
 const { updateComponentState, updateResponse } = componentActions;
 
 export const ManageAdvanceComponent = () => {
@@ -81,20 +85,25 @@ export const ManageAdvanceComponent = () => {
           paymentsDetailsRequest={paymentsDetails}
           onPaymentMethodsResponse={(response: any) => {
             if (response) {
-              let updatedCheckoutConfiguration = replaceKeyValue(
-                checkoutConfiguration,
-                "paymentMethodsResponse",
-                stringifyObject({ ...response }),
-                "object"
+              let evaluatedCheckoutConfiguration = unstringifyObject(
+                checkoutConfiguration
               );
-              // console.log("new updated checkout configuration: ", updatedCheckoutConfiguration);
+
+              evaluatedCheckoutConfiguration.paymentMethodsResponse = {
+                ...response,
+              };
+
               dispatch(
-                updateCheckoutConfiguration(updatedCheckoutConfiguration)
+                updateBuildCheckoutConfiguration(
+                  stringifyObject(evaluatedCheckoutConfiguration)
+                )
+              );
+              dispatch(
+                updateCheckoutConfiguration(
+                  stringifyObject(evaluatedCheckoutConfiguration)
+                )
               );
               dispatch(updateResponse({ paymentMethods: { ...response } }));
-              // what if we dont want to increase by one unsaved change when we update payment methods response
-              // dispatch(addUnsavedChanges({ paymentMethods: true }));
-              // We need to push payment methods to the build state
             }
           }}
         />

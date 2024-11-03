@@ -29,7 +29,7 @@ export interface Formula {
     paymentMethods: FormulaPropType;
     payments: FormulaPropType;
     paymentsDetails: FormulaPropType;
-  }
+  };
   style: FormulaPropType;
   isRedirect: boolean;
   unsavedChanges: {
@@ -159,6 +159,19 @@ const formulaSlice = createSlice({
       state.checkoutAPIVersion = {
         ...state.checkoutAPIVersion,
         ...action.payload,
+      };
+    },
+    updateBuildCheckoutConfiguration: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      let buildCheckoutConfiguration = action.payload;
+      return {
+        ...state,
+        build: {
+          ...state.build,
+          checkoutConfiguration: buildCheckoutConfiguration,
+        },
       };
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
