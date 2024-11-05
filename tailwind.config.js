@@ -17,9 +17,16 @@ module.exports = {
       },
     },
     extend: {
+      fontSize: {
+        xxs: "var(--custom-font-xxs)", // Example: 10px
+      },
       colors: {
         border: "hsl(var(--border))",
         adyen: "var(--custom-accent)",
+        code: "hsl(var(--custom-accent-code))",
+        variable: "var(--code-variable)",
+        property: "var(--code-property)",
+        reserved: "var(--code-reserved)",
         grey: "hsl(var(--grey))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -33,6 +40,7 @@ module.exports = {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -53,6 +61,18 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        warning: {
+          DEFAULT: "var(--color-warning)",
+        },
+        info: {
+          DEFAULT: "var(--custom-accent-info)",
+        },
+        js: {
+          DEFAULT: "var(--color-js-icon)",
+        },
+        preview: {
+          DEFAULT: "var(--color-preview-icon)",
+        }
       },
       borderRadius: {
         lg: "var(--radius)",

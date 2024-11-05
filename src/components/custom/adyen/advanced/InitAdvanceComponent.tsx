@@ -3,11 +3,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
 import { useApi } from "@/hooks/useApi";
-import { useRef } from "react";
-
+import { useRef, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-// import { ReactComponent as AdyenIdkIcon } from "@/assets/adyen-idk-icon.svg"
 
 export const InitAdvanceComponent = (props: any) => {
   const {
@@ -18,16 +15,25 @@ export const InitAdvanceComponent = (props: any) => {
     paymentMethodsRequest,
     paymentsRequest,
     paymentsDetailsRequest,
+    onPaymentMethodsResponse,
+    onChange
   } = props;
 
   const {
     data: paymentMethodsResponse,
     loading: loadingPaymentMethods,
     error: paymentMethodsError,
-  } = useApi(`api/checkout/v${checkoutAPIVersion}/paymentMethods`, "POST", paymentMethodsRequest);
+  } = useApi(
+    `api/checkout/v${checkoutAPIVersion.paymentMethods}/paymentMethods`,
+    "POST",
+    paymentMethodsRequest
+  );
 
   const checkoutRef = useRef(null);
-  // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
+
+  useEffect(() => {
+    onPaymentMethodsResponse(paymentMethodsResponse);
+  }, [paymentMethodsResponse]);
 
   const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
     variant,
@@ -37,13 +43,17 @@ export const InitAdvanceComponent = (props: any) => {
     paymentMethodsResponse,
     paymentsRequest,
     paymentsDetailsRequest,
-    checkoutRef
+    checkoutRef,
+    onChange
   );
 
-  const error = adyenSDKError || paymentMethodsError ? { ...adyenSDKError, ...paymentMethodsError } : null;
+  const error =
+    adyenSDKError || paymentMethodsError
+      ? { ...adyenSDKError, ...paymentMethodsError }
+      : null;
 
   return (
-    <div>
+    <div className="flex justify-center items-center">
       {error && (
         <Alert variant="destructive">
           <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>
@@ -56,8 +66,14 @@ export const InitAdvanceComponent = (props: any) => {
           <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods && <Skeleton className="w-[100px] h-[20px] rounded-full" />}
-      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && <div ref={checkoutRef}></div>}
+      {loadingPaymentMethods && (
+        <Skeleton className="w-[100px] h-[20px] rounded-full" />
+      )}
+      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
+        <div className="!max-w-[45vw]">
+          <div className="px-auto !border-red" ref={checkoutRef}></div>
+        </div>
+      )}
     </div>
   );
 };

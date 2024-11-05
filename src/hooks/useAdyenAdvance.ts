@@ -7,47 +7,27 @@ interface AdyenAdvanceHook {
 
 export const useAdyenAdvance = (
   txVariant: string,
-  checkoutAPIVersion: string,
-  checkoutConfiguration: any, //TODO: Strongly Type this in currentFormula
-  // It should contain clientKey and environment
+  checkoutAPIVersion: {
+    paymentMethods: string;
+    payments: string;
+    paymentDetails: string;
+  },
+  checkoutConfiguration: any,
   txVariantConfiguration: any,
   paymentMethodsResponse: any,
   paymentsRequest: any,
   paymentsDetailsRequest: any,
-  checkoutRef: any
+  checkoutRef: any,
+  onChange: any
 ): AdyenAdvanceHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
 
   useEffect(() => {
-    let configuration: any = {
-      ...checkoutConfiguration,
-      paymentMethodsResponse: paymentMethodsResponse,
-      onError: (error: any) => {
-        setError(error);
-      },
-      onAdditionalDetails: async (state: any, dropin: any) => {
-        const response = await fetch(`/api/checkout/v${checkoutAPIVersion}/payments/details`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...paymentsDetailsRequest,
-            details: state.data.details,
-          }),
-        });
-        const paymentDetailsResponse = await response.json();
-        if (paymentDetailsResponse.statusCode >= 400) {
-          setError(paymentDetailsResponse);
-        } else if (paymentDetailsResponse.action) {
-          dropin.handleAction(paymentDetailsResponse.action);
-        } else {
-          setResult(paymentDetailsResponse);
-        }
-      },
-      onSubmit: async (state: any, dropin: any) => {
-        const response = await fetch(`/api/checkout/v${checkoutAPIVersion}/payments`, {
+    const handleSubmit = async (state: any, dropin: any) => {
+      const response = await fetch(
+        `/api/checkout/v${checkoutAPIVersion.payments}/payments`,
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -56,17 +36,62 @@ export const useAdyenAdvance = (
             ...paymentsRequest,
             ...state.data,
           }),
-        });
-        const paymentResponse = await response.json();
-        if (paymentResponse.status >= 400) {
-          setError(paymentResponse);
-        } else if (paymentResponse.action) {
-          dropin.handleAction(paymentResponse.action);
-        } else {
-          setResult(paymentResponse);
         }
-      },
+      );
+      const paymentResponse = await response.json();
+      if (paymentResponse.status >= 400) {
+        setError(paymentResponse);
+      } else if (paymentResponse.action) {
+        dropin.handleAction(paymentResponse.action);
+      } else {
+        setResult(paymentResponse);
+      }
     };
+
+    const handleAdditionalDetails = async (state: any, dropin: any) => {
+      const response = await fetch(
+        `/api/checkout/v${checkoutAPIVersion.paymentDetails}/payments/details`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...paymentsDetailsRequest,
+            details: state.data.details,
+          }),
+        }
+      );
+      const paymentDetailsResponse = await response.json();
+      if (paymentDetailsResponse.statusCode >= 400) {
+        setError(paymentDetailsResponse);
+      } else if (paymentDetailsResponse.action) {
+        dropin.handleAction(paymentDetailsResponse.action);
+      } else {
+        setResult(paymentDetailsResponse);
+      }
+    };
+    const handleError = (error: any) => {
+      setError(error);
+    };
+
+    const handleChange = (state: any) => {
+      onChange(state);
+    };
+
+    const executeConfiguration = new Function(
+      "handleSubmit",
+      "handleAdditionalDetails",
+      "handleError",
+      "handleChange",
+      `return ${checkoutConfiguration}`
+    )(handleSubmit, handleAdditionalDetails, handleError, handleChange);
+
+    let configuration: any = {
+      ...executeConfiguration,
+      paymentMethodsResponse: paymentMethodsResponse,
+    };
+
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);

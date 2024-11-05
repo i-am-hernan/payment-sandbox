@@ -4,7 +4,6 @@
 
 @layer base {
   :root {
-
     /* --screen-sm: 640px;
     --screen-md: 768px;
     --screen-lg: 1024px;
@@ -31,6 +30,9 @@
 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
+    --color-warning: rgb(255, 90, 0);
+    --color-js-icon: rgb(255, 204, 0);
+    --color-preview-icon: rgb(88, 101, 242);
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -41,19 +43,26 @@
 
     --sidebar-width: 4rem;
     --topbar-width: 3rem;
+    --tab-lable-height: 34px;
 
     --radius: 0.4rem;
-    --grey: 210, 16.67%, 96.47%;
+    --grey: 210, 16.67%, 35%;
 
     --custom-accent: rgb(10, 191, 83);
+    --custom-accent-info: #01baef;
+    --custom-font-xxs: 0.65rem;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
+    --custom-accent-code: 210, 100%, 4.7%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
+
+    --code-variable: #2277ff;
+    --code-property: #9966b8;
+    --code-reserved: #225588;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
@@ -83,12 +92,25 @@
 @layer base {
   * {
     @apply border-border;
-    
   }
   body {
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
   }
+}
+
+.adyen-checkout__payment-method {
+  @apply !bg-code border !border-border rounded-lg;
+}
+.adyen-checkout__label__text {
+  @apply !text-foreground;
+}
+.adyen-checkout__payment-method__name {
+  @apply !text-foreground;
+}
+
+.cm-theme {
+  @apply w-[100%] h-[100%];
 }
 
 /* main, nav {

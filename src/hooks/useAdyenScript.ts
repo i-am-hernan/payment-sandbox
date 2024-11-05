@@ -23,8 +23,8 @@ const useAdyenScript = (version: string): AdyenScriptHook => {
     // Add the new script
     const script = document.createElement("script");
     script.id = scriptId;
-    script.src = `https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/${version}/adyen.js`;
-    script.async = true;
+    script.src = `https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/sdk/${version}/adyen.js`;
+    script.async = true;// 	https://checkoutshopper-test.cdn.adyen.com
     script.onload = () => {
       setLoading(false); // Set loading to false when the script has loaded
     };
@@ -37,7 +37,7 @@ const useAdyenScript = (version: string): AdyenScriptHook => {
     // Add the new CSS
     const link = document.createElement("link");
     link.id = cssId;
-    link.href = `https://checkoutshopper-test.adyen.com/checkoutshopper/sdk/${version}/adyen.css`;
+    link.href = `https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/sdk/${version}/adyen.css`;
     link.type = "text/css";
     link.rel = "stylesheet";
     document.head.appendChild(link);

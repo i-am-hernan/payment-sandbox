@@ -1,17 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {
-  adyenParametersReducer,
-  adyenVariantReducer,
-  currentFormulaReducer,
+  specsReducer,
+  componentReducer,
+  formulaReducer,
   sandboxReducer,
+  userReducer,
 } from "./reducers";
 
 export const store = configureStore({
   reducer: {
-    currentFormula: currentFormulaReducer,
-    adyenParameters: adyenParametersReducer,
-    adyenVariant: adyenVariantReducer,
+    formula: formulaReducer,
+    specs: specsReducer,
+    component: componentReducer,
     sandbox: sandboxReducer,
+    user: userReducer,
   },
 });
 

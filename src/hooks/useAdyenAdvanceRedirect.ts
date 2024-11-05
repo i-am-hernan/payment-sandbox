@@ -8,7 +8,11 @@ interface AdyenAdvanceHook {
 
 export const useAdyenAdvanceRedirect = (
   variant: string,
-  checkoutAPIVersion: string,
+  checkoutAPIVersion: {
+    paymentMethods: string;
+    payments: string;
+    paymentDetails: string;
+  },
   paymentsDetailsRequest: any,
   redirectResult: any
 ): AdyenAdvanceHook => {
@@ -19,7 +23,7 @@ export const useAdyenAdvanceRedirect = (
   useEffect(() => {
     let onAdditionalDetails = async () => {
       const response = await fetch(
-        `/api/checkout/v${checkoutAPIVersion}/payment/details`,
+        `/api/checkout/v${checkoutAPIVersion.paymentDetails}/payment/details`,
         {
           method: "POST",
           headers: {
