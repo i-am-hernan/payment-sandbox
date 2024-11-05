@@ -77,7 +77,7 @@ const initialState: FormulaPropType = {
       },
       returnUrl: `${process.env.NEXT_PUBLIC_CLIENT_URL}/advanced/dropin`,
       reference: "merchant-reference",
-      merchantAccount: "HernanChalco",
+      merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
     },
     paymentsDetails: {},
     sessions: {
@@ -88,7 +88,7 @@ const initialState: FormulaPropType = {
       },
       channel: "Web",
       //TODO: Refactor this
-      returnUrl: "http://localhost:3000/sessions/ideal",
+      returnUrl: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
       reference: "reference",
       shopperLocale: "en_US",
       //TODO: Fix this

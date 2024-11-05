@@ -62,12 +62,7 @@ const OpenApiList = (props: any) => {
                       value={values[property] ? values[property] : ""}
                       onChange={(value: any) => {
                         let tidyValue = value !== undefined ? value : "";
-                        setValues(
-                          { ...values, [property]: tidyValue },
-                          property,
-                          tidyValue,
-                          "string"
-                        );
+                        setValues({ ...values, [property]: tidyValue });
                       }}
                     />
                   )}
@@ -79,12 +74,7 @@ const OpenApiList = (props: any) => {
                       }
                       onChange={(value: any) => {
                         let tidyValue = value !== undefined ? value : "";
-                        setValues(
-                          { ...values, [property]: tidyValue },
-                          property,
-                          tidyValue,
-                          "string"
-                        );
+                        setValues({ ...values, [property]: tidyValue });
                       }}
                       set={properties[property].enum}
                     />
@@ -97,12 +87,7 @@ const OpenApiList = (props: any) => {
                         value !== undefined || value !== null
                           ? parseInt(value)
                           : 0;
-                      setValues(
-                        { ...values, [property]: tidyValue },
-                        property,
-                        tidyValue,
-                        "integer"
-                      );
+                      setValues({ ...values, [property]: tidyValue });
                     }}
                   />
                 )}
@@ -115,12 +100,7 @@ const OpenApiList = (props: any) => {
                     }
                     onChange={(value: any) => {
                       let tidyValue = value === "true" ? true : false;
-                      setValues(
-                        { ...values, [property]: tidyValue },
-                        property,
-                        tidyValue,
-                        "boolean"
-                      );
+                      setValues({ ...values, [property]: tidyValue });
                     }}
                     set={["true", "false"]}
                   />
@@ -130,12 +110,7 @@ const OpenApiList = (props: any) => {
                     value={values[property] ? values[property] : []}
                     onChange={(value: any) => {
                       let tidyValue = value !== undefined ? value : [];
-                      setValues(
-                        { ...values, [property]: tidyValue },
-                        property,
-                        tidyValue,
-                        "array"
-                      );
+                      setValues({ ...values, [property]: tidyValue });
                     }}
                   />
                 )}
