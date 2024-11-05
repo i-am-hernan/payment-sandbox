@@ -9,14 +9,7 @@ import {
 } from "@/components/ui/accordion";
 
 export const OpenSdkList = (props: any) => {
-  const {
-    openSdk,
-    selectedProperties,
-    properties,
-    values,
-    setValues,
-    onChange,
-  } = props;
+  const { selectedProperties, properties, values, setValues, onChange } = props;
 
   return (
     <Accordion

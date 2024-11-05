@@ -148,7 +148,6 @@ export const replaceKeyValue = (
   newValue: string,
   type: string
 ) => {
-
   const replaceObjectKeyValue = (
     strObj: string,
     key: string,
@@ -169,7 +168,7 @@ export const replaceKeyValue = (
     }
   };
 
-  let regex = null;
+  let regex = new RegExp(`(${key}\\s*:\\s*)("[^"]*")`, "g");
 
   if (type === "string") {
     regex = new RegExp(`(${key}\\s*:\\s*)("[^"]*")`, "g");
@@ -182,6 +181,51 @@ export const replaceKeyValue = (
   } else if (type === "object") {
     return replaceObjectKeyValue(strObj, key, newValue);
   }
+  // console log if the regex finds a match
+  console.log("does the regex match", strObj.match(regex));
+  return regex ? strObj.replace(regex, `$1${newValue}`) : strObj;
+};
 
+export const replaceKeyValueJSON = (
+  strObj: string,
+  key: string,
+  newValue: string,
+  type: string
+) => {
+  const replaceObjectKeyValue = (
+    strObj: string,
+    key: string,
+    newValue: string
+  ) => {
+    const regex = new RegExp(`(${key}\\s*:\\s*)(\\{[^]*?\\})(,?)`, "g");
+    const match = strObj.match(regex);
+
+    if (match) {
+      return strObj.replace(regex, `$1${newValue}$3`);
+    } else {
+      const insertionPoint = strObj.lastIndexOf("}");
+      return (
+        strObj.slice(0, insertionPoint) +
+        `, ${key}: ${newValue}` +
+        strObj.slice(insertionPoint)
+      );
+    }
+  };
+
+  let regex = new RegExp(`(${key}\\s*:\\s*)("[^"]*")`, "g");
+
+  if (type === "string") {
+    regex = new RegExp(`("${key}"\\s*:\\s*)("[^"]*")`, "g");
+  } else if (type === "boolean") {
+    regex = new RegExp(`("${key}"\\s*:\\s*)(true|false)`, "g");
+  } else if (type === "integer") {
+    regex = new RegExp(`("${key}"\\s*:\\s*)(\\d+)`, "g");
+  } else if (type === "array") {
+    regex = new RegExp(`("${key}"\\s*:\\s*)(\\[.*\\])`, "g");
+  } else if (type === "object") {
+    return replaceObjectKeyValue(strObj, key, newValue);
+  }
+  // console log if the regex finds a match
+  console.log("does the regex match", strObj.match(regex));
   return regex ? strObj.replace(regex, `$1${newValue}`) : strObj;
 };

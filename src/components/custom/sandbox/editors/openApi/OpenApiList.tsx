@@ -61,11 +61,13 @@ const OpenApiList = (props: any) => {
                     <String
                       value={values[property] ? values[property] : ""}
                       onChange={(value: any) => {
-                        if (value) {
-                          setValues({ ...values, [property]: value });
-                        } else {
-                          setValues({ ...values, [property]: "" });
-                        }
+                        let tidyValue = value !== undefined ? value : "";
+                        setValues(
+                          { ...values, [property]: tidyValue },
+                          property,
+                          tidyValue,
+                          "string"
+                        );
                       }}
                     />
                   )}
@@ -76,11 +78,13 @@ const OpenApiList = (props: any) => {
                         values[property] !== undefined ? values[property] : ""
                       }
                       onChange={(value: any) => {
-                        if (value) {
-                          setValues({ ...values, [property]: value });
-                        } else {
-                          setValues({ ...values, [property]: "" });
-                        }
+                        let tidyValue = value !== undefined ? value : "";
+                        setValues(
+                          { ...values, [property]: tidyValue },
+                          property,
+                          tidyValue,
+                          "string"
+                        );
                       }}
                       set={properties[property].enum}
                     />
@@ -89,11 +93,16 @@ const OpenApiList = (props: any) => {
                   <String
                     value={values[property] ? values[property] : 0}
                     onChange={(value: any) => {
-                      if (value) {
-                        setValues({ ...values, [property]: parseInt(value) });
-                      } else {
-                        setValues({ ...values, [property]: 0 });
-                      }
+                      let tidyValue =
+                        value !== undefined || value !== null
+                          ? parseInt(value)
+                          : 0;
+                      setValues(
+                        { ...values, [property]: tidyValue },
+                        property,
+                        tidyValue,
+                        "integer"
+                      );
                     }}
                   />
                 )}
@@ -105,10 +114,13 @@ const OpenApiList = (props: any) => {
                         : ""
                     }
                     onChange={(value: any) => {
-                      setValues({
-                        ...values,
-                        [property]: value === "true" ? true : false,
-                      });
+                      let tidyValue = value === "true" ? true : false;
+                      setValues(
+                        { ...values, [property]: tidyValue },
+                        property,
+                        tidyValue,
+                        "boolean"
+                      );
                     }}
                     set={["true", "false"]}
                   />
@@ -117,11 +129,13 @@ const OpenApiList = (props: any) => {
                   <Array
                     value={values[property] ? values[property] : []}
                     onChange={(value: any) => {
-                      if (value) {
-                        setValues({ ...values, [property]: value });
-                      } else {
-                        setValues({ ...values, [property]: [] });
-                      }
+                      let tidyValue = value !== undefined ? value : [];
+                      setValues(
+                        { ...values, [property]: tidyValue },
+                        property,
+                        tidyValue,
+                        "array"
+                      );
                     }}
                   />
                 )}
