@@ -200,11 +200,7 @@ const Page: any = () => {
         <Topbar />
       </header>
       <main>
-        <Sandbox
-          main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
-          topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
-          bottomRight={<SandBoxTabs tabsMap={bottomRightTabsMap} />}
-        />
+        <h1>Hi</h1>
       </main>
       <footer>
         <Sidebar
