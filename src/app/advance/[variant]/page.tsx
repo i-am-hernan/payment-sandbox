@@ -197,18 +197,13 @@ const Page: any = () => {
   return (
     <body className={`${theme} border-r-2`}>
       <header>
-        <Topbar />
+      <h1>Hi</h1>
       </header>
       <main>
         <h1>Hi</h1>
       </main>
       <footer>
-        <Sidebar
-          section={section}
-          setSection={setSection}
-          unsavedChanges={unsavedChanges}
-          paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
-        />
+      <h1>Hi</h1>
       </footer>
     </body>
   );
