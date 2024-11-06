@@ -85,17 +85,17 @@ const Page: any = () => {
   ];
   if (section === "Client") {
     tabsMap = [
-      {
-        title: "checkout.js",
-        icon: (
-          <span className="flex">
-            <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
-          </span>
-        ),
-        content: <Script key={"script"} />,
-        value: `${variant}.js`,
-        unsavedChanges: unsavedChanges.js,
-      },
+      // {
+      //   title: "checkout.js",
+      //   icon: (
+      //     <span className="flex">
+      //       <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
+      //     </span>
+      //   ),
+      //   content: <Script key={"script"} />,
+      //   value: `${variant}.js`,
+      //   unsavedChanges: unsavedChanges.js,
+      // },
       {
         title: "style.css",
         icon: (
