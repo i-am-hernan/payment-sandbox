@@ -24,6 +24,7 @@ export const useApi: UseApi = (endpoint, method, payload) => {
       },
     };
 
+    console.log("payload", payload);
     if (payload) {
       requestOptions.body = JSON.stringify(payload);
     }
@@ -48,7 +49,7 @@ export const useApi: UseApi = (endpoint, method, payload) => {
     makeRequest();
 
     return () => {};
-  }, [endpoint, method, payload]);
+  }, [endpoint, method]);
 
   return { data, loading, error };
 };

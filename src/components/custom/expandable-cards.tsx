@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, CreditCard, Clock, BarChart2, SquareTerminal } from "lucide-react";
+import { ChevronDown, ChevronUp, Clock, CreditCard, SquareTerminal } from "lucide-react";
+import { useState } from "react";
 
 interface ExpandableCardsProps {
   paymentMethodName: string;
