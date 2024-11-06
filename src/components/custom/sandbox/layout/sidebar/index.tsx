@@ -30,8 +30,6 @@ const Sidebar = (props: any) => {
     loading: loadingPaymentMethods,
     error: paymentMethodsError,
   } = useApi(`api/checkout/v71/paymentMethods`, "POST");
-  console.log("---------");
-  console.log(paymentMethodsResponse);
 
   return (
     <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-full border-2 text-center pt-3">
