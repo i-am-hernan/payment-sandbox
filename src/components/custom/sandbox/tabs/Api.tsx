@@ -70,7 +70,6 @@ const Api = (props: any) => {
   const syncGlobalState: any = debounce((localState: any, build: any) => {
     const isEqual = deepEqual(build.request[api], localState);
     if (!isEqual) {
-      console.log("Not equal: ", build.request[api], localState);
       dispatch(updateRequest(localState));
       dispatch(
         addUnsavedChanges({

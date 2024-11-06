@@ -14,8 +14,8 @@ export interface User {
 
 // Define the initial state
 const initialState: FormulaPropType = {
-  merchantAccount: "test",
-  defaultMerchantAccount: "test",
+  merchantAccount: null,
+  defaultMerchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
   theme: "dark",
 };
 

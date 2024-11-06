@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { userActions } from "@/store/reducers";
+import { formulaActions, userActions } from "@/store/reducers";
 import TuneIcon from "@mui/icons-material/Tune";
 import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 const { updateMerchantAccount } = userActions;
+const { updateApiRequestMerchantAccount } = formulaActions;
 
 const UpdateMerchantCookie = () => {
   const [open, setOpen] = useState(false);
@@ -35,6 +36,7 @@ const UpdateMerchantCookie = () => {
       setOpen(true);
     } else {
       dispatch(updateMerchantAccount(merchantAccountCookie));
+      dispatch(updateApiRequestMerchantAccount(merchantAccountCookie));
     }
   }, []);
 
@@ -52,7 +54,7 @@ const UpdateMerchantCookie = () => {
       }
       Cookies.set("merchantAccount", merchantAccountLocal, { expires: 365 });
       dispatch(updateMerchantAccount(merchantAccountLocal));
-      // Here we can set the merchant account in the state of the api requests as well
+      dispatch(updateApiRequestMerchantAccount(merchantAccountLocal));
       setOpen(false);
     } catch (error) {
       setError("An error occurred. Please try again.");
@@ -116,7 +118,10 @@ const UpdateMerchantCookie = () => {
                 className="rounded-r-none"
               />
             </div>
-            <Button className="w-24 rounded-l-none text-xs  text-background" type="submit">
+            <Button
+              className="w-24 rounded-l-none text-xs  text-background"
+              type="submit"
+            >
               {isLoading && <Loading />}
               {!isLoading && <p>Save</p>}
             </Button>

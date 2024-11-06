@@ -1,4 +1,4 @@
-import { ExpandableCards } from "@/components/custom/expandable-cards";
+import { ExpandableCards } from "@/components/custom/sandbox/navbars/ExpandableCards";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,

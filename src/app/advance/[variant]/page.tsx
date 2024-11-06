@@ -27,8 +27,6 @@ const {
   updatePaymentsDetailsRequest,
 } = formulaActions;
 
-const defaultMerchantAccount = `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`;
-
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
   const { theme } = useSelector((state: RootState) => state.user);
@@ -40,15 +38,21 @@ const Page: any = () => {
     (state: RootState) => state.formula
   );
 
+  const { defaultMerchantAccount } = useSelector(
+    (state: RootState) => state.user
+  );
+
   const { paymentMethods, payments, paymentsDetails } = request;
-  const paymentMethodsMerchantAccount = { merchantAccount: `${defaultMerchantAccount}` };
-  
+
+  const paymentMethodsMerchantAccount = {
+    merchantAccount: `${defaultMerchantAccount}`,
+  };
+
   const {
     paymentMethods: paymentMethodsAPIVersion,
     payments: paymentsAPIVersion,
     paymentsDetails: paymentsDetailsAPIVersion,
   } = checkoutAPIVersion;
-
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];

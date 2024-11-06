@@ -6,18 +6,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import {
   componentActions,
-  formulaActions,
-  specsActions,
+  formulaActions
 } from "@/store/reducers";
 import type { RootState } from "@/store/store";
+import {
+  stringifyObject,
+  unstringifyObject
+} from "@/utils/utils";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  unstringifyObject,
-  stringifyObject,
-  replaceKeyValue,
-} from "@/utils/utils";
 
 const {
   updateIsRedirect,

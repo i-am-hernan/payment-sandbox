@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Loading from "../../utils/Loading";
-import { ExpandableCards } from "@/components/custom/expandable-cards";
+import { ExpandableCards } from "@/components/custom/sandbox/navbars/ExpandableCards";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -75,7 +75,6 @@ const Sidebar = (props: any) => {
     paymentMethodsMerchantAccount
   );
 
-  console.log("sidebar rendered");
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "i") {

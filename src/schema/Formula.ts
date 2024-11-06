@@ -14,7 +14,6 @@ const FormulaSchema: Schema = new Schema(
       required: true,
     },
     description: { type: String, required: false },
-
     integrationType: {
       type: String,
       required: true,
@@ -22,11 +21,6 @@ const FormulaSchema: Schema = new Schema(
     txVariant: {
       type: String,
       required: true,
-    },
-    link: {
-      type: String,
-      required: true,
-      unique: true,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
@@ -55,5 +49,6 @@ const FormulaSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-const Formula: Model<IFormula> = mongoose.models.Formula || mongoose.model("Formula", FormulaSchema);
+const Formula: Model<IFormula> =
+  mongoose.models.Formula || mongoose.model("Formula", FormulaSchema);
 export default Formula;

@@ -225,7 +225,43 @@ export const replaceKeyValueJSON = (
   } else if (type === "object") {
     return replaceObjectKeyValue(strObj, key, newValue);
   }
-  // console log if the regex finds a match
-  console.log("does the regex match", strObj.match(regex));
   return regex ? strObj.replace(regex, `$1${newValue}`) : strObj;
+};
+
+export const refineFormula = (formula: any) => {
+  const {
+    adyenWebVersion,
+    checkoutAPIVersion,
+    checkoutConfiguration,
+    request,
+    style,
+    txVariantConfiguration,
+  } = formula;
+
+  const removeMerchantAccount = (request: any) => {
+    const requestCopy = { ...request };
+    delete requestCopy["merchantAccount"];
+    return requestCopy;
+  };
+
+  const processRequest = (request: any) => {
+    const copyRequest: any = request;
+    const processedRequest: any = {};
+    for (const key in copyRequest) {
+      if (copyRequest[key] && copyRequest[key].merchantAccount) {
+        processedRequest[key] = removeMerchantAccount(copyRequest[key]);
+      }
+    }
+    return processedRequest;
+  };
+
+  return {
+    adyenWebVersion,
+    checkoutAPIVersion,
+    checkoutConfiguration,
+    request: processRequest(request),
+    style,
+    txVariantConfiguration,
+    isRedirect: false,
+  };
 };

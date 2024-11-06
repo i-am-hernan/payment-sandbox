@@ -17,7 +17,7 @@ export interface Formula {
   };
   adyenWebVersion: string;
   txVariant: string;
-  txVariantConfiguration: FormulaPropType;
+  txVariantConfiguration: string;
   request: {
     sessions: FormulaPropType;
     paymentMethods: FormulaPropType;
@@ -64,7 +64,7 @@ const initialState: FormulaPropType = {
     `{clientKey: "test_747LMAMEOFBGRIEKENIJNYWAZM34XT5N", environment: "test", onChange: function(state){handleChange(state);}, onError: function(error){handleError(error);}, onAdditionalDetails: function(state,dropin){handleAdditionalDetails(state,dropin);}, onSubmit: function(state,dropin){handleSubmit(state,dropin);}}`
   ),
   txVariant: "",
-  txVariantConfiguration: {},
+  txVariantConfiguration: "",
   request: {
     paymentMethods: {
       merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
@@ -75,7 +75,8 @@ const initialState: FormulaPropType = {
         value: 10000,
         currency: "USD",
       },
-      returnUrl: `${process.env.NEXT_PUBLIC_CLIENT_URL}/advanced/dropin`,
+      // Bug: Need to fix this to be dynamic, we need to set the return url for each page
+      returnUrl: `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/dropin`,
       reference: "merchant-reference",
       merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
     },
@@ -88,11 +89,11 @@ const initialState: FormulaPropType = {
       },
       channel: "Web",
       //TODO: Refactor this
-      returnUrl: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
+      returnUrl: `${process.env.NEXT_PUBLIC_CLIENT_URL}`,
       reference: "reference",
       shopperLocale: "en_US",
       //TODO: Fix this
-      merchantAccount: "HernanChalco",
+      merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
     },
   },
   style: {},
@@ -181,6 +182,12 @@ const formulaSlice = createSlice({
     },
     updateTxVariant: (state, action: PayloadAction<string>) => {
       state.txVariant = action.payload;
+    },
+    updateApiRequestMerchantAccount: (state, action: PayloadAction<string>) => {
+      state.request.paymentMethods.merchantAccount = action.payload;
+      state.request.payments.merchantAccount = action.payload;
+      state.request.paymentsDetails.merchantAccount = action.payload;
+      state.request.sessions.merchantAccount = action.payload;
     },
     updateTxVariantConfiguration: (
       state,
