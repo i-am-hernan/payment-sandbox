@@ -140,7 +140,7 @@ const formulaSlice = createSlice({
         ...action.payload,
       };
     },
-    updateReset: (state, action: PayloadAction<any>) => {
+    updateReset: (state) => {
       state.reset = !state.reset;
     },
     resetUnsavedChanges: (state) => {

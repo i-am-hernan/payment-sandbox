@@ -18,6 +18,7 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ShareIcon from "@mui/icons-material/Share";
 
 const {
   updateRun,
@@ -29,12 +30,12 @@ const {
 } = formulaActions;
 
 const Topbar = (props: any) => {
-  const { unsavedChanges } = useSelector((state: RootState) => state.formula);
+  const state = useSelector((state: RootState) => state.formula);
+  const { unsavedChanges } = state;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
     (value) => value
   ).length;
-
 
   return (
     <span
@@ -45,6 +46,24 @@ const Topbar = (props: any) => {
         <UpdateMerchantCookie />
       </div>
       <div className="mr-2 relative">
+        <span className="pr-2">
+          <Tooltip title="Last Build (⌘ + b)">
+            <Button
+              key="clear"
+              variant="outline"
+              size="sm"
+              className="px-2 pt-0 pb-0"
+              onClick={() => {
+                //logic to export configuration
+                console.log("Export configuration", state);
+                // Need to exclude isRedirect
+                // Need to exclude 
+              }}
+            >
+              <ShareIcon className="!text-foreground !text-[16px]" />
+            </Button>
+          </Tooltip>
+        </span>
         <AlertDialog>
           <Tooltip title="Reset (⌘ + delete)">
             <AlertDialogTrigger asChild>
