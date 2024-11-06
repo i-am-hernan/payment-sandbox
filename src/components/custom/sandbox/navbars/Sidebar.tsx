@@ -12,29 +12,30 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import Loading from "../../utils/Loading";
+import { ExpandableCards } from "@/components/custom/expandable-cards";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useApi } from "@/hooks/useApi";
+import { userActions } from "@/store/reducers";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LanguageIcon from "@mui/icons-material/Language";
-import WidgetsIcon from "@mui/icons-material/Widgets";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ShortcutIcon from "@mui/icons-material/Shortcut";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebhookIcon from "@mui/icons-material/Webhook";
+import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import ShortcutIcon from "@mui/icons-material/Shortcut";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { userActions } from "@/store/reducers";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface SideTab {
   name: string;
@@ -47,7 +48,8 @@ interface SideTab {
 const { updateTheme } = userActions;
 
 const Sidebar = (props: any) => {
-  const { section, setSection, unsavedChanges } = props;
+  const { section, setSection, unsavedChanges, paymentMethodsMerchantAccount } =
+    props;
   const {
     html: htmlUnsavedChanges,
     style: styleUnsavedChanges,
@@ -63,6 +65,17 @@ const Sidebar = (props: any) => {
   const webhookButtonRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch();
 
+  const {
+    data: paymentMethodsResponse,
+    loading: loadingPaymentMethods,
+    error: paymentMethodsError,
+  } = useApi(
+    `api/checkout/v71/paymentMethods`,
+    "POST",
+    paymentMethodsMerchantAccount
+  );
+
+  console.log("sidebar rendered");
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "i") {
@@ -142,13 +155,38 @@ const Sidebar = (props: any) => {
                     <DrawerTitle>Online Payments</DrawerTitle>
                     <DrawerDescription>Components</DrawerDescription>
                   </DrawerHeader>
-                  <DrawerFooter>Theme switch</DrawerFooter>
+                  <div className="space-y-2">
+                    {paymentMethodsResponse &&
+                      paymentMethodsResponse.paymentMethods.map(
+                        (paymentMethod: any) => (
+                          <ExpandableCards
+                            key={paymentMethod.type}
+                            paymentMethodName={paymentMethod.name}
+                            paymentMethodType={paymentMethod.type}
+                          />
+                        )
+                      )}
+                    {loadingPaymentMethods && <Loading />}
+                    {paymentMethodsError && (
+                      <Alert variant="destructive">
+                        <AlertTitle>
+                          {"Error: Unable to save Payment methods"}
+                        </AlertTitle>
+                        <AlertDescription>
+                          {paymentMethodsError}
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </div>
                 </DrawerContent>
               </Drawer>
             </div>
             {sideTabs.map((tab, index): any => (
               <span className="relative" key={index}>
-                <Tooltip title={`${tab.name} (${tab.hotKey})`} placement="right-start">
+                <Tooltip
+                  title={`${tab.name} (${tab.hotKey})`}
+                  placement="right-start"
+                >
                   <Button
                     key={tab.name}
                     variant="ghost"
