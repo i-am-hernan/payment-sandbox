@@ -154,7 +154,7 @@ const Sidebar = (props: any) => {
                     <DrawerTitle>Online Payments</DrawerTitle>
                     <DrawerDescription>Components</DrawerDescription>
                   </DrawerHeader>
-                  {/* <div className="space-y-2">
+                  <div className="space-y-2">
                     {paymentMethodsResponse &&
                       paymentMethodsResponse.paymentMethods.map(
                         (paymentMethod: any) => (
@@ -176,7 +176,7 @@ const Sidebar = (props: any) => {
                         </AlertDescription>
                       </Alert>
                     )}
-                  </div> */}
+                  </div>
                 </DrawerContent>
               </Drawer>
             </div>

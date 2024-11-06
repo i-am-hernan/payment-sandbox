@@ -1,3 +1,5 @@
+"use client";
+
 import UpdateMerchantCookie from "@/components/custom/adyen/account/UpdateMerchantCookie";
 import {
   AlertDialog,
