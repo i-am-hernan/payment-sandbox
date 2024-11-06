@@ -6,7 +6,7 @@ declare global {
 const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING!;
 
 if (!MONGO_CONNECTION_STRING) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+  throw new Error("Please define the MONGO_CONNECTION_STRING environment variable inside .env.local");
 }
 
 let cached = global.mongoose;

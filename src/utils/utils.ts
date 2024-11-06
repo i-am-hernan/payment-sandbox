@@ -83,7 +83,6 @@ export const debounce = (func: (...args: any[]) => void, wait: number) => {
 };
 
 export const resolveRef = (json: any, ref: string) => {
-  // console.log("json, ref ", json, ref);
   const path = ref.split("/").slice(1); // Split and remove the initial '#'
   let result = json;
   for (const segment of path) {
@@ -181,8 +180,7 @@ export const replaceKeyValue = (
   } else if (type === "object") {
     return replaceObjectKeyValue(strObj, key, newValue);
   }
-  // console log if the regex finds a match
-  console.log("does the regex match", strObj.match(regex));
+
   return regex ? strObj.replace(regex, `$1${newValue}`) : strObj;
 };
 
