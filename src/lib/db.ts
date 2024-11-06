@@ -3,7 +3,7 @@ declare global {
   var mongoose: any; // This must be a `var` and not a `let / const`
 }
 
-const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING!;
+const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
 if (!MONGO_CONNECTION_STRING) {
   throw new Error("Please define the MONGO_CONNECTION_STRING environment variable inside .env.local");
