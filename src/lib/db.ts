@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 declare global {
   var mongoose: any; // This must be a `var` and not a `let / const`
 }
-
 const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
 if (!MONGO_CONNECTION_STRING) {
-  throw new Error("Please define the MONGO_CONNECTION_STRING environment variable inside .env.local");
+  throw new Error(
+    "Please define the MONGO_CONNECTION_STRING environment variable inside .env.local"
+  );
 }
 
 let cached = global.mongoose;
@@ -23,9 +24,11 @@ async function dbConnect() {
     const opts = {
       bufferCommands: false,
     };
-    cached.promise = mongoose.connect(MONGO_CONNECTION_STRING!, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose
+      .connect(MONGO_CONNECTION_STRING!, opts)
+      .then((mongoose) => {
+        return mongoose;
+      });
   }
   try {
     cached.conn = await cached.promise;
