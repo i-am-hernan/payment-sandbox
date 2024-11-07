@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Clock, CreditCard, SquareTerminal } from "lucide-react";
+import { ChevronDown, ChevronRight, Clock, CreditCard, SquareTerminal } from "lucide-react";
 import { useState } from "react";
 
 interface ExpandableCardsProps {
@@ -17,26 +17,24 @@ export function ExpandableCards(props: ExpandableCardsProps) {
 
   return (
     <div className="w-full px-5">
-      <Button variant="default" className="flex flex-auto w-full justify-between" onClick={toggleExpand}>
+      <Button variant="default" size="sm" className="bg-background flex flex-auto w-full justify-start text-xs text-foreground !py-none hover:bg-background" onClick={toggleExpand}>
+      {isExpanded ? <ChevronDown className="h-4 w-4 pr-1" /> : <ChevronRight className="h-4 w-4 pr-1" />}
         <span className="flex items-center">
-          <CreditCard className="mr-2 h-4 w-4" />
           {props.paymentMethodName}
         </span>
-        {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
       </Button>
-
       {isExpanded && (
-        <div className="mt-4 flex sm:flex-col md:flex-row justify-center">
-          <Button variant="ghost" className="h-auto py-2" asChild>
-            <Link href={`/sessions/${props.paymentMethodType}`} className="flex flex-col items-center">
+        <div className="flex md:flex-col justify-start pl-2">
+          <Button variant="default" className="h-auto py-2 bg-background text-xs text-foreground hover:bg-background justify-start" asChild>
+            <Link href={`/sessions/${props.paymentMethodType}`} className="flex items-center">
               <Clock className="h-4 w-4 mb-1" />
-              <span className="text-xs">Sessions</span>
+              <span className="pl-2 text-xs">Sessions</span>
             </Link>
           </Button>
-          <Button variant="ghost" className=" h-auto py-2" asChild>
-            <Link href={`/advanced/${props.paymentMethodType}`} className="flex flex-col items-center">
+          <Button variant="ghost" className="h-auto py-2 bg-background text-xs text-foreground hover:bg-background justify-start" asChild>
+            <Link href={`/advance/${props.paymentMethodType}`} className="flex items-center">
               <SquareTerminal className="h-4 w-4 mb-1" />
-              <span className="text-xs">Advanced</span>
+              <span className="pl-2 text-xs">Advanced</span>
             </Link>
           </Button>
         </div>

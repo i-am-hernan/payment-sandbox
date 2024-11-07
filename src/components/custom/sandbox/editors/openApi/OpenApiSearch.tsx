@@ -31,7 +31,7 @@ const OpenApiSearch = (props: any) => {
       </div>
       <div className="flex py-2 px-4">
         <Input
-          className="text-xs py-0 rounded-r-none"
+          className="text-xs py-0 rounded-r-none text-foreground"
           ref={inputRef}
           type="search"
           placeholder="search"

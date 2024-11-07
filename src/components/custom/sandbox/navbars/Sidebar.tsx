@@ -6,7 +6,9 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
+  DrawerPortal,
   DrawerTitle,
+  DrawerOverlay,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
@@ -150,35 +152,39 @@ const Sidebar = (props: any) => {
                 <DrawerTrigger className="pt-3">
                   <WidgetsIcon className="!text-foreground !text-[20px]" />
                 </DrawerTrigger>
-                <DrawerContent className="h-full w-[20vw]">
-                  <DrawerHeader>
-                    <DrawerTitle>Online Payments</DrawerTitle>
-                    <DrawerDescription>Components</DrawerDescription>
-                  </DrawerHeader>
-                  <div className="space-y-2">
-                    {paymentMethodsResponse &&
-                      paymentMethodsResponse.paymentMethods.map(
-                        (paymentMethod: any) => (
-                          <ExpandableCards
-                            key={paymentMethod.type}
-                            paymentMethodName={paymentMethod.name}
-                            paymentMethodType={paymentMethod.type}
-                          />
-                        )
+                <DrawerPortal container={sidebarRef.current}>
+                  <DrawerOverlay />
+                  <DrawerContent className="h-full w-[20vw]">
+                    <DrawerHeader>
+                      <DrawerTitle className="text-foreground text-sm">
+                        Online Payments
+                      </DrawerTitle>
+                    </DrawerHeader>
+                    <div className="space-y-2">
+                      {paymentMethodsResponse &&
+                        paymentMethodsResponse.paymentMethods.map(
+                          (paymentMethod: any) => (
+                            <ExpandableCards
+                              key={paymentMethod.type}
+                              paymentMethodName={paymentMethod.name}
+                              paymentMethodType={paymentMethod.type}
+                            />
+                          )
+                        )}
+                      {loadingPaymentMethods && <Loading />}
+                      {paymentMethodsError && (
+                        <Alert variant="destructive">
+                          <AlertTitle>
+                            {"Error: Unable to save Payment methods"}
+                          </AlertTitle>
+                          <AlertDescription>
+                            {paymentMethodsError}
+                          </AlertDescription>
+                        </Alert>
                       )}
-                    {loadingPaymentMethods && <Loading />}
-                    {paymentMethodsError && (
-                      <Alert variant="destructive">
-                        <AlertTitle>
-                          {"Error: Unable to save Payment methods"}
-                        </AlertTitle>
-                        <AlertDescription>
-                          {paymentMethodsError}
-                        </AlertDescription>
-                      </Alert>
-                    )}
-                  </div>
-                </DrawerContent>
+                    </div>
+                  </DrawerContent>
+                </DrawerPortal>
               </Drawer>
             </div>
             {sideTabs.map((tab, index): any => (

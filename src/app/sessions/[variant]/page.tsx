@@ -38,6 +38,14 @@ const Page: any = () => {
   const { sessions } = request;
   const { sessions: sessionsAPIVersion } = checkoutAPIVersion;
 
+  const { defaultMerchantAccount } = useSelector(
+    (state: RootState) => state.user
+  );
+
+  const paymentMethodsMerchantAccount = {
+    merchantAccount: `${defaultMerchantAccount}`,
+  };
+
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
 
@@ -168,6 +176,7 @@ const Page: any = () => {
           section={section}
           setSection={setSection}
           unsavedChanges={unsavedChanges}
+          paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
         />
       </footer>
     </body>

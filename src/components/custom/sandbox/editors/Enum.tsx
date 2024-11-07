@@ -21,7 +21,7 @@ const Enum = (props: any) => {
         <SelectTrigger>
           <SelectValue placeholder={title} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="">
           <SelectGroup>
             {set.map((value: any) => (
               <SelectItem key={value} value={value}>

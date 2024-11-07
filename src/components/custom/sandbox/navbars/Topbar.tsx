@@ -4,6 +4,7 @@ import UpdateMerchantCookie from "@/components/custom/adyen/account/UpdateMercha
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogOverlay,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -11,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  AlertDialogPortal,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { formulaActions } from "@/store/reducers";
@@ -22,6 +24,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { refineFormula } from "@/utils/utils";
 import { useParams } from "next/navigation";
+import { useRef } from "react";
 
 const {
   updateRun,
@@ -43,6 +46,8 @@ const Topbar = (props: any) => {
   const { variant } = useParams<{
     variant: string;
   }>();
+
+  const containerRef = useRef<HTMLSpanElement>(null);
 
   const handleShare = (exportedConfiguration: any) => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/formula`, {
@@ -69,6 +74,7 @@ const Topbar = (props: any) => {
     <span
       className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-2 flex items-center justify-end pr-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
+      ref={containerRef}
     >
       <div className="flex-1 text-center">
         <UpdateMerchantCookie />
@@ -104,27 +110,30 @@ const Topbar = (props: any) => {
               </Button>
             </AlertDialogTrigger>
           </Tooltip>
-          <AlertDialogContent className="text-foreground">
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription className="text-xs">
-                This action will permanently delete your configuration and reset
-                back to the components base configuration. This action cannot be
-                undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  dispatch(resetFormula());
-                  dispatch(updateReset());
-                }}
-              >
-                Reset
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
+          <AlertDialogPortal container={containerRef.current}>
+          <AlertDialogOverlay />
+            <AlertDialogContent className="text-foreground">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription className="text-xs">
+                  This action will permanently delete your configuration and
+                  reset back to the components base configuration. This action
+                  cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    dispatch(resetFormula());
+                    dispatch(updateReset());
+                  }}
+                >
+                  Reset
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogPortal>
         </AlertDialog>
       </div>
       <div className="mr-2 relative">

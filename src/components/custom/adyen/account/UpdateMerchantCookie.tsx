@@ -5,15 +5,17 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
+  DialogPortal,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formulaActions, userActions } from "@/store/reducers";
 import TuneIcon from "@mui/icons-material/Tune";
 import Cookies from "js-cookie";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
@@ -29,6 +31,7 @@ const UpdateMerchantCookie = () => {
   const { defaultMerchantAccount, merchantAccount } = useSelector(
     (state: RootState) => state.user
   );
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const merchantAccountCookie = Cookies.get("merchantAccount");
@@ -64,71 +67,78 @@ const UpdateMerchantCookie = () => {
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => {
-        if (!open) {
-          if (!Cookies.get("merchantAccount")) {
-            Cookies.set("merchantAccount", defaultMerchantAccount, {
-              expires: 365,
-            });
-            dispatch(updateMerchantAccount(defaultMerchantAccount));
+    <div ref={containerRef}>
+      <Dialog
+        open={open}
+        onOpenChange={(open) => {
+          if (!open) {
+            if (!Cookies.get("merchantAccount")) {
+              Cookies.set("merchantAccount", defaultMerchantAccount, {
+                expires: 365,
+              });
+              dispatch(updateMerchantAccount(defaultMerchantAccount));
+            }
+            setOpen(false);
           }
-          setOpen(false);
-        }
-      }}
-    >
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-[50%]"
-          onClick={() => {
-            setOpen(true);
-            setMerchantAccountLocal("");
-            setError("");
-          }}
-        >
-          <TuneIcon className="!text-foreground !text-[14px]" />
-          <span className="px-1 !text-xs !text-foreground">
-            {merchantAccount}
-          </span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle className="text-[16px] text-foreground">
-            Choose Your Merchant Account
-          </DialogTitle>
-          <DialogDescription className="text-[13px]">
-            Select the merchant account you want to submit the payment with.
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSave}>
-          {error && <div className="text-red-500 text-xs mb-2">{error}</div>}
-          <div className="flex items-center">
-            <div className="flex-1">
-              <Label htmlFor="name" className="text-right sr-only">
-                Account
-              </Label>
-              <Input
-                id="name"
-                value={merchantAccountLocal}
-                onChange={(e) => setMerchantAccountLocal(e.target.value)}
-                className="rounded-r-none"
-              />
-            </div>
-            <Button
-              className="w-24 rounded-l-none text-xs  text-background"
-              type="submit"
-            >
-              {isLoading && <Loading />}
-              {!isLoading && <p>Save</p>}
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+        }}
+      >
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-[50%]"
+            onClick={() => {
+              setOpen(true);
+              setMerchantAccountLocal("");
+              setError("");
+            }}
+          >
+            <TuneIcon className="!text-foreground !text-[14px]" />
+            <span className="px-1 !text-xs !text-foreground">
+              {merchantAccount}
+            </span>
+          </Button>
+        </DialogTrigger>
+        <DialogPortal container={containerRef.current}>
+          <DialogOverlay />
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-[16px] text-foreground">
+                Choose Your Merchant Account
+              </DialogTitle>
+              <DialogDescription className="text-[13px]">
+                Select the merchant account you want to submit the payment with.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSave}>
+              {error && (
+                <div className="text-red-500 text-xs mb-2">{error}</div>
+              )}
+              <div className="flex items-center">
+                <div className="flex-1">
+                  <Label htmlFor="name" className="text-right sr-only">
+                    Account
+                  </Label>
+                  <Input
+                    id="name"
+                    value={merchantAccountLocal}
+                    onChange={(e) => setMerchantAccountLocal(e.target.value)}
+                    className="rounded-r-none text-foreground"
+                  />
+                </div>
+                <Button
+                  className="w-24 rounded-l-none text-xs  text-background"
+                  type="submit"
+                >
+                  {isLoading && <Loading />}
+                  {!isLoading && <p>Save</p>}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </DialogPortal>
+      </Dialog>
+    </div>
   );
 };
 
