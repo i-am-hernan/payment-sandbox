@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }: any) => {
         <title>{"Adyen Sandbox"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <Providers>{children}</Providers>
+      <body>{children}</body>
     </html>
   );
 };
