@@ -1,3 +1,14 @@
+import { ExpandableCards } from "@/components/custom/sandbox/navbars/ExpandableCards";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,17 +23,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Loading from "../../utils/Loading";
-import { ExpandableCards } from "@/components/custom/sandbox/navbars/ExpandableCards";
-import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { useApi } from "@/hooks/useApi";
 import { userActions } from "@/store/reducers";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -35,8 +35,7 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { createPortal } from "react-dom";
+import Loading from "../../utils/Loading";
 
 interface SideTab {
   name: string;
@@ -212,11 +211,11 @@ const Sidebar = (props: any) => {
             ))}
           </div>
           <div className="pb-3">
-            <DropdownMenu modal={false}>
+            <DropdownMenu>
               <DropdownMenuTrigger className="p-2 pt-1 rounded-none border-none hover:border-[1px] hover:border-adyen hover:border-dotted">
                 <SettingsIcon className="!text-foreground !text-[20px]" />
               </DropdownMenuTrigger>
-              <DropdownMenuPortal container={sidebarRef.current} forceMount={true}>
+              <DropdownMenuPortal container={sidebarRef.current}>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Setting</DropdownMenuLabel>
                   <DropdownMenuSeparator />
