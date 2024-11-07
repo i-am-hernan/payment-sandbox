@@ -311,7 +311,7 @@ const Script = () => {
           onChange={handleOpenApiSearchChange}
         />
         {!loadingSdkSpecData && sdkSpecsData && checkoutConfig.parsed && (
-          <OpenSdkList
+          <MemoizedOpenSdkList
             openSdk={sdkSpecsData}
             properties={filteredProperties}
             selectedProperties={Object.keys(checkoutConfig.parsed)}
@@ -342,5 +342,7 @@ const Script = () => {
     </ResizablePanelGroup>
   );
 };
+
+const MemoizedOpenSdkList = memo(OpenSdkList);
 
 export default Script;
