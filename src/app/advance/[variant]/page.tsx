@@ -195,7 +195,7 @@ const Page: any = () => {
   }
 
   return (
-    <body className={`${theme} border-r-2`}>
+    <div className={`${theme} border-r-2`}>
       <header>
         <Topbar />
       </header>
@@ -214,7 +214,7 @@ const Page: any = () => {
           paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
         />
       </footer>
-    </body>
+    </div>
   );
 };
 
