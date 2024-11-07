@@ -45,7 +45,7 @@ const Topbar = (props: any) => {
   }>();
 
   const handleShare = (exportedConfiguration: any) => {
-    fetch("http://localhost:3000/api/formula", {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,8 +53,7 @@ const Topbar = (props: any) => {
       body: JSON.stringify({
         configuration: { ...exportedConfiguration },
         txVariant: variant,
-        integrationType: "advance"
-
+        integrationType: "advance",
       }),
     })
       .then((response) => response.json())
