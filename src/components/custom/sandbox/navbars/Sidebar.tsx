@@ -36,6 +36,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { createPortal } from "react-dom";
 
 interface SideTab {
   name: string;
@@ -64,6 +65,7 @@ const Sidebar = (props: any) => {
   const clientButtonRef = useRef<HTMLButtonElement>(null);
   const webhookButtonRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch();
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const {
     data: paymentMethodsResponse,
@@ -140,7 +142,7 @@ const Sidebar = (props: any) => {
     return Object.values(unsavedChanges).filter((value) => value).length;
   };
   return (
-    <div>
+    <div ref={sidebarRef}>
       <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-2 text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
@@ -210,28 +212,28 @@ const Sidebar = (props: any) => {
             ))}
           </div>
           <div className="pb-3">
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger className="p-2 pt-1 rounded-none border-none hover:border-[1px] hover:border-adyen hover:border-dotted">
                 <SettingsIcon className="!text-foreground !text-[20px]" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="">
-                <DropdownMenuLabel>Setting</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem className="text-xs">
-                    <ShortcutIcon className="text-sm" />
-                    <p className="px-2">Shortcuts</p>
-                    <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="text-xs">
-                      <DarkModeIcon className="text-sm" />
-                      <p className="px-2">Theme</p>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuPortal>
+              <DropdownMenuPortal container={sidebarRef.current} forceMount={true}>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Setting</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem className="text-xs">
+                      <ShortcutIcon className="text-sm" />
+                      <p className="px-2">Shortcuts</p>
+                      <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger className="text-xs">
+                        <DarkModeIcon className="text-sm" />
+                        <p className="px-2">Theme</p>
+                      </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="">
                         <DropdownMenuItem
                           className="text-xs"
@@ -250,10 +252,10 @@ const Sidebar = (props: any) => {
                           <span>Light</span>
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
-                    </DropdownMenuPortal>
-                  </DropdownMenuSub>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
+                    </DropdownMenuSub>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenuPortal>
             </DropdownMenu>
           </div>
         </div>
