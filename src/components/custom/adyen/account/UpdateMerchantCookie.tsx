@@ -126,6 +126,7 @@ const UpdateMerchantCookie = () => {
                   </Label>
                   <Input
                     id="name"
+                    placeholder={defaultMerchantAccount}
                     value={merchantAccountLocal}
                     onChange={(e) => setMerchantAccountLocal(e.target.value)}
                     className="rounded-r-none text-foreground"
