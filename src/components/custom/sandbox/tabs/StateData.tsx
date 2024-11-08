@@ -20,7 +20,7 @@ const StateData = (props: any) => {
 
   useEffect(() => {
     const stringAndPrettify = debounce(async () => {
-      const stringified = stringifyObject(componentState);
+      const stringified = JSON.stringify(componentState);
       setFormattedCode(await prettify(stringified, "json"));
     }, 500);
     stringAndPrettify();
