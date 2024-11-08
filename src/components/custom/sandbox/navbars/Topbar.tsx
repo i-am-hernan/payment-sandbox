@@ -126,7 +126,6 @@ const Topbar = (props: any) => {
             variant="default"
             size="sm"
             className="px-4"
-            disabled={totalUnsavedChanges === 0}
             onClick={() => {
               const clearRedirectInfo = () => {
                 window.history.replaceState(
