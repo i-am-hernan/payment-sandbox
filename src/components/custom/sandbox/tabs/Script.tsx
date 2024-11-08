@@ -264,27 +264,32 @@ const Script = () => {
       direction="horizontal"
       className="bg-background inline-block !overflow-y-scroll"
     >
-      <ResizablePanel defaultSize={50} className="sm:flex bg-code flex-col">
-        <Code
-          type="babel"
-          code={checkoutConfig.stringified}
-          readOnly={false}
-          theme={theme}
-          onChange={(jsValue: any, stringValue: string) => {
-            if (stringValue === checkoutConfig.stringified) {
-              return;
-            } else {
-              dispatchCheckoutConfig({
-                type: "SET_BOTH",
-                payload: {
-                  parsed: jsValue,
-                  stringified: stringValue,
-                },
-              });
-            }
-          }}
-          jsVariable={checkoutConfigurationVar}
-        />
+      <ResizablePanel
+        defaultSize={50}
+        className="sm:flex bg-code flex-col items-stretch"
+      >
+        <div className="flex flex-1 overflow-scroll">
+          <Code
+            type="babel"
+            code={checkoutConfig.stringified}
+            readOnly={false}
+            theme={theme}
+            onChange={(jsValue: any, stringValue: string) => {
+              if (stringValue === checkoutConfig.stringified) {
+                return;
+              } else {
+                dispatchCheckoutConfig({
+                  type: "SET_BOTH",
+                  payload: {
+                    parsed: jsValue,
+                    stringified: stringValue,
+                  },
+                });
+              }
+            }}
+            jsVariable={checkoutConfigurationVar}
+          />
+        </div>
         <div className={`flex justify-end border-y-2 bg-background`}>
           <Button
             key={"prettify"}
