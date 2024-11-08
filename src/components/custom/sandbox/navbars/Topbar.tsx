@@ -55,7 +55,7 @@ const Topbar = (props: any) => {
         <UpdateMerchantCookie />
       </div>
       <div className="mr-2">
-        <ShareableButton />
+        <ShareableButton disabled={totalUnsavedChanges !== 0} />
       </div>
       <div className="mr-2">
         <AlertDialog>

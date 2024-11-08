@@ -19,7 +19,8 @@ import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-const ShareableButton = () => {
+const ShareableButton = (props: any) => {
+  const { disabled } = props;
   const { variant } = useParams<{
     variant: string;
   }>();
@@ -63,6 +64,7 @@ const ShareableButton = () => {
           <Button
             key="clear"
             variant="outline"
+            disabled={disabled}
             size="sm"
             className="px-2 pt-0 pb-0"
             onClick={() => {

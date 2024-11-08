@@ -54,6 +54,9 @@ const Page: any = () => {
     paymentsDetails: paymentsDetailsAPIVersion,
   } = checkoutAPIVersion;
 
+  // We need a hook that when this page mounts, it will dispatch and fetch the configuration if an id is present
+
+
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
   let topRightTabsMap = [
