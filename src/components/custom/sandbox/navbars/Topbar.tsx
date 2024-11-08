@@ -1,6 +1,7 @@
 "use client";
 
 import UpdateMerchantCookie from "@/components/custom/adyen/account/UpdateMerchantCookie";
+import ShareableButton from "@/components/custom/sandbox/share/ShareableButton";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,14 +50,15 @@ const Topbar = (props: any) => {
 
   const containerRef = useRef<HTMLSpanElement>(null);
 
-  const handleShare = (exportedConfiguration: any) => {
+  const handleShare = (request: any) => {
+    const processedRequest = refineFormula(state);
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/formula`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        configuration: { ...exportedConfiguration },
+        configuration: { ...processedRequest },
         txVariant: variant,
         integrationType: "advance",
       }),
@@ -79,24 +81,10 @@ const Topbar = (props: any) => {
       <div className="flex-1 text-center">
         <UpdateMerchantCookie />
       </div>
-      <div className="mr-2 relative">
-        <span className="pr-2">
-          <Tooltip title="Share Build">
-            <Button
-              key="clear"
-              variant="outline"
-              size="sm"
-              className="px-2 pt-0 pb-0"
-              disabled={totalUnsavedChanges !== 0}
-              onClick={() => {
-                var processedFormula = refineFormula(state);
-                handleShare(processedFormula);
-              }}
-            >
-              <ShareIcon className="!text-foreground !text-[16px]" />
-            </Button>
-          </Tooltip>
-        </span>
+      <div className="mr-2">
+        <ShareableButton />
+      </div>
+      <div className="mr-2">
         <AlertDialog>
           <Tooltip title="Reset (⌘ + delete)">
             <AlertDialogTrigger asChild>
@@ -111,7 +99,7 @@ const Topbar = (props: any) => {
             </AlertDialogTrigger>
           </Tooltip>
           <AlertDialogPortal container={containerRef.current}>
-          <AlertDialogOverlay />
+            <AlertDialogOverlay />
             <AlertDialogContent className="text-foreground">
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -141,42 +129,48 @@ const Topbar = (props: any) => {
           {totalUnsavedChanges !== 0 && totalUnsavedChanges}
         </span>
         <Tooltip title="Last Build (⌘ + b)">
-          <Button
-            key="clear"
-            variant="outline"
-            size="sm"
-            className="px-2 pt-0 pb-0"
-            onClick={() => {
-              dispatch(clearOnDeckInfo());
-              dispatch(updateReset());
-            }}
-          >
-            <RestoreIcon className="!text-foreground !text-[16px]" />
-          </Button>
+          <span>
+            <Button
+              key="clear"
+              variant="outline"
+              size="sm"
+              className="px-2 pt-0 pb-0"
+              disabled={totalUnsavedChanges === 0}
+              onClick={() => {
+                dispatch(clearOnDeckInfo());
+                dispatch(updateReset());
+              }}
+            >
+              <RestoreIcon className="!text-foreground !text-[16px]" />
+            </Button>
+          </span>
         </Tooltip>
       </div>
       <Tooltip title="Build (⌘ + enter)">
-        <Button
-          key="run"
-          variant="default"
-          size="sm"
-          className="px-4"
-          onClick={() => {
-            const clearRedirectInfo = () => {
-              window.history.replaceState(
-                {},
-                document.title,
-                window.location.pathname
-              );
-            };
-            clearRedirectInfo();
-            dispatch(updateIsRedirect(false));
-            dispatch(updateRun());
-            dispatch(resetUnsavedChanges());
-          }}
-        >
-          Build
-        </Button>
+        <span>
+          <Button
+            key="run"
+            variant="default"
+            size="sm"
+            className="px-4"
+            disabled={totalUnsavedChanges === 0}
+            onClick={() => {
+              const clearRedirectInfo = () => {
+                window.history.replaceState(
+                  {},
+                  document.title,
+                  window.location.pathname
+                );
+              };
+              clearRedirectInfo();
+              dispatch(updateIsRedirect(false));
+              dispatch(updateRun());
+              dispatch(resetUnsavedChanges());
+            }}
+          >
+            Build
+          </Button>
+        </span>
       </Tooltip>
     </span>
   );

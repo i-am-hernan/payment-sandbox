@@ -33,11 +33,9 @@ Open Items:
 4. Add variant configuration
 5. Refactor Code
 6. Host with dedicated company account.
-7. Add functionality that updates the merchant account on all of the requests.
 8. Decide what happens with code outside of checkoutConfiguration
 9. Add some context to the javascript components
 10. Add comment on config.js to instruct user what handle function is doing
-11. When I undo a change in the editor its still showing an unsaved change
 
 Back logs:
 1. Need to convey to user that value of paymentMethods response comes from an API
