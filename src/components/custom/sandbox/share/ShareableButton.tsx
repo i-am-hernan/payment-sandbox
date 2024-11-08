@@ -74,7 +74,7 @@ const ShareableButton = () => {
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>
           <DialogOverlay />
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px] flex flex-col">
             <DialogHeader>
               <DialogTitle className="text-[16px] text-foreground">
                 Share your build
@@ -86,9 +86,9 @@ const ShareableButton = () => {
             {error && <div className="text-red-500 text-xs mb-2">{error}</div>}
             {loading && <Loading />}
             {data && !loading && !error && (
-              <div className="flex">
-                <div>
-                  <p className="h-[100%] flex items-center justify-center flex-1 border border-r-none rounded rounded-r-none border-foreground text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-y-scroll">
+              <div className="flex items-stretch">
+                <div className="border border-r-none rounded rounded-r-none border-foreground">
+                  <p className="!h-[100%] max-w-[350px] flex items-center justify-center flex-1 text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-scroll">
                     {`${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`}
                   </p>
                 </div>
