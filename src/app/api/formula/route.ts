@@ -52,11 +52,8 @@ export async function POST(request: Request) {
     await dbConnect();
     console.log("DB Connected");
 
-    let insertResult = await Formula.create({
-      ...requestBody,
-    });
+    let insertResult = await Formula.create(requestBody);
 
-    console.log(`Formula inserted with id: ${insertResult._id}`);
     return NextResponse.json(
       { message: "formula inserted", success: true, data: insertResult },
       { status: 201 }

@@ -238,7 +238,7 @@ export const refineFormula = (formula: any) => {
 
   const removeMerchantAccount = (request: any) => {
     const requestCopy = { ...request };
-    delete requestCopy["merchantAccount"];
+    requestCopy["merchantAccount"] && delete requestCopy["merchantAccount"];
     return requestCopy;
   };
 
@@ -246,7 +246,7 @@ export const refineFormula = (formula: any) => {
     const copyRequest: any = request;
     const processedRequest: any = {};
     for (const key in copyRequest) {
-      if (copyRequest[key] && copyRequest[key].merchantAccount) {
+      if (copyRequest[key] !== null) {
         processedRequest[key] = removeMerchantAccount(copyRequest[key]);
       }
     }

@@ -162,6 +162,7 @@ const Sidebar = (props: any) => {
                     </DrawerHeader>
                     <div className="space-y-2">
                       {paymentMethodsResponse &&
+                        paymentMethodsResponse.paymentMethods &&
                         paymentMethodsResponse.paymentMethods.map(
                           (paymentMethod: any) => (
                             <ExpandableCards

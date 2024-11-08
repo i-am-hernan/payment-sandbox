@@ -13,9 +13,10 @@ import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useParams } from "next/navigation";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useApi } from "@/hooks/useApi";
 
 interface SectionType {
   section: "Client" | "Server" | "Webhooks";
@@ -25,6 +26,10 @@ const {
   updatePaymentMethodsRequest,
   updatePaymentsRequest,
   updatePaymentsDetailsRequest,
+  updateFormula,
+  updateApiRequestMerchantAccount,
+  updateRun,
+  updateReset,
 } = formulaActions;
 
 const Page: any = () => {
@@ -33,12 +38,21 @@ const Page: any = () => {
   const { variant } = useParams<{
     variant: string;
   }>();
+  const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  const {
+    data: formula,
+    loading: loadingFormula,
+    error: formulaError,
+  } = useApi(`api/formula${id ? "/" + id : ""}`, "GET");
 
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
 
-  const { defaultMerchantAccount } = useSelector(
+  const { defaultMerchantAccount, merchantAccount } = useSelector(
     (state: RootState) => state.user
   );
 
@@ -54,8 +68,20 @@ const Page: any = () => {
     paymentsDetails: paymentsDetailsAPIVersion,
   } = checkoutAPIVersion;
 
-  // We need a hook that when this page mounts, it will dispatch and fetch the configuration if an id is present
+  useEffect(() => {
+    const syncFormula = (formula: any) => {
+      if (formula && formula.success && merchantAccount) {
+        let { data } = formula;
+        let { configuration } = data;
+        dispatch(updateFormula({ ...configuration }));
+        dispatch(updateApiRequestMerchantAccount(merchantAccount));
+        dispatch(updateReset());
+        dispatch(updateRun());
+      }
+    };
 
+    syncFormula(formula);
+  }, [formula, merchantAccount]);
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];

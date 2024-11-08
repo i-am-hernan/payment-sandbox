@@ -130,6 +130,7 @@ const formulaSlice = createSlice({
       state.run = !state.run;
     },
     updateFormula: (state, action: PayloadAction<Partial<Formula>>) => {
+      // Here we can add code to reset the request back to empty since we are not storing emty objects, or we try to store empty objects
       return { ...state, ...action.payload };
     },
     updateCheckoutConfiguration: (state, action: PayloadAction<string>) => {

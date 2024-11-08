@@ -1,54 +1,59 @@
-import mongoose, { Schema, Document, model, Model } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-interface IFormula extends Document {
-  stringifiedConfiguration: string;
-  description: string;
-  slug: string;
-  createdBy: string;
+interface Formula extends Document {
+  configuration: {
+    adyenWebVersion: string;
+    checkoutAPIVersion: {
+      paymentMethods: string;
+      payments: string;
+      paymentsDetails: string;
+      sessions: string;
+    };
+    checkoutConfiguration: string;
+    request: {
+      paymentMethods: Record<string, any>; // Allow any key-value pair of mixed type
+      payments: Record<string, any>; // Allow any key-value pair of mixed type
+      paymentsDetails: Record<string, any>;
+      sessions: Record<string, any>; // Allow any key-value pair of mixed type
+    };
+    style: Record<string, any>;
+    txVariantConfiguration: string;
+    isRedirect: boolean;
+  };
+  description?: string;
+  integrationType: string;
+  txVariant: string;
+  createdBy?: mongoose.Types.ObjectId;
 }
 
 const FormulaSchema: Schema = new Schema(
   {
     configuration: {
-      type: Schema.Types.Mixed,
-      required: true,
+      adyenWebVersion: { type: String, required: true },
+      checkoutAPIVersion: {
+        paymentMethods: { type: String, required: true },
+        payments: { type: String, required: true },
+        paymentsDetails: { type: String, required: true },
+        sessions: { type: String, required: true },
+      },
+      checkoutConfiguration: { type: String, required: true },
+      request: {
+        paymentMethods: { type: Schema.Types.Mixed, required: true }, // Allow any key-value pair of mixed type
+        payments: { type: Schema.Types.Mixed, required: true },
+        paymentsDetails: { type: Schema.Types.Mixed, required: true },
+        sessions: { type: Schema.Types.Mixed, required: true },
+      },
+      style: { type: Schema.Types.Mixed, required: true },
+      txVariantConfiguration: { type: String, required: false },
+      isRedirect: { type: Boolean, required: true },
     },
     description: { type: String, required: false },
-    integrationType: {
-      type: String,
-      required: true,
-    },
-    txVariant: {
-      type: String,
-      required: true,
-    },
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      required: false,
-    },
-
-    // //TODO: Consider breaking this down into HTML, CSS, and JS
-    // stringifiedConfiguration: {
-    //   type: String,
-    //   required: true,
-    // },
-    // sdkConfigurationObject: { type: String, required: false },
-    // paymentRequest: { type: Schema.Types.Mixed, required: false },
-    // checkoutAPIVersion: {},
-    // adyenWebVersion: { type: String, required: false },
-    // // TODO:
-    // checkoutConfiguration: { type: String, required: false },
-    // txVariant: { type: String, required: false },
-    // txVariantConfiguration: { type: String, required: false },
-    // sessionsRequest: { type: String, required: false },
-    // paymentMethodsRequest: { type: String, required: false },
-    // paymentsRequest: { type: String, required: false },
-    // paymentsDetailsRequest: { type: String, required: false },
-    // style: {},
+    integrationType: { type: String, required: true },
+    txVariant: { type: String, required: true },
+    createdBy: { type: Schema.Types.ObjectId, required: false },
   },
-  { timestamps: true }
+  { timestamps: true, minimize: false }
 );
 
-const Formula: Model<IFormula> =
-  mongoose.models.Formula || mongoose.model("Formula", FormulaSchema);
-export default Formula;
+export default mongoose.models.Formula ||
+  mongoose.model<Formula>("Formula", FormulaSchema);

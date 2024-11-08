@@ -34,17 +34,19 @@ const ShareableButton = (props: any) => {
   const { data, loading, error } = formula;
   const handleShare = (request: any) => {
     const processedRequest = refineFormula(request);
+    const requestBody = JSON.stringify({
+      configuration: processedRequest,
+      txVariant: variant,
+      integrationType: "advance",
+    });
+    
     setFormula({ ...formula, loading: true });
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/formula`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        configuration: { ...processedRequest },
-        txVariant: variant,
-        integrationType: "advance",
-      }),
+      body: requestBody,
     })
       .then((response) => response.json())
       .then((response) => {
