@@ -74,7 +74,7 @@ const ShareableButton = () => {
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>
           <DialogOverlay />
-          <DialogContent className="sm:max-w-[425px] flex flex-col">
+          <DialogContent className="sm:max-w-[425px] flex flex-col text-foreground">
             <DialogHeader>
               <DialogTitle className="text-[16px] text-foreground">
                 Share your build

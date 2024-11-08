@@ -93,10 +93,15 @@ const UpdateMerchantCookie = () => {
               setError("");
             }}
           >
-            <TuneIcon className="!text-foreground !text-[14px]" />
-            <span className="px-1 !text-xs !text-foreground">
-              {merchantAccount}
-            </span>
+            {merchantAccount && (
+              <div>
+                <TuneIcon className="!text-foreground !text-[14px]" />
+                <p className="px-1 !text-xs !text-foreground inline-block">
+                  {merchantAccount}
+                </p>
+              </div>
+            )}
+            {!merchantAccount && <Loading />}
           </Button>
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>
