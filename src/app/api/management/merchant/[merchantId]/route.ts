@@ -22,7 +22,6 @@ export async function GET(
     }
 
     const data = await response.json();
-    console.log("data", data);
     return Response.json({ ...data });
   } catch (error: any) {
     if (error instanceof Response) {

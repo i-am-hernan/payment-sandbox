@@ -30,6 +30,8 @@ const {
   updateApiRequestMerchantAccount,
   updateRun,
   updateReset,
+  updateVariantReturnUrl,
+  updateBuildCheckoutReturnUrls,
 } = formulaActions;
 
 const Page: any = () => {
@@ -82,6 +84,22 @@ const Page: any = () => {
 
     syncFormula(formula);
   }, [formula, merchantAccount]);
+
+  useEffect(() => {
+    if (variant) {
+      dispatch(
+        updateBuildCheckoutReturnUrls(
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
+        )
+      );
+      dispatch(
+        updateVariantReturnUrl(
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
+        )
+      );
+      dispatch(updateReset());
+    }
+  }, [variant]);
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];

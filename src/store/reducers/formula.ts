@@ -76,7 +76,7 @@ const initialState: FormulaPropType = {
         currency: "USD",
       },
       // Bug: Need to fix this to be dynamic, we need to set the return url for each page
-      returnUrl: `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/dropin`,
+      returnUrl: "",
       reference: "merchant-reference",
       merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
     },
@@ -88,8 +88,8 @@ const initialState: FormulaPropType = {
         currency: "USD",
       },
       channel: "Web",
-      //TODO: Refactor this
-      returnUrl: `${process.env.NEXT_PUBLIC_CLIENT_URL}`,
+      //TODO: Need to dynamically get the return url
+      returnUrl: "",
       reference: "reference",
       shopperLocale: "en_US",
       //TODO: Fix this
@@ -145,6 +145,10 @@ const formulaSlice = createSlice({
     updateReset: (state) => {
       state.reset = !state.reset;
     },
+    updateVariantReturnUrl: (state, action: PayloadAction<string>) => {
+      state.request.payments.returnUrl = action.payload;
+      state.request.sessions.returnUrl = action.payload;
+    },
     resetUnsavedChanges: (state) => {
       state.unsavedChanges = {
         html: false,
@@ -168,6 +172,10 @@ const formulaSlice = createSlice({
       action: PayloadAction<string>
     ) => {
       state.build.checkoutConfiguration = action.payload;
+    },
+    updateBuildCheckoutReturnUrls: (state, action: PayloadAction<string>) => {
+      state.build.request.payments.returnUrl = action.payload;
+      state.build.request.sessions.returnUrl = action.payload;
     },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
       state.adyenWebVersion = action.payload;
