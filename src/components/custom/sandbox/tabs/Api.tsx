@@ -11,6 +11,8 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
+import { formulaActions, specsActions } from "@/store/reducers";
+import type { RootState } from "@/store/store";
 import {
   debounce,
   deepEqual,
@@ -18,9 +20,7 @@ import {
   replaceKeyValueJSON,
   stringifyObject,
 } from "@/utils/utils";
-import { formulaActions, specsActions } from "@/store/reducers";
-import type { RootState } from "@/store/store";
-import { useEffect, useState, useReducer, useCallback } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const { updateSpecs } = specsActions;
