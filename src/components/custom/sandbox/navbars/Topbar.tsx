@@ -5,27 +5,26 @@ import ShareableButton from "@/components/custom/sandbox/share/ShareableButton";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogOverlay,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogOverlay,
+  AlertDialogPortal,
   AlertDialogTitle,
   AlertDialogTrigger,
-  AlertDialogPortal,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { formulaActions } from "@/store/reducers";
 import { RootState } from "@/store/store";
+import { refineFormula } from "@/utils/utils";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import RestoreIcon from "@mui/icons-material/Restore";
-import ShareIcon from "@mui/icons-material/Share";
 import Tooltip from "@mui/material/Tooltip";
-import { useDispatch, useSelector } from "react-redux";
-import { refineFormula } from "@/utils/utils";
 import { useParams } from "next/navigation";
 import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const {
   updateRun,
@@ -44,33 +43,7 @@ const Topbar = (props: any) => {
     (value) => value
   ).length;
 
-  const { variant } = useParams<{
-    variant: string;
-  }>();
-
   const containerRef = useRef<HTMLSpanElement>(null);
-
-  const handleShare = (request: any) => {
-    const processedRequest = refineFormula(state);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/formula`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        configuration: { ...processedRequest },
-        txVariant: variant,
-        integrationType: "advance",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
 
   return (
     <span
