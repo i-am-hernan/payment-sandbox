@@ -6,6 +6,10 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: false, // Set to true to ignore TypeScript errors during build
   },
+  // images: {
+  //   domains: ["localhost", "yourdomain.com", "externaldomain.com"],
+  //   // loader: "custom",
+  // },
   reactStrictMode: false,
   // Custom webpack configuration
   webpack: (config, { isServer }) => {
@@ -26,10 +30,7 @@ module.exports = {
     });
 
     // Resolve path aliases (optional)
-    config.resolve.alias["@components"] = path.join(
-      __dirname,
-      "src/components"
-    );
+    config.resolve.alias["@components"] = path.join(__dirname, "src/components");
     config.resolve.alias["@styles"] = path.join(__dirname, "src/styles");
     config.resolve.alias["@utils"] = path.join(__dirname, "src/utils");
     config.resolve.alias["@public"] = path.join(__dirname, "public");
