@@ -177,6 +177,12 @@ const formulaSlice = createSlice({
       state.build.request.payments.returnUrl = action.payload;
       state.build.request.sessions.returnUrl = action.payload;
     },
+    updateBuildMerchantAccount: (state, action: PayloadAction<string>) => {
+      state.build.request.paymentMethods.merchantAccount = action.payload;
+      state.build.request.payments.merchantAccount = action.payload;
+      state.build.request.paymentsDetails.merchantAccount = action.payload;
+      state.build.request.sessions.merchantAccount = action.payload;
+    },
     updateAdyenWebVersion: (state, action: PayloadAction<string>) => {
       state.adyenWebVersion = action.payload;
     },

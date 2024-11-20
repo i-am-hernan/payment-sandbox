@@ -28,6 +28,7 @@ const {
   updatePaymentsDetailsRequest,
   updateFormula,
   updateApiRequestMerchantAccount,
+  updateBuildMerchantAccount,
   updateRun,
   updateReset,
   updateVariantReturnUrl,
@@ -72,34 +73,43 @@ const Page: any = () => {
 
   useEffect(() => {
     const syncFormula = (formula: any) => {
-      if (formula && formula.success && merchantAccount) {
-        let { data } = formula;
-        let { configuration } = data;
-        dispatch(updateFormula({ ...configuration }));
-        dispatch(updateApiRequestMerchantAccount(merchantAccount));
-        dispatch(updateReset());
-        dispatch(updateRun());
-      }
+      let { data } = formula;
+      let { configuration } = data;
+      dispatch(updateFormula({ ...configuration }));
+    };
+    const updateMerchantAccount = (merchantAccount: string) => {
+      dispatch(updateApiRequestMerchantAccount(merchantAccount));
+      dispatch(updateBuildMerchantAccount(merchantAccount));
+    };
+    const updateReturnUrl = (returnUrl: string) => {
+      dispatch(updateBuildCheckoutReturnUrls(returnUrl));
+      dispatch(updateVariantReturnUrl(returnUrl));
     };
 
-    syncFormula(formula);
-  }, [formula, merchantAccount]);
-
-  useEffect(() => {
-    if (variant) {
-      dispatch(
-        updateBuildCheckoutReturnUrls(
-          `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
-        )
-      );
-      dispatch(
-        updateVariantReturnUrl(
-          `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
-        )
-      );
+    const syncSandBoxWithFormula = () => {
       dispatch(updateReset());
+    };
+
+    const rebuildCheckout = () => {
+      dispatch(updateRun());
+    };
+
+    if (variant && formula && merchantAccount) {
+      const isDefault = id === null ? true : false;
+      if (isDefault) {
+        // if we get the default configuration, then we set the return url to the default
+        updateReturnUrl(
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
+        );
+      } else if (formula.success) {
+        syncFormula(formula);
+      }
+      // We will never store merchant account in data layer, need to update global state with cookie value
+      updateMerchantAccount(merchantAccount);
+      syncSandBoxWithFormula();
+      rebuildCheckout();
     }
-  }, [variant]);
+  }, [variant, formula, merchantAccount, id]);
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];

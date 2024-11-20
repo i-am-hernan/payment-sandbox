@@ -92,7 +92,6 @@ export const useAdyenAdvance = (
       paymentMethodsResponse: paymentMethodsResponse,
     };
 
-    console.log("configuration", configuration);
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
