@@ -11,12 +11,12 @@ import Html from "@/components/custom/sandbox/tabs/Html";
 import Script from "@/components/custom/sandbox/tabs/Script";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
+import { useFormula } from "@/hooks/useFormula";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useApi } from "@/hooks/useApi";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 interface SectionType {
   section: "Client" | "Server" | "Webhooks";
@@ -26,13 +26,6 @@ const {
   updatePaymentMethodsRequest,
   updatePaymentsRequest,
   updatePaymentsDetailsRequest,
-  updateFormula,
-  updateApiRequestMerchantAccount,
-  updateBuildMerchantAccount,
-  updateRun,
-  updateReset,
-  updateVariantReturnUrl,
-  updateBuildCheckoutReturnUrls,
 } = formulaActions;
 
 const Page: any = () => {
@@ -41,21 +34,13 @@ const Page: any = () => {
   const { variant } = useParams<{
     variant: string;
   }>();
-  const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-
-  const {
-    data: formula,
-    loading: loadingFormula,
-    error: formulaError,
-  } = useApi(`api/formula${id ? "/" + id : ""}`, "GET");
+  const { formulaLoading, formulaError, formulaSuccess } = useFormula(variant);
 
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
 
-  const { defaultMerchantAccount, merchantAccount } = useSelector(
+  const { defaultMerchantAccount } = useSelector(
     (state: RootState) => state.user
   );
 
@@ -70,46 +55,6 @@ const Page: any = () => {
     payments: paymentsAPIVersion,
     paymentsDetails: paymentsDetailsAPIVersion,
   } = checkoutAPIVersion;
-
-  useEffect(() => {
-    const syncFormula = (formula: any) => {
-      let { data } = formula;
-      let { configuration } = data;
-      dispatch(updateFormula({ ...configuration }));
-    };
-    const updateMerchantAccount = (merchantAccount: string) => {
-      dispatch(updateApiRequestMerchantAccount(merchantAccount));
-      dispatch(updateBuildMerchantAccount(merchantAccount));
-    };
-    const updateReturnUrl = (returnUrl: string) => {
-      dispatch(updateBuildCheckoutReturnUrls(returnUrl));
-      dispatch(updateVariantReturnUrl(returnUrl));
-    };
-
-    const syncSandBoxWithFormula = () => {
-      dispatch(updateReset());
-    };
-
-    const rebuildCheckout = () => {
-      dispatch(updateRun());
-    };
-
-    if (variant && formula && merchantAccount) {
-      const isDefault = id === null ? true : false;
-      if (isDefault) {
-        // if we get the default configuration, then we set the return url to the default
-        updateReturnUrl(
-          `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
-        );
-      } else if (formula.success) {
-        syncFormula(formula);
-      }
-      // We will never store merchant account in data layer, need to update global state with cookie value
-      updateMerchantAccount(merchantAccount);
-      syncSandBoxWithFormula();
-      rebuildCheckout();
-    }
-  }, [variant, formula, merchantAccount, id]);
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];

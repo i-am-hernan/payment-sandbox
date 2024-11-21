@@ -2,11 +2,8 @@ import dbConnect from "@/lib/db";
 import Formula from "@/schema/Formula";
 import { NextResponse } from "next/server";
 
-//TODO: Change to NEXT_PUBLIC_API_URL
-const BASE_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
-
 //TODO: Move to constants file or configuration file
-const STARTER_FORMULA_SLUG = "starter-formula";
+const defaultFormulaId = process.env.DEFAULT_FORMULA_ID;
 
 export async function GET(request: Request) {
   console.log("Request to GET Starter Formula");
@@ -15,11 +12,11 @@ export async function GET(request: Request) {
     await dbConnect();
     console.log("DB Connected");
 
-    let formula = await Formula.findOne({ slug: STARTER_FORMULA_SLUG });
+    let formula = await Formula.findById(defaultFormulaId);
 
     if (!formula) {
       throw new Error(
-        `Starter Formula not found. Starter Formula Slug attempted: ${STARTER_FORMULA_SLUG}`
+        `Starter Formula not found`
       );
     }
 
