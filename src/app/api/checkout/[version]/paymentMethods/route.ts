@@ -1,23 +1,18 @@
-export async function POST(
-  request: Request,
-  { params }: { params: { version: string } }
-) {
+export async function POST(request: Request, { params }: { params: { version: string } }) {
   try {
     // TODO: Had to change this from await request.json() to request.body.
     const requestBody = await request.json();
-    const response = await fetch(
-      `https://checkout-test.adyen.com/${params.version}/paymentMethods`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": `${process.env.ADYEN_API_KEY}`,
-        },
-        body: JSON.stringify({
-          ...requestBody,
-        }),
-      }
-    );
+    console.log(requestBody);
+    const response = await fetch(`https://checkout-test.adyen.com/${params.version}/paymentMethods`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": `${process.env.ADYEN_API_KEY}`,
+      },
+      body: JSON.stringify({
+        ...requestBody,
+      }),
+    });
 
     if (!response.ok) {
       throw response;
