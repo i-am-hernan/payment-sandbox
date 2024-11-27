@@ -18,7 +18,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
   return (
     <div className="w-full px-5">
       <Button
-        variant="default"
+        variant="ghost"
         size="sm"
         className="bg-background flex flex-auto w-full justify-start text-xs text-foreground !py-none hover:bg-background mb-2"
         onClick={toggleExpand}
