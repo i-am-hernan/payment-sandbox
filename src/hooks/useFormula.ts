@@ -1,7 +1,7 @@
 import { useApi } from "@/hooks/useApi";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,6 +19,7 @@ export const useFormula = (variant: string) => {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const redirectResult = searchParams.get("redirectResult");
   const { data, error } = useApi(`api/formula${id ? "/" + id : ""}`, "GET");
 
   const { merchantAccount } = useSelector((state: RootState) => state.user);
@@ -37,9 +38,7 @@ export const useFormula = (variant: string) => {
 
   useEffect(() => {
     const syncFormula = (formula: any) => {
-      let { data } = formula;
-      let { configuration } = data;
-      dispatch(updateFormula({ ...configuration }));
+      dispatch(updateFormula({ ...formula }));
     };
     const updateMerchantAccount = (merchantAccount: string) => {
       dispatch(updateApiRequestMerchantAccount(merchantAccount));
@@ -58,6 +57,10 @@ export const useFormula = (variant: string) => {
       dispatch(updateRun());
     };
 
+    const storeFormulaToLocalStorage = (data: any) => {
+      sessionStorage.setItem("formula", JSON.stringify(data));
+    };
+
     if (variant && data && merchantAccount) {
       if (data.error || data.success === false || error) {
         setFormula({
@@ -71,13 +74,23 @@ export const useFormula = (variant: string) => {
         });
       } else {
         const isDefault = id === null ? true : false;
-        if (isDefault) {
-          // if we get the default configuration, then we set the return url to the default
+        let configuration = data?.data?.configuration;
+
+        if (redirectResult) {
+          const sessionStoredFormula = sessionStorage.getItem("formula");
+          if (sessionStoredFormula) {
+            syncFormula(JSON.parse(sessionStoredFormula));
+          }
+        } else if (id) {
+          syncFormula(configuration);
+          storeFormulaToLocalStorage(configuration);
+        } else if (isDefault) {
+          syncFormula(configuration);
           updateReturnUrl(
             `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
           );
+          storeFormulaToLocalStorage(configuration);
         }
-        syncFormula(data);
         updateMerchantAccount(merchantAccount);
         syncSandBoxWithFormula();
         rebuildCheckout();
@@ -88,7 +101,7 @@ export const useFormula = (variant: string) => {
         });
       }
     }
-  }, [variant, data, merchantAccount, id]);
+  }, [variant, data, merchantAccount]);
 
   return { formulaLoading, formulaError, formulaSuccess };
 };

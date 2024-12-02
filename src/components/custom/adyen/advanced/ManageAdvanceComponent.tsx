@@ -47,7 +47,6 @@ export const ManageAdvanceComponent = () => {
   }>();
   const searchParams = useSearchParams();
   const redirectResultQueryParameter = searchParams.get("redirectResult");
-
   useEffect(() => {
     if (redirectResultQueryParameter && !isRedirect) {
       dispatch(updateIsRedirect(true));

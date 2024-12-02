@@ -101,7 +101,7 @@ const UpdateMerchantCookie = () => {
                 </p>
               </div>
             )}
-            {!merchantAccount && <Loading />}
+            {!merchantAccount && <Loading className="text-foreground" />}
           </Button>
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>
@@ -112,12 +112,13 @@ const UpdateMerchantCookie = () => {
                 Choose Your Merchant Account
               </DialogTitle>
               <DialogDescription className="text-[13px]">
-                Select the merchant account you want to submit the payment with.
+                Enter your merchant account or use the default account. To use
+                default account hit 'X'.
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSave}>
               {error && (
-                <div className="text-red-500 text-xs mb-2">{error}</div>
+                <p className="text-red-500 text-xs mb-1 text-left">{error}</p>
               )}
               <div className="flex items-center">
                 <div className="flex-1">
@@ -126,17 +127,16 @@ const UpdateMerchantCookie = () => {
                   </Label>
                   <Input
                     id="name"
-                    placeholder={defaultMerchantAccount}
                     value={merchantAccountLocal}
                     onChange={(e) => setMerchantAccountLocal(e.target.value)}
                     className="rounded-r-none text-foreground"
                   />
                 </div>
                 <Button
-                  className="w-24 rounded-l-none text-xs  text-background"
+                  className="w-20 rounded-l-none text-xs text-background"
                   type="submit"
                 >
-                  {isLoading && <Loading />}
+                  {isLoading && <Loading className="text-background" />}
                   {!isLoading && <p>Save</p>}
                 </Button>
               </div>

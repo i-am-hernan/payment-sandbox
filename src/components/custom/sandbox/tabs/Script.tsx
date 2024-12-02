@@ -304,7 +304,7 @@ const Script = () => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
-        {loadingSdkSpecData && <Loading />}
+        {loadingSdkSpecData && <Loading className="text-foreground" />}
         <Version
           label={"Adyen Web"}
           value={adyenWebVersion}

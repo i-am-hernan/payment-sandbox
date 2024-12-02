@@ -14,7 +14,6 @@ import { RootState } from "@/store/store";
 import { refineFormula } from "@/utils/utils";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ShareIcon from "@mui/icons-material/Share";
-import Tooltip from "@mui/material/Tooltip";
 import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";

@@ -217,7 +217,6 @@ const Api = (props: any) => {
             if (stringValue === apiRequest.stringified) {
               return;
             } else {
-              console.log("dispatching: ", stringValue);
               dispatchApiRequest({
                 type: "SET_BOTH",
                 payload: {

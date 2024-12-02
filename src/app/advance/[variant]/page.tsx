@@ -11,6 +11,7 @@ import Html from "@/components/custom/sandbox/tabs/Html";
 import Script from "@/components/custom/sandbox/tabs/Script";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
+import Loading from "@/components/custom/utils/Loading";
 import { useFormula } from "@/hooks/useFormula";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
@@ -35,7 +36,6 @@ const Page: any = () => {
     variant: string;
   }>();
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(variant);
-
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
   );
@@ -203,9 +203,45 @@ const Page: any = () => {
       </header>
       <main>
         <Sandbox
-          main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
-          topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
-          bottomRight={<SandBoxTabs tabsMap={bottomRightTabsMap} />}
+          main={
+            formulaLoading ? (
+              <Loading className="text-foreground" />
+            ) : formulaError ? (
+              <div className="text-error p-4">
+                Error loading formula: {formulaError}
+              </div>
+            ) : !formulaSuccess ? (
+              <div className="text-warning p-4">Formula not loaded</div>
+            ) : (
+              <SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />
+            )
+          }
+          topRight={
+            formulaLoading ? (
+              <Loading className="text-foreground" />
+            ) : formulaError ? (
+              <div className="text-error p-4">
+                Error loading formula: {formulaError}
+              </div>
+            ) : !formulaSuccess ? (
+              <div className="text-warning p-4">Formula not loaded</div>
+            ) : (
+              <SandBoxTabs tabsMap={topRightTabsMap} />
+            )
+          }
+          bottomRight={
+            formulaLoading ? (
+              <Loading className="text-foreground" />
+            ) : formulaError ? (
+              <div className="text-error p-4">
+                Error loading formula: {formulaError}
+              </div>
+            ) : !formulaSuccess ? (
+              <div className="text-warning p-4">Formula not loaded</div>
+            ) : (
+              <SandBoxTabs tabsMap={bottomRightTabsMap} />
+            )
+          }
         />
       </main>
       <footer>

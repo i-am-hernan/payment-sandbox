@@ -11,7 +11,7 @@ export const useAdyenAdvanceRedirect = (
   checkoutAPIVersion: {
     paymentMethods: string;
     payments: string;
-    paymentDetails: string;
+    paymentsDetails: string;
   },
   paymentsDetailsRequest: any,
   redirectResult: any
@@ -19,11 +19,11 @@ export const useAdyenAdvanceRedirect = (
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  
+
   useEffect(() => {
     let onAdditionalDetails = async () => {
       const response = await fetch(
-        `/api/checkout/v${checkoutAPIVersion.paymentDetails}/payment/details`,
+        `/api/checkout/v${checkoutAPIVersion.paymentsDetails}/payment/details`,
         {
           method: "POST",
           headers: {
@@ -53,7 +53,7 @@ export const useAdyenAdvanceRedirect = (
         setError(error);
       }
     }
-  }, [variant, paymentsDetailsRequest, checkoutAPIVersion]);
+  }, [variant, paymentsDetailsRequest,]);
 
   return { error, result, loading };
 };

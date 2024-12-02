@@ -18,13 +18,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { formulaActions } from "@/store/reducers";
 import { RootState } from "@/store/store";
-import { refineFormula } from "@/utils/utils";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import RestoreIcon from "@mui/icons-material/Restore";
 import Tooltip from "@mui/material/Tooltip";
-import { useParams } from "next/navigation";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { refineFormula } from "@/utils/utils";
 
 const {
   updateRun,
@@ -36,14 +35,35 @@ const {
 } = formulaActions;
 
 const Topbar = (props: any) => {
-  const state = useSelector((state: RootState) => state.formula);
-  const { unsavedChanges } = state;
+  const storeFormula = useSelector((state: RootState) => state.formula);
+  const { unsavedChanges } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
     (value) => value
   ).length;
 
   const containerRef = useRef<HTMLSpanElement>(null);
+
+  const storeToLocalStorage = (data: any) => {
+    sessionStorage.setItem("formula", JSON.stringify(data));
+  };
+
+  const clearRedirectInfo = () => {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    // Remove redirect specific parameters
+    params.delete("redirectResult");
+    params.delete("paRes");
+    params.delete("MD");
+    params.delete("sessionId");
+    params.delete("sessionData");
+
+    // Create new URL with remaining parameters
+    const newUrl = `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
+
+    window.history.replaceState({}, document.title, newUrl);
+  };
 
   return (
     <span
@@ -127,13 +147,7 @@ const Topbar = (props: any) => {
             size="sm"
             className="px-4"
             onClick={() => {
-              const clearRedirectInfo = () => {
-                window.history.replaceState(
-                  {},
-                  document.title,
-                  window.location.pathname
-                );
-              };
+              storeToLocalStorage(refineFormula(storeFormula));
               clearRedirectInfo();
               dispatch(updateIsRedirect(false));
               dispatch(updateRun());

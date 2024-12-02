@@ -2,7 +2,6 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenAdvanceRedirect } from "@/hooks/useAdyenAdvanceRedirect";
-import { useRef } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
