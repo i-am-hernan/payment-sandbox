@@ -241,7 +241,7 @@ const Api = (props: any) => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
-        {loadingApiSpecData && <Loading />}
+        {loadingApiSpecData && <Loading className="text-foreground" />}
         <Version
           label={api}
           value={checkoutAPIVersion[api]}
