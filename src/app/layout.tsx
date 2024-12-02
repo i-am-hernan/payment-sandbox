@@ -1,19 +1,8 @@
+'use client'
+
 import React from "react";
 import Providers from "../store/provider";
 import "../styles/globals.css";
-
-export const metadata = {
-  title: 'Formulize | Build your own',
-  description: 'Adyen Sandbox Environment',
-  icons: {
-    icon: [
-      {
-        url: '/icons/cart.svg',
-        type: 'image/svg+xml',
-      }
-    ],
-  },
-};
 
 type LayoutProps = {
   children: React.ReactNode;
