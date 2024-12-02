@@ -26,7 +26,7 @@ const UpdateMerchantCookie = () => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false); // New state variable
-  const [merchantAccountLocal, setMerchantAccountLocal] = useState("");
+  const [merchantAccountLocal, setMerchantAccountLocal] = useState(process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || "");
   const dispatch = useDispatch();
   const { defaultMerchantAccount, merchantAccount } = useSelector(
     (state: RootState) => state.user

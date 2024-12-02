@@ -12,6 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ children }: any) => {
   return (
     <html lang="en">
       <head>
+        <title>Formulize | Build your checkout</title>
         <link 
           rel="icon" 
           type="image/svg+xml" 
