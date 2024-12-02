@@ -54,7 +54,7 @@ const OpenApiList = (props: any) => {
             <AccordionContent>
               <div className="px-4">
                 <p className="text-xs pb-2 text-foreground">
-                  {parseStringWithLinks(properties[property].description)}
+                  {properties[property] && properties[property].description && parseStringWithLinks(properties[property].description)}
                 </p>
                 {properties[property].type === "string" &&
                   !properties[property].enum && (
