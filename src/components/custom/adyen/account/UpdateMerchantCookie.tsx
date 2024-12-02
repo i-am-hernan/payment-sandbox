@@ -18,6 +18,7 @@ import Cookies from "js-cookie";
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import CheckIcon from '@mui/icons-material/Check';
 
 const { updateMerchantAccount } = userActions;
 const { updateApiRequestMerchantAccount } = formulaActions;

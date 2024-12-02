@@ -17,8 +17,11 @@ import ShareIcon from "@mui/icons-material/Share";
 import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import CheckIcon from "@mui/icons-material/Check";
 
 const ShareableButton = (props: any) => {
+  const [copied, setCopied] = useState(false);
+
   const { disabled } = props;
   const { variant } = useParams<{
     variant: string;
@@ -38,7 +41,7 @@ const ShareableButton = (props: any) => {
       txVariant: variant,
       integrationType: "advance",
     });
-    
+
     setFormula({ ...formula, loading: true });
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/formula`, {
       method: "POST",
@@ -57,10 +60,20 @@ const ShareableButton = (props: any) => {
         setFormula({ data: null, loading: false, error });
       });
   };
+  // when you close the dialog box update the copied back to false
+  const handleClose = () => {
+    setCopied(false);
+  };
 
   return (
     <div ref={containerRef}>
-      <Dialog>
+      <Dialog
+        onOpenChange={(open) => {
+          if (!open) {
+            handleClose();
+          }
+        }}
+      >
         <DialogTrigger asChild>
           <Button
             key="clear"
@@ -105,11 +118,14 @@ const ShareableButton = (props: any) => {
                       navigator.clipboard.writeText(
                         `${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`
                       );
+                      setCopied(true);
                     }}
                   >
-                    {
+                    {copied ? (
+                      <CheckIcon className="!text-foreground !text-[16px] pt-0 rounded-l-none" />
+                    ) : (
                       <ContentCopyIcon className="!text-foreground !text-[16px] pt-0 rounded-l-none" />
-                    }
+                    )}
                   </Button>
                 </div>
               </div>
