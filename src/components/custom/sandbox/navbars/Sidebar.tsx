@@ -155,12 +155,16 @@ const Sidebar = (props: any) => {
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
                   <DrawerContent className="h-full w-[20vw]">
-                    <DrawerHeader>
-                      <DrawerTitle className="text-foreground text-sm">
+                    <DrawerHeader className="pb-2">
+                      <DrawerTitle className="text-foreground text-sm py-0">
                         Online Payments
                       </DrawerTitle>
                     </DrawerHeader>
-                    <div className="space-y-2">
+                    <div className="space-y-1">
+                      <ExpandableCards
+                        paymentMethodName={"Dropin"}
+                        paymentMethodType={"dropin"}
+                      />
                       {paymentMethodsResponse &&
                         paymentMethodsResponse.paymentMethods &&
                         paymentMethodsResponse.paymentMethods.map(

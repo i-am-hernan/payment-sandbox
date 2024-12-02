@@ -89,7 +89,9 @@ const UpdateMerchantCookie = () => {
             className="w-[50%]"
             onClick={() => {
               setOpen(true);
-              setMerchantAccountLocal("");
+              setMerchantAccountLocal(
+                process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || ""
+              );
               setError("");
             }}
           >
@@ -109,11 +111,10 @@ const UpdateMerchantCookie = () => {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle className="text-[16px] text-foreground">
-                Choose Your Merchant Account
+                Choose a merchant account
               </DialogTitle>
               <DialogDescription className="text-[13px]">
-                Enter your merchant account or use the default account. To use
-                default account hit X.
+                Enter a merchant account or use the default account.
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSave}>
