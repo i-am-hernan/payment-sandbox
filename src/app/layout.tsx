@@ -1,9 +1,19 @@
-"use client";
-
-import Head from "next/head";
 import React from "react";
 import Providers from "../store/provider";
 import "../styles/globals.css";
+
+export const metadata = {
+  title: 'Formulize | Build your own',
+  description: 'Adyen Sandbox Environment',
+  icons: {
+    icon: [
+      {
+        url: '/icons/cart.svg',
+        type: 'image/svg+xml',
+      }
+    ],
+  },
+};
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -11,13 +21,22 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }: any) => {
   return (
-    <html>
-      <Head>
-        <title>{"Adyen Sandbox"}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
+    <html lang="en">
+      <head>
+        <link 
+          rel="icon" 
+          type="image/svg+xml" 
+          href="/icons/cart.svg" 
+          sizes="any"
+        />
+        <link 
+          rel="shortcut icon" 
+          type="image/svg+xml" 
+          href="/icons/cart.svg"
+        />
+      </head>
       <body>
-        <Providers>{children} </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
