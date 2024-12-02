@@ -113,7 +113,7 @@ const UpdateMerchantCookie = () => {
               </DialogTitle>
               <DialogDescription className="text-[13px]">
                 Enter your merchant account or use the default account. To use
-                default account hit 'X'.
+                default account hit X.
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSave}>
