@@ -20,7 +20,7 @@ export const useFormula = (variant: string) => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const redirectResult = searchParams.get("redirectResult");
-  const { data, error } = useApi(`api/formula${id ? "/" + id : ""}`, "GET");
+  const { data, error: apiError } = useApi(`api/formula${id ? "/" + id : ""}`, "GET");
 
   const { merchantAccount } = useSelector((state: RootState) => state.user);
 
@@ -62,13 +62,13 @@ export const useFormula = (variant: string) => {
     };
 
     if (variant && data && merchantAccount) {
-      if (data.error || data.success === false || error) {
+      if (data.error || data.success === false || apiError) {
         setFormula({
           loading: false,
           error: data.error
             ? data.error
-            : error
-              ? error
+            : apiError
+              ? apiError
               : "Error setting formula",
           success: false,
         });
