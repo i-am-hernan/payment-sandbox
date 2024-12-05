@@ -142,6 +142,7 @@ const Page: any = () => {
           />
         ),
         value: "paymentmethods",
+        unsavedChanges: unsavedChanges.paymentMethods,
       },
       {
         title: `/v${paymentsAPIVersion}/payments`,
@@ -159,6 +160,7 @@ const Page: any = () => {
           />
         ),
         value: "payments",
+        unsavedChanges: unsavedChanges.payments,
       },
       {
         title: `/v${paymentsDetailsAPIVersion}/payment/details`,

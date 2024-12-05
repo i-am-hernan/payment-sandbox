@@ -1,6 +1,6 @@
 import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
-import Enum from "@/components/custom/sandbox/editors/Enum";
+import Version from "@/components/custom/sandbox/editors/Version";
 import {
   Accordion,
   AccordionContent,
@@ -12,9 +12,9 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { createHtmlCode } from "@/utils/utils";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
+import { createHtmlCode } from "@/utils/utils";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,56 +24,38 @@ const Html = () => {
   const { adyenWebVersion, build } = useSelector(
     (state: RootState) => state.formula
   );
+  const { theme } = useSelector((state: RootState) => state.user);
   const { variant } = useParams<{
     variant: string;
   }>();
+
+  const handleVersionChange = (value: any) => {
+    dispatch(addUnsavedChanges({ html: build.adyenWebVersion !== value }));
+    dispatch(updateAdyenWebVersion(value));
+  };
   const dispatch = useDispatch();
 
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block overflow-y-scroll"
+      className="inline-block overflow-y-scroll"
     >
       <ResizablePanel defaultSize={50} className="sm:flex">
         <Code
           type="html"
           code={createHtmlCode(adyenWebVersion, variant)}
           readOnly={true}
+          theme={theme}
         />
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50}>
-        <p className="border-b-2 flex text-sm">
-          <span className="border-r-2 px-2 py-[1px]">version</span>
-        </p>
-        <Accordion
-          type="single"
-          collapsible
-          className="w-full"
-          defaultValue="select-version"
-        >
-          <AccordionItem value="select-version" className="px-3">
-            <AccordionTrigger className="px-1 py-3">
-              <p className="text-sm">{"Adyen Web"}</p>
-            </AccordionTrigger>
-            <AccordionContent>
-              <p className="text-xs pb-3 px-1">
-                Find the release notes for the version you are using here.
-              </p>
-              <Enum
-                value={adyenWebVersion}
-                set={WEBVERSIONS}
-                title="Adyen Web"
-                onChange={(value: any) => {
-                  dispatch(
-                    addUnsavedChanges({ html: build.adyenWebVersion !== value })
-                  );
-                  dispatch(updateAdyenWebVersion(value));
-                }}
-              />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <Version
+          label={"Adyen Web"}
+          value={adyenWebVersion}
+          options={WEBVERSIONS}
+          onChange={handleVersionChange}
+        />
       </ResizablePanel>
     </ResizablePanelGroup>
   );

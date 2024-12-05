@@ -20,7 +20,10 @@ export const useFormula = (variant: string) => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const redirectResult = searchParams.get("redirectResult");
-  const { data, error: apiError } = useApi(`api/formula${id ? "/" + id : ""}`, "GET");
+  const { data, error: apiError } = useApi(
+    `api/formula${id ? "/" + id : ""}`,
+    "GET"
+  );
 
   const { merchantAccount } = useSelector((state: RootState) => state.user);
 
@@ -83,6 +86,14 @@ export const useFormula = (variant: string) => {
           }
         } else if (id) {
           syncFormula(configuration);
+          if (configuration.returnUrl) {
+            const returnUrl = new URL(configuration.returnUrl);
+            returnUrl.searchParams.set("id", id);
+            updateReturnUrl(returnUrl.toString());
+          } else {
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}?id=${id}`;
+            updateReturnUrl(returnUrl);
+          }
           storeFormulaToLocalStorage(configuration);
         } else if (isDefault) {
           syncFormula(configuration);

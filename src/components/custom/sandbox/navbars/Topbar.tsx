@@ -47,21 +47,17 @@ const Topbar = (props: any) => {
   const storeToLocalStorage = (data: any) => {
     sessionStorage.setItem("formula", JSON.stringify(data));
   };
+  // need to update this function to take specific query parameters to delete so that I can call it with the reset button and also clear the id query parameter
 
-  const clearRedirectInfo = () => {
+  const clearUrlParams = (paramsToDelete: string[]) => {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 
-    // Remove redirect specific parameters
-    params.delete("redirectResult");
-    params.delete("paRes");
-    params.delete("MD");
-    params.delete("sessionId");
-    params.delete("sessionData");
+    // Remove specified parameters
+    paramsToDelete.forEach((param) => params.delete(param));
 
     // Create new URL with remaining parameters
     const newUrl = `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
-
     window.history.replaceState({}, document.title, newUrl);
   };
 
@@ -108,6 +104,14 @@ const Topbar = (props: any) => {
                   onClick={() => {
                     dispatch(resetFormula());
                     dispatch(updateReset());
+                    clearUrlParams([
+                      "redirectResult",
+                      "paRes",
+                      "MD",
+                      "sessionId",
+                      "sessionData",
+                      "id",
+                    ]);
                   }}
                 >
                   Reset
@@ -148,7 +152,13 @@ const Topbar = (props: any) => {
             className="px-4"
             onClick={() => {
               storeToLocalStorage(refineFormula(storeFormula));
-              clearRedirectInfo();
+              clearUrlParams([
+                "redirectResult",
+                "paRes",
+                "MD",
+                "sessionId",
+                "sessionData",
+              ]);
               dispatch(updateIsRedirect(false));
               dispatch(updateRun());
               dispatch(resetUnsavedChanges());

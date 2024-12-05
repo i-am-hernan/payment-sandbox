@@ -11,7 +11,7 @@ const Version = (props: any) => {
           </p>
         </span>
       </span>
-      <div className="border-b-2 px-1 py-3">
+      <div className="border-b-2 px-3 py-3">
         <p className="text-xs pb-2 px-1 text-foreground">
           {`Change the version of ${label} to test different scenarios.`}
         </p>
