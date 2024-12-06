@@ -18,6 +18,8 @@ import type { RootState } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
+import React from "react";
 
 interface SectionType {
   section: "Client" | "Server" | "Webhooks";
@@ -200,60 +202,63 @@ const Page: any = () => {
 
   return (
     <div className={`${theme} border-r-2`}>
-      <header>
-        <Topbar />
-      </header>
-      <main>
-        <Sandbox
-          main={
-            formulaLoading ? (
-              <Loading className="text-foreground" />
-            ) : formulaError ? (
-              <div className="text-error p-4">
-                Error loading formula: {formulaError}
-              </div>
-            ) : !formulaSuccess ? (
-              <div className="text-warning p-4">Formula not loaded</div>
-            ) : (
-              <SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />
-            )
-          }
-          topRight={
-            formulaLoading ? (
-              <Loading className="text-foreground" />
-            ) : formulaError ? (
-              <div className="text-error p-4">
-                Error loading formula: {formulaError}
-              </div>
-            ) : !formulaSuccess ? (
-              <div className="text-warning p-4">Formula not loaded</div>
-            ) : (
-              <SandBoxTabs tabsMap={topRightTabsMap} />
-            )
-          }
-          bottomRight={
-            formulaLoading ? (
-              <Loading className="text-foreground" />
-            ) : formulaError ? (
-              <div className="text-error p-4">
-                Error loading formula: {formulaError}
-              </div>
-            ) : !formulaSuccess ? (
-              <div className="text-warning p-4">Formula not loaded</div>
-            ) : (
-              <SandBoxTabs tabsMap={bottomRightTabsMap} />
-            )
-          }
-        />
-      </main>
-      <footer>
-        <Sidebar
-          section={section}
-          setSection={setSection}
-          unsavedChanges={unsavedChanges}
-          paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
-        />
-      </footer>
+      <React.Fragment>
+        <header>
+          <Topbar />
+        </header>
+        <main>
+          <Sandbox
+            main={
+              formulaLoading ? (
+                <Loading className="text-foreground" />
+              ) : formulaError ? (
+                <div className="text-error p-4">
+                  Error loading formula: {formulaError}
+                </div>
+              ) : !formulaSuccess ? (
+                <div className="text-warning p-4">Formula not loaded</div>
+              ) : (
+                <SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />
+              )
+            }
+            topRight={
+              formulaLoading ? (
+                <Loading className="text-foreground" />
+              ) : formulaError ? (
+                <div className="text-error p-4">
+                  Error loading formula: {formulaError}
+                </div>
+              ) : !formulaSuccess ? (
+                <div className="text-warning p-4">Formula not loaded</div>
+              ) : (
+                <SandBoxTabs tabsMap={topRightTabsMap} />
+              )
+            }
+            bottomRight={
+              formulaLoading ? (
+                <Loading className="text-foreground" />
+              ) : formulaError ? (
+                <div className="text-error p-4">
+                  Error loading formula: {formulaError}
+                </div>
+              ) : !formulaSuccess ? (
+                <div className="text-warning p-4">Formula not loaded</div>
+              ) : (
+                <SandBoxTabs tabsMap={bottomRightTabsMap} />
+              )
+            }
+          />
+        </main>
+        <footer>
+          <Sidebar
+            section={section}
+            setSection={setSection}
+            unsavedChanges={unsavedChanges}
+            paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
+          />
+        </footer>
+      </React.Fragment>
+      <ScreenSizeDialog />
     </div>
   );
 };
