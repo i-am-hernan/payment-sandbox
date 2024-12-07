@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
-  DrawerDescription,
   DrawerHeader,
+  DrawerOverlay,
   DrawerPortal,
   DrawerTitle,
-  DrawerOverlay,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import {
   DropdownMenu,
@@ -27,18 +26,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useApi } from "@/hooks/useApi";
 import { userActions } from "@/store/reducers";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
-import ShortcutIcon from "@mui/icons-material/Shortcut";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebhookIcon from "@mui/icons-material/Webhook";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import Loading from "../../utils/Loading";
-import { ChevronDown } from "lucide-react";
 
 interface SideTab {
   name: string;

@@ -61,7 +61,7 @@ const Sandbox = ({
           })}
         </div>
       </ResizablePanel>
-      <ResizableHandle />
+      {view !== "user" && <ResizableHandle />}
       <ResizablePanel
         defaultSize={
           view === "developer" ? 40 : view === "product" ? 50 : "user" ? 100 : 0

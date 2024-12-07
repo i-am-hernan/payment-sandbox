@@ -242,7 +242,7 @@ const Api = (props: any) => {
           </Button>
         </div>
       </ResizablePanel>
-      <ResizableHandle />
+      {view === "developer" && <ResizableHandle />}
       <ResizablePanel
         className="!overflow-y-scroll"
       >

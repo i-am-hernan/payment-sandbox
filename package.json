@@ -47,6 +47,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@reduxjs/toolkit": "^2.2.3",
     "@uiw/codemirror-theme-abyss": "^4.23.5",
+    "@uiw/codemirror-theme-duotone": "^4.23.6",
     "@uiw/codemirror-theme-github": "^4.22.2",
     "@uiw/react-codemirror": "^4.22.2",
     "class-variance-authority": "^0.7.0",
