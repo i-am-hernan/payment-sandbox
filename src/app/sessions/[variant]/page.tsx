@@ -27,7 +27,7 @@ const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
 
   const { componentState } = useSelector((state: RootState) => state.component);
-  const { theme } = useSelector((state: RootState) => state.user);
+  const { theme, view } = useSelector((state: RootState) => state.user);
   const { variant } = useParams<{
     variant: string;
   }>();
@@ -180,6 +180,7 @@ useEffect(() => {
           main={<SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />}
           topRight={<SandBoxTabs tabsMap={topRightTabsMap} />}
           bottomRight={<SandBoxTabs tabsMap={bottomRightTabsMap} />}
+          view={view}
         />
       </main>
       <footer>
