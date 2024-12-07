@@ -117,14 +117,14 @@ const ShareableButton = (props: any) => {
             {loading && <Loading />}
             {data && !loading && !error && (
               <div className="flex items-stretch">
-                <div className="border border-r-none rounded rounded-r-none border-foreground">
+                <div className="border-border border border-r-none rounded rounded-r-none border-foreground">
                   <p className="!h-[100%] max-w-[350px] flex items-center justify-center flex-1 text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-scroll">
                     {`${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`}
                   </p>
                 </div>
                 <div className="justify-start">
                   <Button
-                    className="h-[100%] py-4 text-xs text-background w-10 rounded-none relative overflow-hidden"
+                    className="h-[100%] py-4 text-xs text-background w-10 rounded-tl-none rounded-bl-none rounded-br-2 rounded-tr-2 relative overflow-hidden "
                     onClick={handleCopy}
                     key="reset"
                     variant="outline"

@@ -31,7 +31,7 @@ export function ScreenSizeDialog() {
     <div ref={containerRef}>
       <Dialog open={isOpen} onOpenChange={() => {}}>
         <DialogPortal container={containerRef.current}>
-          <DialogOverlay className="bg-black/95" />
+          <DialogOverlay className="bg-black/85" />
           <DialogContent
             className="w-[90vw] max-w-[425px] p-7"
             onPointerDownOutside={(e) => e.preventDefault()}
