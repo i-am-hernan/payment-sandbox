@@ -49,7 +49,13 @@ const Sandbox = ({
     >
       <ResizablePanel
         defaultSize={
-          view === "developer" ? 60 : view === "product" ? 50 : "user" ? 0 : 0
+          view === "developer"
+            ? 60
+            : view === "product"
+              ? 50
+              : view === "user"
+                ? 0
+                : 0
         }
         ref={refA}
         maxSize={view === "user" ? 0 : 100}
@@ -64,7 +70,7 @@ const Sandbox = ({
       {view !== "user" && <ResizableHandle />}
       <ResizablePanel
         defaultSize={
-          view === "developer" ? 40 : view === "product" ? 50 : "user" ? 100 : 0
+          view === "developer" ? 40 : view === "product" ? 50 : view === "user" ? 100 : 0
         }
       >
         <ResizablePanelGroup direction="vertical">
