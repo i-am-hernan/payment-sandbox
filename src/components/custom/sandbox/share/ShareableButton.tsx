@@ -69,7 +69,9 @@ const ShareableButton = (props: any) => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`
+      );
       setShowCheck(true);
       setTimeout(() => {
         setShowCheck(false);
