@@ -53,11 +53,10 @@ const Api = (props: any) => {
     (state: RootState) => state.formula
   );
   const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
-  const { theme } = useSelector((state: RootState) => state.user);
+  const { theme, view } = useSelector((state: RootState) => state.user);
   const schemas = checkoutApi?.components?.schemas ?? null;
   const properties = schemas?.[schema]?.properties ?? null;
   const required = schemas?.[schema]?.required ?? null;
-  const [request, setRequest] = useState(globalRequest);
 
   const [apiRequest, dispatchApiRequest] = useReducer(
     apiRequestReducer,
@@ -207,7 +206,11 @@ const Api = (props: any) => {
       direction="horizontal"
       className="bg-background inline-block !overflow-y-scroll"
     >
-      <ResizablePanel defaultSize={50} className="sm:flex bg-code flex-col">
+      <ResizablePanel
+        defaultSize={view === "developer" ? 50 : 0}
+        maxSize={view === "product" ? 0 : 100}
+        className="sm:flex bg-code flex-col"
+      >
         <Code
           type="json"
           code={apiRequest.stringified}
@@ -240,7 +243,9 @@ const Api = (props: any) => {
         </div>
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
+      <ResizablePanel
+        className="!overflow-y-scroll"
+      >
         {loadingApiSpecData && <Loading className="text-foreground" />}
         <Version
           label={api}

@@ -136,8 +136,9 @@ const UpdateMerchantCookie = () => {
                   />
                 </div>
                 <Button
-                  className="min-w-13 text-xs text-background rounded-tl-none rounded-bl-none rounded-br-2 rounded-tr-2"
+                  className="min-w-13 text-xs text-foreground rounded-tl-none rounded-bl-none rounded-br-2 rounded-tr-2"
                   type="submit"
+                  variant="outline"
                 >
                   {isLoading && (
                     <div className="animate-spin text-xs">

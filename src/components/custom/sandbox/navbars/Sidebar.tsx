@@ -38,6 +38,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import Loading from "../../utils/Loading";
+import { ChevronDown } from "lucide-react";
 
 interface SideTab {
   name: string;
@@ -47,7 +48,7 @@ interface SideTab {
   ref: any;
 }
 
-const { updateTheme } = userActions;
+const { updateTheme, updateView } = userActions;
 
 const Sidebar = (props: any) => {
   const {
@@ -56,6 +57,7 @@ const Sidebar = (props: any) => {
     unsavedChanges,
     paymentMethodsMerchantAccount,
     variant,
+    view,
   } = props;
   const {
     html: htmlUnsavedChanges,
@@ -154,15 +156,22 @@ const Sidebar = (props: any) => {
           <div>
             <div>
               <Drawer direction="left">
-                <DrawerTrigger className="pt-3">
-                  <WidgetsIcon className="!text-foreground !text-[20px]" />
-                </DrawerTrigger>
+                <span>
+                  <DrawerTrigger className="mt-2 px-2 pb-2 pt-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
+                    <WidgetsIcon className="!text-foreground !text-[19px]" />
+                  </DrawerTrigger>
+                </span>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
                   <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-sm py-0">
-                        Online Payments
+                        <span className="flex items-center">
+                          <ChevronDown className="h-4 w-4 pr-1 text-grey" />
+                          <span className="display-inline">
+                            Online Payments
+                          </span>
+                        </span>
                       </DrawerTitle>
                     </DrawerHeader>
                     <div>
@@ -207,20 +216,23 @@ const Sidebar = (props: any) => {
                   title={`${tab.name} (${tab.hotKey})`}
                   placement="right-start"
                 >
-                  <Button
-                    key={tab.name}
-                    variant="ghost"
-                    size="icon"
-                    ref={tab.ref}
-                    className={`mt-2 rounded-none ${
-                      section === tab.name
-                        ? "border-[1px] border-adyen "
-                        : "hover:border-[1px] hover:border-adyen hover:border-dotted"
-                    }`}
-                    onClick={() => setSection(tab.name)}
-                  >
-                    {tab.icon}
-                  </Button>
+                  <span>
+                    <Button
+                      key={tab.name}
+                      disabled={view === "user"}
+                      variant="ghost"
+                      size="icon"
+                      ref={tab.ref}
+                      className={`mt-2 rounded-none ${
+                        section === tab.name && view !== "user"
+                          ? "border-[1px] border-adyen"
+                          : "hover:border-[1px] hover:border-adyen hover:border-dotted"
+                      }`}
+                      onClick={() => setSection(tab.name)}
+                    >
+                      {tab.icon}
+                    </Button>
+                  </span>
                 </Tooltip>
                 {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
                   <div className="w-4 h-4 border border-foreground rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-background text-foreground text-xxs">
@@ -237,11 +249,12 @@ const Sidebar = (props: any) => {
               </DropdownMenuTrigger>
               <DropdownMenuPortal container={sidebarRef.current}>
                 <DropdownMenuContent>
-                  <DropdownMenuLabel>Setting</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-xs">
+                    Settings
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem className="text-xs">
-                      <ShortcutIcon className="text-sm" />
                       <p className="px-2">Shortcuts</p>
                       <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
                     </DropdownMenuItem>
@@ -250,7 +263,6 @@ const Sidebar = (props: any) => {
                   <DropdownMenuGroup>
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger className="text-xs">
-                        <DarkModeIcon className="text-sm" />
                         <p className="px-2">Theme</p>
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="">
@@ -269,6 +281,37 @@ const Sidebar = (props: any) => {
                           }}
                         >
                           <span>Light</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger className="text-xs">
+                        <p className="px-2">View</p>
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuSubContent className="">
+                        <DropdownMenuItem
+                          className="text-xs"
+                          onClick={() => {
+                            dispatch(updateView("developer"));
+                          }}
+                        >
+                          <span>Developer</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-xs"
+                          onClick={() => {
+                            dispatch(updateView("product"));
+                          }}
+                        >
+                          <span>Product</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-xs"
+                          onClick={() => {
+                            dispatch(updateView("user"));
+                          }}
+                        >
+                          <span>User</span>
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>

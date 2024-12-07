@@ -36,6 +36,7 @@ const {
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
+  const { view } = props;
   const { unsavedChanges } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
@@ -71,20 +72,25 @@ const Topbar = (props: any) => {
         <UpdateMerchantCookie />
       </div>
       <div className="mr-2">
-        <ShareableButton disabled={totalUnsavedChanges !== 0} />
+        <ShareableButton
+          disabled={totalUnsavedChanges !== 0 || view == "user"}
+        />
       </div>
       <div className="mr-2">
         <AlertDialog>
           <Tooltip title="Reset (⌘ + delete)">
             <AlertDialogTrigger asChild>
-              <Button
-                key="reset"
-                variant="outline"
-                size="sm"
-                className="px-2 pt-0 pb-0"
-              >
-                <RestartAltIcon className="!text-foreground !text-[16px]" />
-              </Button>
+              <span>
+                <Button
+                  key="reset"
+                  disabled={view === "user"}
+                  variant="outline"
+                  size="sm"
+                  className="px-2 pt-0 pb-0"
+                >
+                  <RestartAltIcon className="!text-foreground !text-[16px]" />
+                </Button>
+              </span>
             </AlertDialogTrigger>
           </Tooltip>
           <AlertDialogPortal container={containerRef.current}>

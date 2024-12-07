@@ -33,17 +33,15 @@ const {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
-  const { theme } = useSelector((state: RootState) => state.user);
+  const { theme, defaultMerchantAccount, view } = useSelector(
+    (state: RootState) => state.user
+  );
   const { variant } = useParams<{
     variant: string;
   }>();
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(variant);
   const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
     (state: RootState) => state.formula
-  );
-
-  const { defaultMerchantAccount } = useSelector(
-    (state: RootState) => state.user
   );
 
   const { paymentMethods, payments, paymentsDetails } = request;
@@ -204,7 +202,7 @@ const Page: any = () => {
     <div className={`${theme} border-r-2`}>
       <React.Fragment>
         <header>
-          <Topbar />
+          <Topbar view={view}/>
         </header>
         <main>
           <Sandbox
@@ -247,6 +245,8 @@ const Page: any = () => {
                 <SandBoxTabs tabsMap={bottomRightTabsMap} />
               )
             }
+            view={view}
+            key={view}
           />
         </main>
         <footer>
@@ -256,6 +256,7 @@ const Page: any = () => {
             unsavedChanges={unsavedChanges}
             paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
             variant={variant}
+            view={view}
           />
         </footer>
       </React.Fragment>

@@ -65,7 +65,7 @@ const Script = () => {
   } = useSelector((state: RootState) => state.formula);
   const { adyenWeb }: any = useSelector((state: RootState) => state.specs);
   const { response }: any = useSelector((state: RootState) => state.component);
-  const { theme } = useSelector((state: RootState) => state.user);
+  const { theme, view } = useSelector((state: RootState) => state.user);
   const { paymentMethods } = response;
   const properties = adyenWeb?.checkout ?? null;
 
@@ -265,7 +265,8 @@ const Script = () => {
       className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel
-        defaultSize={50}
+        defaultSize={view === "developer" ? 50 : 0}
+        maxSize={view === "product" ? 0 : 100}
         className="sm:flex bg-code flex-col items-stretch"
       >
         <div className="flex flex-1 overflow-scroll">
@@ -303,7 +304,10 @@ const Script = () => {
         </div>
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={50} className="!overflow-y-scroll">
+      <ResizablePanel
+        defaultSize={view === "developer" ? 50 : 100}
+        className="!overflow-y-scroll"
+      >
         {loadingSdkSpecData && <Loading className="text-foreground" />}
         <Version
           label={"Adyen Web"}
