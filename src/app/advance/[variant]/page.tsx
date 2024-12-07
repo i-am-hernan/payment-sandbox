@@ -15,11 +15,12 @@ import Loading from "@/components/custom/utils/Loading";
 import { useFormula } from "@/hooks/useFormula";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
 import React from "react";
+import { useView } from "@/hooks/useView";
 
 interface SectionType {
   section: "Client" | "Server" | "Webhooks";
@@ -33,23 +34,26 @@ const {
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
-  const { theme, defaultMerchantAccount, view } = useSelector(
+  const { theme, defaultMerchantAccount, merchantAccount, view } = useSelector(
     (state: RootState) => state.user
   );
   const { variant } = useParams<{
     variant: string;
   }>();
-  const { formulaLoading, formulaError, formulaSuccess } = useFormula(variant);
-  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.formula
+  const searchParams = useSearchParams();
+  const viewParam = searchParams.get("view");
+  const { formulaLoading, formulaError, formulaSuccess } = useFormula(
+    variant,
+    view
   );
+  const { run, unsavedChanges, request, checkoutAPIVersion, build } =
+    useSelector((state: RootState) => state.formula);
+  useView(viewParam);
 
   const { paymentMethods, payments, paymentsDetails } = request;
-
   const paymentMethodsMerchantAccount = {
     merchantAccount: `${defaultMerchantAccount}`,
   };
-
   const {
     paymentMethods: paymentMethodsAPIVersion,
     payments: paymentsAPIVersion,
@@ -197,17 +201,17 @@ const Page: any = () => {
     ];
     crumbs = ["advanced", variant];
   }
-
+  
   return (
     <div className={`${theme} border-r-2`}>
       <React.Fragment>
         <header>
-          <Topbar view={view}/>
+          <Topbar view={view} />
         </header>
         <main>
           <Sandbox
             main={
-              formulaLoading ? (
+              formulaLoading || merchantAccount === null ? (
                 <Loading className="text-foreground" />
               ) : formulaError ? (
                 <div className="text-error p-4">
@@ -220,7 +224,7 @@ const Page: any = () => {
               )
             }
             topRight={
-              formulaLoading ? (
+              formulaLoading || merchantAccount === null ? (
                 <Loading className="text-foreground" />
               ) : formulaError ? (
                 <div className="text-error p-4">
@@ -233,7 +237,7 @@ const Page: any = () => {
               )
             }
             bottomRight={
-              formulaLoading ? (
+              formulaLoading || merchantAccount === null ? (
                 <Loading className="text-foreground" />
               ) : formulaError ? (
                 <div className="text-error p-4">

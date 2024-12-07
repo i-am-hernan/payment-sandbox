@@ -24,7 +24,7 @@ const Html = () => {
   const { adyenWebVersion, build } = useSelector(
     (state: RootState) => state.formula
   );
-  const { theme } = useSelector((state: RootState) => state.user);
+  const { theme, view } = useSelector((state: RootState) => state.user);
   const { variant } = useParams<{
     variant: string;
   }>();
@@ -40,7 +40,11 @@ const Html = () => {
       direction="horizontal"
       className="inline-block overflow-y-scroll"
     >
-      <ResizablePanel defaultSize={50} className="sm:flex">
+      <ResizablePanel
+        defaultSize={view === "developer" ? 50 : 0}
+        maxSize={view === "developer" ? 100 : 0}
+        className="sm:flex"
+      >
         <Code
           type="html"
           code={createHtmlCode(adyenWebVersion, variant)}
@@ -48,7 +52,7 @@ const Html = () => {
           theme={theme}
         />
       </ResizablePanel>
-      <ResizableHandle />
+      {view === "developer" && <ResizableHandle />}
       <ResizablePanel defaultSize={50}>
         <Version
           label={"Adyen Web"}

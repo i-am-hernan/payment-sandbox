@@ -95,7 +95,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               key="clear"
               variant="outline"
               size="sm"
-              className="shadow-none px-2 mb-0 pt-0 pb-0 border-r-0 border-t-0 border-b-0 rounded-none border-l-[2px]"
+              className="shadow-none px-2 mb-0 pt-0 pb-0 border-r-0 border-t-0 border-b-0 rounded-none border-l-[2px] border-border"
               onClick={(e) => {
                 if (onExpand) {
                   onExpand();

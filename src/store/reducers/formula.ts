@@ -131,7 +131,34 @@ const formulaSlice = createSlice({
     },
     updateFormula: (state, action: PayloadAction<Partial<Formula>>) => {
       // Here we can add code to reset the request back to empty since we are not storing emty objects, or we try to store empty objects
-      return { ...state, ...action.payload };
+      // So I need to make sure that we dont overwrite the request object
+      const updatedPaymentMethodsRequest = {
+        ...state.request.paymentMethods,
+        ...action.payload.request?.paymentMethods,
+      };
+      const updatedPaymentsRequest = {
+        ...state.request.payments,
+        ...action.payload.request?.payments,
+      };
+      const updatedPaymentsDetailsRequest = {
+        ...state.request.paymentsDetails,
+        ...action.payload.request?.paymentsDetails,
+      };
+      const updatedSessionsRequest = {
+        ...state.request.sessions,
+        ...action.payload.request?.sessions,
+      };
+      const updatedRequest = {
+        paymentMethods: updatedPaymentMethodsRequest,
+        payments: updatedPaymentsRequest,
+        paymentsDetails: updatedPaymentsDetailsRequest,
+        sessions: updatedSessionsRequest,
+      };
+      return {
+        ...state,
+        ...action.payload,
+        request: updatedRequest,
+      };
     },
     updateCheckoutConfiguration: (state, action: PayloadAction<string>) => {
       state.checkoutConfiguration = action.payload;

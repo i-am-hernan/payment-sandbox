@@ -8,7 +8,7 @@ import {
   DrawerOverlay,
   DrawerPortal,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
   DropdownMenu,
@@ -36,6 +36,7 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import Loading from "../../utils/Loading";
+import { clearUrlParams } from "@/utils/utils";
 
 interface SideTab {
   name: string;
@@ -245,26 +246,26 @@ const Sidebar = (props: any) => {
                 <SettingsIcon className="!text-foreground !text-[20px]" />
               </DropdownMenuTrigger>
               <DropdownMenuPortal container={sidebarRef.current}>
-                <DropdownMenuContent>
+                <DropdownMenuContent side="top" className="ml-1 rounded-none">
                   <DropdownMenuLabel className="text-xs">
                     Settings
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem className="text-xs">
+                    <DropdownMenuItem className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted">
                       <p className="px-2">Shortcuts</p>
                       <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuGroup>
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="text-xs">
+                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted">
                         <p className="px-2">Theme</p>
                       </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent className="">
+                      <DropdownMenuSubContent className="ml-1 rounded-none">
                         <DropdownMenuItem
-                          className="text-xs"
+                          className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted"
                           onClick={() => {
                             dispatch(updateTheme("dark"));
                           }}
@@ -272,7 +273,7 @@ const Sidebar = (props: any) => {
                           <span>Dark</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs"
+                          className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted"
                           onClick={() => {
                             dispatch(updateTheme("light"));
                           }}
@@ -282,30 +283,33 @@ const Sidebar = (props: any) => {
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="text-xs">
+                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted">
                         <p className="px-2">View</p>
                       </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent className="">
+                      <DropdownMenuSubContent className="ml-1 rounded-none">
                         <DropdownMenuItem
-                          className="text-xs"
+                          className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted"
                           onClick={() => {
                             dispatch(updateView("developer"));
+                            clearUrlParams(["view"]);
                           }}
                         >
                           <span>Developer</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs"
+                          className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted"
                           onClick={() => {
                             dispatch(updateView("product"));
+                            clearUrlParams(["view"]);
                           }}
                         >
                           <span>Product</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs"
+                          className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted"
                           onClick={() => {
                             dispatch(updateView("user"));
+                            clearUrlParams(["view"]);
                           }}
                         >
                           <span>User</span>

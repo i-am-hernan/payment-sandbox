@@ -263,3 +263,15 @@ export const refineFormula = (formula: any) => {
     isRedirect: false,
   };
 };
+
+export const clearUrlParams = (paramsToDelete: string[]) => {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+
+  // Remove specified parameters
+  paramsToDelete.forEach((param) => params.delete(param));
+
+  // Create new URL with remaining parameters
+  const newUrl = `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
+  window.history.replaceState({}, document.title, newUrl);
+};

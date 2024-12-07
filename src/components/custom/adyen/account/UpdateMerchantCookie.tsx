@@ -20,7 +20,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 const { updateMerchantAccount } = userActions;
-const { updateApiRequestMerchantAccount } = formulaActions;
+const {
+  updateApiRequestMerchantAccount,
+  updateBuildMerchantAccount,
+  updateReset,
+  updateRun,
+} = formulaActions;
 
 const UpdateMerchantCookie = () => {
   const [open, setOpen] = useState(false);
@@ -33,6 +38,14 @@ const UpdateMerchantCookie = () => {
   const { defaultMerchantAccount, merchantAccount } = useSelector(
     (state: RootState) => state.user
   );
+
+  const syncSandBoxWithFormula = () => {
+    dispatch(updateReset());
+  };
+
+  const rebuildCheckout = () => {
+    dispatch(updateRun());
+  };
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -40,8 +53,10 @@ const UpdateMerchantCookie = () => {
     if (!merchantAccountCookie) {
       setOpen(true);
     } else {
-      dispatch(updateMerchantAccount(merchantAccountCookie));
       dispatch(updateApiRequestMerchantAccount(merchantAccountCookie));
+      dispatch(updateBuildMerchantAccount(merchantAccountCookie));
+      dispatch(updateMerchantAccount(merchantAccountCookie));
+      syncSandBoxWithFormula();
     }
   }, []);
 
@@ -60,6 +75,9 @@ const UpdateMerchantCookie = () => {
       Cookies.set("merchantAccount", merchantAccountLocal, { expires: 365 });
       dispatch(updateMerchantAccount(merchantAccountLocal));
       dispatch(updateApiRequestMerchantAccount(merchantAccountLocal));
+      dispatch(updateBuildMerchantAccount(merchantAccountLocal));
+      syncSandBoxWithFormula();
+      rebuildCheckout();
       setOpen(false);
     } catch (error) {
       setError("An error occurred. Please try again.");
@@ -88,7 +106,7 @@ const UpdateMerchantCookie = () => {
           <Button
             variant="outline"
             size="sm"
-            className="w-[50%] rounded-none"
+            className="w-[50%] rounded-none border-border"
             onClick={() => {
               setOpen(true);
               setMerchantAccountLocal(

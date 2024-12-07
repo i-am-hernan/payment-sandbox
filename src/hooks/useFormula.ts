@@ -1,21 +1,18 @@
 import { useApi } from "@/hooks/useApi";
 import { formulaActions } from "@/store/reducers";
-import type { RootState } from "@/store/store";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const {
   updateFormula,
-  updateApiRequestMerchantAccount,
-  updateBuildMerchantAccount,
   updateRun,
   updateReset,
   updateVariantReturnUrl,
   updateBuildCheckoutReturnUrls,
 } = formulaActions;
 
-export const useFormula = (variant: string) => {
+export const useFormula = (variant: string, view: string) => {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -24,8 +21,6 @@ export const useFormula = (variant: string) => {
     `api/formula${id ? "/" + id : ""}`,
     "GET"
   );
-
-  const { merchantAccount } = useSelector((state: RootState) => state.user);
 
   const [formula, setFormula] = useState({
     loading: true,
@@ -42,10 +37,6 @@ export const useFormula = (variant: string) => {
   useEffect(() => {
     const syncFormula = (formula: any) => {
       dispatch(updateFormula({ ...formula }));
-    };
-    const updateMerchantAccount = (merchantAccount: string) => {
-      dispatch(updateApiRequestMerchantAccount(merchantAccount));
-      dispatch(updateBuildMerchantAccount(merchantAccount));
     };
     const updateReturnUrl = (returnUrl: string) => {
       dispatch(updateBuildCheckoutReturnUrls(returnUrl));
@@ -64,7 +55,7 @@ export const useFormula = (variant: string) => {
       sessionStorage.setItem("formula", JSON.stringify(data));
     };
 
-    if (variant && data && merchantAccount) {
+    if (variant && data) {
       if (data.error || data.success === false || apiError) {
         setFormula({
           loading: false,
@@ -91,7 +82,8 @@ export const useFormula = (variant: string) => {
             returnUrl.searchParams.set("id", id);
             updateReturnUrl(returnUrl.toString());
           } else {
-            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}?id=${id}`;
+            // I need to add the view param to the url
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}?id=${id}&view=${view}`;
             updateReturnUrl(returnUrl);
           }
           storeFormulaToLocalStorage(configuration);
@@ -102,7 +94,6 @@ export const useFormula = (variant: string) => {
           );
           storeFormulaToLocalStorage(configuration);
         }
-        updateMerchantAccount(merchantAccount);
         syncSandBoxWithFormula();
         rebuildCheckout();
         setFormula({
@@ -112,7 +103,7 @@ export const useFormula = (variant: string) => {
         });
       }
     }
-  }, [variant, data, merchantAccount]);
+  }, [variant, data]);
 
   return { formulaLoading, formulaError, formulaSuccess };
 };

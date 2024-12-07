@@ -303,7 +303,7 @@ const Script = () => {
           </Button>
         </div>
       </ResizablePanel>
-      <ResizableHandle />
+      {view === "developer" && <ResizableHandle />}
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
         className="!overflow-y-scroll"
