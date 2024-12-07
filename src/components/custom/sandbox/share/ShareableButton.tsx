@@ -18,9 +18,11 @@ import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import CheckIcon from "@mui/icons-material/Check";
+import { cn } from "@/lib/utils";
 
 const ShareableButton = (props: any) => {
   const [copied, setCopied] = useState(false);
+  const [showCheck, setShowCheck] = useState(false);
 
   const { disabled } = props;
   const { variant } = useParams<{
@@ -63,6 +65,18 @@ const ShareableButton = (props: any) => {
   // when you close the dialog box update the copied back to false
   const handleClose = () => {
     setCopied(false);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShowCheck(true);
+      setTimeout(() => {
+        setShowCheck(false);
+      }, 1500);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   };
 
   return (
@@ -110,22 +124,34 @@ const ShareableButton = (props: any) => {
                 </div>
                 <div className="justify-start">
                   <Button
-                    className="p-2 rounded-l-none text-xs  text-background"
+                    className="h-[100%] py-4 text-xs text-background w-10 rounded-none relative overflow-hidden"
+                    onClick={handleCopy}
                     key="reset"
                     variant="outline"
                     size="sm"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`
-                      );
-                      setCopied(true);
-                    }}
                   >
-                    {copied ? (
-                      <CheckIcon className="!text-foreground !text-[16px] pt-0 rounded-l-none" />
-                    ) : (
-                      <ContentCopyIcon className="!text-foreground !text-[16px] pt-0 rounded-l-none" />
-                    )}
+                    <div className="absolute inset-0">
+                      <div
+                        className={cn(
+                          "absolute inset-0 flex items-center justify-center transition-transform duration-200 ease-in-out",
+                          showCheck
+                            ? "transform -translate-y-full"
+                            : "transform translate-y-0"
+                        )}
+                      >
+                        <ContentCopyIcon className="!text-foreground !text-[16px]" />
+                      </div>
+                      <div
+                        className={cn(
+                          "absolute inset-0 flex items-center justify-center transition-transform duration-200 ease-in-out",
+                          showCheck
+                            ? "transform translate-y-0"
+                            : "transform translate-y-full"
+                        )}
+                      >
+                        <CheckIcon className="!text-foreground !text-[16px]" />
+                      </div>
+                    </div>
                   </Button>
                 </div>
               </div>

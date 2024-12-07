@@ -6,20 +6,19 @@ import {
   DialogDescription,
   DialogHeader,
   DialogOverlay,
+  DialogPortal,
   DialogTitle,
   DialogTrigger,
-  DialogPortal,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formulaActions, userActions } from "@/store/reducers";
+import { RootState } from "@/store/store";
 import TuneIcon from "@mui/icons-material/Tune";
 import Cookies from "js-cookie";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import CheckIcon from '@mui/icons-material/Check';
-
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 const { updateMerchantAccount } = userActions;
 const { updateApiRequestMerchantAccount } = formulaActions;
 
@@ -27,7 +26,9 @@ const UpdateMerchantCookie = () => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false); // New state variable
-  const [merchantAccountLocal, setMerchantAccountLocal] = useState(process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || "");
+  const [merchantAccountLocal, setMerchantAccountLocal] = useState(
+    process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || ""
+  );
   const dispatch = useDispatch();
   const { defaultMerchantAccount, merchantAccount } = useSelector(
     (state: RootState) => state.user
@@ -87,7 +88,7 @@ const UpdateMerchantCookie = () => {
           <Button
             variant="outline"
             size="sm"
-            className="w-[50%]"
+            className="w-[50%] rounded-none"
             onClick={() => {
               setOpen(true);
               setMerchantAccountLocal(
@@ -131,14 +132,18 @@ const UpdateMerchantCookie = () => {
                     id="name"
                     value={merchantAccountLocal}
                     onChange={(e) => setMerchantAccountLocal(e.target.value)}
-                    className="rounded-r-none text-foreground"
+                    className="rounded-none text-foreground"
                   />
                 </div>
                 <Button
-                  className="w-20 rounded-l-none text-xs text-background"
+                  className="min-w-13 rounded-none text-xs text-background"
                   type="submit"
                 >
-                  {isLoading && <Loading className="text-background" />}
+                  {isLoading && (
+                    <div className="animate-spin text-xs">
+                      <AutorenewIcon className="!h-3" />
+                    </div>
+                  )}
                   {!isLoading && <p>Save</p>}
                 </Button>
               </div>

@@ -255,6 +255,7 @@ const Page: any = () => {
             setSection={setSection}
             unsavedChanges={unsavedChanges}
             paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
+            variant={variant}
           />
         </footer>
       </React.Fragment>

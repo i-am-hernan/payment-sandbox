@@ -50,8 +50,13 @@ interface SideTab {
 const { updateTheme } = userActions;
 
 const Sidebar = (props: any) => {
-  const { section, setSection, unsavedChanges, paymentMethodsMerchantAccount } =
-    props;
+  const {
+    section,
+    setSection,
+    unsavedChanges,
+    paymentMethodsMerchantAccount,
+    variant,
+  } = props;
   const {
     html: htmlUnsavedChanges,
     style: styleUnsavedChanges,
@@ -154,16 +159,18 @@ const Sidebar = (props: any) => {
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
-                  <DrawerContent className="h-full w-[20vw]">
+                  <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-sm py-0">
                         Online Payments
                       </DrawerTitle>
                     </DrawerHeader>
-                    <div className="space-y-1">
+                    <div>
                       <ExpandableCards
                         paymentMethodName={"Dropin"}
                         paymentMethodType={"dropin"}
+                        defaultExpanded={variant === "dropin"}
+                        defaultIntegration="Advanced"
                       />
                       {paymentMethodsResponse &&
                         paymentMethodsResponse.paymentMethods &&
@@ -173,6 +180,8 @@ const Sidebar = (props: any) => {
                               key={paymentMethod.type}
                               paymentMethodName={paymentMethod.name}
                               paymentMethodType={paymentMethod.type}
+                              defaultExpanded={variant === paymentMethod.type}
+                              defaultIntegration="Advanced"
                             />
                           )
                         )}
