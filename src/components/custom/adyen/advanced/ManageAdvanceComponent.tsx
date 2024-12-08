@@ -4,19 +4,13 @@ import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdv
 import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
-import {
-  componentActions,
-  formulaActions
-} from "@/store/reducers";
+import { componentActions, formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import {
-  stringifyObject,
-  unstringifyObject
-} from "@/utils/utils";
+import { stringifyObject, unstringifyObject } from "@/utils/utils";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import Loading from "../../utils/Loading";
 const {
   updateIsRedirect,
   updateRedirectResult,
@@ -55,13 +49,7 @@ export const ManageAdvanceComponent = () => {
   }, [redirectResultQueryParameter, isRedirect]);
 
   if (loadingAdyenScript || !variant) {
-    return (
-      <div className="flex flex-col h-[100%] space-y-3 items-center p-2">
-        <Skeleton className="h-[100%] w-[100%] rounded-xl bg-border" />
-        <Skeleton className="h-7 w-[100%] bg-border" />
-        <Skeleton className="h-7 w-[100%] bg-border" />
-      </div>
-    );
+    return <Loading className="text-foreground" />;
   }
 
   if (adyenScriptError) {
@@ -70,7 +58,7 @@ export const ManageAdvanceComponent = () => {
   }
 
   return (
-    <div className="p-2">
+    <div className="h-[100%]">
       {!isRedirect && (
         <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}

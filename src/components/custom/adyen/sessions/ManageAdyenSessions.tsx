@@ -5,10 +5,10 @@ import type { RootState } from "@/store/store";
 import { componentActions, formulaActions } from "@/store/reducers";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import { useParams, useSearchParams } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
 import { InitSessionsComponent } from "./InitSessionsComponent";
 import { RedirectSessionsComponent } from "./RedirectSessionsComponent";
 import { useEffect } from "react";
+import Loading from "../../utils/Loading";
 
 const { updateIsRedirect, updateRedirectResult, updateSessionId } =
   formulaActions;
@@ -50,15 +50,7 @@ export const ManageAdyenSessions = (props: any) => {
   }, [redirectResultQueryParameter, isRedirect]);
 
   if (loadingAdyenScript || !variant) {
-    return (
-      <div className="flex flex-col space-y-3 items-center m-4">
-        <Skeleton className="h-[180px] w-[250px] rounded-xl bg-border" />
-        <div className="space-y-2">
-          <Skeleton className="h-7 w-[250px] bg-border" />
-          <Skeleton className="h-7 w-[250px] bg-border" />
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (adyenScriptError) {

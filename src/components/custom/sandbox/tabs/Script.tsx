@@ -266,7 +266,7 @@ const Script = () => {
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
-        maxSize={view === "product" ? 0 : 100}
+        maxSize={view === "preview" ? 0 : 100}
         className="sm:flex bg-code flex-col items-stretch"
       >
         <div className="flex flex-1 overflow-scroll">
@@ -306,19 +306,23 @@ const Script = () => {
       {view === "developer" && <ResizableHandle />}
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
-        className="!overflow-y-scroll"
+        className="!overflow-y-scroll border-b-2"
       >
         {loadingSdkSpecData && <Loading className="text-foreground" />}
-        <Version
-          label={"Adyen Web"}
-          value={adyenWebVersion}
-          options={WEBVERSIONS}
-          onChange={handleVersionChange}
-        />
-        <OpenApiSearch
-          properties={properties}
-          onChange={handleOpenApiSearchChange}
-        />
+        {!loadingSdkSpecData && sdkSpecsData && (
+          <Version
+            label={"Adyen Web"}
+            value={adyenWebVersion}
+            options={WEBVERSIONS}
+            onChange={handleVersionChange}
+          />
+        )}
+          {!loadingSdkSpecData && sdkSpecsData && (
+          <OpenApiSearch
+            properties={properties}
+            onChange={handleOpenApiSearchChange}
+          />
+        )}
         {!loadingSdkSpecData && sdkSpecsData && checkoutConfig.parsed && (
           <MemoizedOpenSdkList
             openSdk={sdkSpecsData}

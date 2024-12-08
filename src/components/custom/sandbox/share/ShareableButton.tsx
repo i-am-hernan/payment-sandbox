@@ -19,11 +19,17 @@ import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import CheckIcon from "@mui/icons-material/Check";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 const ShareableButton = (props: any) => {
   const [copied, setCopied] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
-
+  const [buildInfo, setBuildInfo] = useState<any>({
+    title: null,
+    description: null,
+  });
+  const [share, setShare] = useState(false);
+  const [view, setView] = useState("developer");
   const { disabled } = props;
   const { variant } = useParams<{
     variant: string;
@@ -36,12 +42,15 @@ const ShareableButton = (props: any) => {
     error: null,
   });
   const { data, loading, error } = formula;
+  const { title, description } = buildInfo;
   const handleShare = (request: any) => {
     const processedRequest = refineFormula(request);
     const requestBody = JSON.stringify({
       configuration: processedRequest,
       txVariant: variant,
       integrationType: "advance",
+      title,
+      description,
     });
 
     setFormula({ ...formula, loading: true });
@@ -65,12 +74,14 @@ const ShareableButton = (props: any) => {
   // when you close the dialog box update the copied back to false
   const handleClose = () => {
     setCopied(false);
+    setShare(false);
+    setBuildInfo({ title: "", description: "" });
   };
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(
-        `${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}&view=${view}`
       );
       setShowCheck(true);
       setTimeout(() => {
@@ -98,7 +109,7 @@ const ShareableButton = (props: any) => {
             size="sm"
             className="px-2 pt-0 pb-0"
             onClick={() => {
-              handleShare(state);
+              // handleShare(state);
             }}
           >
             <ShareIcon className="!text-foreground !text-[16px]" />
@@ -106,59 +117,142 @@ const ShareableButton = (props: any) => {
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>
           <DialogOverlay />
-          <DialogContent className="sm:max-w-[425px] flex flex-col text-foreground">
-            <DialogHeader>
-              <DialogTitle className="text-[16px] text-foreground">
-                Share your build
-              </DialogTitle>
-              <DialogDescription className="text-[13px]">
-                You can share your build by copying the link below
-              </DialogDescription>
-            </DialogHeader>
-            {error && <div className="text-red-500 text-xs mb-2">{error}</div>}
-            {loading && <Loading />}
-            {data && !loading && !error && (
-              <div className="flex items-stretch">
-                <div className="border-border border border-r-none rounded rounded-r-none">
-                  <p className="!h-[100%] max-w-[350px] flex items-center justify-center flex-1 text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-scroll">
-                    {`${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`}
-                  </p>
-                </div>
-                <div className="justify-start">
+          {!share && (
+            <DialogContent className="p-5 sm:max-w-[425px] flex flex-col text-foreground">
+              <DialogHeader>
+                <DialogTitle className="text-[16px] text-foreground">
+                  Create a shareable link
+                </DialogTitle>
+                <DialogDescription className="text-[13px]">
+                  You can create a shareable link by providing a title and
+                  description
+                </DialogDescription>
+                <form
+                  className="flex flex-col"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setShare(true);
+                    handleShare(state);
+                  }}
+                >
+                  <label className="text-[13px] pt-2 pb-1">Title</label>
+                  <Input
+                    value={title}
+                    required
+                    onChange={(e) =>
+                      setBuildInfo({ ...buildInfo, title: e.target.value })
+                    }
+                  />
+                  <label className="text-[13px] pt-2 pb-1">Description</label>
+                  <Input
+                    value={description}
+                    required
+                    onChange={(e) =>
+                      setBuildInfo({
+                        ...buildInfo,
+                        description: e.target.value,
+                      })
+                    }
+                  />
                   <Button
-                    className="h-[100%] py-4 text-xs text-background w-10 rounded-tl-none rounded-bl-none rounded-br-2 rounded-tr-2 relative overflow-hidden "
-                    onClick={handleCopy}
+                    type="submit"
+                    className="mt-3 w-[30%] self-end"
+                    disabled={!title || !description}
+                  >
+                    Create
+                  </Button>
+                </form>
+              </DialogHeader>
+            </DialogContent>
+          )}
+          {share && (
+            <DialogContent className="p-5 sm:max-w-[425px] flex flex-col text-foreground">
+              <DialogHeader>
+                <DialogTitle className="text-[16px] text-foreground">
+                  Share your build
+                </DialogTitle>
+                <DialogDescription className="text-[13px]">
+                  You can share your build by copying the link below
+                </DialogDescription>
+              </DialogHeader>
+              {error && (
+                <div className="text-red-500 text-xs mb-2">{error}</div>
+              )}
+              {loading && <Loading />}
+              {data && !loading && !error && (
+                <div className="flex items-center justify-start border-b border-border">
+                  <Button
+                    className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "developer" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
+                    onClick={() => setView("developer")}
                     key="reset"
                     variant="outline"
                     size="sm"
                   >
-                    <div className="absolute inset-0">
-                      <div
-                        className={cn(
-                          "absolute inset-0 flex items-center justify-center transition-transform duration-200 ease-in-out",
-                          showCheck
-                            ? "transform -translate-y-full"
-                            : "transform translate-y-0"
-                        )}
-                      >
-                        <ContentCopyIcon className="!text-foreground !text-[16px]" />
-                      </div>
-                      <div
-                        className={cn(
-                          "absolute inset-0 flex items-center justify-center transition-transform duration-200 ease-in-out",
-                          showCheck
-                            ? "transform translate-y-0"
-                            : "transform translate-y-full"
-                        )}
-                      >
-                        <CheckIcon className="!text-foreground !text-[16px]" />
-                      </div>
-                    </div>
+                    <span className="text-foreground text-xs">developer</span>
+                  </Button>
+                  <Button
+                    className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "preview" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
+                    onClick={() => setView("preview")}
+                    key="reset"
+                    variant="outline"
+                    size="sm"
+                  >
+                    <span className="text-foreground text-xs">preview</span>
+                  </Button>
+                  <Button
+                    className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "demo" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
+                    onClick={() => setView("demo")}
+                    key="reset"
+                    variant="outline"
+                    size="sm"
+                  >
+                    <span className="text-foreground text-xs">demo</span>
                   </Button>
                 </div>
-              </div>
-            )}
-          </DialogContent>
+              )}
+              {data && !loading && !error && (
+                <div className="flex items-stretch">
+                  <div className="border-border border border-r-none rounded rounded-r-none">
+                    <p className="!h-[100%] max-w-[350px] flex items-center justify-center flex-1 text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-scroll">
+                      {`${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`}
+                    </p>
+                  </div>
+                  <div className="justify-start">
+                    <Button
+                      className="h-[100%] py-4 text-xs text-background w-10 rounded-tl-none rounded-bl-none rounded-br-2 rounded-tr-2 relative overflow-hidden border-border"
+                      onClick={handleCopy}
+                      key="reset"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <div className="absolute inset-0">
+                        <div
+                          className={cn(
+                            "absolute inset-0 flex items-center justify-center transition-transform duration-200 ease-in-out",
+                            showCheck
+                              ? "transform -translate-y-full"
+                              : "transform translate-y-0"
+                          )}
+                        >
+                          <ContentCopyIcon className="!text-foreground !text-[16px]" />
+                        </div>
+                        <div
+                          className={cn(
+                            "absolute inset-0 flex items-center justify-center transition-transform duration-200 ease-in-out",
+                            showCheck
+                              ? "transform translate-y-0"
+                              : "transform translate-y-full"
+                          )}
+                        >
+                          <CheckIcon className="!text-foreground !text-[16px]" />
+                        </div>
+                      </div>
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          )}
         </DialogPortal>
       </Dialog>
     </div>

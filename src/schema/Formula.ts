@@ -20,6 +20,7 @@ interface Formula extends Document {
     txVariantConfiguration: string;
     isRedirect: boolean;
   };
+  title?: string;
   description?: string;
   integrationType: string;
   txVariant: string;
@@ -47,7 +48,8 @@ const FormulaSchema: Schema = new Schema(
       txVariantConfiguration: { type: String, required: false },
       isRedirect: { type: Boolean, required: true },
     },
-    description: { type: String, required: false },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
     integrationType: { type: String, required: true },
     txVariant: { type: String, required: true },
     createdBy: { type: Schema.Types.ObjectId, required: false },

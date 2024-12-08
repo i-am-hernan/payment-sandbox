@@ -3,6 +3,7 @@
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
+import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
 import Api from "@/components/custom/sandbox/tabs/Api";
@@ -13,14 +14,12 @@ import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
 import { useFormula } from "@/hooks/useFormula";
+import { useView } from "@/hooks/useView";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
-import React from "react";
-import { useView } from "@/hooks/useView";
 
 interface SectionType {
   section: "Client" | "Server" | "Webhooks";
@@ -46,7 +45,8 @@ const Page: any = () => {
     variant,
     view
   );
-  const { run, unsavedChanges, request, checkoutAPIVersion, build } =
+
+  const { run, unsavedChanges, request, checkoutAPIVersion } =
     useSelector((state: RootState) => state.formula);
   useView(viewParam);
 

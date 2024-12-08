@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useApi } from "@/hooks/useApi";
 import { userActions } from "@/store/reducers";
+import { clearUrlParams } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
 import StorageIcon from "@mui/icons-material/Storage";
@@ -36,7 +37,6 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import Loading from "../../utils/Loading";
-import { clearUrlParams } from "@/utils/utils";
 
 interface SideTab {
   name: string;
@@ -299,20 +299,20 @@ const Sidebar = (props: any) => {
                         <DropdownMenuItem
                           className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted"
                           onClick={() => {
-                            dispatch(updateView("product"));
+                            dispatch(updateView("preview"));
                             clearUrlParams(["view"]);
                           }}
                         >
-                          <span>Product</span>
+                          <span>Preview</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-xs rounded-none border-transparent border-[1px] hover:border-adyen hover:border-dotted"
                           onClick={() => {
-                            dispatch(updateView("user"));
+                            dispatch(updateView("demo"));
                             clearUrlParams(["view"]);
                           }}
                         >
-                          <span>User</span>
+                          <span>Demo</span>
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>

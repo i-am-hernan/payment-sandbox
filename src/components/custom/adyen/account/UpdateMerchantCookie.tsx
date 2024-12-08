@@ -150,11 +150,11 @@ const UpdateMerchantCookie = () => {
                     id="name"
                     value={merchantAccountLocal}
                     onChange={(e) => setMerchantAccountLocal(e.target.value)}
-                    className="rounded-l-2 rounded-r-none text-foreground mr-2 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="border-border rounded-l-2 rounded-r-none text-foreground mr-2 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                   />
                 </div>
                 <Button
-                  className="min-w-13 text-xs text-foreground rounded-tl-none rounded-bl-none rounded-br-2 rounded-tr-2"
+                  className="border-border min-w-13 text-xs text-foreground rounded-tl-none rounded-bl-none rounded-br-2 rounded-tr-2"
                   type="submit"
                   variant="outline"
                 >

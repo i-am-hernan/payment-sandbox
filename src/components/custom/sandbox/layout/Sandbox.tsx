@@ -11,7 +11,7 @@ interface SandboxContentProps {
   main: any;
   topRight: any;
   bottomRight: any;
-  view: "developer" | "product" | "user";
+  view: "developer" | "preview" | "demo";
 }
 
 const Sandbox = ({
@@ -51,14 +51,14 @@ const Sandbox = ({
         defaultSize={
           view === "developer"
             ? 60
-            : view === "product"
+            : view === "preview"
               ? 50
-              : view === "user"
+              : view === "demo"
                 ? 0
                 : 0
         }
         ref={refA}
-        maxSize={view === "user" ? 0 : 100}
+        maxSize={view === "demo" ? 0 : 100}
       >
         <div className="items-center justify-center flex w-full h-full">
           {React.cloneElement(Main, {
@@ -67,10 +67,16 @@ const Sandbox = ({
           })}
         </div>
       </ResizablePanel>
-      {view !== "user" && <ResizableHandle />}
+      {view !== "demo" && <ResizableHandle />}
       <ResizablePanel
         defaultSize={
-          view === "developer" ? 40 : view === "product" ? 50 : view === "user" ? 100 : 0
+          view === "developer"
+            ? 40
+            : view === "preview"
+              ? 50
+              : view === "demo"
+                ? 100
+                : 0
         }
       >
         <ResizablePanelGroup direction="vertical">
@@ -83,7 +89,7 @@ const Sandbox = ({
           <ResizableHandle />
           <ResizablePanel
             defaultSize={view === "developer" ? 50 : 0}
-            maxSize={view === "product" || view === "user" ? 0 : 100}
+            maxSize={view === "preview" || view === "demo" ? 0 : 100}
             ref={refB}
           >
             {React.cloneElement(BottomRight, {

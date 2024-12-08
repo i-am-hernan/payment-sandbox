@@ -243,29 +243,31 @@ const Api = (props: any) => {
         </div>
       </ResizablePanel>
       {view === "developer" && <ResizableHandle />}
-      <ResizablePanel
-        className="!overflow-y-scroll"
-      >
+      <ResizablePanel className="!overflow-y-scroll border-b-2">
         {loadingApiSpecData && <Loading className="text-foreground" />}
-        <Version
-          label={api}
-          value={checkoutAPIVersion[api]}
-          options={APIVERSIONS}
-          onChange={(value: any) => {
-            dispatch(
-              addUnsavedChanges({
-                [api]: build.checkoutAPIVersion[api] !== value,
-              })
-            );
-            dispatch(updateCheckoutAPIVersion({ [api]: value }));
-          }}
-        />
-        <OpenApiSearch
-          properties={properties}
-          onChange={(filteredProperties: any) => {
-            setFilteredProperties(filteredProperties);
-          }}
-        />
+        {!loadingApiSpecData && apiSpecsData && (
+          <Version
+            label={api}
+            value={checkoutAPIVersion[api]}
+            options={APIVERSIONS}
+            onChange={(value: any) => {
+              dispatch(
+                addUnsavedChanges({
+                  [api]: build.checkoutAPIVersion[api] !== value,
+                })
+              );
+              dispatch(updateCheckoutAPIVersion({ [api]: value }));
+            }}
+          />
+        )}
+        {!loadingApiSpecData && apiSpecsData && (
+          <OpenApiSearch
+            properties={properties}
+            onChange={(filteredProperties: any) => {
+              setFilteredProperties(filteredProperties);
+            }}
+          />
+        )}
         {!loadingApiSpecData && apiSpecsData && (
           <OpenApiList
             openApi={apiSpecsData}

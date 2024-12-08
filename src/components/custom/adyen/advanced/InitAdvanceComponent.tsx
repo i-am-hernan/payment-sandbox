@@ -1,10 +1,10 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
 import { useApi } from "@/hooks/useApi";
 import { useRef, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Loading from "@/components/custom/utils/Loading";
 
 export const InitAdvanceComponent = (props: any) => {
   const {
@@ -16,7 +16,7 @@ export const InitAdvanceComponent = (props: any) => {
     paymentsRequest,
     paymentsDetailsRequest,
     onPaymentMethodsResponse,
-    onChange
+    onChange,
   } = props;
 
   const {
@@ -53,7 +53,7 @@ export const InitAdvanceComponent = (props: any) => {
       : null;
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center h-[100%]">
       {error && (
         <Alert variant="destructive">
           <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>
@@ -66,11 +66,9 @@ export const InitAdvanceComponent = (props: any) => {
           <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
-      {loadingPaymentMethods && (
-        <Skeleton className="w-[100px] h-[20px] rounded-full" />
-      )}
+      {loadingPaymentMethods && <Loading className="text-foreground" />}
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div className="!w-[40vw]">
+        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
           <div className="px-auto !border-red" ref={checkoutRef}></div>
         </div>
       )}

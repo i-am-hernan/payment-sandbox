@@ -2,12 +2,6 @@ import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Version from "@/components/custom/sandbox/editors/Version";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
