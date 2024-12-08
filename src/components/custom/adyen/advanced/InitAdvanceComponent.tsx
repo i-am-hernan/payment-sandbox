@@ -70,7 +70,7 @@ export const InitAdvanceComponent = (props: any) => {
         <Skeleton className="w-[100px] h-[20px] rounded-full" />
       )}
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div className="!max-w-[45vw]">
+        <div className="!w-[40vw]">
           <div className="px-auto !border-red" ref={checkoutRef}></div>
         </div>
       )}

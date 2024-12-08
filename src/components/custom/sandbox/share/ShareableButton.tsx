@@ -119,7 +119,7 @@ const ShareableButton = (props: any) => {
             {loading && <Loading />}
             {data && !loading && !error && (
               <div className="flex items-stretch">
-                <div className="border-border border border-r-none rounded rounded-r-none border-foreground">
+                <div className="border-border border border-r-none rounded rounded-r-none">
                   <p className="!h-[100%] max-w-[350px] flex items-center justify-center flex-1 text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-scroll">
                     {`${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`}
                   </p>
