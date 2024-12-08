@@ -217,12 +217,12 @@ const Sidebar = (props: any) => {
                   <span>
                     <Button
                       key={tab.name}
-                      disabled={view === "user"}
+                      disabled={view === "demo"}
                       variant="ghost"
                       size="icon"
                       ref={tab.ref}
                       className={`mt-2 rounded-none ${
-                        section === tab.name && view !== "user"
+                        section === tab.name && view !== "demo"
                           ? "border-[1px] border-adyen"
                           : "hover:border-[1px] hover:border-adyen hover:border-dotted"
                       }`}
