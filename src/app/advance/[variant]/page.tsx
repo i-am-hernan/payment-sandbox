@@ -46,8 +46,9 @@ const Page: any = () => {
     view
   );
 
-  const { run, unsavedChanges, request, checkoutAPIVersion } =
-    useSelector((state: RootState) => state.formula);
+  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
+    (state: RootState) => state.formula
+  );
   useView(viewParam);
 
   const { paymentMethods, payments, paymentsDetails } = request;
@@ -66,10 +67,8 @@ const Page: any = () => {
     {
       title: `${variant}`,
       icon: (
-        <span className="flex">
-          <span className="font-semibold px-1 text-xxs text-preview">
-            preview
-          </span>
+        <span className="font-semibold px-1 text-xxs text-preview">
+          preview
         </span>
       ),
       content: <ManageAdvanceComponent key={run ? "run" : "default"} />,
@@ -81,9 +80,7 @@ const Page: any = () => {
     {
       title: `${variant} (read-only)`,
       icon: (
-        <span className="flex">
-          <span className="font-semibold px-1 text-xxs text-info">state</span>
-        </span>
+        <span className="font-semibold px-1 text-xxs text-info">state</span>
       ),
       content: <StateData theme={theme} />,
       value: "state",
@@ -94,9 +91,7 @@ const Page: any = () => {
       {
         title: "checkout.js",
         icon: (
-          <span className="flex">
-            <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
-          </span>
+          <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
         ),
         content: <Script key={"script"} />,
         value: `${variant}.js`,
@@ -105,9 +100,7 @@ const Page: any = () => {
       {
         title: "style.css",
         icon: (
-          <span className="flex">
-            <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>
-          </span>
+          <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>
         ),
         content: <Style key={"stye"} />,
         value: "style.css",
@@ -116,10 +109,8 @@ const Page: any = () => {
       {
         title: "checkout.html (read-only)",
         icon: (
-          <span className="flex">
-            <span className="font-semibold px-1 text-xxs text-warning">
-              {"</>"}
-            </span>
+          <span className="font-semibold px-1 text-xxs text-warning">
+            {"</>"}
           </span>
         ),
         content: <Html key={"html"} />,
@@ -133,9 +124,7 @@ const Page: any = () => {
       {
         title: `/v${paymentMethodsAPIVersion}/paymentMethods`,
         icon: (
-          <span className="font-semibold px-1 text-xxs text-adyen">
-            {"POST"}
-          </span>
+          <span className="font-semibold px-1 text-xxs text-adyen">POST</span>
         ),
         content: (
           <Api
@@ -151,9 +140,7 @@ const Page: any = () => {
       {
         title: `/v${paymentsAPIVersion}/payments`,
         icon: (
-          <span className="font-semibold px-1 text-xxs text-adyen">
-            {"POST"}
-          </span>
+          <span className="font-semibold px-1 text-xxs text-adyen">POST</span>
         ),
         content: (
           <Api
@@ -169,9 +156,7 @@ const Page: any = () => {
       {
         title: `/v${paymentsDetailsAPIVersion}/payment/details`,
         icon: (
-          <span className="font-semibold px-1 text-xxs text-adyen">
-            {"POST"}
-          </span>
+          <span className="font-semibold px-1 text-xxs text-adyen">POST</span>
         ),
         content: (
           <Api
