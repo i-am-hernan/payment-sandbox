@@ -201,12 +201,12 @@ const Page: any = () => {
     ];
     crumbs = ["advanced", variant];
   }
-  
+
   return (
     <div className={`${theme} border-r-2`}>
       <React.Fragment>
         <header>
-          <Topbar view={view} />
+          <Topbar view={view} merchantAccount={merchantAccount} />
         </header>
         <main>
           <Sandbox

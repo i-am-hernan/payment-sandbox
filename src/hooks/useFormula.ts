@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 const {
   updateFormula,
   updateRun,
+  updateBase,
   updateReset,
   updateVariantReturnUrl,
   updateBuildCheckoutReturnUrls,
@@ -37,6 +38,9 @@ export const useFormula = (variant: string, view: string) => {
   useEffect(() => {
     const syncFormula = (formula: any) => {
       dispatch(updateFormula({ ...formula }));
+    };
+    const syncBase = (base: any) => {
+      dispatch(updateBase({ ...base }));
     };
     const updateReturnUrl = (returnUrl: string) => {
       dispatch(updateBuildCheckoutReturnUrls(returnUrl));
@@ -76,6 +80,7 @@ export const useFormula = (variant: string, view: string) => {
             syncFormula(JSON.parse(sessionStoredFormula));
           }
         } else if (id) {
+          syncBase(configuration);
           syncFormula(configuration);
           if (configuration.returnUrl) {
             const returnUrl = new URL(configuration.returnUrl);
@@ -86,6 +91,7 @@ export const useFormula = (variant: string, view: string) => {
             const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}?id=${id}&view=${view}`;
             updateReturnUrl(returnUrl);
           }
+          // I need to store the formula in the base parameter of the formula stor
           storeFormulaToLocalStorage(configuration);
         } else if (isDefault) {
           syncFormula(configuration);

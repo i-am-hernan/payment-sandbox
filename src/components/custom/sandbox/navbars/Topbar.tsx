@@ -32,11 +32,13 @@ const {
   updateIsRedirect,
   clearOnDeckInfo,
   resetUnsavedChanges,
+  updateApiRequestMerchantAccount,
+  updateBuildMerchantAccount,
 } = formulaActions;
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
-  const { view } = props;
+  const { view, merchantAccount } = props;
   const { unsavedChanges } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
@@ -96,6 +98,8 @@ const Topbar = (props: any) => {
                 <AlertDialogAction
                   onClick={() => {
                     dispatch(resetFormula());
+                    dispatch(updateApiRequestMerchantAccount(merchantAccount));
+                    dispatch(updateBuildMerchantAccount(merchantAccount));
                     dispatch(updateReset());
                     clearUrlParams([
                       "redirectResult",
@@ -103,7 +107,6 @@ const Topbar = (props: any) => {
                       "MD",
                       "sessionId",
                       "sessionData",
-                      "id",
                     ]);
                   }}
                 >

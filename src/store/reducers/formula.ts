@@ -129,9 +129,10 @@ const formulaSlice = createSlice({
       state.build = { ...state };
       state.run = !state.run;
     },
+    updateBase: (state, action: PayloadAction<Partial<Formula>>) => {
+      state.base = { ...state.base, ...action.payload };
+    },
     updateFormula: (state, action: PayloadAction<Partial<Formula>>) => {
-      // Here we can add code to reset the request back to empty since we are not storing emty objects, or we try to store empty objects
-      // So I need to make sure that we dont overwrite the request object
       const updatedPaymentMethodsRequest = {
         ...state.request.paymentMethods,
         ...action.payload.request?.paymentMethods,
@@ -154,6 +155,7 @@ const formulaSlice = createSlice({
         paymentsDetails: updatedPaymentsDetailsRequest,
         sessions: updatedSessionsRequest,
       };
+
       return {
         ...state,
         ...action.payload,
@@ -293,8 +295,9 @@ const formulaSlice = createSlice({
     },
     resetFormula: (state) => {
       const baseConfiguration = state.base;
-      return {
+      const newState = {
         ...baseConfiguration,
+        build: baseConfiguration,
         base: baseConfiguration,
         run: !state.run,
         reset: state.reset,
@@ -309,6 +312,8 @@ const formulaSlice = createSlice({
           events: false,
         },
       };
+
+      return newState;
     },
     clearOnDeckInfo: (state) => {
       const lastBuild = state.build;
