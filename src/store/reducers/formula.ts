@@ -61,7 +61,7 @@ const initialState: FormulaPropType = {
   },
   adyenWebVersion: "5.66.1",
   checkoutConfiguration: sanitizeString(
-    `{clientKey: "${process.env.NEXT_PUBLIC_CLIENT_KEY}", environment: "test", onChange: function(state){handleChange(state);}, onError: function(error){handleError(error);}, onAdditionalDetails: function(state,dropin){handleAdditionalDetails(state,dropin);}, onSubmit: function(state,dropin){handleSubmit(state,dropin);}}`
+    `{clientKey: "${process.env.NEXT_PUBLIC_CLIENT_KEY}", environment: "test", onChange: function(state){handleChange(state);}, onError: function(error){handleError(error);}, onAdditionalDetails: function(state,dropin){handleAdditionalDetails(state,dropin);}, onSubmit: function(state,dropin){handleSubmit(state,dropin);}, onPaymentCompleted: function(state,dropin){handlePaymentCompleted(state,dropin);}}`
   ),
   txVariant: "",
   txVariantConfiguration: "",
@@ -175,6 +175,7 @@ const formulaSlice = createSlice({
       state.reset = !state.reset;
     },
     updateVariantReturnUrl: (state, action: PayloadAction<string>) => {
+      console.log("update return url", action.payload);
       state.request.payments.returnUrl = action.payload;
       state.request.sessions.returnUrl = action.payload;
     },

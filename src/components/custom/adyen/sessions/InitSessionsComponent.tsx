@@ -4,7 +4,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenSessions } from "@/hooks/useAdyenSessions";
 import { useApi } from "@/hooks/useApi";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import Loading from "../../utils/Loading";
 
 export const InitSessionsComponent = (props: any) => {
   const {
@@ -13,6 +14,8 @@ export const InitSessionsComponent = (props: any) => {
     variant,
     txVariantConfiguration,
     sessionsRequest,
+    onSessionsResponse,
+    onChange,
   } = props;
 
   const {
@@ -26,7 +29,10 @@ export const InitSessionsComponent = (props: any) => {
   );
 
   const checkoutRef = useRef(null);
-  // need to update state with the paymentMethodsResponse, but just pull paymentResponse for now
+
+  useEffect(() => {
+    onSessionsResponse(sessionsResponse);
+  }, [sessionsResponse]);
 
   const { result: adyenResult, error: adyenSDKError }: any = useAdyenSessions(
     variant,
@@ -34,7 +40,8 @@ export const InitSessionsComponent = (props: any) => {
     checkoutConfiguration,
     txVariantConfiguration,
     sessionsResponse,
-    checkoutRef
+    checkoutRef,
+    onChange
   );
 
   const error =
@@ -53,14 +60,13 @@ export const InitSessionsComponent = (props: any) => {
       {adyenResult && (
         <Alert variant="default" className="border-primary">
           <AlertTitle>{adyenResult.resultCode}</AlertTitle>
+          <AlertDescription>{`PSP Reference: ${adyenResult.pspReference}`}</AlertDescription>
         </Alert>
       )}
-      {loadingSessions && (
-        <Skeleton className="w-[100px] h-[20px] rounded-full" />
-      )}
+      {loadingSessions && <Loading className="text-foreground" />}
       {!adyenSDKError && !adyenResult && !loadingSessions && (
-        <div >
-          <div ref={checkoutRef}></div>
+        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
+          <div className="px-auto !border-red" ref={checkoutRef}></div>
         </div>
       )}
     </div>

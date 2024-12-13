@@ -9,10 +9,17 @@ import { InitSessionsComponent } from "./InitSessionsComponent";
 import { RedirectSessionsComponent } from "./RedirectSessionsComponent";
 import { useEffect } from "react";
 import Loading from "../../utils/Loading";
+import { stringifyObject } from "@/utils/utils";
+import { unstringifyObject } from "@/utils/utils";
 
-const { updateIsRedirect, updateRedirectResult, updateSessionId } =
-  formulaActions;
-const { updateComponentState } = componentActions;
+const {
+  updateIsRedirect,
+  updateRedirectResult,
+  updateSessionId,
+  updateCheckoutConfiguration,
+  updateBuildCheckoutConfiguration,
+} = formulaActions;
+const { updateComponentState, updateResponse } = componentActions;
 
 export const ManageAdyenSessions = (props: any) => {
   const { build, isRedirect, redirectResult, sessionId } = useSelector(
@@ -43,14 +50,13 @@ export const ManageAdyenSessions = (props: any) => {
   useEffect(() => {
     if (redirectResultQueryParameter && !isRedirect) {
       dispatch(updateIsRedirect(true));
-      //need to remove query path parameters without refreshing
       dispatch(updateRedirectResult(redirectResultQueryParameter));
       dispatch(updateSessionId(sessionIdQueryParameter));
     }
   }, [redirectResultQueryParameter, isRedirect]);
 
   if (loadingAdyenScript || !variant) {
-    return <Loading />;
+    return <Loading className="text-foreground" />;
   }
 
   if (adyenScriptError) {
@@ -59,20 +65,38 @@ export const ManageAdyenSessions = (props: any) => {
   }
 
   return (
-    <div>
-      {/* Non Redirect Handler */}
+    <div className="h-[100%]">
       {!isRedirect && (
         <InitSessionsComponent
           checkoutAPIVersion={checkoutAPIVersion}
-          checkoutConfiguration={{
-            ...checkoutConfiguration,
-            onChange: (state: any) => {
-              dispatch(updateComponentState(state));
-            },
-          }}
+          checkoutConfiguration={checkoutConfiguration}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}
           sessionsRequest={sessions}
+          onChange={(state: any) => {
+            dispatch(updateComponentState(state));
+          }}
+          onSessionsResponse={(response: any) => {
+            if (response) {
+              let evaluatedCheckoutConfiguration = unstringifyObject(
+                checkoutConfiguration
+              );
+              evaluatedCheckoutConfiguration.paymentMethodsResponse = {
+                ...response,
+              };
+              dispatch(
+                updateBuildCheckoutConfiguration(
+                  stringifyObject(evaluatedCheckoutConfiguration)
+                )
+              );
+              dispatch(
+                updateCheckoutConfiguration(
+                  stringifyObject(evaluatedCheckoutConfiguration)
+                )
+              );
+              dispatch(updateResponse({ sessions: { ...response } }));
+            }
+          }}
         />
       )}
 
@@ -80,12 +104,6 @@ export const ManageAdyenSessions = (props: any) => {
       {isRedirect && redirectResult && sessionId && (
         <RedirectSessionsComponent
           checkoutAPIVersion={checkoutAPIVersion}
-          checkoutConfiguration={{
-            ...checkoutConfiguration,
-            onChange: (state: any) => {
-              dispatch(updateComponentState(state));
-            },
-          }}
           variant={variant}
           redirectResult={redirectResult}
           sessionId={sessionId}

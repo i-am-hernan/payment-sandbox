@@ -7,32 +7,39 @@ interface AdyenSessionsHook {
 
 export const useAdyenSessions = (
   txVariant: string,
-  checkoutAPIVersion: string,
+  checkoutAPIVersion: {
+    sessions: string;
+  },
   checkoutConfiguration: any,
   txVariantConfiguration: any,
   sessionsResponse: any,
-  checkoutRef: any
+  checkoutRef: any,
+  onChange: any
 ): AdyenSessionsHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
 
   useEffect(() => {
+    const handlePaymentCompleted = (result: any, component: any) => {
+      setResult(result);
+    };
+    const handleError = (error: any) => {
+      setError(error);
+    };
+    const handleChange = (state: any) => {
+      onChange(state);
+    };
+
+    const executeConfiguration = new Function(
+      "handlePaymentCompleted",
+      "handleError",
+      "handleChange",
+      `return ${checkoutConfiguration}`
+    )(handlePaymentCompleted, handleError, handleChange);
+
     let configuration: any = {
-      ...checkoutConfiguration,
+      ...executeConfiguration,
       session: sessionsResponse,
-      showPayButton: true,
-      onPaymentCompleted: (result: any, component: any) => {
-        console.log(result);
-        //TODO: handle the result
-        setResult(result);
-        console.log("-------PAYMENT COMPLETED WITH SESSIONS------");
-      },
-      onPaymentFailed: (error: any, component: any) => {
-        console.log(error);
-        //TODO: handle the error
-        setError(error);
-        console.log("-------UH OH .. PAYMENT FAILED----");
-      },
     };
     try {
       const initCheckout: any = async () => {
@@ -47,7 +54,14 @@ export const useAdyenSessions = (
         setError(error);
       }
     }
-  }, [txVariant, txVariantConfiguration, sessionsResponse, checkoutAPIVersion, checkoutConfiguration, checkoutRef]);
+  }, [
+    txVariant,
+    txVariantConfiguration,
+    sessionsResponse,
+    checkoutAPIVersion,
+    checkoutConfiguration,
+    checkoutRef,
+  ]);
 
   return { error, result };
 };

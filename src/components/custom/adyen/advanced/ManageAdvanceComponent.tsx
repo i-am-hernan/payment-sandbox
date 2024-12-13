@@ -2,7 +2,6 @@
 
 import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdvanceComponent";
 import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
-import { Skeleton } from "@/components/ui/skeleton";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import { componentActions, formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
@@ -11,6 +10,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../utils/Loading";
+
 const {
   updateIsRedirect,
   updateRedirectResult,

@@ -53,7 +53,7 @@ export const InitAdvanceComponent = (props: any) => {
       : null;
 
   return (
-    <div className="flex justify-center items-center h-[100%]">
+    <div className="flex justify-center items-center min-h-screen">
       {error && (
         <Alert variant="destructive">
           <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>

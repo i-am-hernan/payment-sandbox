@@ -13,7 +13,11 @@ const {
   updateBuildCheckoutReturnUrls,
 } = formulaActions;
 
-export const useFormula = (variant: string, view: string) => {
+export const useFormula = (
+  variant: string,
+  view: string,
+  integration: string
+) => {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -87,16 +91,14 @@ export const useFormula = (variant: string, view: string) => {
             returnUrl.searchParams.set("id", id);
             updateReturnUrl(returnUrl.toString());
           } else {
-            // I need to add the view param to the url
-            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}?id=${id}&view=${view}`;
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}?id=${id}&view=${view}`;
             updateReturnUrl(returnUrl);
           }
-          // I need to store the formula in the base parameter of the formula stor
           storeFormulaToLocalStorage(configuration);
         } else if (isDefault) {
           syncFormula(configuration);
           updateReturnUrl(
-            `${process.env.NEXT_PUBLIC_CLIENT_URL}/advance/${variant}`
+            `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}`
           );
           storeFormulaToLocalStorage(configuration);
         }
