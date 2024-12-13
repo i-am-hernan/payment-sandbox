@@ -23,7 +23,7 @@ export const useFormula = (
   const id = searchParams.get("id");
   const redirectResult = searchParams.get("redirectResult");
   const { data, error: apiError } = useApi(
-    `api/formula${id ? "/" + id : ""}`,
+    `api/formula/${integration}${id ? "/" + id : ""}`,
     "GET"
   );
 
@@ -71,7 +71,7 @@ export const useFormula = (
             ? data.error
             : apiError
               ? apiError
-              : "Error setting formula",
+              : "Error getting formula",
           success: false,
         });
       } else {

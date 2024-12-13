@@ -1,26 +1,34 @@
 import dbConnect from "@/lib/db";
 import Formula from "@/schema/Formula";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-//TODO: Move to constants file or configuration file
-const defaultFormulaId = process.env.DEFAULT_FORMULA_ID;
+interface Params {
+  params: {
+    integration: string;
+  };
+}
 
-export async function GET(request: Request) {
-  console.log("Request to GET Starter Formula");
+const defaultSessionsFormulaId = process.env.DEFAULT_SESSIONS_FORMULA_ID;
+const defaultAdvanceFormulaId = process.env.DEFAULT_ADVANCE_FORMULA_ID;
+
+export async function GET(request: NextRequest, { params }: Params) {
+  const { integration } = params;
 
   try {
     await dbConnect();
     console.log("DB Connected");
 
+    const defaultFormulaId =
+      integration === "sessions"
+        ? defaultSessionsFormulaId
+        : integration === "advance"
+          ? defaultAdvanceFormulaId
+          : "";
     let formula = await Formula.findById(defaultFormulaId);
 
     if (!formula) {
-      throw new Error(
-        `Starter Formula not found`
-      );
+      throw new Error(`Starter Formula not found`);
     }
-
-    console.log("Starter Formula retrieved");
 
     return NextResponse.json(
       { message: "starter formula retrieved", success: true, data: formula },

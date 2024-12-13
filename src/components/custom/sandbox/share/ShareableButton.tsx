@@ -31,8 +31,9 @@ const ShareableButton = (props: any) => {
   const [share, setShare] = useState(false);
   const [view, setView] = useState("developer");
   const { disabled } = props;
-  const { variant } = useParams<{
+  const { variant, integration } = useParams<{
     variant: string;
+    integration: string;
   }>();
   const state = useSelector((state: RootState) => state.formula);
   const containerRef = useRef(null);
@@ -48,13 +49,13 @@ const ShareableButton = (props: any) => {
     const requestBody = JSON.stringify({
       configuration: processedRequest,
       txVariant: variant,
-      integrationType: "advance",
+      integrationType: integration,
       title,
       description,
     });
 
     setFormula({ ...formula, loading: true });
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/formula`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/formula/${integration}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +82,7 @@ const ShareableButton = (props: any) => {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(
-        `${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}&view=${view}`
+        `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}?id=${data._id}&view=${view}`
       );
       setShowCheck(true);
       setTimeout(() => {
@@ -214,7 +215,7 @@ const ShareableButton = (props: any) => {
                 <div className="flex items-stretch">
                   <div className="border-border border border-r-none rounded rounded-r-none">
                     <p className="!h-[100%] max-w-[350px] flex items-center justify-center flex-1 text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-scroll">
-                      {`${process.env.NEXT_PUBLIC_API_URL}/advance/${variant}?id=${data._id}`}
+                      {`${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}?id=${data._id}`}
                     </p>
                   </div>
                   <div className="justify-start">

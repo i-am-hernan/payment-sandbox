@@ -16,6 +16,7 @@ const {
   updateRedirectResult,
   updateCheckoutConfiguration,
   updateBuildCheckoutConfiguration,
+  updateReset,
 } = formulaActions;
 const { updateComponentState, updateResponse } = componentActions;
 
@@ -90,6 +91,7 @@ export const ManageAdvanceComponent = () => {
                 )
               );
               dispatch(updateResponse({ paymentMethods: { ...response } }));
+              dispatch(updateReset());
             }
           }}
         />

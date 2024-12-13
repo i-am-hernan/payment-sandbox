@@ -18,6 +18,7 @@ const {
   updateSessionId,
   updateCheckoutConfiguration,
   updateBuildCheckoutConfiguration,
+  updateReset,
 } = formulaActions;
 const { updateComponentState, updateResponse } = componentActions;
 
@@ -81,8 +82,9 @@ export const ManageAdyenSessions = (props: any) => {
               let evaluatedCheckoutConfiguration = unstringifyObject(
                 checkoutConfiguration
               );
-              evaluatedCheckoutConfiguration.paymentMethodsResponse = {
-                ...response,
+              evaluatedCheckoutConfiguration.session = {
+                id: response.id,
+                sessionData: response.sessionData,
               };
               dispatch(
                 updateBuildCheckoutConfiguration(
@@ -95,6 +97,7 @@ export const ManageAdyenSessions = (props: any) => {
                 )
               );
               dispatch(updateResponse({ sessions: { ...response } }));
+              dispatch(updateReset());
             }
           }}
         />
