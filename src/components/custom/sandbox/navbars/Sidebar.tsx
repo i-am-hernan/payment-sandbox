@@ -56,6 +56,7 @@ const Sidebar = (props: any) => {
     paymentMethodsMerchantAccount,
     variant,
     view,
+    integration,
   } = props;
   const {
     html: htmlUnsavedChanges,
@@ -177,7 +178,7 @@ const Sidebar = (props: any) => {
                         paymentMethodName={"Dropin"}
                         paymentMethodType={"dropin"}
                         defaultExpanded={variant === "dropin"}
-                        defaultIntegration="Advanced"
+                        defaultIntegration={integration}
                       />
                       {paymentMethodsResponse &&
                         paymentMethodsResponse.paymentMethods &&
@@ -188,7 +189,7 @@ const Sidebar = (props: any) => {
                               paymentMethodName={paymentMethod.name}
                               paymentMethodType={paymentMethod.type}
                               defaultExpanded={variant === paymentMethod.type}
-                              defaultIntegration="Advanced"
+                              defaultIntegration={integration}
                             />
                           )
                         )}

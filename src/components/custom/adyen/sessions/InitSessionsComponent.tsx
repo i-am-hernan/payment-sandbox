@@ -1,7 +1,6 @@
 "use client";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenSessions } from "@/hooks/useAdyenSessions";
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useRef } from "react";

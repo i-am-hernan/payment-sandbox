@@ -19,7 +19,7 @@ interface ExpandableCardsProps {
 }
 
 export function ExpandableCards(props: ExpandableCardsProps) {
-  const { defaultExpanded } = props;
+  const { defaultExpanded, defaultIntegration } = props;
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
@@ -54,8 +54,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
                 <Clock className="h-3 w-3 mb-1 text-adyen" />
                 <span
                   className={`pl-1 text-xs ${
-                    props.defaultIntegration === "Sessions" &&
-                    props.defaultExpanded
+                    defaultIntegration === "sessions" && defaultExpanded
                       ? ""
                       : "font-thin"
                   }`}
@@ -76,8 +75,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
                 <SquareTerminal className="h-3 w-3 mb-1 text-preview" />
                 <span
                   className={`pl-1 text-xs ${
-                    props.defaultIntegration === "Advanced" &&
-                    props.defaultExpanded
+                    defaultIntegration === "advance" && defaultExpanded
                       ? ""
                       : "font-thin"
                   }`}

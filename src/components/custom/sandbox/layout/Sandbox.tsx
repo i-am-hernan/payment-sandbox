@@ -81,10 +81,12 @@ const Sandbox = ({
       >
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel defaultSize={view === "developer" ? 50 : 100}>
-            {React.cloneElement(TopRight, {
-              onExpand: handleTopRightExpand,
-              onContract: handleContract,
-            })}
+            <div className="items-center justify-center flex w-full h-full">
+              {React.cloneElement(TopRight, {
+                onExpand: handleTopRightExpand,
+                onContract: handleContract,
+              })}
+            </div>
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel
@@ -92,10 +94,12 @@ const Sandbox = ({
             maxSize={view === "preview" || view === "demo" ? 0 : 100}
             ref={refB}
           >
-            {React.cloneElement(BottomRight, {
-              onExpand: handleBottomRightExpand,
-              onContract: handleContract,
-            })}
+            <div className="items-center justify-center flex w-full h-full">
+              {React.cloneElement(BottomRight, {
+                onExpand: handleBottomRightExpand,
+                onContract: handleContract,
+              })}
+            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>

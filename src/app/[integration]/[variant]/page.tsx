@@ -322,6 +322,7 @@ const Page: any = () => {
             paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
             variant={variant}
             view={view}
+            integration={integration}
           />
         </footer>
       </React.Fragment>
