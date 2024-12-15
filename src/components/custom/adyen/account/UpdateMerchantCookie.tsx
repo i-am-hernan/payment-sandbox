@@ -106,7 +106,7 @@ const UpdateMerchantCookie = () => {
           <Button
             variant="outline"
             size="sm"
-            className="w-[50%] rounded-none border-border"
+            className="w-[50%] rounded-md border-border"
             onClick={() => {
               setOpen(true);
               setMerchantAccountLocal(

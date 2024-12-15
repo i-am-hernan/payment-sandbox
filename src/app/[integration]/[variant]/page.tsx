@@ -58,7 +58,7 @@ const Page: any = () => {
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
   const paymentMethodsMerchantAccount = {
-    merchantAccount: `${defaultMerchantAccount}`,
+    merchantAccount: `${merchantAccount}`,
   };
   const {
     paymentMethods: paymentMethodsAPIVersion,

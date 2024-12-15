@@ -41,7 +41,13 @@ export const useAdyenAdvance = (
     );
     const paymentResponse = await response.json();
     if (paymentResponse.status >= 400) {
-      setError(paymentResponse);
+      setError({
+        status: paymentResponse?.status,
+        pspReference: paymentResponse?.pspReference,
+        message: paymentResponse?.message
+          ? paymentResponse.message
+          : "Error retrieving /paymentMethods response",
+      });
     } else if (paymentResponse.action) {
       dropin.handleAction(paymentResponse.action);
     } else {
@@ -65,7 +71,13 @@ export const useAdyenAdvance = (
     );
     const paymentDetailsResponse = await response.json();
     if (paymentDetailsResponse.statusCode >= 400) {
-      setError(paymentDetailsResponse);
+      setError({
+        status: paymentDetailsResponse?.status,
+        pspReference: paymentDetailsResponse?.pspReference,
+        message: paymentDetailsResponse?.message
+          ? paymentDetailsResponse.message
+          : "Error retrieving /paymentMethods response",
+      });
     } else if (paymentDetailsResponse.action) {
       dropin.handleAction(paymentDetailsResponse.action);
     } else {
@@ -89,18 +101,31 @@ export const useAdyenAdvance = (
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
-        const component = checkout
-          .create(txVariant, {
+        try {
+          const component = checkout.create(txVariant, {
             ...txVariantConfiguration,
-          })
-          .mount(checkoutRef.current);
+          });
+          component.mount(checkoutRef.current);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            setError({
+              message: error.message
+                ? error.message
+                : "Error mounting component",
+            });
+          }
+        }
       };
       if (checkoutRef.current) {
         initCheckout();
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error);
+        setError({
+          message: error.message
+            ? error.message
+            : "Error initializing checkout",
+        });
       }
     }
   };
