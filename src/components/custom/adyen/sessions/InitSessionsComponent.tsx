@@ -53,7 +53,7 @@ export const InitSessionsComponent = (props: any) => {
     adyenSDKError || sessionError
       ? { ...adyenSDKError, ...sessionError }
       : null;
-  console.log("adyenWebVersion:: initSessionsComponent", adyenWebVersion);
+
   return (
     <div className="flex justify-center items-center h-[100%]">
       {error && (

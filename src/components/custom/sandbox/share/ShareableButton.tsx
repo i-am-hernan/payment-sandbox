@@ -44,7 +44,6 @@ const ShareableButton = (props: any) => {
   });
   const { data, loading, error } = formula;
   const { title, description } = buildInfo;
-  
   const handleShare = (request: any) => {
     const processedRequest = refineFormula(request);
     const requestBody = JSON.stringify({
@@ -139,7 +138,7 @@ const ShareableButton = (props: any) => {
                 >
                   <label className="text-[13px] pt-2 pb-1">Title</label>
                   <Input
-                    value={title}
+                    value={title ? title : ""}
                     required
                     onChange={(e) =>
                       setBuildInfo({ ...buildInfo, title: e.target.value })
@@ -147,7 +146,7 @@ const ShareableButton = (props: any) => {
                   />
                   <label className="text-[13px] pt-2 pb-1">Description</label>
                   <Input
-                    value={description}
+                    value={description ? description : ""}
                     required
                     onChange={(e) =>
                       setBuildInfo({

@@ -34,7 +34,7 @@ export const InitAdvanceComponent = (props: any) => {
   const checkoutRef = useRef(null);
 
   useEffect(() => {
-    if (paymentMethodsResponse && !paymentMethodsError) { 
+    if (paymentMethodsResponse && !paymentMethodsError) {
       onPaymentMethodsResponse(paymentMethodsResponse);
       setReadyToMount(true);
     }
