@@ -24,7 +24,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useApi } from "@/hooks/useApi";
+import { RequestOptions, useApi } from "@/hooks/useApi";
 import { userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -34,7 +34,7 @@ import WebhookIcon from "@mui/icons-material/Webhook";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import Loading from "../../utils/Loading";
 
@@ -53,7 +53,7 @@ const Sidebar = (props: any) => {
     section,
     setSection,
     unsavedChanges,
-    paymentMethodsMerchantAccount,
+    merchantAccount,
     variant,
     view,
     integration,
@@ -74,15 +74,11 @@ const Sidebar = (props: any) => {
   const dispatch = useDispatch();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const {
-    data: paymentMethodsResponse,
-    loading: loadingPaymentMethods,
-    error: paymentMethodsError,
-  } = useApi(
-    `api/checkout/v71/paymentMethods`,
-    "POST",
-    paymentMethodsMerchantAccount
-  );
+  const [paymentMethods, setPaymentMethods] = useState({
+    data: null,
+    loading: true,
+    error: null,
+  });
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -145,6 +141,39 @@ const Sidebar = (props: any) => {
     },
   ];
 
+  const fetchPaymentMethods = async () => {
+    try {
+      const requestOptions: RequestOptions = {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ merchantAccount: merchantAccount }),
+      };
+      const domain = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_API_URL;
+      const response = await fetch(
+        `${domain}/api/checkout/v71/paymentMethods`,
+        requestOptions
+      );
+      const data = await response.json();
+      if (data.status >= 400) {
+        throw new Error(data.message);
+      } else {
+        setPaymentMethods({
+          data: data.paymentMethods,
+          loading: false,
+          error: null,
+        });
+      }
+    } catch (error: any) {
+      setPaymentMethods({
+        data: null,
+        loading: false,
+        error: error.message,
+      });
+    }
+  };
+
   const totalUnsavedChanges = (unsavedChanges: any) => {
     return Object.values(unsavedChanges).filter((value) => value).length;
   };
@@ -156,7 +185,12 @@ const Sidebar = (props: any) => {
             <div>
               <Drawer direction="left">
                 <span>
-                  <DrawerTrigger className="mt-2 px-2 pb-2 pt-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
+                  <DrawerTrigger
+                    onClick={() => {
+                      fetchPaymentMethods();
+                    }}
+                    className="mt-2 px-2 pb-2 pt-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground"
+                  >
                     <WidgetsIcon className="!text-foreground !text-[19px]" />
                   </DrawerTrigger>
                 </span>
@@ -165,45 +199,51 @@ const Sidebar = (props: any) => {
                   <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-sm py-0">
-                        <span className="flex items-center">
-                          <ChevronDown className="h-4 w-4 pr-1 text-grey" />
-                          <span className="display-inline">
-                            Online Payments
+                        {paymentMethods && paymentMethods.data && (
+                          <span className="flex items-center">
+                            <ChevronDown className="h-4 w-4 pr-1 text-grey" />
+                            <span className="display-inline">
+                              Online Payments
+                            </span>
                           </span>
-                        </span>
+                        )}
                       </DrawerTitle>
                     </DrawerHeader>
-                    <div>
-                      <ExpandableCards
-                        paymentMethodName={"Dropin"}
-                        paymentMethodType={"dropin"}
-                        defaultExpanded={variant === "dropin"}
-                        defaultIntegration={integration}
-                      />
-                      {paymentMethodsResponse &&
-                        paymentMethodsResponse.paymentMethods &&
-                        paymentMethodsResponse.paymentMethods.map(
-                          (paymentMethod: any) => (
-                            <ExpandableCards
-                              key={paymentMethod.type}
-                              paymentMethodName={paymentMethod.name}
-                              paymentMethodType={paymentMethod.type}
-                              defaultExpanded={variant === paymentMethod.type}
-                              defaultIntegration={integration}
-                            />
-                          )
-                        )}
-                      {loadingPaymentMethods && <Loading />}
-                      {paymentMethodsError && (
+                    {paymentMethods.loading && (
+                      <div className="h-[100%] w-[100%]">
+                        <Loading />
+                      </div>
+                    )}
+                    {paymentMethods.error && (
+                      <div className="h-[100%] w-[100%]">
                         <Alert variant="destructive">
                           <AlertTitle>
                             {"Error: Unable to save Payment methods"}
                           </AlertTitle>
                           <AlertDescription>
-                            {paymentMethodsError}
+                            {paymentMethods.error}
                           </AlertDescription>
                         </Alert>
+                      </div>
+                    )}
+                    <div>
+                      {paymentMethods && paymentMethods.data && (
+                        <ExpandableCards
+                          paymentMethodName={"Dropin"}
+                          paymentMethodType={"dropin"}
+                          defaultExpanded={variant === "dropin"}
+                          defaultIntegration={integration}
+                        />
                       )}
+                      {paymentMethods?.data?.map((paymentMethod: any) => (
+                          <ExpandableCards
+                            key={paymentMethod.type}
+                            paymentMethodName={paymentMethod.name}
+                            paymentMethodType={paymentMethod.type}
+                            defaultExpanded={variant === paymentMethod.type}
+                            defaultIntegration={integration}
+                          />
+                        ))}
                     </div>
                   </DrawerContent>
                 </DrawerPortal>

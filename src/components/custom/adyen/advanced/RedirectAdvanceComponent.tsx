@@ -1,11 +1,8 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAdyenAdvanceRedirect } from "@/hooks/useAdyenAdvanceRedirect";
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-// import { ReactComponent as AdyenIdkIcon } from "@/assets/adyen-idk-icon.svg"
+import Loading from "../../utils/Loading";
 
 export const RedirectAdvanceComponent = (props: any) => {
   const {
@@ -23,30 +20,26 @@ export const RedirectAdvanceComponent = (props: any) => {
   );
 
   return (
-    <div>
+    <div className="flex justify-center items-center h-[100%]">
       {error && (
-        <Alert variant="destructive">
-          <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>
-          <AlertDescription>{error.message}</AlertDescription>
-        </Alert>
-      )}
-      {result && (
-        <Alert variant="default" className="border-primary">
-          <AlertTitle>{result.resultCode}</AlertTitle>
-          <AlertDescription>
-            {`PSP Reference: ${result.pspReference}`}
-          </AlertDescription>
-        </Alert>
-      )}
-      {loading && (
-        <div className="flex flex-col space-y-3 items-center m-4">
-          <Skeleton className="h-[180px] w-[250px] rounded-xl bg-border" />
-          <div className="space-y-2">
-            <Skeleton className="h-7 w-[250px] bg-border" />
-            <Skeleton className="h-7 w-[250px] bg-border" />
-          </div>
+        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
+          <Alert variant="destructive">
+            <AlertTitle>{`Error: ${error?.errorCode ? error.errorCode : ""} ${error?.errorType ? error.errorType : ""} ${error?.status ? error.status : ""}`}</AlertTitle>
+            <AlertDescription className="text-xs">
+              {error.message}
+            </AlertDescription>
+          </Alert>
         </div>
       )}
+      {result && (
+        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
+          <Alert variant="default" className="border-primary">
+            <AlertTitle>{result.resultCode}</AlertTitle>
+            <AlertDescription className="text-xs">{`PSP Reference: ${result.pspReference}`}</AlertDescription>
+          </Alert>
+        </div>
+      )}
+      {loading && <Loading className="text-foreground" />}
     </div>
   );
 };

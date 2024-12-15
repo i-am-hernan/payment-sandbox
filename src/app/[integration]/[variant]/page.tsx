@@ -57,9 +57,7 @@ const Page: any = () => {
   useView(viewParam);
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
-  const paymentMethodsMerchantAccount = {
-    merchantAccount: `${merchantAccount}`,
-  };
+
   const {
     paymentMethods: paymentMethodsAPIVersion,
     payments: paymentsAPIVersion,
@@ -319,7 +317,7 @@ const Page: any = () => {
             section={section}
             setSection={setSection}
             unsavedChanges={unsavedChanges}
-            paymentMethodsMerchantAccount={paymentMethodsMerchantAccount}
+            merchantAccount={merchantAccount ? merchantAccount : defaultMerchantAccount}
             variant={variant}
             view={view}
             integration={integration}

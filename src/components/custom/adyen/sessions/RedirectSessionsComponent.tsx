@@ -1,29 +1,18 @@
 "use client";
-
-import { Skeleton } from "@/components/ui/skeleton";
-import { useAdyenAdvanceRedirect } from "@/hooks/useAdyenAdvanceRedirect";
-import { useRef } from "react";
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAdyenSessionsRedirect } from "@/hooks/useAdyenSessionsRedirect";
-
-// import { ReactComponent as AdyenIdkIcon } from "@/assets/adyen-idk-icon.svg"
+import Loading from "../../utils/Loading";
 
 export const RedirectSessionsComponent = (props: any) => {
   const { redirectResult, sessionId, checkoutConfiguration } = props;
-  const { result, error, loading }: any = useAdyenSessionsRedirect(checkoutConfiguration, sessionId, redirectResult);
-
-  console.log(result);
-  console.log(error);
-  console.log(loading);
+  const { result, error, loading }: any = useAdyenSessionsRedirect(
+    checkoutConfiguration,
+    sessionId,
+    redirectResult
+  );
 
   return (
-    <div>
-      RedirectResult:
-      {redirectResult}
-      <br></br>
-      SessionId:
-      {sessionId}
+    <div className="flex justify-center items-center h-[100%]">
       {error && (
         <Alert variant="destructive">
           <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>
@@ -35,15 +24,7 @@ export const RedirectSessionsComponent = (props: any) => {
           <AlertTitle>{result.resultCode}</AlertTitle>
         </Alert>
       )}
-      {loading && (
-        <div className="flex flex-col space-y-3 items-center m-4">
-          <Skeleton className="h-[180px] w-[250px] rounded-xl bg-border" />
-          <div className="space-y-2">
-            <Skeleton className="h-7 w-[250px] bg-border" />
-            <Skeleton className="h-7 w-[250px] bg-border" />
-          </div>
-        </div>
-      )}
+      {loading && <Loading className="text-foreground" />}
     </div>
   );
 };
