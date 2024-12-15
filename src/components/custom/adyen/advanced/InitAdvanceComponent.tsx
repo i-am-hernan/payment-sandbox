@@ -2,7 +2,7 @@
 
 import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
 import { useApi } from "@/hooks/useApi";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Loading from "@/components/custom/utils/Loading";
 
@@ -10,6 +10,7 @@ export const InitAdvanceComponent = (props: any) => {
   const {
     checkoutConfiguration,
     checkoutAPIVersion,
+    adyenWebVersion,
     variant,
     txVariantConfiguration,
     paymentMethodsRequest,
@@ -29,22 +30,28 @@ export const InitAdvanceComponent = (props: any) => {
     paymentMethodsRequest
   );
 
+  const [readyToMount, setReadyToMount] = useState(false);
   const checkoutRef = useRef(null);
 
   useEffect(() => {
-    onPaymentMethodsResponse(paymentMethodsResponse);
+    if (paymentMethodsResponse && !paymentMethodsError) { 
+      onPaymentMethodsResponse(paymentMethodsResponse);
+      setReadyToMount(true);
+    }
   }, [paymentMethodsResponse]);
 
   const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
     variant,
     checkoutAPIVersion,
+    adyenWebVersion,
     checkoutConfiguration,
     txVariantConfiguration,
     paymentMethodsResponse,
     paymentsRequest,
     paymentsDetailsRequest,
     checkoutRef,
-    onChange
+    onChange,
+    readyToMount
   );
 
   const error =

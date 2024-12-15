@@ -44,6 +44,7 @@ const ShareableButton = (props: any) => {
   });
   const { data, loading, error } = formula;
   const { title, description } = buildInfo;
+  
   const handleShare = (request: any) => {
     const processedRequest = refineFormula(request);
     const requestBody = JSON.stringify({

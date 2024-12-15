@@ -63,6 +63,7 @@ export const ManageAdvanceComponent = () => {
       {!isRedirect && (
         <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}
+          adyenWebVersion={adyenWebVersion}
           checkoutConfiguration={checkoutConfiguration}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}

@@ -64,12 +64,13 @@ export const ManageAdyenSessions = (props: any) => {
     //TODO: Create Error Component
     return <div>Error...</div>;
   }
-
+  
   return (
     <div className="h-[100%]">
       {!isRedirect && (
         <InitSessionsComponent
           checkoutAPIVersion={checkoutAPIVersion}
+          adyenWebVersion={adyenWebVersion}
           checkoutConfiguration={checkoutConfiguration}
           variant={variant}
           txVariantConfiguration={txVariantConfiguration}
@@ -110,6 +111,7 @@ export const ManageAdyenSessions = (props: any) => {
           variant={variant}
           redirectResult={redirectResult}
           sessionId={sessionId}
+          checkoutConfiguration={checkoutConfiguration}
         />
       )}
     </div>

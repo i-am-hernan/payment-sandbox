@@ -14,11 +14,12 @@ export const useAdyenSessions = (
   txVariantConfiguration: any,
   sessionsResponse: any,
   checkoutRef: any,
-  onChange: any
+  onChange: any,
+  readyToMount: boolean
 ): AdyenSessionsHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
-
+  // console.log("adyenWebVersion:: useAdyenSessions", adyenWebVersion);
   useEffect(() => {
     const handlePaymentCompleted = (result: any, component: any) => {
       setResult(result);
@@ -30,6 +31,31 @@ export const useAdyenSessions = (
       onChange(state);
     };
 
+    const adyenV5 = (
+      configuration: any,
+      checkoutRef: any,
+      txVariant: string,
+      txVariantConfiguration: any
+    ) => {
+      try {
+        const initCheckout: any = async () => {
+          const checkout = await (window as any).AdyenCheckout(configuration);
+          const component = checkout
+            .create(txVariant, {
+              ...txVariantConfiguration,
+            })
+            .mount(checkoutRef.current);
+        };
+        if (checkoutRef.current) {
+          initCheckout();
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error);
+        }
+      }
+    };
+
     const executeConfiguration = new Function(
       "handlePaymentCompleted",
       "handleError",
@@ -39,21 +65,12 @@ export const useAdyenSessions = (
 
     let configuration: any = {
       ...executeConfiguration,
-      session: sessionsResponse,
     };
-    try {
-      const initCheckout: any = async () => {
-        const checkout = await (window as any).AdyenCheckout(configuration);
-        const component = checkout.create(txVariant).mount(checkoutRef.current);
-      };
-      if (checkoutRef.current) {
-        initCheckout();
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error);
-      }
+
+    if (readyToMount) {
+      adyenV5(configuration, checkoutRef, txVariant, txVariantConfiguration);
     }
+
   }, [
     txVariant,
     txVariantConfiguration,

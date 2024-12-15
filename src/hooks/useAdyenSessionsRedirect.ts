@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { unstringifyObject } from "@/utils/utils";
 interface AdyenSessionsHook {
   error: object | null;
   result: object | null;
@@ -16,8 +16,9 @@ export const useAdyenSessionsRedirect = (
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    // I need to change checkoutConfiguration from string to object
     let configuration: any = {
-      ...checkoutConfiguration,
+      ...unstringifyObject(checkoutConfiguration),
       session: {
         id: sessionId,
       },
@@ -30,7 +31,7 @@ export const useAdyenSessionsRedirect = (
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
-        console.log(redirectResult);
+
         checkout.submitDetails({ details: { redirectResult: redirectResult } });
       };
       initCheckout();

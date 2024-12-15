@@ -175,7 +175,6 @@ const formulaSlice = createSlice({
       state.reset = !state.reset;
     },
     updateVariantReturnUrl: (state, action: PayloadAction<string>) => {
-      console.log("update return url", action.payload);
       state.request.payments.returnUrl = action.payload;
       state.request.sessions.returnUrl = action.payload;
     },

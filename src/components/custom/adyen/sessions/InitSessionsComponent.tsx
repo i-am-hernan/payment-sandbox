@@ -3,12 +3,13 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAdyenSessions } from "@/hooks/useAdyenSessions";
 import { useApi } from "@/hooks/useApi";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loading from "../../utils/Loading";
 
 export const InitSessionsComponent = (props: any) => {
   const {
     checkoutAPIVersion,
+    adyenWebVersion,
     checkoutConfiguration,
     variant,
     txVariantConfiguration,
@@ -26,11 +27,14 @@ export const InitSessionsComponent = (props: any) => {
     "POST",
     sessionsRequest
   );
-
+  const [readyToMount, setReadyToMount] = useState(false);
   const checkoutRef = useRef(null);
 
   useEffect(() => {
-    onSessionsResponse(sessionsResponse);
+    if (sessionsResponse && !sessionError) {
+      onSessionsResponse(sessionsResponse);
+      setReadyToMount(true);
+    }
   }, [sessionsResponse]);
 
   const { result: adyenResult, error: adyenSDKError }: any = useAdyenSessions(
@@ -40,14 +44,16 @@ export const InitSessionsComponent = (props: any) => {
     txVariantConfiguration,
     sessionsResponse,
     checkoutRef,
-    onChange
+    onChange,
+    readyToMount,
+    adyenWebVersion
   );
 
   const error =
     adyenSDKError || sessionError
       ? { ...adyenSDKError, ...sessionError }
       : null;
-
+  console.log("adyenWebVersion:: initSessionsComponent", adyenWebVersion);
   return (
     <div className="flex justify-center items-center h-[100%]">
       {error && (

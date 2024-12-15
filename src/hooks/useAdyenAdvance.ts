@@ -12,13 +12,15 @@ export const useAdyenAdvance = (
     payments: string;
     paymentDetails: string;
   },
+  adyenWebVersion: string,
   checkoutConfiguration: any,
   txVariantConfiguration: any,
   paymentMethodsResponse: any,
   paymentsRequest: any,
   paymentsDetailsRequest: any,
   checkoutRef: any,
-  onChange: any
+  onChange: any,
+  readyToMount: boolean
 ): AdyenAdvanceHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
@@ -79,6 +81,31 @@ export const useAdyenAdvance = (
       onChange(state);
     };
 
+    const adyenV5 = (
+      configuration: any,
+      checkoutRef: any,
+      txVariant: string,
+      txVariantConfiguration: any
+    ) => {
+      try {
+        const initCheckout: any = async () => {
+          const checkout = await (window as any).AdyenCheckout(configuration);
+          const component = checkout
+            .create(txVariant, {
+              ...txVariantConfiguration,
+            })
+            .mount(checkoutRef.current);
+        };
+        if (checkoutRef.current) {
+          initCheckout();
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error);
+        }
+      }
+    };
+
     const executeConfiguration = new Function(
       "handleSubmit",
       "handleAdditionalDetails",
@@ -89,25 +116,9 @@ export const useAdyenAdvance = (
 
     let configuration: any = {
       ...executeConfiguration,
-      paymentMethodsResponse: paymentMethodsResponse,
     };
-
-    try {
-      const initCheckout: any = async () => {
-        const checkout = await (window as any).AdyenCheckout(configuration);
-        const component = checkout
-          .create(txVariant, {
-            ...txVariantConfiguration,
-          })
-          .mount(checkoutRef.current);
-      };
-      if (checkoutRef.current) {
-        initCheckout();
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error);
-      }
+    if (/^5./.test(adyenWebVersion) && readyToMount) {
+      adyenV5(configuration, checkoutRef, txVariant, txVariantConfiguration);
     }
   }, [
     txVariant,
