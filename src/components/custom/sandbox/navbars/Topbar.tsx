@@ -73,7 +73,7 @@ const Topbar = (props: any) => {
                 <Button
                   key="reset"
                   disabled={view === "user"}
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   className="px-2 pt-0 pb-0"
                 >
@@ -125,7 +125,7 @@ const Topbar = (props: any) => {
           <span>
             <Button
               key="clear"
-              variant="outline"
+              variant="ghost"
               size="sm"
               className="px-2 pt-0 pb-0"
               disabled={totalUnsavedChanges === 0}

@@ -107,6 +107,10 @@ const Sidebar = (props: any) => {
     };
   }, []);
 
+  useEffect(() => {
+    merchantAccount && fetchPaymentMethods(merchantAccount);
+  }, [merchantAccount]);
+
   const sideTabs: Array<SideTab> = [
     {
       name: "Server",
@@ -141,7 +145,7 @@ const Sidebar = (props: any) => {
     },
   ];
 
-  const fetchPaymentMethods = async () => {
+  const fetchPaymentMethods = async (merchantAccount: string) => {
     try {
       const requestOptions: RequestOptions = {
         method: "POST",
@@ -185,12 +189,7 @@ const Sidebar = (props: any) => {
             <div>
               <Drawer direction="left">
                 <span>
-                  <DrawerTrigger
-                    onClick={() => {
-                      fetchPaymentMethods();
-                    }}
-                    className="mt-2 px-2 pb-2 pt-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground"
-                  >
+                  <DrawerTrigger className="mt-2 px-2 pb-2 pt-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
                     <WidgetsIcon className="!text-foreground !text-[19px]" />
                   </DrawerTrigger>
                 </span>
@@ -236,14 +235,14 @@ const Sidebar = (props: any) => {
                         />
                       )}
                       {paymentMethods?.data?.map((paymentMethod: any) => (
-                          <ExpandableCards
-                            key={paymentMethod.type}
-                            paymentMethodName={paymentMethod.name}
-                            paymentMethodType={paymentMethod.type}
-                            defaultExpanded={variant === paymentMethod.type}
-                            defaultIntegration={integration}
-                          />
-                        ))}
+                        <ExpandableCards
+                          key={paymentMethod.type}
+                          paymentMethodName={paymentMethod.name}
+                          paymentMethodType={paymentMethod.type}
+                          defaultExpanded={variant === paymentMethod.type}
+                          defaultIntegration={integration}
+                        />
+                      ))}
                     </div>
                   </DrawerContent>
                 </DrawerPortal>

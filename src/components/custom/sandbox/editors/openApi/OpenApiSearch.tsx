@@ -27,7 +27,7 @@ const OpenApiSearch = (props: any) => {
       <div>
         <div className="border-b-2 flex text-sm text-foreground">
           <span className="border-r-2 p-[3px]">
-            <p className="inline-block border border-adyen px-2 text-sm">
+            <p className="inline-block border border-info border-dotted px-2 text-sm">
               parameters
             </p>
           </span>

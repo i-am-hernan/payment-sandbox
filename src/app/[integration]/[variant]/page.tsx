@@ -317,7 +317,7 @@ const Page: any = () => {
             section={section}
             setSection={setSection}
             unsavedChanges={unsavedChanges}
-            merchantAccount={merchantAccount ? merchantAccount : defaultMerchantAccount}
+            merchantAccount={merchantAccount}
             variant={variant}
             view={view}
             integration={integration}

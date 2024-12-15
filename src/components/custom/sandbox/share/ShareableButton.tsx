@@ -105,7 +105,7 @@ const ShareableButton = (props: any) => {
         <DialogTrigger asChild>
           <Button
             key="clear"
-            variant="outline"
+            variant="ghost"
             disabled={disabled}
             size="sm"
             className="px-2 pt-0 pb-0"

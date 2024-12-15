@@ -6,7 +6,7 @@ const Version = (props: any) => {
     <div>
       <span className="border-b-2 flex text-sm">
         <span className="border-r-2 p-[3px] text-foreground">
-          <p className="inline-block border border-adyen px-2 text-sm">
+          <p className="inline-block border border-info border-dotted px-2 text-sm">
             version
           </p>
         </span>

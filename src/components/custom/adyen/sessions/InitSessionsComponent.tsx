@@ -57,15 +57,21 @@ export const InitSessionsComponent = (props: any) => {
   return (
     <div className="flex justify-center items-center h-[100%]">
       {error && (
-        <Alert variant="destructive">
-          <AlertTitle>{`Error: ${error.errorCode} ${error.errorType}`}</AlertTitle>
-          <AlertDescription>{error.message}</AlertDescription>
-        </Alert>
+        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
+          <Alert variant="destructive">
+            <AlertTitle>{`Error: ${error?.errorCode ? error.errorCode : ""} ${error?.errorType ? error.errorType : ""} ${error?.status ? error.status : ""}`}</AlertTitle>
+            <AlertDescription className="text-xs">
+              {error.message}
+            </AlertDescription>
+          </Alert>
+        </div>
       )}
       {adyenResult && (
-        <Alert variant="default" className="border-primary">
-          <AlertTitle>{adyenResult.resultCode}</AlertTitle>
-        </Alert>
+        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
+          <Alert variant="default" className="border-primary">
+            <AlertTitle>{adyenResult.resultCode}</AlertTitle>
+          </Alert>
+        </div>
       )}
       {loadingSessions && <Loading className="text-foreground" />}
       {!adyenSDKError && !adyenResult && !loadingSessions && (

@@ -76,7 +76,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
             <TabsTrigger
               key={index}
               value={tab.value}
-              className=" flex px-2 py-[2px] justify-space-between"
+              className={`flex px-2 py-[2px] justify-space-between ${tabsMap.length < 2 ? "border-dotted" : ""}`}
               ref={(el) => {
                 tabRefs.current[index] = el;
               }}

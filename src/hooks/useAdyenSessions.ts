@@ -40,24 +40,38 @@ export const useAdyenSessions = (
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
-        const component = checkout
-          .create(txVariant, {
+        try {
+          const component = checkout.create(txVariant, {
             ...txVariantConfiguration,
-          })
-          .mount(checkoutRef.current);
+          });
+          component.mount(checkoutRef.current);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            setError({
+              message: error.message
+                ? error.message
+                : "Error mounting component",
+            });
+          }
+        }
       };
       if (checkoutRef.current) {
         initCheckout();
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error);
+        if (error instanceof Error) {
+          setError({
+            message: error.message
+              ? error.message
+              : "Error initializing checkout",
+          });
+        }
       }
     }
   };
-  
-  useEffect(() => {
 
+  useEffect(() => {
     const executeConfiguration = new Function(
       "handlePaymentCompleted",
       "handleError",
