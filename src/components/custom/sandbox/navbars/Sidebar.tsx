@@ -252,37 +252,39 @@ const Sidebar = (props: any) => {
                 </DrawerPortal>
               </Drawer>
             </div>
-            {sideTabs.map((tab, index): any => (
-              <span className="relative" key={index}>
-                <Tooltip
-                  title={`${tab.name} (${tab.hotKey})`}
-                  placement="right-start"
-                >
-                  <span>
-                    <Button
-                      key={tab.name}
-                      disabled={view === "demo"}
-                      variant="ghost"
-                      size="icon"
-                      ref={tab.ref}
-                      className={`mt-2 rounded-none ${
-                        section === tab.name && view !== "demo"
-                          ? "border-[1px] border-adyen"
-                          : "hover:border-[1px] hover:border-adyen hover:border-dotted"
-                      }`}
-                      onClick={() => setSection(tab.name)}
+            {sideTabs.map(
+              (tab, index): any =>
+                view !== "demo" && (
+                  <span className="relative" key={index}>
+                    <Tooltip
+                      title={`${tab.name} (${tab.hotKey})`}
+                      placement="right-start"
                     >
-                      {tab.icon}
-                    </Button>
+                      <span>
+                        <Button
+                          key={tab.name}
+                          variant="ghost"
+                          size="icon"
+                          ref={tab.ref}
+                          className={`mt-2 rounded-none ${
+                            section === tab.name
+                              ? "border-[1px] border-adyen"
+                              : "hover:border-[1px] hover:border-adyen hover:border-dotted"
+                          }`}
+                          onClick={() => setSection(tab.name)}
+                        >
+                          {tab.icon}
+                        </Button>
+                      </span>
+                    </Tooltip>
+                    {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
+                      <div className="w-4 h-4 border border-foreground rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-background text-foreground text-xxs">
+                        {totalUnsavedChanges(tab.unsavedChanges)}
+                      </div>
+                    )}
                   </span>
-                </Tooltip>
-                {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
-                  <div className="w-4 h-4 border border-foreground rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-background text-foreground text-xxs">
-                    {totalUnsavedChanges(tab.unsavedChanges)}
-                  </div>
-                )}
-              </span>
-            ))}
+                )
+            )}
           </div>
           <div className="pb-3">
             <DropdownMenu>

@@ -108,7 +108,7 @@ const ShareableButton = (props: any) => {
             variant="ghost"
             disabled={disabled}
             size="sm"
-            className="px-2 pt-0 pb-0"
+            className="border-[1px] border-transparent bg-background px-2 hover:border-[1px] hover:border-adyen hover:border-dotted rounded-none"
             onClick={() => {
               // handleShare(state);
             }}
