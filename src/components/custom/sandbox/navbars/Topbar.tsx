@@ -27,6 +27,7 @@ import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import Tooltip from "@mui/material/Tooltip";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import CodeIcon from '@mui/icons-material/Code';
 
 const {
   updateRun,
@@ -62,50 +63,34 @@ const Topbar = (props: any) => {
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
       ref={containerRef}
     >
-      <div className="flex justify-end pr-3">
-        <Tooltip title="Developer">
-          <span>
-            <Button
-              key="developer"
-              variant="ghost"
-              size="sm"
-              className="border-foreground bg-background px-2"
-              onClick={() => {
-                dispatch(updateView("developer"));
-                clearUrlParams(["view"]);
-              }}
-            >
-              <ViewColumnIcon
-                className={`!text-[16px] ${view === "developer" ? "text-adyen" : "text-foreground"}`}
-              />
-            </Button>
-          </span>
-        </Tooltip>
-        <Tooltip title="Preview">
-          <span>
-            <Button
-              key="preview"
-              variant="ghost"
-              size="sm"
-              className="bg-background border-foreground px-2"
-              onClick={() => {
-                dispatch(updateView("preview"));
-                clearUrlParams(["view"]);
-              }}
-            >
-              <VerticalSplitIcon
-                className={`!text-[16px] ${
-                  view === "preview" ? "text-adyen" : "text-foreground"
-                }`}
-              />
-            </Button>
-          </span>
-        </Tooltip>
-      </div>
       <div className="flex-1 text-center">
         <UpdateMerchantCookie />
       </div>
       <div className="flex justify-end">
+        <div className="mr-2">
+          <Tooltip title="Developer Tools">
+            <span>
+              <Button
+                key="developer"
+                variant="ghost"
+                size="sm"
+                className="border-foreground bg-background px-2"
+                onClick={() => {
+                  if (view === "developer") {
+                    dispatch(updateView("preview"));
+                  } else if (view === "preview") {
+                    dispatch(updateView("developer"));
+                  }
+                  clearUrlParams(["view"]);
+                }}
+              >
+                <CodeIcon
+                  className={`!text-[16px] ${view === "developer" ? "text-adyen" : "text-foreground"}`}
+                />
+              </Button>
+            </span>
+          </Tooltip>
+        </div>
         <div className="mr-2">
           <ShareableButton
             disabled={totalUnsavedChanges !== 0 || view == "user"}

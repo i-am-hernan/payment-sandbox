@@ -18,7 +18,7 @@ const initialState: FormulaPropType = {
   merchantAccount: null,
   defaultMerchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
   theme: "dark",
-  view: "developer",
+  view: "preview",
 };
 
 // Create the slice with typed reducers
