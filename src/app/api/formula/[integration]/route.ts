@@ -25,7 +25,7 @@ export async function GET(request: NextRequest, { params }: Params) {
           ? defaultAdvanceFormulaId
           : "";
     let formula = await Formula.findById(defaultFormulaId);
-
+    console.log("defaultFormulaId", defaultFormulaId);
     if (!formula) {
       throw new Error(`Starter Formula not found`);
     }
