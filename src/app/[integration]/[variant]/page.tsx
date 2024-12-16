@@ -309,7 +309,6 @@ const Page: any = () => {
               )
             }
             view={view}
-            key={view}
           />
         </main>
         <footer>

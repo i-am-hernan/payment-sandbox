@@ -20,8 +20,10 @@ import {
   replaceKeyValueJSON,
   stringifyObject,
 } from "@/utils/utils";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ImperativePanelHandle } from "react-resizable-panels";
+import { cn } from "@/lib/utils";
 
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateCheckoutAPIVersion } = formulaActions;
@@ -65,6 +67,8 @@ const Api = (props: any) => {
 
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const dispatch = useDispatch();
+
+  const panelRef = useRef<ImperativePanelHandle>(null);
 
   const syncGlobalState: any = debounce((localState: any, build: any) => {
     const isEqual = deepEqual(build.request[api], localState);
@@ -174,6 +178,14 @@ const Api = (props: any) => {
   );
 
   useEffect(() => {
+    if (view === "demo" || view === "preview") {
+      panelRef.current?.resize(0);
+    } else if (view === "developer") {
+      panelRef.current?.resize(50);
+    }
+  }, [view]);
+
+  useEffect(() => {
     if (apiSpecsData) {
       dispatch(
         updateSpecs({
@@ -209,7 +221,11 @@ const Api = (props: any) => {
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "product" ? 0 : 100}
-        className="sm:flex bg-code flex-col"
+        ref={panelRef}
+        className={cn(
+          "sm:flex bg-code flex-col transition-all duration-300 ease-in-out",
+          view === "demo" && "opacity-0"
+        )}
       >
         <Code
           type="json"

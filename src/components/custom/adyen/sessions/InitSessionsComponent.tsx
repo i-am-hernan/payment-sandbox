@@ -73,7 +73,11 @@ export const InitSessionsComponent = (props: any) => {
           </Alert>
         </div>
       )}
-      {loadingSessions && <Loading className="text-foreground" />}
+      {loadingSessions && (
+        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
+          <Loading className="text-foreground" />
+        </div>
+      )}
       {!adyenSDKError && !adyenResult && !loadingSessions && (
         <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
           <div className="px-auto !border-red" ref={checkoutRef}></div>

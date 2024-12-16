@@ -145,6 +145,7 @@ export const useAdyenAdvance = (
 
     if (readyToMount) {
       if (/^5./.test(adyenWebVersion)) {
+        console.log("about to mount adyenV5", adyenV5);
         adyenV5(configuration, checkoutRef, txVariant, txVariantConfiguration);
       }
     }
