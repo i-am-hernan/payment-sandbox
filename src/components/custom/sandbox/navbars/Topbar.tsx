@@ -75,7 +75,7 @@ const Topbar = (props: any) => {
             }}
           >
             <ViewColumnIcon
-              className={`!text-[16px] ${view === "developer" ? "text-adyen" : "text-foreground"}`}
+              className={`!text-[16px] ${view === "developer" ? "text-info" : "text-foreground"}`}
             />
           </Button>
         </span>
@@ -94,7 +94,7 @@ const Topbar = (props: any) => {
           >
             <VerticalSplitIcon
               className={`!text-[16px] ${
-                view === "preview" ? "text-adyen" : "text-foreground"
+                view === "preview" ? "text-info" : "text-foreground"
               }`}
             />
           </Button>
@@ -114,7 +114,7 @@ const Topbar = (props: any) => {
           >
             <ViewInArIcon
               className={`!text-[16px] ${
-                view === "demo" ? "text-adyen" : "text-foreground"
+                view === "demo" ? "text-info" : "text-foreground"
               }`}
             />
           </Button>
