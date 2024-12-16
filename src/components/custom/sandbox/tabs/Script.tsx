@@ -20,9 +20,18 @@ import {
   stringifyObject,
   unstringifyObject,
 } from "@/utils/utils";
-import { memo, useCallback, useEffect, useReducer, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useReducer,
+  useState,
+  useRef,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
+import { ImperativePanelHandle } from "react-resizable-panels";
+import { cn } from "@/lib/utils";
 
 const { updateSpecs } = specsActions;
 const {
@@ -74,6 +83,8 @@ const Script = () => {
     initialState
   );
 
+  const panelRef = useRef<ImperativePanelHandle>(null);
+
   const dispatch = useDispatch();
   const {
     data: sdkSpecsData,
@@ -83,6 +94,7 @@ const Script = () => {
     `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/checkout`,
     "GET"
   );
+
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const checkoutConfigurationVar = "checkoutConfiguration";
   const syncGlobalState: any = useCallback(
@@ -126,6 +138,14 @@ const Script = () => {
     },
     []
   );
+
+  useEffect(() => {
+    if (view === "demo" || view === "preview") {
+      panelRef.current?.resize(0);
+    } else if (view === "developer") {
+      panelRef.current?.resize(50);
+    }
+  }, [view]);
 
   useEffect(() => {
     if (sdkSpecsData) {
@@ -267,7 +287,11 @@ const Script = () => {
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "preview" ? 0 : 100}
-        className="sm:flex bg-code flex-col items-stretch"
+        className={cn(
+          "sm:flex bg-code flex-col items-stretch transition-all duration-300 ease-in-out",
+          view === "demo" && "opacity-0"
+        )}
+        ref={panelRef}
       >
         <div className="flex flex-1 overflow-scroll">
           <Code
@@ -317,7 +341,7 @@ const Script = () => {
             onChange={handleVersionChange}
           />
         )}
-          {!loadingSdkSpecData && sdkSpecsData && (
+        {!loadingSdkSpecData && sdkSpecsData && (
           <OpenApiSearch
             properties={properties}
             onChange={handleOpenApiSearchChange}
