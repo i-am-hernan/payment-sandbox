@@ -16,14 +16,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { formulaActions } from "@/store/reducers";
+import { formulaActions, userActions } from "@/store/reducers";
 import { RootState } from "@/store/store";
+import { clearUrlParams, refineFormula } from "@/utils/utils";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import RestoreIcon from "@mui/icons-material/Restore";
+import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
+import ViewColumnIcon from "@mui/icons-material/ViewColumn";
+import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import Tooltip from "@mui/material/Tooltip";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { refineFormula, clearUrlParams } from "@/utils/utils";
 
 const {
   updateRun,
@@ -35,6 +38,8 @@ const {
   updateApiRequestMerchantAccount,
   updateBuildMerchantAccount,
 } = formulaActions;
+
+const { updateView } = userActions;
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
@@ -53,10 +58,68 @@ const Topbar = (props: any) => {
 
   return (
     <span
-      className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-2 flex items-center justify-end pr-2"
+      className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-2 flex items-center justify-end px-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
       ref={containerRef}
     >
+      <Tooltip title="Developer">
+        <span>
+          <Button
+            key="developer"
+            variant="ghost"
+            size="sm"
+            className="border-foreground bg-background px-2"
+            onClick={() => {
+              dispatch(updateView("developer"));
+              clearUrlParams(["view"]);
+            }}
+          >
+            <ViewColumnIcon
+              className={`!text-[16px] ${view === "developer" ? "text-adyen" : "text-foreground"}`}
+            />
+          </Button>
+        </span>
+      </Tooltip>
+      <Tooltip title="Preview">
+        <span>
+          <Button
+            key="preview"
+            variant="ghost"
+            size="sm"
+            className="bg-background border-foreground px-2"
+            onClick={() => {
+              dispatch(updateView("preview"));
+              clearUrlParams(["view"]);
+            }}
+          >
+            <VerticalSplitIcon
+              className={`!text-[16px] ${
+                view === "preview" ? "text-adyen" : "text-foreground"
+              }`}
+            />
+          </Button>
+        </span>
+      </Tooltip>
+      <Tooltip title="Demo">
+        <span>
+          <Button
+            key="demo"
+            variant="ghost"
+            size="sm"
+            className="bg-background border-foreground px-2"
+            onClick={() => {
+              dispatch(updateView("demo"));
+              clearUrlParams(["view"]);
+            }}
+          >
+            <ViewInArIcon
+              className={`!text-[16px] ${
+                view === "demo" ? "text-adyen" : "text-foreground"
+              }`}
+            />
+          </Button>
+        </span>
+      </Tooltip>
       <div className="flex-1 text-center">
         <UpdateMerchantCookie />
       </div>

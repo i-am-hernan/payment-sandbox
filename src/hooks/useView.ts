@@ -13,7 +13,7 @@ export const useView = (viewParam: any) => {
     if (viewParam && ["developer", "preview", "demo"].includes(viewParam)) {
       dispatch(updateView(viewParam as "developer" | "preview" | "demo"));
     }
-  }, [viewParam]);  
+  }, [viewParam, dispatch]);
   return view;
 };
 

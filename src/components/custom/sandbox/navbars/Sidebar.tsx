@@ -74,7 +74,11 @@ const Sidebar = (props: any) => {
   const dispatch = useDispatch();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const [paymentMethods, setPaymentMethods] = useState({
+  const [paymentMethods, setPaymentMethods] = useState<{
+    data: any;
+    loading: boolean;
+    error: any;
+  }>({
     data: null,
     loading: true,
     error: null,
