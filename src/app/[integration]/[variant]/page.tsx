@@ -109,7 +109,7 @@ const Page: any = () => {
   if (section === "Client") {
     tabsMap = [
       {
-        title: "checkout.js",
+        title: "checkout",
         icon: (
           <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
         ),
@@ -118,19 +118,19 @@ const Page: any = () => {
         unsavedChanges: unsavedChanges.js,
       },
       {
-        title: "style.css",
+        title: "style",
         icon: (
-          <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>
+          <span className="font-semibold px-1 text-xxs text-info">{"CSS"}</span>
         ),
-        content: <Style key={"stye"} />,
-        value: "style.css",
+        content: <Style key={"style"} />,
+        value: "style",
         unsavedChanges: unsavedChanges.style,
       },
       {
-        title: "checkout.html (read-only)",
+        title: "checkout",
         icon: (
           <span className="font-semibold px-1 text-xxs text-warning">
-            {"</>"}
+            {"HTML"}
           </span>
         ),
         content: <Html key={"html"} />,

@@ -7,11 +7,13 @@ export interface Specs {
 export interface SpecsList {
   checkoutApi?: Specs | null;
   adyenWeb?: Specs | null;
+  adyenVariant?: Specs | null;
 }
 
 const initialState: SpecsList = {
   checkoutApi: null,
   adyenWeb: null,
+  adyenVariant: null,
 };
 
 export const SpecsSlice = createSlice({

@@ -2,8 +2,8 @@
 import { strict } from "assert";
 import { NextRequest } from "next/server";
 import * as ts from "typescript";
-import { descriptionMap } from "@/lib/descriptionMap";
-
+import { variantToInterfaceName } from "@/lib/variantToInterfaceName";
+import { VariantToInterfaceName } from "@/lib/variantToInterfaceName";
 interface ParsedProperty {
   name: string;
   type: string;
@@ -19,13 +19,29 @@ export async function GET(
   { params }: { params: { version: string } }
 ) {
   const { version } = params;
+  const searchParams = request.nextUrl.searchParams;
+  const txVariant = searchParams.get("txvariant");
   const parsedVersion = version.replaceAll("_", ".");
-  const interfaceName = /^v6./.test(parsedVersion)
-    ? "CoreConfiguration"
-    : "CoreOptions";
-  const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/packages/lib/src/core/types.ts`;
+  const majorVersion = parsedVersion.split(".")[0];
+  const map = variantToInterfaceName as Record<
+    string,
+    Record<string, VariantToInterfaceName>
+  >;
+  const interfaceName =
+    txVariant && map[txVariant] ? map[txVariant][majorVersion].interfaceName : null;
+  const path = txVariant && map[txVariant] ? map[txVariant][majorVersion].path : null;
+  const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${path}`;
 
-  const map = descriptionMap as Record<string, string>;
+  if (!txVariant) {
+    return new Response("Variant parameter is required", { status: 400 });
+  }
+
+  if (!interfaceName) {
+    return new Response("Could not find interface name for variant", {
+      status: 400,
+    });
+  }
+
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -38,7 +54,6 @@ export async function GET(
     }
 
     const fileContent = await response.text();
-
     // Create a TypeScript source file from the fetched content
     const sourceFile = ts.createSourceFile(
       "fetchedFile.ts",
@@ -211,7 +226,7 @@ export async function GET(
     };
 
     const result = structureAdyenWebTypes();
-    return Response.json({ checkout: result });
+    return Response.json({ variant: result });
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();

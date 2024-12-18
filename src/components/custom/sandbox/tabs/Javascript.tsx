@@ -34,11 +34,7 @@ import { ImperativePanelHandle } from "react-resizable-panels";
 import { cn } from "@/lib/utils";
 
 const { updateSpecs } = specsActions;
-const {
-  addUnsavedChanges,
-  updateAdyenWebVersion,
-  updateCheckoutConfiguration,
-} = formulaActions;
+const { addUnsavedChanges, updateAdyenWebVersion } = formulaActions;
 
 const formatJsString = (code: any, varName: string) => {
   return `var ${varName} = ${code};`;
@@ -65,39 +61,37 @@ const checkoutConfigReducer = (state: any, action: any) => {
   }
 };
 
-const Script = () => {
+const Javascript = (props: any) => {
   const {
-    reset,
-    build,
-    checkoutConfiguration: globalCheckoutConfiguration,
-    adyenWebVersion,
-  } = useSelector((state: RootState) => state.formula);
-  
-  const { adyenWeb }: any = useSelector((state: RootState) => state.specs);
-  const { response }: any = useSelector((state: RootState) => state.component);
-  const { theme, view } = useSelector((state: RootState) => state.user);
-  const { paymentMethods } = response;
-  const properties = adyenWeb?.checkout ?? null;
+    storeConfiguration,
+    updateStoreConfiguration,
+    properties,
+    configurationType,
+    variant,
+  } = props;
 
-  const [checkoutConfig, dispatchCheckoutConfig] = useReducer(
-    checkoutConfigReducer,
-    initialState
+  const { reset, build, adyenWebVersion } = useSelector(
+    (state: RootState) => state.formula
   );
 
-  const panelRef = useRef<ImperativePanelHandle>(null);
-
-  const dispatch = useDispatch();
   const {
     data: sdkSpecsData,
     loading: loadingSdkSpecData,
     error: sdkSpecsError,
   } = useApi(
-    `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/checkout`,
+    `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/${configurationType}?${configurationType === "variant" ? `txvariant=${variant}` : ""}`,
     "GET"
   );
 
+  const { theme, view } = useSelector((state: RootState) => state.user);
   const [filteredProperties, setFilteredProperties] = useState(properties);
-  const checkoutConfigurationVar = "checkoutConfiguration";
+  const [checkoutConfig, dispatchCheckoutConfig] = useReducer(
+    checkoutConfigReducer,
+    initialState
+  );
+  const panelRef = useRef<ImperativePanelHandle>(null);
+  const dispatch = useDispatch();
+
   const syncGlobalState: any = useCallback(
     debounce((localState: any, build: any) => {
       let stringifiedLocalState = stringifyObject(localState);
@@ -106,7 +100,7 @@ const Script = () => {
         sanitizeString(build.checkoutConfiguration) !==
         sanitizeString(stringifiedLocalState)
       ) {
-        dispatch(updateCheckoutConfiguration(stringifiedLocalState));
+        dispatch(updateStoreConfiguration(stringifiedLocalState));
         dispatch(
           addUnsavedChanges({
             js: true,
@@ -124,15 +118,15 @@ const Script = () => {
   );
 
   const syncLocalState = useCallback(
-    async (globalCheckoutConfiguration: any, checkoutConfigurationVar: any) => {
+    async (storeConfiguration: any, configurationType: any) => {
       let prettifiedString = await prettify(
-        formatJsString(globalCheckoutConfiguration, checkoutConfigurationVar),
+        formatJsString(storeConfiguration, configurationType),
         "babel"
       );
       dispatchCheckoutConfig({
         type: "SET_BOTH",
         payload: {
-          parsed: unstringifyObject(globalCheckoutConfiguration),
+          parsed: unstringifyObject(storeConfiguration),
           stringified: prettifiedString,
         },
       });
@@ -169,12 +163,8 @@ const Script = () => {
   }, [checkoutConfig.stringified]);
 
   useEffect(() => {
-    syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
+    syncLocalState(storeConfiguration, configurationType);
   }, [reset]);
-
-  useEffect(() => {
-    syncLocalState(globalCheckoutConfiguration, checkoutConfigurationVar);
-  }, [paymentMethods, syncLocalState]);
 
   const handlePrettify = useCallback(async () => {
     try {
@@ -241,10 +231,7 @@ const Script = () => {
           payload: {
             parsed: newObject,
             stringified: await prettify(
-              formatJsString(
-                stringifyObject(newObject),
-                checkoutConfigurationVar
-              ),
+              formatJsString(stringifyObject(newObject), configurationType),
               "babel"
             ),
           },
@@ -264,7 +251,7 @@ const Script = () => {
               stringified: await prettify(
                 formatJsString(
                   stringifyObject(updatedRequest),
-                  checkoutConfigurationVar
+                  configurationType
                 ),
                 "babel"
               ),
@@ -273,7 +260,7 @@ const Script = () => {
         }
       }
     },
-    [checkoutConfig.parsed, properties, checkoutConfigurationVar]
+    [checkoutConfig.parsed, properties, configurationType]
   );
 
   if (sdkSpecsError) {
@@ -313,7 +300,7 @@ const Script = () => {
                 });
               }
             }}
-            jsVariable={checkoutConfigurationVar}
+            jsVariable={configurationType}
           />
         </div>
         <div className={`flex justify-end border-y-2 bg-background`}>
@@ -383,4 +370,4 @@ const Script = () => {
 
 const MemoizedOpenSdkList = memo(OpenSdkList);
 
-export default Script;
+export default Javascript;
