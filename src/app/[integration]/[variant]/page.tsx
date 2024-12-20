@@ -55,6 +55,7 @@ const Page: any = () => {
   } = checkoutAPIVersion;
 
   let tabsMap: any = [];
+  let bottomRightTabsMap: any = [];
   let crumbs: Array<string> = [];
   let topRightTabsMap =
     integration === "advance"
@@ -77,20 +78,6 @@ const Page: any = () => {
           ]
         : [];
 
-  let bottomRightTabsMap = [
-    {
-      title: `${variant} (read-only)`,
-      icon: <span className="font-semibold px-1 text-xxs text-info">state</span>,
-      content: <StateData theme={theme} />,
-      value: "state",
-    },
-    {
-      title: `network`,
-      icon: <span className="font-semibold px-1 text-xxs text-info">network</span>,
-      content: <Network theme={theme} />,
-      value: "network",
-    },
-  ];
   if (section === "Client") {
     tabsMap = [
       {
@@ -113,6 +100,15 @@ const Page: any = () => {
         content: <Html key={"html"} />,
         value: "checkout.html",
         unsavedChanges: unsavedChanges.html,
+      },
+    ];
+
+    bottomRightTabsMap = [
+      {
+        title: `${variant} (read-only)`,
+        icon: <span className="font-semibold px-1 text-xxs text-info">state</span>,
+        content: <StateData theme={theme} />,
+        value: "state",
       },
     ];
     crumbs = [integration, variant, "client"];
@@ -177,6 +173,15 @@ const Page: any = () => {
             ]
           : [];
     crumbs = [integration, variant, "server"];
+
+    bottomRightTabsMap = [
+      {
+        title: `network (read-only)`,
+        icon: <span className="font-semibold px-1 text-xxs text-info">network</span>,
+        content: <Network theme={theme} />,
+        value: "network",
+      },
+    ];
   } else if (section === "Webhooks") {
     tabsMap = [
       {
