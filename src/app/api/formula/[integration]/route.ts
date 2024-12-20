@@ -18,21 +18,15 @@ export async function GET(request: NextRequest, { params }: Params) {
     await dbConnect();
 
     const defaultFormulaId =
-      integration === "sessions"
-        ? defaultSessionsFormulaId
-        : integration === "advance"
-          ? defaultAdvanceFormulaId
-          : "";
+      integration === "sessions" ? defaultSessionsFormulaId : integration === "advance" ? defaultAdvanceFormulaId : "";
+
     let formula = await Formula.findById(defaultFormulaId);
 
     if (!formula) {
       throw new Error(`Starter Formula not found`);
     }
 
-    return NextResponse.json(
-      { message: "starter formula retrieved", success: true, data: formula },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "starter formula retrieved", success: true, data: formula }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -58,10 +52,7 @@ export async function POST(request: Request) {
 
     let insertResult = await Formula.create(requestBody);
 
-    return NextResponse.json(
-      { message: "formula inserted", success: true, data: insertResult },
-      { status: 201 }
-    );
+    return NextResponse.json({ message: "formula inserted", success: true, data: insertResult }, { status: 201 });
   } catch (error) {
     console.error("Error inserting formula", error);
 

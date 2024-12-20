@@ -31,12 +31,7 @@ export const useAdyenSessions = (
     onChange(state);
   };
 
-  const adyenV5 = (
-    configuration: any,
-    checkoutRef: any,
-    txVariant: string,
-    txVariantConfiguration: any
-  ) => {
+  const adyenV5 = (configuration: any, checkoutRef: any, txVariant: string, txVariantConfiguration: any) => {
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
@@ -48,9 +43,7 @@ export const useAdyenSessions = (
         } catch (error: unknown) {
           if (error instanceof Error) {
             setError({
-              message: error.message
-                ? error.message
-                : "Error mounting component",
+              message: error.message ? error.message : "Error mounting component",
             });
           }
         }
@@ -62,9 +55,7 @@ export const useAdyenSessions = (
       if (error instanceof Error) {
         if (error instanceof Error) {
           setError({
-            message: error.message
-              ? error.message
-              : "Error initializing checkout",
+            message: error.message ? error.message : "Error initializing checkout",
           });
         }
       }

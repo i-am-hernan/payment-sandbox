@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+// import { updateNetworkResponse } from "@/store/reducers/sandbox";
+import { sandboxActions } from "@/store/reducers";
 
 interface AdyenAdvanceHook {
   error: object | null;
@@ -24,29 +27,29 @@ export const useAdyenAdvance = (
 ): AdyenAdvanceHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
+  const dispatch = useDispatch();
+  const { updateNetworkResponse } = sandboxActions;
 
   const handleSubmit = async (state: any, dropin: any) => {
-    const response = await fetch(
-      `/api/checkout/v${checkoutAPIVersion.payments}/payments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...paymentsRequest,
-          ...state.data,
-        }),
-      }
-    );
+    const response = await fetch(`/api/checkout/v${checkoutAPIVersion.payments}/payments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...paymentsRequest,
+        ...state.data,
+      }),
+    });
+
     const paymentResponse = await response.json();
+    dispatch(updateNetworkResponse(paymentResponse));
+
     if (paymentResponse.status >= 400) {
       setError({
         status: paymentResponse?.status,
         pspReference: paymentResponse?.pspReference,
-        message: paymentResponse?.message
-          ? paymentResponse.message
-          : "Error retrieving /paymentMethods response",
+        message: paymentResponse?.message ? paymentResponse.message : "Error retrieving /paymentMethods response",
       });
     } else if (paymentResponse.action) {
       dropin.handleAction(paymentResponse.action);
@@ -56,20 +59,19 @@ export const useAdyenAdvance = (
   };
 
   const handleAdditionalDetails = async (state: any, dropin: any) => {
-    const response = await fetch(
-      `/api/checkout/v${checkoutAPIVersion.paymentDetails}/payments/details`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...paymentsDetailsRequest,
-          details: state.data.details,
-        }),
-      }
-    );
+    const response = await fetch(`/api/checkout/v${checkoutAPIVersion.paymentDetails}/payments/details`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...paymentsDetailsRequest,
+        details: state.data.details,
+      }),
+    });
     const paymentDetailsResponse = await response.json();
+    dispatch(updateNetworkResponse(paymentDetailsResponse));
+
     if (paymentDetailsResponse.statusCode >= 400) {
       setError({
         status: paymentDetailsResponse?.status,
@@ -92,12 +94,7 @@ export const useAdyenAdvance = (
     onChange(state);
   };
 
-  const adyenV5 = (
-    configuration: any,
-    checkoutRef: any,
-    txVariant: string,
-    txVariantConfiguration: any
-  ) => {
+  const adyenV5 = (configuration: any, checkoutRef: any, txVariant: string, txVariantConfiguration: any) => {
     try {
       const initCheckout: any = async () => {
         const checkout = await (window as any).AdyenCheckout(configuration);
@@ -109,9 +106,7 @@ export const useAdyenAdvance = (
         } catch (error: unknown) {
           if (error instanceof Error) {
             setError({
-              message: error.message
-                ? error.message
-                : "Error mounting component",
+              message: error.message ? error.message : "Error mounting component",
             });
           }
         }
@@ -122,9 +117,7 @@ export const useAdyenAdvance = (
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError({
-          message: error.message
-            ? error.message
-            : "Error initializing checkout",
+          message: error.message ? error.message : "Error initializing checkout",
         });
       }
     }

@@ -6,6 +6,8 @@ export interface Sandbox {
   section: "frontend" | "backend" | "webhooks";
   isRedirect: boolean;
   unsavedChanges: number;
+  // TODO: Make this an Array of Strings so we can maintain a history of network responses
+  networkResponse: any;
 }
 
 // Define the initial state
@@ -13,7 +15,8 @@ const initialState: Sandbox = {
   theme: "dark",
   section: "frontend",
   isRedirect: false,
-  unsavedChanges: 0
+  unsavedChanges: 0,
+  networkResponse: null,
 };
 
 // Create the slice with typed reducers
@@ -24,13 +27,13 @@ const sandboxSlice = createSlice({
     updateSandbox: (state, action: PayloadAction<Partial<any>>) => {
       return { ...state, ...action.payload };
     },
+    updateNetworkResponse: (state, action) => {
+      state.networkResponse = action.payload;
+    },
     updateSandboxTheme: (state, action: PayloadAction<"dark" | "light">) => {
       state.theme = action.payload;
     },
-    updateSandboxSection: (
-      state,
-      action: PayloadAction<"frontend" | "backend" | "webhooks">
-    ) => {
+    updateSandboxSection: (state, action: PayloadAction<"frontend" | "backend" | "webhooks">) => {
       state.section = action.payload;
     },
     updateIsRedirect: (state, action: PayloadAction<boolean>) => {

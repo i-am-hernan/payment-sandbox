@@ -10,6 +10,7 @@ import Topbar from "@/components/custom/sandbox/navbars/Topbar";
 import Api from "@/components/custom/sandbox/tabs/Api";
 import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
+import Network from "@/components/custom/sandbox/tabs/Network";
 import Script from "@/components/custom/sandbox/tabs/Script";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
@@ -27,33 +28,21 @@ interface SectionType {
   section: "Client" | "Server" | "Webhooks";
 }
 
-const {
-  updatePaymentMethodsRequest,
-  updatePaymentsRequest,
-  updatePaymentsDetailsRequest,
-  updateSessionsRequest,
-} = formulaActions;
+const { updatePaymentMethodsRequest, updatePaymentsRequest, updatePaymentsDetailsRequest, updateSessionsRequest } =
+  formulaActions;
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
-  const { theme, defaultMerchantAccount, merchantAccount, view } = useSelector(
-    (state: RootState) => state.user
-  );
+  const { theme, defaultMerchantAccount, merchantAccount, view } = useSelector((state: RootState) => state.user);
   const { integration, variant } = useParams<{
     integration: string;
     variant: string;
   }>();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
-  const { formulaLoading, formulaError, formulaSuccess } = useFormula(
-    variant,
-    view,
-    integration
-  );
+  const { formulaLoading, formulaError, formulaSuccess } = useFormula(variant, view, integration);
 
-  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.formula
-  );
+  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector((state: RootState) => state.formula);
   useView(viewParam);
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
@@ -72,11 +61,7 @@ const Page: any = () => {
       ? [
           {
             title: `${variant}`,
-            icon: (
-              <span className="font-semibold px-1 text-xxs text-preview">
-                preview
-              </span>
-            ),
+            icon: <span className="font-semibold px-1 text-xxs text-preview">preview</span>,
             content: <ManageAdvanceComponent key={run ? "run" : "default"} />,
             value: variant,
           },
@@ -85,11 +70,7 @@ const Page: any = () => {
         ? [
             {
               title: `${variant}`,
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-preview">
-                  preview
-                </span>
-              ),
+              icon: <span className="font-semibold px-1 text-xxs text-preview">preview</span>,
               content: <ManageAdyenSessions key={run ? "run" : "default"} />,
               value: variant,
             },
@@ -99,40 +80,36 @@ const Page: any = () => {
   let bottomRightTabsMap = [
     {
       title: `${variant} (read-only)`,
-      icon: (
-        <span className="font-semibold px-1 text-xxs text-info">state</span>
-      ),
+      icon: <span className="font-semibold px-1 text-xxs text-info">state</span>,
       content: <StateData theme={theme} />,
       value: "state",
+    },
+    {
+      title: `network`,
+      icon: <span className="font-semibold px-1 text-xxs text-info">network</span>,
+      content: <Network theme={theme} />,
+      value: "network",
     },
   ];
   if (section === "Client") {
     tabsMap = [
       {
         title: "checkout.js",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
-        ),
+        icon: <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>,
         content: <Script key={"script"} />,
         value: `${variant}.js`,
         unsavedChanges: unsavedChanges.js,
       },
       {
         title: "style.css",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>
-        ),
+        icon: <span className="font-semibold px-1 text-xxs text-info">{"#"}</span>,
         content: <Style key={"stye"} />,
         value: "style.css",
         unsavedChanges: unsavedChanges.style,
       },
       {
         title: "checkout.html (read-only)",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-warning">
-            {"</>"}
-          </span>
-        ),
+        icon: <span className="font-semibold px-1 text-xxs text-warning">{"</>"}</span>,
         content: <Html key={"html"} />,
         value: "checkout.html",
         unsavedChanges: unsavedChanges.html,
@@ -145,11 +122,7 @@ const Page: any = () => {
         ? [
             {
               title: `/v${paymentMethodsAPIVersion}/paymentMethods`,
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-adyen">
-                  POST
-                </span>
-              ),
+              icon: <span className="font-semibold px-1 text-xxs text-adyen">POST</span>,
               content: (
                 <Api
                   api="paymentMethods"
@@ -163,29 +136,16 @@ const Page: any = () => {
             },
             {
               title: `/v${paymentsAPIVersion}/payments`,
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-adyen">
-                  POST
-                </span>
-              ),
+              icon: <span className="font-semibold px-1 text-xxs text-adyen">POST</span>,
               content: (
-                <Api
-                  api="payments"
-                  schema="PaymentRequest"
-                  request={payments}
-                  updateRequest={updatePaymentsRequest}
-                />
+                <Api api="payments" schema="PaymentRequest" request={payments} updateRequest={updatePaymentsRequest} />
               ),
               value: "payments",
               unsavedChanges: unsavedChanges.payments,
             },
             {
               title: `/v${paymentsDetailsAPIVersion}/payment/details`,
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-adyen">
-                  POST
-                </span>
-              ),
+              icon: <span className="font-semibold px-1 text-xxs text-adyen">POST</span>,
               content: (
                 <Api
                   api="paymentsDetails"
@@ -202,11 +162,7 @@ const Page: any = () => {
           ? [
               {
                 title: `/v${sessionsAPIVersion}/sessions`,
-                icon: (
-                  <span className="font-semibold px-1 text-xxs text-adyen">
-                    {"POST"}
-                  </span>
-                ),
+                icon: <span className="font-semibold px-1 text-xxs text-adyen">{"POST"}</span>,
                 content: (
                   <Api
                     api="sessions"
@@ -225,11 +181,7 @@ const Page: any = () => {
     tabsMap = [
       {
         title: "webhooks",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-info">
-            {"event"}
-          </span>
-        ),
+        icon: <span className="font-semibold px-1 text-xxs text-info">{"event"}</span>,
         content: <Events key={"Events"} />,
         value: "events",
       },
@@ -251,9 +203,7 @@ const Page: any = () => {
               ) : integration !== "sessions" && integration !== "advance" ? (
                 <Alert variant="destructive" className="w-[50%]">
                   <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {"Integration type not valid"}
-                  </AlertDescription>
+                  <AlertDescription className="text-foreground">{"Integration type not valid"}</AlertDescription>
                 </Alert>
               ) : formulaError || !formulaSuccess ? (
                 <Alert variant="destructive" className="w-[50%]">
@@ -272,9 +222,7 @@ const Page: any = () => {
               ) : integration !== "sessions" && integration !== "advance" ? (
                 <Alert variant="destructive" className="w-[50%]">
                   <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {"Integration type not valid"}
-                  </AlertDescription>
+                  <AlertDescription className="text-foreground">{"Integration type not valid"}</AlertDescription>
                 </Alert>
               ) : formulaError || !formulaSuccess ? (
                 <Alert variant="destructive" className="w-[50%]">
@@ -293,9 +241,7 @@ const Page: any = () => {
               ) : integration !== "sessions" && integration !== "advance" ? (
                 <Alert variant="destructive" className="w-[50%]">
                   <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {"Integration type not valid"}
-                  </AlertDescription>
+                  <AlertDescription className="text-foreground">{"Integration type not valid"}</AlertDescription>
                 </Alert>
               ) : formulaError || !formulaSuccess ? (
                 <Alert variant="destructive" className="w-[50%]">

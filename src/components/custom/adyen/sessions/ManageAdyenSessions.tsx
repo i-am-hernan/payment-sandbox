@@ -2,7 +2,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { componentActions, formulaActions } from "@/store/reducers";
+import { componentActions, formulaActions, sandboxActions } from "@/store/reducers";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import { useParams, useSearchParams } from "next/navigation";
 import { InitSessionsComponent } from "./InitSessionsComponent";
@@ -23,22 +23,14 @@ const {
 const { updateComponentState, updateResponse } = componentActions;
 
 export const ManageAdyenSessions = (props: any) => {
-  const { build, isRedirect, redirectResult, sessionId } = useSelector(
-    (state: RootState) => state.formula
-  );
+  const { build, isRedirect, redirectResult, sessionId } = useSelector((state: RootState) => state.formula);
+  const { updateNetworkResponse } = sandboxActions;
 
-  const {
-    checkoutConfiguration,
-    checkoutAPIVersion,
-    adyenWebVersion,
-    txVariantConfiguration,
-    request,
-  } = build;
+  const { checkoutConfiguration, checkoutAPIVersion, adyenWebVersion, txVariantConfiguration, request } = build;
 
   const { sessions } = request;
 
-  const { error: adyenScriptError, loading: loadingAdyenScript } =
-    useAdyenScript(adyenWebVersion);
+  const { error: adyenScriptError, loading: loadingAdyenScript } = useAdyenScript(adyenWebVersion);
 
   const dispatch = useDispatch();
   const { variant } = useParams<{
@@ -64,7 +56,7 @@ export const ManageAdyenSessions = (props: any) => {
     //TODO: Create Error Component
     return <div>Error...</div>;
   }
-  
+
   return (
     <div className="h-[100%]">
       {!isRedirect && (
@@ -80,25 +72,16 @@ export const ManageAdyenSessions = (props: any) => {
           }}
           onSessionsResponse={(response: any) => {
             if (response) {
-              let evaluatedCheckoutConfiguration = unstringifyObject(
-                checkoutConfiguration
-              );
+              let evaluatedCheckoutConfiguration = unstringifyObject(checkoutConfiguration);
               evaluatedCheckoutConfiguration.session = {
                 id: response.id,
                 sessionData: response.sessionData,
               };
-              dispatch(
-                updateBuildCheckoutConfiguration(
-                  stringifyObject(evaluatedCheckoutConfiguration)
-                )
-              );
-              dispatch(
-                updateCheckoutConfiguration(
-                  stringifyObject(evaluatedCheckoutConfiguration)
-                )
-              );
+              dispatch(updateBuildCheckoutConfiguration(stringifyObject(evaluatedCheckoutConfiguration)));
+              dispatch(updateCheckoutConfiguration(stringifyObject(evaluatedCheckoutConfiguration)));
               dispatch(updateResponse({ sessions: { ...response } }));
               dispatch(updateReset());
+              dispatch(updateNetworkResponse(response));
             }
           }}
         />
