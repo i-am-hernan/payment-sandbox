@@ -64,7 +64,7 @@ const initialState: FormulaPropType = {
     `{clientKey: "${process.env.NEXT_PUBLIC_CLIENT_KEY}", environment: "test", onChange: function(state){handleChange(state);}, onError: function(error){handleError(error);}, onAdditionalDetails: function(state,dropin){handleAdditionalDetails(state,dropin);}, onSubmit: function(state,dropin){handleSubmit(state,dropin);}, onPaymentCompleted: function(state,dropin){handlePaymentCompleted(state,dropin);}}`
   ),
   txVariant: "",
-  txVariantConfiguration: "",
+  txVariantConfiguration: sanitizeString(`{}`),
   request: {
     paymentMethods: {
       merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,

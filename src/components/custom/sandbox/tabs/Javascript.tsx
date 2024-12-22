@@ -65,27 +65,33 @@ const Javascript = (props: any) => {
   const {
     storeConfiguration,
     updateStoreConfiguration,
-    properties,
     configurationType,
     variant,
+    theme,
+    view,
   } = props;
 
   const { reset, build, adyenWebVersion } = useSelector(
     (state: RootState) => state.formula
   );
 
+  const url = `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/${configurationType === "checkoutConfiguration" ? "checkout" : "variant"}?${configurationType === "txVariantConfiguration" ? `txvariant=${variant}` : ""}`;
   const {
     data: sdkSpecsData,
     loading: loadingSdkSpecData,
     error: sdkSpecsError,
-  } = useApi(
-    `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/${configurationType}?${configurationType === "adyenVariant" ? `txvariant=${variant}` : ""}`,
-    "GET"
-  );
+  } = useApi(url, "GET");
 
-  const { theme, view } = useSelector((state: RootState) => state.user);
+  const specs: any = useSelector((state: RootState) => state.specs);
+  const { checkoutConfiguration, txVariantConfiguration } = specs;
+  const properties =
+    configurationType === "checkoutConfiguration"
+      ? checkoutConfiguration.checkout
+      : txVariantConfiguration;
+
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const [config, dispatchConfig] = useReducer(configReducer, initialState);
+
   const panelRef = useRef<ImperativePanelHandle>(null);
   const dispatch = useDispatch();
 
@@ -115,21 +121,25 @@ const Javascript = (props: any) => {
   );
 
   const syncLocalState = useCallback(
-    async (storeConfiguration: any, configurationType: any) => {
+    async (configuration: any, type: any) => {
       let prettifiedString = await prettify(
-        formatJsString(storeConfiguration, configurationType),
+        formatJsString(configuration, type),
         "babel"
       );
       dispatchConfig({
         type: "SET_BOTH",
         payload: {
-          parsed: unstringifyObject(storeConfiguration),
+          parsed: unstringifyObject(configuration),
           stringified: prettifiedString,
         },
       });
     },
     []
   );
+
+  // const syncLocalState = () => {
+  //   console.log("syncLocalState");
+  // };
 
   useEffect(() => {
     setFilteredProperties(properties);

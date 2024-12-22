@@ -11,6 +11,7 @@ import Api from "@/components/custom/sandbox/tabs/Api";
 import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
 import Script from "@/components/custom/sandbox/tabs/Script";
+import Javascript from "@/components/custom/sandbox/tabs/Javascript";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
@@ -32,11 +33,13 @@ const {
   updatePaymentsRequest,
   updatePaymentsDetailsRequest,
   updateSessionsRequest,
+  updateCheckoutConfiguration,
+  updateTxVariantConfiguration,
 } = formulaActions;
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
-  const { theme, defaultMerchantAccount, merchantAccount, view } = useSelector(
+  const { theme, merchantAccount, view } = useSelector(
     (state: RootState) => state.user
   );
   const { integration, variant } = useParams<{
@@ -51,9 +54,14 @@ const Page: any = () => {
     integration
   );
 
-  const { run, unsavedChanges, request, checkoutAPIVersion } = useSelector(
-    (state: RootState) => state.formula
-  );
+  const {
+    run,
+    unsavedChanges,
+    request,
+    checkoutAPIVersion,
+    checkoutConfiguration,
+    txVariantConfiguration,
+  } = useSelector((state: RootState) => state.formula);
   useView(viewParam);
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
@@ -113,8 +121,37 @@ const Page: any = () => {
         icon: (
           <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
         ),
-        content: <Script key={"script"} />,
-        value: `${variant}.js`,
+        content: (
+          <Javascript
+            storeConfiguration={checkoutConfiguration}
+            updateStoreConfiguration={updateCheckoutConfiguration}
+            configurationType="checkoutConfiguration"
+            variant={variant}
+            theme={theme}
+            view={view}
+            key={"checkout"}
+          />
+        ),
+        value: `checkout`,
+        unsavedChanges: unsavedChanges.js,
+      },
+      {
+        title: `${variant}`,
+        icon: (
+          <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
+        ),
+        content: (
+          <Javascript
+            storeConfiguration={txVariantConfiguration}
+            updateStoreConfiguration={updateTxVariantConfiguration}
+            configurationType="txVariantConfiguration"
+            variant={variant}
+            theme={theme}
+            view={view}
+            key={"variant"}
+          />
+        ),
+        value: `${variant}`,
         unsavedChanges: unsavedChanges.js,
       },
       {

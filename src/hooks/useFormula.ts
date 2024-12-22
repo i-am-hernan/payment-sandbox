@@ -1,5 +1,6 @@
 import { useApi } from "@/hooks/useApi";
 import { formulaActions } from "@/store/reducers";
+import { sanitizeString } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -41,9 +42,18 @@ export const useFormula = (
 
   useEffect(() => {
     const syncFormula = (formula: any) => {
+      if (
+        formula.txVariantConfiguration &&
+        formula.txVariantConfiguration === ""
+      ) {
+        formula.txVariantConfiguration = sanitizeString(`{}`);
+      }
       dispatch(updateFormula({ ...formula }));
     };
     const syncBase = (base: any) => {
+      if (base.txVariantConfiguration && base.txVariantConfiguration === "") {
+        base.txVariantConfiguration = sanitizeString(`{}`);
+      }
       dispatch(updateBase({ ...base }));
     };
     const updateReturnUrl = (returnUrl: string) => {

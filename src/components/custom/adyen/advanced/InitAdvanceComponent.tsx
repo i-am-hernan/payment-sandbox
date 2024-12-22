@@ -59,8 +59,6 @@ export const InitAdvanceComponent = (props: any) => {
       ? { ...adyenSDKError, ...paymentMethodsError }
       : null;
 
-  console.log("Error", error);
-
   return (
     <div className="flex justify-center items-center h-[100%]">
       {error && (

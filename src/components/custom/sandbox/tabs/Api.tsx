@@ -54,9 +54,9 @@ const Api = (props: any) => {
   const { reset, checkoutAPIVersion, build } = useSelector(
     (state: RootState) => state.formula
   );
-  const { checkoutApi }: any = useSelector((state: RootState) => state.specs);
+  const { checkoutConfiguration }: any = useSelector((state: RootState) => state.specs);
   const { theme, view } = useSelector((state: RootState) => state.user);
-  const schemas = checkoutApi?.components?.schemas ?? null;
+  const schemas = checkoutConfiguration?.components?.schemas ?? null;
   const properties = schemas?.[schema]?.properties ?? null;
   const required = schemas?.[schema]?.required ?? null;
 
@@ -189,7 +189,7 @@ const Api = (props: any) => {
     if (apiSpecsData) {
       dispatch(
         updateSpecs({
-          checkoutApi: apiSpecsData,
+          checkoutConfiguration: apiSpecsData,
         })
       );
     }

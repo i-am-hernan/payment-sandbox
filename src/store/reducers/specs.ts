@@ -6,14 +6,14 @@ export interface Specs {
 
 export interface SpecsList {
   checkoutApi?: Specs | null;
-  adyenWeb?: Specs | null;
-  adyenVariant?: Specs | null;
+  checkoutConfiguration?: Specs | null;
+  txVariantConfiguration?: Specs | null;
 }
 
 const initialState: SpecsList = {
   checkoutApi: null,
-  adyenWeb: null,
-  adyenVariant: null,
+  checkoutConfiguration: null,
+  txVariantConfiguration: null,
 };
 
 export const SpecsSlice = createSlice({

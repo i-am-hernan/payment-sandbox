@@ -28,8 +28,11 @@ export async function GET(
     Record<string, VariantToInterfaceName>
   >;
   const interfaceName =
-    txVariant && map[txVariant] ? map[txVariant][majorVersion].interfaceName : null;
-  const path = txVariant && map[txVariant] ? map[txVariant][majorVersion].path : null;
+    txVariant && map[txVariant]
+      ? map[txVariant][majorVersion].interfaceName
+      : null;
+  const path =
+    txVariant && map[txVariant] ? map[txVariant][majorVersion].path : null;
   const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${path}`;
 
   if (!txVariant) {
@@ -226,7 +229,7 @@ export async function GET(
     };
 
     const result = structureAdyenWebTypes();
-    return Response.json({ variant: result });
+    return Response.json({ ...result });
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();
