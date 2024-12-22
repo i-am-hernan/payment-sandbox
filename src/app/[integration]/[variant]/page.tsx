@@ -10,8 +10,7 @@ import Topbar from "@/components/custom/sandbox/navbars/Topbar";
 import Api from "@/components/custom/sandbox/tabs/Api";
 import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
-import Script from "@/components/custom/sandbox/tabs/Script";
-import Javascript from "@/components/custom/sandbox/tabs/Javascript";
+import Sdk from "@/components/custom/sandbox/tabs/Sdk";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
@@ -122,7 +121,7 @@ const Page: any = () => {
           <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
         ),
         content: (
-          <Javascript
+          <Sdk
             storeConfiguration={checkoutConfiguration}
             updateStoreConfiguration={updateCheckoutConfiguration}
             configurationType="checkoutConfiguration"
@@ -130,6 +129,9 @@ const Page: any = () => {
             theme={theme}
             view={view}
             key={"checkout"}
+            description={
+              "Create a global configuration object and it pass it to Checkout"
+            }
           />
         ),
         value: `checkout`,
@@ -141,7 +143,7 @@ const Page: any = () => {
           <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
         ),
         content: (
-          <Javascript
+          <Sdk
             storeConfiguration={txVariantConfiguration}
             updateStoreConfiguration={updateTxVariantConfiguration}
             configurationType="txVariantConfiguration"
@@ -149,6 +151,7 @@ const Page: any = () => {
             theme={theme}
             view={view}
             key={"variant"}
+            description={`Create another configuration object for ${variant}`}
           />
         ),
         value: `${variant}`,
@@ -193,6 +196,7 @@ const Page: any = () => {
                   schema="PaymentMethodsRequest"
                   request={paymentMethods}
                   updateRequest={updatePaymentMethodsRequest}
+                  description={"Create a /paymentMethods request"}
                 />
               ),
               value: "paymentmethods",
@@ -211,6 +215,7 @@ const Page: any = () => {
                   schema="PaymentRequest"
                   request={payments}
                   updateRequest={updatePaymentsRequest}
+                  description={"Create a /payments request"}
                 />
               ),
               value: "payments",
@@ -229,6 +234,7 @@ const Page: any = () => {
                   schema="PaymentDetailsRequest"
                   request={paymentsDetails}
                   updateRequest={updatePaymentsDetailsRequest}
+                  description={"Create a /payment/details request"}
                 />
               ),
               value: "paymentsDetails",
@@ -250,6 +256,7 @@ const Page: any = () => {
                     schema="CreateCheckoutSessionRequest"
                     request={sessions}
                     updateRequest={updateSessionsRequest}
+                    description={"Create a /sessions request"}
                   />
                 ),
                 value: "sessions",

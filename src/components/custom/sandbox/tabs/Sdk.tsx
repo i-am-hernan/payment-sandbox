@@ -61,7 +61,7 @@ const configReducer = (state: any, action: any) => {
   }
 };
 
-const Javascript = (props: any) => {
+const Sdk = (props: any) => {
   const {
     storeConfiguration,
     updateStoreConfiguration,
@@ -69,6 +69,7 @@ const Javascript = (props: any) => {
     variant,
     theme,
     view,
+    description,
   } = props;
 
   const { reset, build, adyenWebVersion } = useSelector(
@@ -120,22 +121,19 @@ const Javascript = (props: any) => {
     [dispatch]
   );
 
-  const syncLocalState = useCallback(
-    async (configuration: any, type: any) => {
-      let prettifiedString = await prettify(
-        formatJsString(configuration, type),
-        "babel"
-      );
-      dispatchConfig({
-        type: "SET_BOTH",
-        payload: {
-          parsed: unstringifyObject(configuration),
-          stringified: prettifiedString,
-        },
-      });
-    },
-    []
-  );
+  const syncLocalState = useCallback(async (configuration: any, type: any) => {
+    let prettifiedString = await prettify(
+      formatJsString(configuration, type),
+      "babel"
+    );
+    dispatchConfig({
+      type: "SET_BOTH",
+      payload: {
+        parsed: unstringifyObject(configuration),
+        stringified: prettifiedString,
+      },
+    });
+  }, []);
 
   // const syncLocalState = () => {
   //   console.log("syncLocalState");
@@ -319,7 +317,11 @@ const Javascript = (props: any) => {
           </Button>
         </div>
       </ResizablePanel>
-      {view === "developer" && <ResizableHandle />}
+      <ResizableHandle
+        className={cn(
+          view !== "developer" && "opacity-0 pointer-events-none hidden"
+        )}
+      />
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
         className="!overflow-y-scroll border-b-2"
@@ -337,6 +339,7 @@ const Javascript = (props: any) => {
           <OpenApiSearch
             properties={properties}
             onChange={handleOpenApiSearchChange}
+            description={description}
           />
         )}
         {!loadingSdkSpecData && sdkSpecsData && config.parsed && (
@@ -374,4 +377,4 @@ const Javascript = (props: any) => {
 
 const MemoizedOpenSdkList = memo(OpenSdkList);
 
-export default Javascript;
+export default Sdk;

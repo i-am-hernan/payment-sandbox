@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import React, { useRef, useEffect } from "react";
 
 const OpenApiSearch = (props: any) => {
-  const { onChange, properties } = props;
+  const { onChange, properties, description } = props;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -24,15 +24,16 @@ const OpenApiSearch = (props: any) => {
 
   return (
     <div className="border-b-2 z-10 sticky top-0 bg-background">
-      <div>
-        <div className="border-b-2 flex text-sm text-foreground">
-          <span className="border-r-2 p-[3px]">
-            <p className="inline-block border border-info border-dotted px-2 text-sm">
-              parameters
-            </p>
-          </span>
-        </div>
+      <div className="border-b-2 flex text-sm text-foreground">
+        <span className="border-r-2 p-[3px]">
+          <p className="inline-block border border-info border-dotted px-2 text-sm">
+            parameters
+          </p>
+        </span>
       </div>
+      <p className="text-xs text-foreground px-4 pt-2">
+        {`${description}`}
+      </p>
       <div className="flex py-2 px-4">
         <Input
           className="text-xs py-0 rounded-r-none text-foreground"

@@ -49,12 +49,14 @@ const apiRequestReducer = (state: any, action: any) => {
 };
 
 const Api = (props: any) => {
-  const { schema, api, request: globalRequest, updateRequest } = props;
+  const { schema, api, request: globalRequest, updateRequest, description } = props;
 
   const { reset, checkoutAPIVersion, build } = useSelector(
     (state: RootState) => state.formula
   );
-  const { checkoutConfiguration }: any = useSelector((state: RootState) => state.specs);
+  const { checkoutConfiguration }: any = useSelector(
+    (state: RootState) => state.specs
+  );
   const { theme, view } = useSelector((state: RootState) => state.user);
   const schemas = checkoutConfiguration?.components?.schemas ?? null;
   const properties = schemas?.[schema]?.properties ?? null;
@@ -258,7 +260,11 @@ const Api = (props: any) => {
           </Button>
         </div>
       </ResizablePanel>
-      {view === "developer" && <ResizableHandle />}
+      <ResizableHandle
+        className={cn(
+          view !== "developer" && "opacity-0 pointer-events-none hidden"
+        )}
+      />
       <ResizablePanel className="!overflow-y-scroll border-b-2">
         {loadingApiSpecData && <Loading className="text-foreground" />}
         {!loadingApiSpecData && apiSpecsData && (
@@ -282,6 +288,7 @@ const Api = (props: any) => {
             onChange={(filteredProperties: any) => {
               setFilteredProperties(filteredProperties);
             }}
+            description={description}
           />
         )}
         {!loadingApiSpecData && apiSpecsData && (

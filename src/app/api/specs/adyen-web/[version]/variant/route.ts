@@ -87,9 +87,7 @@ export async function GET(
                 type: child.type?.getText() || "string",
                 strictType: child.type?.getText() || "string",
                 required: !child.questionToken,
-                description: map[child.name.getText()]
-                  ? map[child.name.getText()]
-                  : "",
+                description: String(map[child.name.getText()] || ""),
               };
 
               if (child?.type?.kind === ts.SyntaxKind.TypeLiteral) {
@@ -215,7 +213,7 @@ export async function GET(
                 strictType,
                 required,
                 values,
-                description: map[name] ? map[name] : "",
+                description: typeof map[name] === "string" ? map[name] : "",
                 additionalProperties,
               };
             }

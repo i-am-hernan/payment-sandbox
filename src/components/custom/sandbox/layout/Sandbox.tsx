@@ -62,13 +62,7 @@ const Sandbox = ({
       className="bg-background !h-[180vh] sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)]"
     >
       <ResizablePanel
-        defaultSize={
-          view === "developer"
-            ? 60
-            : view === "preview"
-              ? 50
-              : 0
-        }
+        defaultSize={view === "developer" ? 60 : view === "preview" ? 50 : 0}
         ref={refA}
         maxSize={view === "demo" ? 0 : 100}
         className={cn(
@@ -83,19 +77,17 @@ const Sandbox = ({
           })}
         </div>
       </ResizablePanel>
-      {view !== "demo" && <ResizableHandle />}
+      <ResizableHandle
+        className={cn(
+          view === "demo" && "opacity-0 pointer-events-none hidden"
+        )}
+      />
       <ResizablePanel
-        defaultSize={
-          view === "developer"
-            ? 40
-            : view === "preview"
-              ? 50
-              : 100
-        }
+        defaultSize={view === "developer" ? 40 : view === "preview" ? 50 : 100}
         className="transition-all duration-300 ease-in-out"
       >
         <ResizablePanelGroup direction="vertical">
-          <ResizablePanel 
+          <ResizablePanel
             defaultSize={view === "developer" ? 50 : 100}
             className="transition-all duration-300 ease-in-out"
           >
@@ -106,7 +98,11 @@ const Sandbox = ({
               })}
             </div>
           </ResizablePanel>
-          <ResizableHandle />
+          <ResizableHandle
+            className={cn(
+              view !== "developer" && "opacity-0 pointer-events-none hidden"
+            )}
+          />
           <ResizablePanel
             defaultSize={view === "developer" ? 50 : 0}
             maxSize={view === "preview" || view === "demo" ? 0 : 100}

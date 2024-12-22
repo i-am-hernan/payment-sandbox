@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/resizable";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { createHtmlCode } from "@/utils/utils";
+import { cn, createHtmlCode } from "@/utils/utils";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -46,8 +46,12 @@ const Html = () => {
           theme={theme}
         />
       </ResizablePanel>
-      {view === "developer" && <ResizableHandle />}
-      <ResizablePanel defaultSize={50}>
+      <ResizableHandle
+        className={cn(
+          view !== "developer" && "opacity-0 pointer-events-none hidden"
+        )}
+      />
+      <ResizablePanel>
         <Version
           label={"Adyen Web"}
           value={adyenWebVersion}
