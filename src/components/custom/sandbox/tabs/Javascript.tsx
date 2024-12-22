@@ -45,7 +45,7 @@ const initialState = {
   stringified: "",
 };
 
-const checkoutConfigReducer = (state: any, action: any) => {
+const configReducer = (state: any, action: any) => {
   switch (action.type) {
     case "SET_PARSED":
       return { ...state, parsed: action.payload };
@@ -79,16 +79,13 @@ const Javascript = (props: any) => {
     loading: loadingSdkSpecData,
     error: sdkSpecsError,
   } = useApi(
-    `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/${configurationType}?${configurationType === "variant" ? `txvariant=${variant}` : ""}`,
+    `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/${configurationType}?${configurationType === "adyenVariant" ? `txvariant=${variant}` : ""}`,
     "GET"
   );
 
   const { theme, view } = useSelector((state: RootState) => state.user);
   const [filteredProperties, setFilteredProperties] = useState(properties);
-  const [checkoutConfig, dispatchCheckoutConfig] = useReducer(
-    checkoutConfigReducer,
-    initialState
-  );
+  const [config, dispatchConfig] = useReducer(configReducer, initialState);
   const panelRef = useRef<ImperativePanelHandle>(null);
   const dispatch = useDispatch();
 
@@ -97,7 +94,7 @@ const Javascript = (props: any) => {
       let stringifiedLocalState = stringifyObject(localState);
 
       if (
-        sanitizeString(build.checkoutConfiguration) !==
+        sanitizeString(build[configurationType]) !==
         sanitizeString(stringifiedLocalState)
       ) {
         dispatch(updateStoreConfiguration(stringifiedLocalState));
@@ -123,7 +120,7 @@ const Javascript = (props: any) => {
         formatJsString(storeConfiguration, configurationType),
         "babel"
       );
-      dispatchCheckoutConfig({
+      dispatchConfig({
         type: "SET_BOTH",
         payload: {
           parsed: unstringifyObject(storeConfiguration),
@@ -135,6 +132,20 @@ const Javascript = (props: any) => {
   );
 
   useEffect(() => {
+    setFilteredProperties(properties);
+  }, [properties]);
+
+  useEffect(() => {
+    if (sdkSpecsData) {
+      dispatch(
+        updateSpecs({
+          [configurationType]: sdkSpecsData,
+        })
+      );
+    }
+  }, [sdkSpecsData]);
+
+  useEffect(() => {
     if (view === "demo" || view === "preview") {
       panelRef.current?.resize(0);
     } else if (view === "developer") {
@@ -143,24 +154,10 @@ const Javascript = (props: any) => {
   }, [view]);
 
   useEffect(() => {
-    if (sdkSpecsData) {
-      dispatch(
-        updateSpecs({
-          adyenWeb: sdkSpecsData,
-        })
-      );
+    if (config.parsed !== null) {
+      syncGlobalState(config.parsed, build);
     }
-  }, [sdkSpecsData]);
-
-  useEffect(() => {
-    setFilteredProperties(properties);
-  }, [properties]);
-
-  useEffect(() => {
-    if (checkoutConfig.parsed !== null) {
-      syncGlobalState(checkoutConfig.parsed, build);
-    }
-  }, [checkoutConfig.stringified]);
+  }, [config.stringified]);
 
   useEffect(() => {
     syncLocalState(storeConfiguration, configurationType);
@@ -168,18 +165,15 @@ const Javascript = (props: any) => {
 
   const handlePrettify = useCallback(async () => {
     try {
-      let prettifiedString = await prettify(
-        checkoutConfig.stringified,
-        "babel"
-      );
-      dispatchCheckoutConfig({
+      let prettifiedString = await prettify(config.stringified, "babel");
+      dispatchConfig({
         type: "SET_STRINGIFIED",
         payload: prettifiedString,
       });
     } catch (e) {
       console.error(e);
     }
-  }, [checkoutConfig.stringified]);
+  }, [config.stringified]);
 
   const handleVersionChange = useCallback(
     (value: any) => {
@@ -199,8 +193,8 @@ const Javascript = (props: any) => {
 
   const handleOpenSdkListChange = useCallback(
     async (value: any) => {
-      const checkoutParameters = Object.keys(checkoutConfig.parsed);
-      const isNewProperty = checkoutParameters.length < value.length;
+      const configParameters = Object.keys(config.parsed);
+      const isNewProperty = configParameters.length < value.length;
       if (isNewProperty) {
         const latestKey = value[value.length - 1];
         const latestValue = properties[latestKey];
@@ -223,10 +217,10 @@ const Javascript = (props: any) => {
           newProperty = { [latestKey]: function () {} };
         }
         let newObject = {
-          ...checkoutConfig.parsed,
+          ...config.parsed,
           ...newProperty,
         };
-        dispatchCheckoutConfig({
+        dispatchConfig({
           type: "SET_BOTH",
           payload: {
             parsed: newObject,
@@ -237,14 +231,14 @@ const Javascript = (props: any) => {
           },
         });
       } else {
-        const removedProperties: any = checkoutParameters.filter((i) => {
+        const removedProperties: any = configParameters.filter((i) => {
           return value.indexOf(i) < 0;
         });
         if (removedProperties.length > 0) {
-          let updatedRequest = { ...checkoutConfig.parsed };
+          let updatedRequest = { ...config.parsed };
           let removedProperty = removedProperties.pop();
           delete updatedRequest[removedProperty];
-          dispatchCheckoutConfig({
+          dispatchConfig({
             type: "SET_BOTH",
             payload: {
               parsed: updatedRequest,
@@ -260,7 +254,7 @@ const Javascript = (props: any) => {
         }
       }
     },
-    [checkoutConfig.parsed, properties, configurationType]
+    [config.parsed, properties, configurationType]
   );
 
   if (sdkSpecsError) {
@@ -284,14 +278,14 @@ const Javascript = (props: any) => {
         <div className="flex flex-1 overflow-scroll">
           <Code
             type="babel"
-            code={checkoutConfig.stringified}
+            code={config.stringified}
             readOnly={false}
             theme={theme}
             onChange={(jsValue: any, stringValue: string) => {
-              if (stringValue === checkoutConfig.stringified) {
+              if (stringValue === config.stringified) {
                 return;
               } else {
-                dispatchCheckoutConfig({
+                dispatchConfig({
                   type: "SET_BOTH",
                   payload: {
                     parsed: jsValue,
@@ -335,24 +329,24 @@ const Javascript = (props: any) => {
             onChange={handleOpenApiSearchChange}
           />
         )}
-        {!loadingSdkSpecData && sdkSpecsData && checkoutConfig.parsed && (
+        {!loadingSdkSpecData && sdkSpecsData && config.parsed && (
           <MemoizedOpenSdkList
             openSdk={sdkSpecsData}
             properties={filteredProperties}
-            selectedProperties={Object.keys(checkoutConfig.parsed)}
-            values={checkoutConfig.parsed}
+            selectedProperties={Object.keys(config.parsed)}
+            values={config.parsed}
             setValues={(
               value: any,
               keyString: any,
               keyValue: any,
               type: string
             ) => {
-              dispatchCheckoutConfig({
+              dispatchConfig({
                 type: "SET_BOTH",
                 payload: {
                   parsed: value,
                   stringified: replaceKeyValue(
-                    checkoutConfig.stringified,
+                    config.stringified,
                     keyString,
                     JSON.stringify(keyValue),
                     type
