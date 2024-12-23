@@ -86,8 +86,9 @@ const Sdk = (props: any) => {
   const specs: any = useSelector((state: RootState) => state.specs);
   const { checkoutConfiguration, txVariantConfiguration } = specs;
   const properties =
+    (checkoutConfiguration || txVariantConfiguration) &&
     configurationType === "checkoutConfiguration"
-      ? checkoutConfiguration.checkout
+      ? checkoutConfiguration
       : txVariantConfiguration;
 
   const [filteredProperties, setFilteredProperties] = useState(properties);
@@ -135,10 +136,6 @@ const Sdk = (props: any) => {
     });
   }, []);
 
-  // const syncLocalState = () => {
-  //   console.log("syncLocalState");
-  // };
-
   useEffect(() => {
     setFilteredProperties(properties);
   }, [properties]);
@@ -150,8 +147,14 @@ const Sdk = (props: any) => {
           [configurationType]: sdkSpecsData,
         })
       );
+    } else if (sdkSpecsError) {
+      dispatch(
+        updateSpecs({
+          [configurationType]: {},
+        })
+      );
     }
-  }, [sdkSpecsData]);
+  }, [sdkSpecsData, sdkSpecsError]);
 
   useEffect(() => {
     if (view === "demo" || view === "preview") {
@@ -265,10 +268,6 @@ const Sdk = (props: any) => {
     [config.parsed, properties, configurationType]
   );
 
-  if (sdkSpecsError) {
-    return <div>Error</div>;
-  }
-
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -327,7 +326,7 @@ const Sdk = (props: any) => {
         className="!overflow-y-scroll border-b-2"
       >
         {loadingSdkSpecData && <Loading className="text-foreground" />}
-        {!loadingSdkSpecData && sdkSpecsData && (
+        {adyenWebVersion && (
           <Version
             label={"adyen web"}
             value={adyenWebVersion}
@@ -335,7 +334,7 @@ const Sdk = (props: any) => {
             onChange={handleVersionChange}
           />
         )}
-        {!loadingSdkSpecData && sdkSpecsData && (
+        {sdkSpecsData && (
           <OpenApiSearch
             properties={properties}
             onChange={handleOpenApiSearchChange}
@@ -344,7 +343,7 @@ const Sdk = (props: any) => {
             method="object"
           />
         )}
-        {!loadingSdkSpecData && sdkSpecsData && config.parsed && (
+        {properties && config.parsed && (
           <MemoizedOpenSdkList
             openSdk={sdkSpecsData}
             properties={filteredProperties}

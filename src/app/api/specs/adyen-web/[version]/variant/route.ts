@@ -4,6 +4,17 @@ import { NextRequest } from "next/server";
 import * as ts from "typescript";
 import { variantToInterfaceName } from "@/lib/variantToInterfaceName";
 import { VariantToInterfaceName } from "@/lib/variantToInterfaceName";
+
+// First, create a custom error class at the top of the file
+class ApiError extends Error {
+  status: number;
+  
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
 interface ParsedProperty {
   name: string;
   type: string;
@@ -23,35 +34,37 @@ export async function GET(
   const txVariant = searchParams.get("txvariant");
   const parsedVersion = version.replaceAll("_", ".");
   const majorVersion = parsedVersion.split(".")[0];
-  const map = variantToInterfaceName as Record<
-    string,
-    Record<string, VariantToInterfaceName>
-  >;
-  const interfaceName =
-    txVariant && map[txVariant]
-      ? map[txVariant][majorVersion].interfaceName
-      : null;
-  const path =
-    txVariant && map[txVariant] ? map[txVariant][majorVersion].path : null;
-  const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${path}`;
-
-  if (!txVariant) {
-    return new Response("Variant parameter is required", { status: 400 });
-  }
-
-  if (!interfaceName) {
-    return new Response("Could not find interface name for variant", {
-      status: 400,
-    });
-  }
-
+  
+  // Move validation inside try block
   try {
+    if (!txVariant) {
+      throw new ApiError("Variant parameter is required", 400);
+    }
+
+    const map = variantToInterfaceName as Record<
+      string,
+      Record<string, VariantToInterfaceName>
+    >;
+    
+    const interfaceName =
+      txVariant && map[txVariant]
+        ? map[txVariant][majorVersion].interfaceName
+        : null;
+    const path =
+      txVariant && map[txVariant] ? map[txVariant][majorVersion].path : null;
+
+    if (!interfaceName) {
+      throw new ApiError("Could not find interface name for variant", 400);
+    }
+
+    const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${path}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
+
     if (!response.ok) {
       throw response;
     }
@@ -231,11 +244,24 @@ export async function GET(
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();
-      return new Response(JSON.stringify(data), {
+      return new Response(JSON.stringify({
+        error: data,
+        status: error.status
+      }), {
+        status: error.status,
+      });
+    } else if (error instanceof ApiError) {
+      return new Response(JSON.stringify({
+        error: error.message,
+        status: error.status
+      }), {
         status: error.status,
       });
     } else {
-      return new Response(JSON.stringify({ error: error.message }), {
+      return new Response(JSON.stringify({
+        error: error.message,
+        status: 500
+      }), {
         status: 500,
       });
     }

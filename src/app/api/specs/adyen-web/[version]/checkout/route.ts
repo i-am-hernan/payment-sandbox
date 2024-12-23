@@ -211,7 +211,7 @@ export async function GET(
     };
 
     const result = structureAdyenWebTypes();
-    return Response.json({ checkout: result });
+    return Response.json({ ...result });
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();

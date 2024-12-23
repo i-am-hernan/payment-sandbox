@@ -132,7 +132,6 @@ const ShareableButton = (props: any) => {
                   className="flex flex-col"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    console.log("state", state);
                     setShare(true);
                     handleShare(state);
                   }}

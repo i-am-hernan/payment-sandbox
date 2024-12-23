@@ -43,11 +43,12 @@ export const useFormula = (
   useEffect(() => {
     const syncFormula = (formula: any) => {
       if (
-        formula.txVariantConfiguration &&
+        typeof formula.txVariantConfiguration === "string" &&
         formula.txVariantConfiguration === ""
       ) {
-        formula.txVariantConfiguration = sanitizeString(`{}`);
+        formula.txVariantConfiguration = "{}";
       }
+
       dispatch(updateFormula({ ...formula }));
     };
     const syncBase = (base: any) => {

@@ -83,9 +83,13 @@ export const useAdyenSessions = (
       ...executeConfiguration,
     };
 
+    const executeTxVariantConfiguration = new Function(
+      `return ${txVariantConfiguration}`
+    )();
+
     if (readyToMount) {
       if (/^5./.test(adyenWebVersion)) {
-        adyenV5(configuration, checkoutRef, txVariant, txVariantConfiguration);
+        adyenV5(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
       }
     }
   }, [

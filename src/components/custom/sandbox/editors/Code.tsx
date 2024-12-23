@@ -131,7 +131,7 @@ const Code = (props: any) => {
   } else if (type === "babel") {
     extensions.push(javascript(), linter(javascriptLinter));
   }
-
+  
   return (
     <div
       className={`flex w-[100%] h-[100%] flex-col codemirror-wrapper border-t-none ${readOnly ? "cursor-not-allowed" : ""}`}
