@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
 import React from "react";
 import Providers from "../store/provider";
+
 import "../styles/globals.css";
 
 type LayoutProps = {
@@ -13,17 +14,13 @@ const Layout: React.FC<LayoutProps> = ({ children }: any) => {
     <html lang="en">
       <head>
         <title>Formulize | Build your checkout</title>
-        <link 
-          rel="icon" 
-          type="image/svg+xml" 
-          href="/icons/cart.svg" 
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href="/icons/cart.svg"
           sizes="any"
         />
-        <link 
-          rel="shortcut icon" 
-          type="image/svg+xml" 
-          href="/icons/cart.svg"
-        />
+        <link rel="shortcut icon" type="image/svg+xml" href="/icons/cart.svg" />
       </head>
       <body>
         <Providers>{children}</Providers>

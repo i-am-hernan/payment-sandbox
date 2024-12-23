@@ -1,6 +1,6 @@
 import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
-import OpenApiSearch from "@/components/custom/sandbox/editors/openApi/OpenApiSearch";
+import Search from "@/components/custom/sandbox/editors/Search";
 import Version from "@/components/custom/sandbox/editors/Version";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
@@ -335,7 +335,7 @@ const Sdk = (props: any) => {
           />
         )}
         {sdkSpecsData && (
-          <OpenApiSearch
+          <Search
             properties={properties}
             onChange={handleOpenApiSearchChange}
             description={description}

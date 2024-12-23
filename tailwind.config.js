@@ -72,7 +72,7 @@ module.exports = {
         },
         preview: {
           DEFAULT: "var(--color-preview-icon)",
-        }
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

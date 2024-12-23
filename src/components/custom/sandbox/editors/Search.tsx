@@ -3,7 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@/components/ui/button";
 import React, { useRef, useEffect } from "react";
 
-const OpenApiSearch = (props: any) => {
+const Search = (props: any) => {
   const { onChange, properties, description, label, method } = props;
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -78,4 +78,4 @@ const OpenApiSearch = (props: any) => {
   );
 };
 
-export default OpenApiSearch;
+export default Search;

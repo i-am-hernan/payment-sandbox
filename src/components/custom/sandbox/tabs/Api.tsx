@@ -1,7 +1,7 @@
 import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import OpenApiList from "@/components/custom/sandbox/editors/openApi/OpenApiList";
-import OpenApiSearch from "@/components/custom/sandbox/editors/openApi/OpenApiSearch";
+import Search from "@/components/custom/sandbox/editors/Search";
 import Version from "@/components/custom/sandbox/editors/Version";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
@@ -283,7 +283,7 @@ const Api = (props: any) => {
           />
         )}
         {!loadingApiSpecData && apiSpecsData && (
-          <OpenApiSearch
+          <Search
             properties={properties}
             onChange={(filteredProperties: any) => {
               setFilteredProperties(filteredProperties);
