@@ -6,6 +6,7 @@ export interface Sandbox {
   section: "frontend" | "backend" | "webhooks";
   isRedirect: boolean;
   unsavedChanges: number;
+  variantName: string;
 }
 
 // Define the initial state
@@ -13,7 +14,8 @@ const initialState: Sandbox = {
   theme: "dark",
   section: "frontend",
   isRedirect: false,
-  unsavedChanges: 0
+  unsavedChanges: 0,
+  variantName: "",
 };
 
 // Create the slice with typed reducers
@@ -35,6 +37,9 @@ const sandboxSlice = createSlice({
     },
     updateIsRedirect: (state, action: PayloadAction<boolean>) => {
       state.isRedirect = action.payload;
+    },
+    updateVariantName: (state, action: PayloadAction<string>) => {
+      state.variantName = action.payload;
     },
     incrementUnsavedChanges: (state) => {
       state.unsavedChanges += 1;

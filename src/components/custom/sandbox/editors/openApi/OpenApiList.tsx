@@ -46,7 +46,7 @@ const OpenApiList = (props: any) => {
                 {!properties[property].type && (
                   <span className="pl-2 text-grey">{"object"}</span>
                 )}
-                {required.indexOf(property) > -1 && (
+                {required?.indexOf(property) > -1 && (
                   <span className="pl-2 text-warning">Required</span>
                 )}
               </p>
@@ -54,7 +54,9 @@ const OpenApiList = (props: any) => {
             <AccordionContent>
               <div className="pl-6 pr-4">
                 <p className="text-xs pb-2 text-foreground">
-                  {properties[property] && properties[property].description && parseStringWithLinks(properties[property].description)}
+                  {properties[property] &&
+                    properties[property].description &&
+                    parseStringWithLinks(properties[property].description)}
                 </p>
                 {properties[property].type === "string" &&
                   !properties[property].enum && (

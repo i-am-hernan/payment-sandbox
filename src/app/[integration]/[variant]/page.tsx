@@ -285,7 +285,7 @@ const Page: any = () => {
     <div className={`${theme} border-r-2`}>
       <React.Fragment>
         <header>
-          <Topbar view={view} merchantAccount={merchantAccount} />
+          <Topbar view={view} merchantAccount={merchantAccount} integration={integration}/>
         </header>
         <main>
           <Sandbox

@@ -25,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { RequestOptions, useApi } from "@/hooks/useApi";
-import { userActions } from "@/store/reducers";
+import { sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -47,6 +47,7 @@ interface SideTab {
 }
 
 const { updateTheme, updateView } = userActions;
+const { updateVariantName } = sandboxActions;
 
 const Sidebar = (props: any) => {
   const {
@@ -114,6 +115,19 @@ const Sidebar = (props: any) => {
   useEffect(() => {
     merchantAccount && fetchPaymentMethods(merchantAccount);
   }, [merchantAccount]);
+
+  useEffect(() => {
+    console.log(variant);
+    console.log("paymentMethods.data", paymentMethods.data);
+    paymentMethods.data?.forEach((paymentMethod: any) => {
+      if (paymentMethod.type === variant) {
+        console.log(paymentMethod.name);
+        dispatch(updateVariantName(paymentMethod.name));
+      } else if (variant === "dropin") {
+        dispatch(updateVariantName("Dropin"));
+      }
+    });
+  }, [paymentMethods.data, variant]);
 
   const sideTabs: Array<SideTab> = [
     {

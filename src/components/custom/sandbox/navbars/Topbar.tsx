@@ -44,7 +44,8 @@ const { updateView } = userActions;
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
-  const { view, merchantAccount } = props;
+  const { variantName } = useSelector((state: RootState) => state.sandbox);
+  const { view, merchantAccount, integration } = props;
   const { unsavedChanges } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
@@ -63,6 +64,8 @@ const Topbar = (props: any) => {
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
       ref={containerRef}
     >
+      <div className="flex text-center text-preview px-1 text-xs rounded-xs">{`${integration.toUpperCase()}`}</div>
+      <div className="flex text-center text-foreground text-sm rounded-md">{`${variantName}`}</div>
       <div className="flex-1 text-center">
         <UpdateMerchantCookie />
       </div>
