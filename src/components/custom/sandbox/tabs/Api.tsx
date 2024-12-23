@@ -269,7 +269,7 @@ const Api = (props: any) => {
         {loadingApiSpecData && <Loading className="text-foreground" />}
         {!loadingApiSpecData && apiSpecsData && (
           <Version
-            label={api}
+            label={"checkout api"}
             value={checkoutAPIVersion[api]}
             options={APIVERSIONS}
             onChange={(value: any) => {
@@ -289,6 +289,8 @@ const Api = (props: any) => {
               setFilteredProperties(filteredProperties);
             }}
             description={description}
+            label={api}
+            method="POST"
           />
         )}
         {!loadingApiSpecData && apiSpecsData && (

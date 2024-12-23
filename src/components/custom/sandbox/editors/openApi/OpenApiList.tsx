@@ -35,8 +35,8 @@ const OpenApiList = (props: any) => {
             value={property}
             className="hover:no-underline"
           >
-            <AccordionTrigger className="px-4 py-3">
-              <p className="text-sm text-foreground">{property}</p>
+            <AccordionTrigger className="pl-6 pr-4 py-3">
+              <p className="text-[0.85rem] text-foreground">{property}</p>
               <p className="font-mono text-xs flex-grow text-left">
                 {properties[property].type && (
                   <span className="pl-2 text-grey">
@@ -52,7 +52,7 @@ const OpenApiList = (props: any) => {
               </p>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="px-4">
+              <div className="pl-6 pr-4">
                 <p className="text-xs pb-2 text-foreground">
                   {properties[property] && properties[property].description && parseStringWithLinks(properties[property].description)}
                 </p>

@@ -329,7 +329,7 @@ const Sdk = (props: any) => {
         {loadingSdkSpecData && <Loading className="text-foreground" />}
         {!loadingSdkSpecData && sdkSpecsData && (
           <Version
-            label={"Adyen Web"}
+            label={"adyen web"}
             value={adyenWebVersion}
             options={WEBVERSIONS}
             onChange={handleVersionChange}
@@ -340,6 +340,8 @@ const Sdk = (props: any) => {
             properties={properties}
             onChange={handleOpenApiSearchChange}
             description={description}
+            label={configurationType}
+            method="object"
           />
         )}
         {!loadingSdkSpecData && sdkSpecsData && config.parsed && (

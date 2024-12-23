@@ -130,7 +130,7 @@ const Page: any = () => {
             view={view}
             key={"checkout"}
             description={
-              "Create a global configuration object and it pass it to Checkout"
+              "Create a configuration object for Checkout"
             }
           />
         ),
@@ -151,7 +151,7 @@ const Page: any = () => {
             theme={theme}
             view={view}
             key={"variant"}
-            description={`Create another configuration object for ${variant}`}
+            description={`Create a configuration object for ${variant}`}
           />
         ),
         value: `${variant}`,
@@ -196,7 +196,7 @@ const Page: any = () => {
                   schema="PaymentMethodsRequest"
                   request={paymentMethods}
                   updateRequest={updatePaymentMethodsRequest}
-                  description={"Create a /paymentMethods request"}
+                  description={"Configure /paymentMethods request parameters"}
                 />
               ),
               value: "paymentmethods",
@@ -215,7 +215,7 @@ const Page: any = () => {
                   schema="PaymentRequest"
                   request={payments}
                   updateRequest={updatePaymentsRequest}
-                  description={"Create a /payments request"}
+                  description={"Configure /payments request parameters"}
                 />
               ),
               value: "payments",
@@ -234,7 +234,7 @@ const Page: any = () => {
                   schema="PaymentDetailsRequest"
                   request={paymentsDetails}
                   updateRequest={updatePaymentsDetailsRequest}
-                  description={"Create a /payment/details request"}
+                  description={"Configure /payment/details request parameters"}
                 />
               ),
               value: "paymentsDetails",
