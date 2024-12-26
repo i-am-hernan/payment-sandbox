@@ -127,6 +127,7 @@ const Page: any = () => {
             configurationType="checkoutConfiguration"
             variant={variant}
             theme={theme}
+            integration={integration}
             view={view}
             key={"checkout"}
             description={
@@ -149,6 +150,7 @@ const Page: any = () => {
             configurationType="txVariantConfiguration"
             variant={variant}
             theme={theme}
+            integration={integration}
             view={view}
             key={"variant"}
             description={`Create a configuration object for ${variant}`}

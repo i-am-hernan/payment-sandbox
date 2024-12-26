@@ -69,6 +69,7 @@ const Sdk = (props: any) => {
     variant,
     theme,
     view,
+    integration,
     description,
   } = props;
 
@@ -330,7 +331,13 @@ const Sdk = (props: any) => {
           <Version
             label={"adyen web"}
             value={adyenWebVersion}
-            options={WEBVERSIONS}
+            options={
+              integration === "sessions"
+                ? WEBVERSIONS.filter((version: string) =>
+                    /^[5-9]/.test(version)
+                  )
+                : WEBVERSIONS
+            }
             onChange={handleVersionChange}
           />
         )}
