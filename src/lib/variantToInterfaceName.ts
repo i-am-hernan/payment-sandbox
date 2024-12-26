@@ -74,4 +74,50 @@ export const variantToInterfaceName: Record<
       path: "packages/lib/src/components/Card/types.ts",
     },
   },
+  ancv: {
+    v5: {
+      interfaceName: "ANCVProps",
+      variant: "ancv",
+      path: "packages/lib/src/components/ANCV/ANCV.tsx",
+    },
+    v6: {
+      interfaceName: "ANCVConfiguration",
+      variant: "ancv",
+      path: "packages/lib/src/components/ANCV/types.ts",
+    },
+  },
+  paypal: {
+    v3: {
+      interfaceName: "PayPalCommonProps",
+      variant: "paypal",
+      path: "packages/lib/src/components/PayPal/types.ts",
+    },
+    v4: {
+      interfaceName: "PayPalCommonProps",
+      variant: "paypal",
+      path: "packages/lib/src/components/PayPal/types.ts",
+    },
+    v5: {
+      interfaceName: "PayPalCommonProps",
+      variant: "paypal",
+      path: "packages/lib/src/components/PayPal/types.ts",
+    },
+    v6: {
+      interfaceName: "PayPalConfiguration",
+      variant: "paypal",
+      path: "packages/lib/src/components/PayPal/types.ts",
+    },
+  },
+  klarna: {
+    v5: {
+      interfaceName: "KlarnaPaymentsProps",
+      variant: "paypal",
+      path: "packages/lib/src/components/PayPal/types.ts",
+    },
+    v6: {
+      interfaceName: "KlarnConfiguration",
+      variant: "klarna",
+      path: "packages/lib/src/components/Klarna/types.ts",
+    },
+  },
 };
