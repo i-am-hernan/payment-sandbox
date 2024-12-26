@@ -117,11 +117,8 @@ const Sidebar = (props: any) => {
   }, [merchantAccount]);
 
   useEffect(() => {
-    console.log(variant);
-    console.log("paymentMethods.data", paymentMethods.data);
     paymentMethods.data?.forEach((paymentMethod: any) => {
       if (paymentMethod.type === variant) {
-        console.log(paymentMethod.name);
         dispatch(updateVariantName(paymentMethod.name));
       } else if (variant === "dropin") {
         dispatch(updateVariantName("Dropin"));

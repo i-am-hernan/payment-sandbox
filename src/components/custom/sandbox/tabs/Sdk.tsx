@@ -334,7 +334,7 @@ const Sdk = (props: any) => {
             onChange={handleVersionChange}
           />
         )}
-        {sdkSpecsData && (
+        {!loadingSdkSpecData && (
           <Search
             properties={properties}
             onChange={handleOpenApiSearchChange}

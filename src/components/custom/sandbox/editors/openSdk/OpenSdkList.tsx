@@ -10,7 +10,7 @@ import {
 
 export const OpenSdkList = (props: any) => {
   const { selectedProperties, properties, values, setValues, onChange } = props;
-
+  const propertyKeys = properties ? Object.keys(properties) : [];
   return (
     <Accordion
       type="multiple"
@@ -18,8 +18,13 @@ export const OpenSdkList = (props: any) => {
       value={selectedProperties}
       onValueChange={onChange}
     >
-      {properties &&
-        Object.keys(properties).map((property: any) => (
+      {propertyKeys.length === 0 && (
+        <div className="pl-6 pr-4 py-3">
+          <p className="text-sm text-foreground">{`0 matching results`}</p>
+        </div>
+      )}
+      {propertyKeys.length > 0 &&
+        propertyKeys.map((property: any) => (
           <AccordionItem
             key={property}
             value={property}
