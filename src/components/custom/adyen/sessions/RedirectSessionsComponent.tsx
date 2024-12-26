@@ -1,7 +1,8 @@
 "use client";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAdyenSessionsRedirect } from "@/hooks/useAdyenSessionsRedirect";
+import Error from "../../utils/Error";
 import Loading from "../../utils/Loading";
+import Result from "../../utils/Result";
 
 export const RedirectSessionsComponent = (props: any) => {
   const { redirectResult, sessionId, checkoutConfiguration } = props;
@@ -13,23 +14,8 @@ export const RedirectSessionsComponent = (props: any) => {
 
   return (
     <div className="flex justify-center items-center h-[100%]">
-      {error && (
-        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
-          <Alert variant="destructive">
-            <AlertTitle>{`Error: ${error?.errorCode ? error.errorCode : ""} ${error?.errorType ? error.errorType : ""} ${error?.status ? error.status : ""}`}</AlertTitle>
-            <AlertDescription className="text-xs">
-              {error.message}
-            </AlertDescription>
-          </Alert>
-        </div>
-      )}
-      {result && (
-        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
-          <Alert variant="default" className="border-primary">
-            <AlertTitle>{result.resultCode}</AlertTitle>
-          </Alert>
-        </div>
-      )}
+      {error && <Error error={error} />}
+      {result && <Result adyenResult={result} />}
       {loading && <Loading className="text-foreground" />}
     </div>
   );

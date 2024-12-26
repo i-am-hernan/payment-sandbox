@@ -4,7 +4,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAdyenSessions } from "@/hooks/useAdyenSessions";
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useRef, useState } from "react";
-import Loading from "../../utils/Loading";
+import Error from "@/components/custom/utils/Error";
+import Loading from "@/components/custom/utils/Loading";
+import Result from "@/components/custom/utils/Result";
 
 export const InitSessionsComponent = (props: any) => {
   const {
@@ -56,23 +58,8 @@ export const InitSessionsComponent = (props: any) => {
 
   return (
     <div className="flex justify-center items-center h-[100%]">
-      {error && (
-        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
-          <Alert variant="destructive">
-            <AlertTitle>{`Error: ${error?.errorCode ? error.errorCode : ""} ${error?.errorType ? error.errorType : ""} ${error?.status ? error.status : ""}`}</AlertTitle>
-            <AlertDescription className="text-xs">
-              {error.message}
-            </AlertDescription>
-          </Alert>
-        </div>
-      )}
-      {adyenResult && (
-        <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
-          <Alert variant="default" className="border-primary">
-            <AlertTitle>{adyenResult.resultCode}</AlertTitle>
-          </Alert>
-        </div>
-      )}
+      {error && <Error error={error} />}
+      {adyenResult && <Result adyenResult={adyenResult} />}
       {loadingSessions && (
         <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
           <Loading className="text-foreground" />
