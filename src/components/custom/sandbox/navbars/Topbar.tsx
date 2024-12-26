@@ -19,15 +19,12 @@ import { Button } from "@/components/ui/button";
 import { formulaActions, userActions } from "@/store/reducers";
 import { RootState } from "@/store/store";
 import { clearUrlParams, refineFormula } from "@/utils/utils";
+import CodeIcon from "@mui/icons-material/Code";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import RestoreIcon from "@mui/icons-material/Restore";
-import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
-import ViewColumnIcon from "@mui/icons-material/ViewColumn";
-import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import Tooltip from "@mui/material/Tooltip";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CodeIcon from "@mui/icons-material/Code";
 
 const {
   updateRun,
@@ -65,8 +62,14 @@ const Topbar = (props: any) => {
       ref={containerRef}
     >
       <div className="flex items-baseline">
-        <div className="flex text-center text-preview px-1 text-[0.77rem] rounded-xs">{`${integration.toUpperCase()}`}</div>
-        <div className="flex text-center text-foreground text-[0.9rem] rounded-md">{`${variantName}`}</div>
+        <div className="flex text-center text-preview pl-[8px] pr-1 text-[0.73rem] rounded-xs">{`${integration.toUpperCase()}`}</div>
+        <div className="flex text-center text-[0.9rem] relative w-[max-content]">
+          {variantName && (
+            <h3
+              className="flex text-center text-[0.9rem] relative w-[max-content] text-foreground"
+            >{`${variantName}`}</h3>
+          )}
+        </div>
       </div>
       <div className="flex-1 text-center">
         <UpdateMerchantCookie />

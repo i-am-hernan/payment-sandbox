@@ -88,10 +88,35 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        typing: {
+          "0%": {
+            width: "0%",
+            visibility: "visible",
+            borderRightWidth: "2px",
+            borderRightColor: "hsl(var(--foreground))"
+          },
+          "99.9%": {
+            borderRightWidth: "2px",
+            borderRightColor: "hsl(var(--foreground))"
+          },
+          "100%": {
+            width: "100%",
+            borderRightWidth: "0px"
+          },
+        },
+        cursor: {
+          "0%, 100%": {
+            borderRightColor: "hsl(var(--foreground))"
+          },
+          "50%": {
+            borderRightColor: "transparent"
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        typing: "typing 2s steps(40), cursor 1s step-end infinite",
       },
     },
   },
