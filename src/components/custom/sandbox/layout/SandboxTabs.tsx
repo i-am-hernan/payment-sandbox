@@ -12,21 +12,7 @@ import { useState, useRef, useEffect } from "react";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import { Button } from "@/components/ui/button";
-
-interface Tab {
-  title: string;
-  icon: JSX.Element;
-  content: JSX.Element;
-  value: string;
-  unsavedChanges?: boolean;
-}
-
-interface TabsProps {
-  tabsMap: Tab[];
-  crumbs?: string[];
-  onExpand?: () => void;
-  onContract?: () => void;
-}
+import { TabsProps } from "./types";
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   const { tabsMap, crumbs, onExpand, onContract } = props;
