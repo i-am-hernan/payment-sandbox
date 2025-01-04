@@ -1,5 +1,5 @@
 import generate from "@babel/generator";
-import { parse } from "@babel/parser"; // Import a JavaScript parser
+import { parse as babelParser } from "@babel/parser"; // Import a JavaScript parser
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { javascript } from "@codemirror/lang-javascript";
@@ -7,16 +7,18 @@ import { json } from "@codemirror/lang-json";
 import { Diagnostic, linter } from "@codemirror/lint";
 import { EditorView, ViewUpdate } from "@codemirror/view";
 import { abyss } from "@uiw/codemirror-theme-abyss";
-import { duotoneLight } from "@uiw/codemirror-theme-duotone";  
+import { duotoneLight } from "@uiw/codemirror-theme-duotone";
 import CodeMirror from "@uiw/react-codemirror";
 import * as jsonc from "jsonc-parser"; // Import jsonc-parser
+import { css } from "@codemirror/lang-css"; // Add this import
+const cssParse = require("css/lib/parse");
 
 const Code = (props: any) => {
   const { code, type, readOnly, onChange, theme, jsVariable } = props;
 
   const getVariableValueFromAST = (code: string, variableName: string) => {
     // Parse the code to get the AST
-    const ast = parse(code, { sourceType: "module" });
+    const ast = babelParser(code, { sourceType: "module" });
 
     let variableValue = null;
 
@@ -37,6 +39,39 @@ const Code = (props: any) => {
     return evaluatedValue;
   };
 
+  const cssToObject = (cssString: string) => {
+    try {
+      const ast = cssParse(cssString);
+      const styleObject: { [key: string]: { [key: string]: string } } = {};
+
+      ast.stylesheet?.rules.forEach((rule: any) => {
+        if (rule.type === "rule") {
+          rule.selectors.forEach((selector: string) => {
+            // Clean up the selector - remove any leading/trailing commas and whitespace
+            const cleanSelector = selector
+              .replace(/^[\s,]+|[\s,]+$/g, '') // Remove leading/trailing commas and whitespace
+              .trim();
+
+            if (cleanSelector) {
+              styleObject[cleanSelector] = styleObject[cleanSelector] || {};
+              
+              rule.declarations?.forEach((declaration: any) => {
+                if (declaration.type === "declaration") {
+                  styleObject[cleanSelector][declaration.property] = declaration.value;
+                }
+              });
+            }
+          });
+        }
+      });
+
+      return styleObject;
+    } catch (error) {
+      console.error("Error parsing CSS:", error);
+      return null;
+    }
+  };
+
   const handleChange = async (value: string, type: string) => {
     try {
       // Linter logic
@@ -55,6 +90,14 @@ const Code = (props: any) => {
         if (diagnostics.length === 0) {
           // Bug: What if the user doesn't have any bugs but also doesnt have checkout configuration in the code, we should still throw an error
           onChange(getVariableValueFromAST(value, jsVariable), value);
+        }
+      } else if (type === "style") {
+        diagnostics = await cssLinter({
+          state: { doc: { toString: () => value } },
+        });
+        if (diagnostics.length === 0) {
+          const styleObject = cssToObject(value);
+          onChange(styleObject, value);
         }
       }
     } catch (error) {
@@ -83,7 +126,7 @@ const Code = (props: any) => {
     const diagnostics: Diagnostic[] = [];
     const code = view.state.doc.toString();
     try {
-      const ast = parse(code, { sourceType: "module" });
+      const ast = babelParser(code, { sourceType: "module" });
     } catch (error: any) {
       // Extract location information if available
       const from = error.loc
@@ -111,6 +154,57 @@ const Code = (props: any) => {
     return position;
   };
 
+  const cssLinter = async (view: any) => {
+    const diagnostics: Diagnostic[] = [];
+    const code = view.state.doc.toString();
+
+    try {
+      // Basic CSS validation
+      if (!code.trim()) return diagnostics;
+
+      // Check for unclosed braces
+      const openBraces = (code.match(/{/g) || []).length;
+      const closeBraces = (code.match(/}/g) || []).length;
+
+      if (openBraces !== closeBraces) {
+        diagnostics.push({
+          from: 0,
+          to: code.length,
+          severity: "error",
+          message: "Unclosed CSS block",
+        });
+      }
+
+      // Check for invalid selectors
+      const lines = code.split("\n");
+      let position = 0;
+
+      for (const line of lines) {
+        if (line.includes("{")) {
+          const selector = line.split("{")[0].trim();
+          if (!selector || selector.includes("}")) {
+            diagnostics.push({
+              from: position,
+              to: position + line.length,
+              severity: "error",
+              message: "Invalid CSS selector",
+            });
+          }
+        }
+        position += line.length + 1;
+      }
+    } catch (error: any) {
+      diagnostics.push({
+        from: 0,
+        to: code.length,
+        severity: "error",
+        message: error.message,
+      });
+    }
+
+    return diagnostics;
+  };
+
   const extensions = [];
 
   if (!readOnly) {
@@ -130,8 +224,10 @@ const Code = (props: any) => {
     extensions.push(json(), linter(jsonLinter));
   } else if (type === "babel") {
     extensions.push(javascript(), linter(javascriptLinter));
+  } else if (type === "style") {
+    extensions.push(css(), linter(cssLinter));
   }
-  
+
   return (
     <div
       className={`flex w-[100%] h-[100%] flex-col codemirror-wrapper border-t-none ${readOnly ? "cursor-not-allowed" : ""}`}

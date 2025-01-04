@@ -21,6 +21,10 @@ module.exports = {
     ],
   },
 
+  node: {
+    fs: "empty",
+  },
+
   // Telling webpack which extensions
   // we are interested in.
   resolve: {

@@ -34,6 +34,7 @@ const {
   updateSessionsRequest,
   updateCheckoutConfiguration,
   updateTxVariantConfiguration,
+  updateStyle,
 } = formulaActions;
 
 const Page: any = () => {
@@ -60,6 +61,7 @@ const Page: any = () => {
     checkoutAPIVersion,
     checkoutConfiguration,
     txVariantConfiguration,
+    style,
   } = useSelector((state: RootState) => state.formula);
   useView(viewParam);
 
@@ -130,9 +132,7 @@ const Page: any = () => {
             integration={integration}
             view={view}
             key={"checkout"}
-            description={
-              "Create a configuration object for Checkout"
-            }
+            description={"Create a configuration object for Checkout"}
           />
         ),
         value: `checkout`,
@@ -164,7 +164,19 @@ const Page: any = () => {
         icon: (
           <span className="font-semibold px-1 text-xxs text-info">{"CSS"}</span>
         ),
-        content: <Style key={"style"} />,
+        content: (
+          <Style
+            key={"style"}
+            storeConfiguration={style}
+            updateStoreConfiguration={updateStyle}
+            configurationType="style"
+            variant={variant}
+            theme={theme}
+            integration={integration}
+            view={view}
+            description={`Customize the style of ${variant}`}
+          />
+        ),
         value: "style",
         unsavedChanges: unsavedChanges.style,
       },
@@ -287,7 +299,11 @@ const Page: any = () => {
     <div className={`${theme} border-r-2`}>
       <React.Fragment>
         <header>
-          <Topbar view={view} merchantAccount={merchantAccount} integration={integration}/>
+          <Topbar
+            view={view}
+            merchantAccount={merchantAccount}
+            integration={integration}
+          />
         </header>
         <main>
           <Sandbox

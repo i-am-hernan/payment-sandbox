@@ -44,7 +44,7 @@ const FormulaSchema: Schema = new Schema(
         paymentsDetails: { type: Schema.Types.Mixed, required: true },
         sessions: { type: Schema.Types.Mixed, required: true },
       },
-      style: { type: Schema.Types.Mixed, required: true },
+      style: { type: String, required: true },
       txVariantConfiguration: { type: String, required: false },
       isRedirect: { type: Boolean, required: true },
     },

@@ -8,12 +8,14 @@ export interface SpecsList {
   checkoutApi?: Specs | null;
   checkoutConfiguration?: Specs | null;
   txVariantConfiguration?: Specs | null;
+  style?: Specs | null;
 }
 
 const initialState: SpecsList = {
   checkoutApi: null,
   checkoutConfiguration: null,
   txVariantConfiguration: null,
+  style: null,
 };
 
 export const SpecsSlice = createSlice({

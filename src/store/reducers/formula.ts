@@ -30,7 +30,7 @@ export interface Formula {
     payments: FormulaPropType;
     paymentsDetails: FormulaPropType;
   };
-  style: FormulaPropType;
+  style: string;
   isRedirect: boolean;
   unsavedChanges: {
     html: boolean;
@@ -96,7 +96,7 @@ const initialState: FormulaPropType = {
       merchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
     },
   },
-  style: {},
+  style: "",
   unsavedChanges: {
     html: false,
     style: false,
@@ -238,6 +238,9 @@ const formulaSlice = createSlice({
       action: PayloadAction<FormulaPropType>
     ) => {
       state.txVariantConfiguration = action.payload;
+    },
+    updateStyle: (state, action: PayloadAction<FormulaPropType>) => {
+      state.style = action.payload;
     },
     updateSessionsRequest: (state, action: PayloadAction<FormulaPropType>) => {
       const updatedRequest = {

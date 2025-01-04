@@ -49,6 +49,10 @@ export const useFormula = (
         formula.txVariantConfiguration = "{}";
       }
 
+      if (typeof formula.style === "object") {
+        formula.style = "";
+      }
+
       dispatch(updateFormula({ ...formula }));
     };
     const syncBase = (base: any) => {

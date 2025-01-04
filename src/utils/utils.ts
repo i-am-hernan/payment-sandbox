@@ -5,6 +5,8 @@ import * as parserHtml from "prettier/parser-html";
 import * as prettierPluginEstree from "prettier/plugins/estree";
 import * as prettier from "prettier/standalone";
 import * as jsonc from "jsonc-parser";
+import prettierPluginPostCss from "prettier/plugins/postcss";
+const cssParse = require("css/lib/parse");
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
@@ -106,6 +108,14 @@ export const stringifyObject = (obj: any) => {
   return `{${entries.join(", ")}}`;
 };
 
+export const stringifyObjectCSS = (obj: any) => {
+  const entries = [];
+  for (const [key, value] of Object.entries(obj)) {
+    entries.push(`${key} ${JSON.stringify(value)}`);
+  }
+  return `{${entries.join(", ")}}`;
+};
+
 export const unstringifyObject = (str: string) => {
   try {
     // Remove the surrounding curly braces
@@ -115,6 +125,42 @@ export const unstringifyObject = (str: string) => {
     return obj;
   } catch (error) {
     console.error("Failed to unstringify object:", error);
+    return null;
+  }
+};
+
+export const unstringifyObjectCSS = (str: string) => {
+  try {
+    // Remove the surrounding curly braces
+    // Create a new function to evaluate the string as JavaScript code
+    return JSON.parse(str);
+  } catch (error) {
+    console.error("Failed to unstringify object:", error);
+    return null;
+  }
+};
+
+export const cssToObject = (cssString: string) => {
+  try {
+    const ast = cssParse(cssString);
+    const styleObject: { [key: string]: { [key: string]: string } } = {};
+
+    ast.stylesheet?.rules.forEach((rule: any) => {
+      if (rule.type === "rule") {
+        const selector = rule.selectors[0];
+        styleObject[selector] = {};
+
+        rule.declarations.forEach((declaration: any) => {
+          if (declaration.type === "declaration") {
+            styleObject[selector][declaration.property] = declaration.value;
+          }
+        });
+      }
+    });
+
+    return styleObject;
+  } catch (error) {
+    console.error("Error parsing CSS:", error);
     return null;
   }
 };
@@ -130,7 +176,13 @@ export const prettify = async (
   try {
     const prettierVersion = prettier.format(uglyCode, {
       parser: type,
-      plugins: [parserBabel, parserHtml, prettierPluginEstree, jsonc],
+      plugins: [
+        parserBabel,
+        parserHtml,
+        prettierPluginEstree,
+        jsonc,
+        prettierPluginPostCss,
+      ],
       tabWidth: 1,
       useTabs: false,
     });
