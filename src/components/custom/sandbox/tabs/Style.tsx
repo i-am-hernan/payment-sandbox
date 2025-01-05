@@ -248,13 +248,13 @@ const Style = (props: any) => {
     },
     [config.parsed, properties, configurationType]
   );
-  console.log("config.parsed", config.parsed);
-  console.log("config.stringified", config.stringified);
-  console.log("filteredProperties", filteredProperties);
+  // console.log("config.parsed", config.parsed);
+  // console.log("config.stringified", config.stringified);
+  // console.log("filteredProperties", filteredProperties);
 
-  if(config.parsed) {
-    console.log("Object.keys(config.parsed)", Object.keys(config.parsed));
-  }
+  // if(config.parsed) {
+  //   console.log("Object.keys(config.parsed)", Object.keys(config.parsed));
+  // }
   return (
     <ResizablePanelGroup
       direction="horizontal"

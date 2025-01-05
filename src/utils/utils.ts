@@ -113,7 +113,7 @@ export const stringifyObjectCSS = (obj: any) => {
   for (const [key, value] of Object.entries(obj)) {
     entries.push(`${key} ${JSON.stringify(value)}`);
   }
-  return `{${entries.join(", ")}}`;
+  return `{${entries.join(" ")}}`;
 };
 
 export const unstringifyObject = (str: string) => {
@@ -144,7 +144,6 @@ export const cssToObject = (cssString: string) => {
   try {
     const ast = cssParse(cssString);
     const styleObject: { [key: string]: { [key: string]: string } } = {};
-
     ast.stylesheet?.rules.forEach((rule: any) => {
       if (rule.type === "rule") {
         const selector = rule.selectors[0];
