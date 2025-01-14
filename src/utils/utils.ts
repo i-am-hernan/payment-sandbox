@@ -111,9 +111,12 @@ export const stringifyObject = (obj: any) => {
 export const stringifyObjectCSS = (obj: any) => {
   const entries = [];
   for (const [key, value] of Object.entries(obj)) {
-    entries.push(`${key} ${JSON.stringify(value)}`);
+    entries.push(`${key} ${stringifyObject(value)}`);
   }
-  return `{${entries.join(" ")}}`;
+  // I need to replace the comma with semicolon on the result
+  // I need to remove quotes from the result
+  const result = entries.join(" ").replace(/"/g, "").replace(/,/g, "");
+  return `{${result}}`;
 };
 
 export const unstringifyObject = (str: string) => {
@@ -131,8 +134,6 @@ export const unstringifyObject = (str: string) => {
 
 export const unstringifyObjectCSS = (str: string) => {
   try {
-    // Remove the surrounding curly braces
-    // Create a new function to evaluate the string as JavaScript code
     return JSON.parse(str);
   } catch (error) {
     console.error("Failed to unstringify object:", error);
@@ -151,7 +152,8 @@ export const cssToObject = (cssString: string) => {
 
         rule.declarations.forEach((declaration: any) => {
           if (declaration.type === "declaration") {
-            styleObject[selector][declaration.property] = declaration.value;
+            styleObject[selector][declaration.property] =
+              declaration.value + ";";
           }
         });
       }

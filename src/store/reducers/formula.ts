@@ -42,6 +42,16 @@ export interface Formula {
     sessions: boolean;
     events: boolean;
   };
+  errors: {
+    html: boolean;
+    style: boolean;
+    js: boolean;
+    paymentMethods: boolean;
+    payments: boolean;
+    paymentsDetails: boolean;
+    sessions: boolean;
+    events: boolean;
+  };
   build: Formula | null;
   base: Formula | null;
   run: boolean;
@@ -98,6 +108,16 @@ const initialState: FormulaPropType = {
   },
   style: "",
   unsavedChanges: {
+    html: false,
+    style: false,
+    js: false,
+    paymentMethods: false,
+    payments: false,
+    paymentsDetails: false,
+    sessions: false,
+    events: false,
+  },
+  errors: {
     html: false,
     style: false,
     js: false,
@@ -193,6 +213,12 @@ const formulaSlice = createSlice({
     updateCheckoutAPIVersion: (state, action: PayloadAction<any>) => {
       state.checkoutAPIVersion = {
         ...state.checkoutAPIVersion,
+        ...action.payload,
+      };
+    },
+    updateErrors: (state, action: PayloadAction<any>) => {
+      state.errors = {
+        ...state.errors,
         ...action.payload,
       };
     },

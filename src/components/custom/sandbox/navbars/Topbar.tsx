@@ -43,7 +43,7 @@ const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
   const { variantName } = useSelector((state: RootState) => state.sandbox);
   const { view, merchantAccount, integration } = props;
-  const { unsavedChanges } = storeFormula;
+  const { unsavedChanges, errors } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
     (value) => value
@@ -195,6 +195,10 @@ const Topbar = (props: any) => {
             <Button
               key="run"
               variant="default"
+              disabled={
+                Object.values(errors).filter((value) => value)
+                  .length > 0
+              }
               size="sm"
               className="px-4"
               onClick={() => {

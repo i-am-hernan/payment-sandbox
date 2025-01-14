@@ -9,7 +9,6 @@ import {
 
 const Enum = (props: any) => {
   const { title, value, set, onChange } = props;
-
   return (
     <div className="p-1 text-foreground">
       <Select

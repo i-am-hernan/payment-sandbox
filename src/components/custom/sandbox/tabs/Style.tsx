@@ -17,9 +17,8 @@ import {
   cssToObject,
   debounce,
   prettify,
-  replaceKeyValue,
   sanitizeString,
-  stringifyObjectCSS
+  stringifyObjectCSS,
 } from "@/utils/utils";
 import {
   memo,
@@ -31,17 +30,18 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ImperativePanelHandle } from "react-resizable-panels";
-import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
+import { OpenCssList } from "../editors/openSdk/OpenCssList";
 
 const { updateSpecs } = specsActions;
-const { addUnsavedChanges, updateAdyenWebVersion } = formulaActions;
+const { addUnsavedChanges, updateAdyenWebVersion, updateErrors } =
+  formulaActions;
 
 const formatCssString = (code: any) => {
   return code.slice(1, -1);
 };
 
 const initialState = {
-  parsed: null,
+  parsed: {},
   stringified: "",
 };
 
@@ -95,8 +95,9 @@ const Style = (props: any) => {
   const dispatch = useDispatch();
 
   const syncGlobalState: any = useCallback(
-    debounce((localState: any, build: any) => {
+    debounce((localState: any, parsedState: any, build: any) => {
       let stringifiedLocalState = localState;
+
       if (
         sanitizeString(build[configurationType]) !==
         sanitizeString(stringifiedLocalState)
@@ -119,21 +120,27 @@ const Style = (props: any) => {
   );
 
   const syncLocalState = useCallback(async (configuration: any, type: any) => {
-    // Here I am no longer formatJsString
-    let prettifiedString = await prettify(configuration, "css");
-    console.log("configuration", configuration);
-    console.log("cssToObject(configuration)", cssToObject(configuration));
-    dispatchConfig({
-      type: "SET_BOTH",
-      payload: {
-        parsed: cssToObject(configuration),
-        stringified: prettifiedString,
-      },
-    });
+    try {
+      let prettifiedState = await prettify(configuration, "css");
+      let parsedState = cssToObject(configuration);
+
+      dispatchConfig({
+        type: "SET_BOTH",
+        payload: {
+          parsed: parsedState,
+          stringified: prettifiedState,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      dispatchConfig({
+        type: "SET_STRINGIFIED",
+        payload: configuration,
+      });
+    }
   }, []);
 
   useEffect(() => {
-    // this is causing maximum rerender
     setFilteredProperties(properties);
   }, [properties]);
 
@@ -163,9 +170,9 @@ const Style = (props: any) => {
 
   useEffect(() => {
     if (config.parsed !== null) {
-      syncGlobalState(config.stringified, build);
+      syncGlobalState(config.stringified, config.parsed, build);
     }
-  }, [config.stringified]);
+  }, [config.stringified, config.parsed]);
 
   useEffect(() => {
     syncLocalState(storeConfiguration, configurationType);
@@ -180,6 +187,10 @@ const Style = (props: any) => {
       });
     } catch (e) {
       console.error(e);
+      dispatchConfig({
+        type: "SET_STRINGIFIED",
+        payload: config.stringified,
+      });
     }
   }, [config.stringified]);
 
@@ -199,7 +210,7 @@ const Style = (props: any) => {
     setFilteredProperties(filteredProperties);
   }, []);
 
-  const handleOpenSdkListChange = useCallback(
+  const handleOpenCssListChange = useCallback(
     async (value: any) => {
       const configParameters = Object.keys(config.parsed);
       const isNewProperty = configParameters.length < value.length;
@@ -233,14 +244,17 @@ const Style = (props: any) => {
           let updatedRequest = { ...config.parsed };
           let removedProperty = removedProperties.pop();
           delete updatedRequest[removedProperty];
+
+          let prettifiedString = await prettify(
+            formatCssString(stringifyObjectCSS(updatedRequest)),
+            "css"
+          );
+          console.log("prettifiedString", prettifiedString);
           dispatchConfig({
             type: "SET_BOTH",
             payload: {
               parsed: updatedRequest,
-              stringified: await prettify(
-                formatCssString(stringifyObjectCSS(updatedRequest)),
-                "css"
-              ),
+              stringified: prettifiedString,
             },
           });
         }
@@ -248,13 +262,7 @@ const Style = (props: any) => {
     },
     [config.parsed, properties, configurationType]
   );
-  // console.log("config.parsed", config.parsed);
-  // console.log("config.stringified", config.stringified);
-  // console.log("filteredProperties", filteredProperties);
 
-  // if(config.parsed) {
-  //   console.log("Object.keys(config.parsed)", Object.keys(config.parsed));
-  // }
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -278,6 +286,16 @@ const Style = (props: any) => {
             onChange={(jsValue: any, stringValue: string) => {
               if (stringValue === config.stringified) {
                 return;
+              } else if (jsValue === null) {
+                dispatchConfig({
+                  type: "SET_STRINGIFIED",
+                  payload: stringValue,
+                });
+                dispatch(
+                  updateErrors({
+                    style: true,
+                  })
+                );
               } else {
                 dispatchConfig({
                   type: "SET_BOTH",
@@ -286,6 +304,11 @@ const Style = (props: any) => {
                     stringified: stringValue,
                   },
                 });
+                dispatch(
+                  updateErrors({
+                    style: false,
+                  })
+                );
               }
             }}
             jsVariable={configurationType}
@@ -336,39 +359,34 @@ const Style = (props: any) => {
             method="css"
           />
         )}
-        {filteredProperties && config.parsed && (
-          <MemoizedOpenSdkList
-            openSdk={cssSpecsData}
+        {filteredProperties && (
+          <MemoizedOpenCssList
             properties={filteredProperties}
             selectedProperties={Object.keys(config.parsed)}
             values={config.parsed}
-            setValues={(
-              value: any,
-              keyString: any,
-              keyValue: any,
-              type: string
-            ) => {
+            setValues={async (value: any) => {
+              const stringifiedAndFormatted = formatCssString(
+                stringifyObjectCSS(value)
+              );
+              const prettifiedString = await prettify(
+                stringifiedAndFormatted,
+                "css"
+              );
               dispatchConfig({
                 type: "SET_BOTH",
                 payload: {
                   parsed: value,
-                  stringified: replaceKeyValue(
-                    config.stringified,
-                    keyString,
-                    JSON.stringify(keyValue),
-                    type
-                  ),
+                  stringified: prettifiedString,
                 },
               });
             }}
-            onChange={handleOpenSdkListChange}
+            onChange={handleOpenCssListChange}
           />
         )}
       </ResizablePanel>
     </ResizablePanelGroup>
   );
 };
-
-const MemoizedOpenSdkList = memo(OpenSdkList);
+const MemoizedOpenCssList = memo(OpenCssList);
 
 export default Style;

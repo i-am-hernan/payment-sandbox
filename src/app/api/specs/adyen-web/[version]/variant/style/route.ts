@@ -15,6 +15,7 @@ interface StyleResponse {
   [key: string]: {
     selector: string;
     type: string;
+    additionalProperties: any;
   };
 }
 
@@ -59,7 +60,29 @@ export async function GET(
 
     const styleResponse: StyleResponse = {};
     rootClasses.forEach((selector) => {
-      styleResponse[selector] = { selector: selector, type: "selector" };
+      styleResponse[selector] = {
+        selector: selector,
+        type: "selector",
+        additionalProperties: {
+          "font-family": {
+            type: "font-family",
+            values: ["Arial", "Helvetica", "sans-serif"],
+            description: "The font family to use for the selector",
+          },
+          "font-size": {
+            type: "font-size",
+            description: "The font size to use for the selector",
+          },
+          "background-color": {
+            type: "color",
+            description: "The background color to use for the selector",
+          },
+          "color": {
+            type: "color",
+            description: "The color to use for the selector",
+          },
+        },
+      };
     });
 
     return Response.json(styleResponse);
