@@ -16,6 +16,7 @@ import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFormula } from "@/hooks/useFormula";
+import { useStyle } from "@/hooks/useStyle";
 import { useView } from "@/hooks/useView";
 import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
@@ -66,6 +67,12 @@ const Page: any = () => {
   useView(viewParam);
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
+  console.log("style", style);
+  const {
+    loading: styleLoading,
+    error: styleError,
+    success: styleSuccess,
+  } = useStyle(variant, style);
 
   const {
     paymentMethods: paymentMethodsAPIVersion,

@@ -161,35 +161,6 @@ const Style = (props: any) => {
   }, [cssSpecsData, cssSpecsError]);
 
   useEffect(() => {
-    if (style) {
-      // Create a unique ID for the style tag
-      const styleId = `adyen-style-${variant}`;
-      
-      // Remove existing style tag if it exists
-      const existingStyle = document.getElementById(styleId);
-      if (existingStyle) {
-        existingStyle.remove();
-      }
-
-      // Create new style element
-      const styleElement = document.createElement('style');
-      styleElement.id = styleId;
-      styleElement.textContent = style;
-      
-      // Append to document head
-      document.head.appendChild(styleElement);
-
-      // Cleanup function
-      return () => {
-        const styleToRemove = document.getElementById(styleId);
-        if (styleToRemove) {
-          styleToRemove.remove();
-        }
-      };
-    }
-  }, [style, variant]);
-
-  useEffect(() => {
     if (view === "demo" || view === "preview") {
       panelRef.current?.resize(0);
     } else if (view === "developer") {
@@ -383,7 +354,6 @@ const Style = (props: any) => {
               const stringifiedAndFormatted = formatCssString(
                 objectToCSS(value)
               );
-              console.log("stringifiedAndFormatted", stringifiedAndFormatted);
               const prettifiedString = await prettify(
                 stringifiedAndFormatted,
                 "css"
