@@ -108,15 +108,21 @@ export const stringifyObject = (obj: any) => {
   return `{${entries.join(", ")}}`;
 };
 
-export const stringifyObjectCSS = (obj: any) => {
+export const objectToCSS = (obj: any) => {
   const entries = [];
   for (const [key, value] of Object.entries(obj)) {
-    entries.push(`${key} ${stringifyObject(value)}`);
+    entries.push(`${key} ${stringifyObjectCSSClass(value)}`);
   }
-  // I need to replace the comma with semicolon on the result
-  // I need to remove quotes from the result
   const result = entries.join(" ").replace(/"/g, "").replace(/,/g, "");
   return `{${result}}`;
+};
+
+export const stringifyObjectCSSClass = (obj: any) => {
+  const entries = [];
+  for (const [key, value] of Object.entries(obj)) {
+    entries.push(`${key}: ${JSON.stringify(value)};`);
+  }
+  return `{${entries.join(", ")}}`;
 };
 
 export const unstringifyObject = (str: string) => {

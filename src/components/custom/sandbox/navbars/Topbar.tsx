@@ -25,6 +25,7 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import Tooltip from "@mui/material/Tooltip";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ErrorIcon from "@mui/icons-material/Error";
 
 const {
   updateRun,
@@ -65,9 +66,7 @@ const Topbar = (props: any) => {
         <div className="flex text-center text-preview pl-[8px] pr-1 text-[0.73rem] rounded-xs">{`${integration.toUpperCase()}`}</div>
         <div className="flex text-center text-[0.9rem] relative w-[max-content]">
           {variantName && (
-            <h3
-              className="flex text-center text-[0.9rem] relative w-[max-content] text-foreground"
-            >{`${variantName}`}</h3>
+            <h3 className="flex text-center text-[0.9rem] relative w-[max-content] text-foreground">{`${variantName}`}</h3>
           )}
         </div>
       </div>
@@ -190,14 +189,18 @@ const Topbar = (props: any) => {
             </Tooltip>
           </div>
         )}
+        <span className="absolute top-0 right-0 transform -translate-x-1/4 -translate-y-1/4 bg-background text-xs rounded-full !opacity-100">
+          {Object.values(errors).filter((value) => value).length > 0 && (
+            <ErrorIcon className="text-warning !text-[16px] !opacity-100" />
+          )}
+        </span>
         <Tooltip title="Build (⌘ + enter)">
           <span>
             <Button
               key="run"
               variant="default"
               disabled={
-                Object.values(errors).filter((value) => value)
-                  .length > 0
+                Object.values(errors).filter((value) => value).length > 0
               }
               size="sm"
               className="px-4"

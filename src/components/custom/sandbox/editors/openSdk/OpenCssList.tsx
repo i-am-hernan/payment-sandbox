@@ -6,22 +6,26 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Slider from "../Slider";
-
-// For CSS
-// I want to recursively call this component if the property is a selector
-// I want to call a specific component for four properties: background, color, font-family, font-size
+import FomulaSlider from "../FomulaSlider";
 
 export const OpenCssList = (props: any) => {
-  const { selectedProperties, properties, values, setValues, onChange } = props;
+  const {
+    selectedProperties,
+    properties,
+    values,
+    setValues,
+    onChange,
+    disabled,
+  } = props;
   const propertyKeys = properties ? Object.keys(properties) : [];
-  console.log("values", values);
+
   return (
     <Accordion
       type="multiple"
       className="w-full"
       value={selectedProperties}
       onValueChange={onChange}
+      disabled={disabled}
     >
       {propertyKeys.length === 0 && (
         <div className="pl-6 pr-4 py-3">
@@ -71,6 +75,7 @@ export const OpenCssList = (props: any) => {
                         ? values[property].replace(/;/g, "")
                         : "Arial"
                     }
+                    disabled={disabled}
                     onChange={(value: any) => {
                       let tidyValue =
                         value !== undefined ? value + ";" : "Arial;";
@@ -88,11 +93,13 @@ export const OpenCssList = (props: any) => {
                     )}
                   />
                 )}
-                {/* {properties[property].type === "font-size" && (
-                  <Slider
-                    value={values[property] ? values[property] : 0}
-                    onChange={(value: any) => {
-                      let tidyValue = value !== undefined ? parseInt(value) : 0;
+                {properties[property].type === "font-size" && values && (
+                  <FomulaSlider
+                    value={values[property] ? parseInt(values[property]) : 14}
+                    max={25}
+                    onChange={(value: number) => {
+                      let tidyValue =
+                        value !== undefined ? `${value}px;` : "14px;";
                       setValues(
                         { ...values, [property]: tidyValue },
                         property,
@@ -101,7 +108,7 @@ export const OpenCssList = (props: any) => {
                       );
                     }}
                   />
-                )} */}
+                )}
                 {properties[property].type === "selector" && (
                   <div className="border-l-[1px]">
                     <OpenCssList
@@ -113,6 +120,7 @@ export const OpenCssList = (props: any) => {
                           : []
                       }
                       properties={properties[property].additionalProperties}
+                      disabled={disabled}
                       values={values[property]}
                       setValues={(value: any) => {
                         setValues({ ...values, [property]: value });
@@ -144,10 +152,15 @@ export const OpenCssList = (props: any) => {
                             ...values[property],
                             ...newProperty,
                           };
-                          setValues({
-                            ...values,
-                            [property]: mergedProperties,
-                          }, property, mergedProperties, "object");
+                          setValues(
+                            {
+                              ...values,
+                              [property]: mergedProperties,
+                            },
+                            property,
+                            mergedProperties,
+                            "object"
+                          );
                         } else {
                           const removedProperties: any =
                             configParameters.filter((i: any) => {

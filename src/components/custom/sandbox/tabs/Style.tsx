@@ -18,7 +18,7 @@ import {
   debounce,
   prettify,
   sanitizeString,
-  stringifyObjectCSS,
+  objectToCSS,
 } from "@/utils/utils";
 import {
   memo,
@@ -73,7 +73,7 @@ const Style = (props: any) => {
     description,
   } = props;
 
-  const { reset, build, adyenWebVersion } = useSelector(
+  const { reset, build, adyenWebVersion, errors, style } = useSelector(
     (state: RootState) => state.formula
   );
 
@@ -95,7 +95,7 @@ const Style = (props: any) => {
   const dispatch = useDispatch();
 
   const syncGlobalState: any = useCallback(
-    debounce((localState: any, parsedState: any, build: any) => {
+    debounce((localState: any, build: any) => {
       let stringifiedLocalState = localState;
 
       if (
@@ -161,6 +161,35 @@ const Style = (props: any) => {
   }, [cssSpecsData, cssSpecsError]);
 
   useEffect(() => {
+    if (style) {
+      // Create a unique ID for the style tag
+      const styleId = `adyen-style-${variant}`;
+      
+      // Remove existing style tag if it exists
+      const existingStyle = document.getElementById(styleId);
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+
+      // Create new style element
+      const styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.textContent = style;
+      
+      // Append to document head
+      document.head.appendChild(styleElement);
+
+      // Cleanup function
+      return () => {
+        const styleToRemove = document.getElementById(styleId);
+        if (styleToRemove) {
+          styleToRemove.remove();
+        }
+      };
+    }
+  }, [style, variant]);
+
+  useEffect(() => {
     if (view === "demo" || view === "preview") {
       panelRef.current?.resize(0);
     } else if (view === "developer") {
@@ -170,9 +199,9 @@ const Style = (props: any) => {
 
   useEffect(() => {
     if (config.parsed !== null) {
-      syncGlobalState(config.stringified, config.parsed, build);
+      syncGlobalState(config.stringified, build);
     }
-  }, [config.stringified, config.parsed]);
+  }, [config.stringified]);
 
   useEffect(() => {
     syncLocalState(storeConfiguration, configurationType);
@@ -231,7 +260,7 @@ const Style = (props: any) => {
           payload: {
             parsed: newObject,
             stringified: await prettify(
-              formatCssString(stringifyObjectCSS(newObject)),
+              formatCssString(objectToCSS(newObject)),
               "css"
             ),
           },
@@ -246,10 +275,9 @@ const Style = (props: any) => {
           delete updatedRequest[removedProperty];
 
           let prettifiedString = await prettify(
-            formatCssString(stringifyObjectCSS(updatedRequest)),
+            formatCssString(objectToCSS(updatedRequest)),
             "css"
           );
-          console.log("prettifiedString", prettifiedString);
           dispatchConfig({
             type: "SET_BOTH",
             payload: {
@@ -286,16 +314,6 @@ const Style = (props: any) => {
             onChange={(jsValue: any, stringValue: string) => {
               if (stringValue === config.stringified) {
                 return;
-              } else if (jsValue === null) {
-                dispatchConfig({
-                  type: "SET_STRINGIFIED",
-                  payload: stringValue,
-                });
-                dispatch(
-                  updateErrors({
-                    style: true,
-                  })
-                );
               } else {
                 dispatchConfig({
                   type: "SET_BOTH",
@@ -304,11 +322,7 @@ const Style = (props: any) => {
                     stringified: stringValue,
                   },
                 });
-                dispatch(
-                  updateErrors({
-                    style: false,
-                  })
-                );
+
               }
             }}
             jsVariable={configurationType}
@@ -364,10 +378,12 @@ const Style = (props: any) => {
             properties={filteredProperties}
             selectedProperties={Object.keys(config.parsed)}
             values={config.parsed}
+            disabled={errors.style}
             setValues={async (value: any) => {
               const stringifiedAndFormatted = formatCssString(
-                stringifyObjectCSS(value)
+                objectToCSS(value)
               );
+              console.log("stringifiedAndFormatted", stringifiedAndFormatted);
               const prettifiedString = await prettify(
                 stringifiedAndFormatted,
                 "css"

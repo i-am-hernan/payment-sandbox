@@ -14,7 +14,7 @@ import { css } from "@codemirror/lang-css"; // Add this import
 const cssParse = require("css/lib/parse");
 
 const Code = (props: any) => {
-  const { code, type, readOnly, onChange, theme, jsVariable } = props;
+  const { code, type, readOnly, onChange, theme, jsVariable, handleError } = props;
 
   const getVariableValueFromAST = (code: string, variableName: string) => {
     // Parse the code to get the AST
@@ -49,15 +49,16 @@ const Code = (props: any) => {
           rule.selectors.forEach((selector: string) => {
             // Clean up the selector - remove any leading/trailing commas and whitespace
             const cleanSelector = selector
-              .replace(/^[\s,]+|[\s,]+$/g, '') // Remove leading/trailing commas and whitespace
+              .replace(/^[\s,]+|[\s,]+$/g, "") // Remove leading/trailing commas and whitespace
               .trim();
 
             if (cleanSelector) {
               styleObject[cleanSelector] = styleObject[cleanSelector] || {};
-              
+
               rule.declarations?.forEach((declaration: any) => {
                 if (declaration.type === "declaration") {
-                  styleObject[cleanSelector][declaration.property] = declaration.value;
+                  styleObject[cleanSelector][declaration.property] =
+                    declaration.value;
                 }
               });
             }
@@ -98,7 +99,7 @@ const Code = (props: any) => {
         if (diagnostics.length === 0) {
           const styleObject = cssToObject(value);
           onChange(styleObject, value);
-        }
+        } 
       }
     } catch (error) {
       console.error("Error in handleChange:", error);
@@ -156,52 +157,23 @@ const Code = (props: any) => {
 
   const cssLinter = async (view: any) => {
     const diagnostics: Diagnostic[] = [];
-    const code = view.state.doc.toString();
+    const cssString = view.state.doc.toString();
 
     try {
-      // Basic CSS validation
-      if (!code.trim()) return diagnostics;
-
-      // Check for unclosed braces
-      const openBraces = (code.match(/{/g) || []).length;
-      const closeBraces = (code.match(/}/g) || []).length;
-
-      if (openBraces !== closeBraces) {
-        diagnostics.push({
-          from: 0,
-          to: code.length,
-          severity: "error",
-          message: "Unclosed CSS block",
-        });
-      }
-
-      // Check for invalid selectors
-      const lines = code.split("\n");
-      let position = 0;
-
-      for (const line of lines) {
-        if (line.includes("{")) {
-          const selector = line.split("{")[0].trim();
-          if (!selector || selector.includes("}")) {
-            diagnostics.push({
-              from: position,
-              to: position + line.length,
-              severity: "error",
-              message: "Invalid CSS selector",
-            });
-          }
-        }
-        position += line.length + 1;
-      }
+      const ast = cssParse(cssString);
     } catch (error: any) {
+      // Extract location information if available
+      const from = error.loc
+        ? getCharacterPosition(code, error.loc.line, error.loc.column)
+        : 0;
+      const to = from; // Assuming the error is at a single point
       diagnostics.push({
-        from: 0,
-        to: code.length,
+        from,
+        to,
         severity: "error",
         message: error.message,
       });
     }
-
     return diagnostics;
   };
 

@@ -67,7 +67,10 @@ export const InitAdvanceComponent = (props: any) => {
       {loadingPaymentMethods && <Loading className="text-foreground" />}
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
         <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
-          <div className="px-auto !border-red" ref={checkoutRef}></div>
+          <div 
+            className="px-auto !border-red" 
+            ref={checkoutRef}
+          ></div>
         </div>
       )}
     </div>
