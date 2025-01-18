@@ -14,6 +14,10 @@ const {
   updateBuildCheckoutReturnUrls,
 } = formulaActions;
 
+
+// I want to pass reset prop to useFormula and then I want to be able to trigger it with the reset prop
+// Then I will call useFormula when clear the 
+
 export const useFormula = (
   variant: string,
   view: string,
@@ -59,6 +63,7 @@ export const useFormula = (
       if (base.txVariantConfiguration && base.txVariantConfiguration === "") {
         base.txVariantConfiguration = sanitizeString(`{}`);
       }
+
       dispatch(updateBase({ ...base }));
     };
     const updateReturnUrl = (returnUrl: string) => {
@@ -111,6 +116,7 @@ export const useFormula = (
           }
           storeFormulaToLocalStorage(configuration);
         } else if (isDefault) {
+          syncBase(configuration);
           syncFormula(configuration);
           updateReturnUrl(
             `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}`

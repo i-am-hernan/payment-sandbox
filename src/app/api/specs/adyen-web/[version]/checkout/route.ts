@@ -118,7 +118,10 @@ export async function GET(
                 | any = {};
               let values: string[] | undefined = undefined;
 
-              if (member.type) {
+              if (/^on/.test(name) || /^before/.test(name)) {
+                typeString = "function";
+                strictType = "function";
+              } else if (member.type) {
                 const type = checker.getTypeAtLocation(member);
                 if (!type) return;
 

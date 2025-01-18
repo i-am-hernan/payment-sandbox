@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import InfoAlert from "@/components/custom/utils/InfoAlert";
 
 export const OpenSdkList = (props: any) => {
   const { selectedProperties, properties, values, setValues, onChange } = props;
@@ -129,6 +130,9 @@ export const OpenSdkList = (props: any) => {
                       );
                     }}
                   />
+                )}
+                {properties[property].type === "function" && (
+                  <InfoAlert message="Update functions in developer mode" />
                 )}
               </div>
             </AccordionContent>

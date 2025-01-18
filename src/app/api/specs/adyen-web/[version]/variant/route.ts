@@ -8,7 +8,7 @@ import { VariantToInterfaceName } from "@/lib/variantToInterfaceName";
 // First, create a custom error class at the top of the file
 class ApiError extends Error {
   status: number;
-  
+
   constructor(message: string, status: number) {
     super(message);
     this.status = status;
@@ -34,7 +34,7 @@ export async function GET(
   const txVariant = searchParams.get("txvariant");
   const parsedVersion = version.replaceAll("_", ".");
   const majorVersion = parsedVersion.split(".")[0];
-  
+
   // Move validation inside try block
   try {
     if (!txVariant) {
@@ -45,7 +45,7 @@ export async function GET(
       string,
       Record<string, VariantToInterfaceName>
     >;
-    
+
     const interfaceName =
       txVariant && map[txVariant]
         ? map[txVariant][majorVersion].interfaceName
@@ -113,6 +113,8 @@ export async function GET(
                 property.type = "number";
               } else if (child?.type?.kind === ts.SyntaxKind.BooleanKeyword) {
                 property.type = "boolean";
+              } else if (child?.name?.getText().indexOf("^on") > -1) {
+                property.type = "function";
               } else if (child?.type?.kind === ts.SyntaxKind.TypeReference) {
                 const typeName = (
                   member.type as ts.TypeReferenceNode
@@ -147,7 +149,10 @@ export async function GET(
                 | any = {};
               let values: string[] | undefined = undefined;
 
-              if (member.type) {
+              if (/^on/.test(name)) {
+                typeString = "function";
+                strictType = "function";
+              } else if (member.type) {
                 const type = checker.getTypeAtLocation(member);
                 if (!type) return;
 
@@ -244,26 +249,35 @@ export async function GET(
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();
-      return new Response(JSON.stringify({
-        error: data,
-        status: error.status
-      }), {
-        status: error.status,
-      });
+      return new Response(
+        JSON.stringify({
+          error: data,
+          status: error.status,
+        }),
+        {
+          status: error.status,
+        }
+      );
     } else if (error instanceof ApiError) {
-      return new Response(JSON.stringify({
-        error: error.message,
-        status: error.status
-      }), {
-        status: error.status,
-      });
+      return new Response(
+        JSON.stringify({
+          error: error.message,
+          status: error.status,
+        }),
+        {
+          status: error.status,
+        }
+      );
     } else {
-      return new Response(JSON.stringify({
-        error: error.message,
-        status: 500
-      }), {
-        status: 500,
-      });
+      return new Response(
+        JSON.stringify({
+          error: error.message,
+          status: 500,
+        }),
+        {
+          status: 500,
+        }
+      );
     }
   }
 }
