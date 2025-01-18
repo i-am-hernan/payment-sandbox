@@ -59,7 +59,7 @@ const Sandbox = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background !h-[180vh] sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)]"
+      className="bg-background sm:!h-screen inline-block pt-[var(--topbar-width)] pb-[var(--footerbar-width)] pl-[var(--sidebar-width)]"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 60 : view === "preview" ? 50 : 0}

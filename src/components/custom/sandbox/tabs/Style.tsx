@@ -303,7 +303,7 @@ const Style = (props: any) => {
             jsVariable={configurationType}
           />
         </div>
-        <div className={`flex justify-end border-y-2 bg-background`}>
+        <div className={`flex justify-end border-t-2 bg-background`}>
           <Button
             key={"prettify"}
             variant="ghost"
@@ -322,7 +322,7 @@ const Style = (props: any) => {
       />
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
-        className="!overflow-y-scroll border-b-2"
+        className="!overflow-y-scroll"
       >
         {loadingCssSpecData && <Loading className="text-foreground" />}
         {adyenWebVersion && (

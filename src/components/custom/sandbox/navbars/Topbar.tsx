@@ -20,12 +20,12 @@ import { formulaActions, userActions } from "@/store/reducers";
 import { RootState } from "@/store/store";
 import { clearUrlParams, refineFormula } from "@/utils/utils";
 import CodeIcon from "@mui/icons-material/Code";
+import ErrorIcon from "@mui/icons-material/Error";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import RestoreIcon from "@mui/icons-material/Restore";
 import Tooltip from "@mui/material/Tooltip";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ErrorIcon from "@mui/icons-material/Error";
 
 const {
   updateRun,
@@ -42,7 +42,9 @@ const { updateView } = userActions;
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
-  const { variantName } = useSelector((state: RootState) => state.sandbox);
+  const { variantName } = useSelector(
+    (state: RootState) => state.sandbox
+  );
   const { view, merchantAccount, integration } = props;
   const { unsavedChanges, errors } = storeFormula;
   const dispatch = useDispatch();

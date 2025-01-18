@@ -248,7 +248,7 @@ const Api = (props: any) => {
             }
           }}
         />
-        <div className={`flex justify-end border-y-2 bg-background`}>
+        <div className={`flex justify-end border-t-2 bg-background`}>
           <Button
             key={"prettify"}
             variant="ghost"
@@ -265,7 +265,7 @@ const Api = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )}
       />
-      <ResizablePanel className="!overflow-y-scroll border-b-2">
+      <ResizablePanel className="!overflow-y-scroll">
         {loadingApiSpecData && <Loading className="text-foreground" />}
         {!loadingApiSpecData && apiSpecsData && (
           <Version

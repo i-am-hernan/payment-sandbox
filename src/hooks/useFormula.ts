@@ -1,5 +1,5 @@
 import { useApi } from "@/hooks/useApi";
-import { formulaActions } from "@/store/reducers";
+import { formulaActions, sandboxActions } from "@/store/reducers";
 import { sanitizeString } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,9 +14,10 @@ const {
   updateBuildCheckoutReturnUrls,
 } = formulaActions;
 
+const { updateSandboxTitle, updateSandboxDescription } = sandboxActions;
 
 // I want to pass reset prop to useFormula and then I want to be able to trigger it with the reset prop
-// Then I will call useFormula when clear the 
+// Then I will call useFormula when clear the
 
 export const useFormula = (
   variant: string,
@@ -75,6 +76,15 @@ export const useFormula = (
       dispatch(updateReset());
     };
 
+    const syncMetaData = (data: any) => {
+      if (data.title) {
+        dispatch(updateSandboxTitle(data.title));
+      }
+      if (data.description) {
+        dispatch(updateSandboxDescription(data.description));
+      }
+    };
+
     const rebuildCheckout = () => {
       dispatch(updateRun());
     };
@@ -106,6 +116,7 @@ export const useFormula = (
         } else if (id) {
           syncBase(configuration);
           syncFormula(configuration);
+          syncMetaData(data?.data);
           if (configuration.returnUrl) {
             const returnUrl = new URL(configuration.returnUrl);
             returnUrl.searchParams.set("id", id);
@@ -118,6 +129,7 @@ export const useFormula = (
         } else if (isDefault) {
           syncBase(configuration);
           syncFormula(configuration);
+          syncMetaData({ title: "default", description: "default" });
           updateReturnUrl(
             `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}`
           );

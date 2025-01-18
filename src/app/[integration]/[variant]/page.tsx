@@ -7,6 +7,7 @@ import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
+import FooterBar from "@/components/custom/sandbox/navbars/FooterBar";
 import Api from "@/components/custom/sandbox/tabs/Api";
 import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
@@ -379,7 +380,7 @@ const Page: any = () => {
             view={view}
           />
         </main>
-        <footer>
+        <footer className="h-[100%]">
           <Sidebar
             section={section}
             setSection={setSection}
@@ -389,6 +390,7 @@ const Page: any = () => {
             view={view}
             integration={integration}
           />
+          <FooterBar integration={integration} />
         </footer>
       </React.Fragment>
       <ScreenSizeDialog />

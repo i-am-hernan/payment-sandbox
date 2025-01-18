@@ -27,7 +27,7 @@ const StateData = (props: any) => {
   }, [componentState]);
 
   return (
-    <div className="flex h-[100%] border-b-2">
+    <div className="flex h-[100%]">
       <Code code={formattedCode} theme={theme} type="json" readOnly={true} />
     </div>
   );

@@ -7,6 +7,8 @@ export interface Sandbox {
   isRedirect: boolean;
   unsavedChanges: number;
   variantName: string;
+  title?: string;
+  description?: string;
 }
 
 // Define the initial state
@@ -28,6 +30,12 @@ const sandboxSlice = createSlice({
     },
     updateSandboxTheme: (state, action: PayloadAction<"dark" | "light">) => {
       state.theme = action.payload;
+    },
+    updateSandboxTitle: (state, action: PayloadAction<string>) => {
+      state.title = action.payload;
+    },
+    updateSandboxDescription: (state, action: PayloadAction<string>) => {
+      state.description = action.payload;
     },
     updateSandboxSection: (
       state,
