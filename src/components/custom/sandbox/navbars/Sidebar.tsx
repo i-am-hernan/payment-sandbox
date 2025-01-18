@@ -25,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { RequestOptions, useApi } from "@/hooks/useApi";
-import { sandboxActions, userActions } from "@/store/reducers";
+import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -48,6 +48,7 @@ interface SideTab {
 
 const { updateTheme, updateView } = userActions;
 const { updateVariantName } = sandboxActions;
+const { clearOnDeckInfo } = formulaActions;
 
 const Sidebar = (props: any) => {
   const {
@@ -241,12 +242,15 @@ const Sidebar = (props: any) => {
                       </div>
                     )}
                     <div>
-                      {paymentMethods && paymentMethods.data && (
+                      {paymentMethods?.data && (
                         <ExpandableCards
                           paymentMethodName={"Dropin"}
                           paymentMethodType={"dropin"}
                           defaultExpanded={variant === "dropin"}
                           defaultIntegration={integration}
+                          onItemClick={() => {
+                            dispatch(clearOnDeckInfo());
+                          }}
                         />
                       )}
                       {paymentMethods?.data?.map((paymentMethod: any) => (
@@ -256,6 +260,9 @@ const Sidebar = (props: any) => {
                           paymentMethodType={paymentMethod.type}
                           defaultExpanded={variant === paymentMethod.type}
                           defaultIntegration={integration}
+                          onItemClick={() => {
+                            dispatch(clearOnDeckInfo());
+                          }}
                         />
                       ))}
                     </div>

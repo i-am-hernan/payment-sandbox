@@ -67,7 +67,6 @@ const Page: any = () => {
   useView(viewParam);
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
-  console.log("style", style);
   const {
     loading: styleLoading,
     error: styleError,
@@ -181,7 +180,7 @@ const Page: any = () => {
             theme={theme}
             integration={integration}
             view={view}
-            description={`Customize the style of ${variant}`}
+            description={`Customize the style of ${variant}. Inspect the browser console to view all selectors.`}
           />
         ),
         value: "style",

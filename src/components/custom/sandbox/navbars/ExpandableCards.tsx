@@ -6,8 +6,7 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
-  CreditCard,
-  SquareTerminal,
+  SquareTerminal
 } from "lucide-react";
 import { useState } from "react";
 
@@ -16,10 +15,11 @@ interface ExpandableCardsProps {
   paymentMethodType: string;
   defaultExpanded: boolean;
   defaultIntegration: string;
+  onItemClick: (route: string) => void;
 }
 
 export function ExpandableCards(props: ExpandableCardsProps) {
-  const { defaultExpanded, defaultIntegration } = props;
+  const { defaultExpanded, defaultIntegration, onItemClick } = props;
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
@@ -50,6 +50,9 @@ export function ExpandableCards(props: ExpandableCardsProps) {
               <Link
                 href={`/sessions/${props.paymentMethodType}`}
                 className="flex items-center"
+                onClick={() => {
+                  onItemClick(`/sessions/${props.paymentMethodType}`);
+                }}
               >
                 <Clock className="h-3 w-3 mb-1 text-adyen" />
                 <span
@@ -71,6 +74,9 @@ export function ExpandableCards(props: ExpandableCardsProps) {
               <Link
                 href={`/advance/${props.paymentMethodType}`}
                 className="flex items-center"
+                onClick={() => {
+                  onItemClick(`/advance/${props.paymentMethodType}`);
+                }}
               >
                 <SquareTerminal className="h-3 w-3 mb-1 text-preview" />
                 <span

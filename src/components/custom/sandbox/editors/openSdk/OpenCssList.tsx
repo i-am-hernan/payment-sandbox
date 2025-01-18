@@ -54,11 +54,12 @@ export const OpenCssList = (props: any) => {
                 <p className="text-xs pb-2 text-foreground">
                   {properties[property].description}
                 </p>
-                {/* {properties[property].type === "color" && (
+                {properties[property].type === "color" && values && (
                   <Color
-                    value={values[property] ? values[property] : ""}
+                    value={values[property] ? values[property] : "#000000"}
                     onChange={(value: any) => {
-                      let tidyValue = value !== undefined ? value : "";
+                      let tidyValue =
+                        value !== undefined ? value + ";" : "#000000;";
                       setValues(
                         { ...values, [property]: tidyValue },
                         property,
@@ -67,7 +68,7 @@ export const OpenCssList = (props: any) => {
                       );
                     }}
                   />
-                )} */}
+                )}
                 {properties[property].type === "font-family" && values && (
                   <Enum
                     value={
@@ -146,7 +147,7 @@ export const OpenCssList = (props: any) => {
                           } else if (latestValue.type === "font-size") {
                             newProperty = { [latestKey]: "14px;" };
                           } else if (latestValue.type === "color") {
-                            newProperty = { [latestKey]: "" };
+                            newProperty = { [latestKey]: "#000000;" };
                           }
                           let mergedProperties = {
                             ...values[property],

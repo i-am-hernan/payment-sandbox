@@ -220,6 +220,10 @@ const Style = (props: any) => {
         let newProperty = null;
         if (latestValue.type === "selector") {
           newProperty = { [latestKey]: {} };
+        } else if (latestValue.type === "color") {
+          newProperty = { [latestKey]: "" };
+        } else if (latestValue.type === "enum") {
+          newProperty = { [latestKey]: "" };
         }
         let newObject = {
           ...config.parsed,
