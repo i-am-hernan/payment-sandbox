@@ -29,7 +29,7 @@ const ShareableButton = (props: any) => {
     description: null,
   });
   const [share, setShare] = useState(false);
-  const [view, setView] = useState("developer");
+  const [view, setView] = useState("preview");
   const { disabled } = props;
   const { variant, integration } = useParams<{
     variant: string;
@@ -81,9 +81,11 @@ const ShareableButton = (props: any) => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(
-        `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}?id=${data._id}&view=${view}`
-      );
+      const url =
+        view === "embed"
+          ? `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}/embed?id=${data._id}`
+          : `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}?id=${data._id}&view=${view}`;
+      await navigator.clipboard.writeText(url);
       setShowCheck(true);
       setTimeout(() => {
         setShowCheck(false);
@@ -183,22 +185,13 @@ const ShareableButton = (props: any) => {
               {data && !loading && !error && (
                 <div className="flex items-center justify-start border-b border-border">
                   <Button
-                    className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "developer" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
-                    onClick={() => setView("developer")}
-                    key="reset"
-                    variant="outline"
-                    size="sm"
-                  >
-                    <span className="text-foreground text-xs">developer</span>
-                  </Button>
-                  <Button
                     className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "preview" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
                     onClick={() => setView("preview")}
                     key="reset"
                     variant="outline"
                     size="sm"
                   >
-                    <span className="text-foreground text-xs">preview</span>
+                    <span className="text-foreground text-xs">share</span>
                   </Button>
                   <Button
                     className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "demo" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
@@ -209,13 +202,24 @@ const ShareableButton = (props: any) => {
                   >
                     <span className="text-foreground text-xs">demo</span>
                   </Button>
+                  <Button
+                    className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "embed" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
+                    onClick={() => setView("embed")}
+                    key="reset"
+                    variant="outline"
+                    size="sm"
+                  >
+                    <span className="text-foreground text-xs">embed</span>
+                  </Button>
                 </div>
               )}
               {data && !loading && !error && (
                 <div className="flex items-stretch">
                   <div className="border-border border border-r-none rounded rounded-r-none">
                     <p className="!h-[100%] max-w-[350px] flex items-center justify-center flex-1 text-xs px-1 py-0 text-foreground whitespace-nowrap overflow-scroll">
-                      {`${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}?id=${data._id}`}
+                      {view !== "embed"
+                        ? `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}?id=${data._id}&view=${view}`
+                        : `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}/embed?id=${data._id}`}
                     </p>
                   </div>
                   <div className="justify-start">

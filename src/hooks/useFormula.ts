@@ -122,7 +122,7 @@ export const useFormula = (
             returnUrl.searchParams.set("id", id);
             updateReturnUrl(returnUrl.toString());
           } else {
-            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}?id=${id}&view=${view}`;
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}?id=${id}${view ? "&view=" + view : ""}`;
             updateReturnUrl(returnUrl);
           }
           storeFormulaToLocalStorage(configuration);

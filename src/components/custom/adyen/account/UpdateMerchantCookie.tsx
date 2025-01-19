@@ -27,7 +27,8 @@ const {
   updateRun,
 } = formulaActions;
 
-const UpdateMerchantCookie = () => {
+const UpdateMerchantCookie = (props: any) => {
+  const { showTrigger = true } = props;
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false); // New state variable
@@ -103,28 +104,30 @@ const UpdateMerchantCookie = () => {
         }}
       >
         <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-[50%] rounded-md border-border"
-            onClick={() => {
-              setOpen(true);
-              setMerchantAccountLocal(
-                process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || ""
-              );
-              setError("");
-            }}
-          >
-            {merchantAccount && (
-              <div>
-                <TuneIcon className="!text-foreground !text-[14px]" />
-                <p className="px-1 !text-xs !text-foreground inline-block">
-                  {merchantAccount}
-                </p>
-              </div>
-            )}
-            {!merchantAccount && <Loading className="text-foreground" />}
-          </Button>
+          {showTrigger && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-[50%] rounded-md border-border"
+              onClick={() => {
+                setOpen(true);
+                setMerchantAccountLocal(
+                  process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || ""
+                );
+                setError("");
+              }}
+            >
+              {merchantAccount && (
+                <div>
+                  <TuneIcon className="!text-foreground !text-[14px]" />
+                  <p className="px-1 !text-xs !text-foreground inline-block">
+                    {merchantAccount}
+                  </p>
+                </div>
+              )}
+              {!merchantAccount && <Loading className="text-foreground" />}
+            </Button>
+          )}
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>
           <DialogOverlay />
