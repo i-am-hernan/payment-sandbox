@@ -35,7 +35,7 @@ const FooterBar = (props: any) => {
   ];
   return (
     <span
-      className="absolute bottom-0 border-t-2 left-[var(--sidebar-width)] h-[var(--footerbar-width)] flex justify-end px-2"
+      className="absolute bottom-0 border-y-2 left-[var(--sidebar-width)] h-[var(--footerbar-width)] flex justify-end px-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
     >
       {footerButtons.map((button, index) => (
