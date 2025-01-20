@@ -16,8 +16,15 @@ export const bookmarkletCode = `
   const HIGHLIGHT_STYLES = 
     '.highlight-green {' +
     '  background-color: rgba(0, 255, 0, 0.2) !important;' +
-    '  transition: background-color 0.2s ease;' +
-    '  cursor: pointer;' +
+    '  transition: background-color 0.2s ease !important;' +
+    '  cursor: pointer !important;' +
+    '  border: 2px dotted rgb(10, 191, 83) !important;' +
+    '  position: relative !important;' +
+    '  z-index: 999999 !important;' +
+    '}' +
+    '.highlight-green:hover {' +
+    '  background-color: rgba(0, 255, 0, 0.3) !important;' +
+    '  border-width: 1px !important;' +
     '}';
 
   // Utility functions
