@@ -13,7 +13,7 @@ interface AdyenResult {
 
 const Result = ({ adyenResult }: { adyenResult: AdyenResult }) => {
   return (
-    <div className="h-[100%] w-[100%] max-w-[40vw] p-2">
+    <div className="h-[100%] w-[100%] p-2">
       <Alert variant="default" className="border-primary px-3 flex">
         <div className="flex items-center">
           {adyenResult.resultCode === "Authorised" ? (

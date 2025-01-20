@@ -11,6 +11,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 import UpdateMerchantCookie from "@/components/custom/adyen/account/UpdateMerchantCookie";
+import { useStyle } from "@/hooks/useStyle";
 
 const Page: any = () => {
   const { theme, merchantAccount, view } = useSelector(
@@ -28,11 +29,17 @@ const Page: any = () => {
     integration
   );
 
-  const { run } = useSelector((state: RootState) => state.formula);
+  const { run, style } = useSelector((state: RootState) => state.formula);
   useView(viewParam);
 
+  const {
+    loading: styleLoading,
+    error: styleError,
+    success: styleSuccess,
+  } = useStyle(variant, style);
+
   return (
-    <div className={`${theme}`}>
+    <div className="h-full w-full">
       <React.Fragment>
         <main>
           <UpdateMerchantCookie showTrigger={false} />

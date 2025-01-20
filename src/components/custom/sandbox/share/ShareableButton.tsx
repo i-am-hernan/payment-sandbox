@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import CheckIcon from "@mui/icons-material/Check";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { bookmarkletCode } from "@/utils/bookmarklet";
 
 const ShareableButton = (props: any) => {
   const [copied, setCopied] = useState(false);
@@ -93,6 +94,12 @@ const ShareableButton = (props: any) => {
     } catch (err) {
       console.error("Failed to copy:", err);
     }
+  };
+
+  // Create bookmarklet URL
+  const createBookmarkletUrl = () => {
+    const encodedCode = encodeURIComponent(bookmarkletCode);
+    return `javascript:${encodedCode}`;
   };
 
   return (
@@ -172,7 +179,12 @@ const ShareableButton = (props: any) => {
             <DialogContent className="p-5 sm:max-w-[425px] flex flex-col text-foreground">
               <DialogHeader>
                 <DialogTitle className="text-[16px] text-foreground">
-                  Share your build
+                  {view === "preview"
+                    ? "Share "
+                    : view === "demo"
+                      ? "Demo "
+                      : "Embed "}
+                  your build
                 </DialogTitle>
                 <DialogDescription className="text-[13px]">
                   You can share your build by copying the link below
@@ -255,6 +267,32 @@ const ShareableButton = (props: any) => {
                     </Button>
                   </div>
                 </div>
+              )}
+              {view === "embed" && (
+                <DialogDescription className="text-[13px]">
+                  <p className="pb-1">
+                    Step 1: Save our{" "}
+                    <a 
+                      href={createBookmarkletUrl()} 
+                      className="text-blue-500"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // Optional: Show instructions to drag to bookmarks
+                        alert("Drag this link to your bookmarks bar");
+                      }}
+                    >
+                      bookmarklet
+                    </a>
+                    {" "}to your browser.
+                  </p>
+                  <p className="pb-1">
+                    Step 2: Navigate to the merchants checkout page
+                  </p>
+                  <p className="pb-1">Step 3: Click the bookmarklet</p>
+                  <p className="pb-1">
+                    Step 4: Enter the above url to embed your build
+                  </p>
+                </DialogDescription>
               )}
             </DialogContent>
           )}
