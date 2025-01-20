@@ -39,9 +39,9 @@ const Page: any = () => {
   } = useStyle(variant, style);
 
   return (
-    <div className={`${theme} h-full w-full`}>
+    <div className={`${theme}`}>
       <React.Fragment>
-        <main>
+        <main className="h-[100vh] w-[100vw]">
           <UpdateMerchantCookie showTrigger={false} />
           {formulaLoading || merchantAccount === null ? (
             <Loading className="text-foreground" />
