@@ -39,7 +39,7 @@ const Page: any = () => {
   } = useStyle(variant, style);
 
   return (
-    <div className="h-full w-full">
+    <div className={`${theme} h-full w-full`}>
       <React.Fragment>
         <main>
           <UpdateMerchantCookie showTrigger={false} />
