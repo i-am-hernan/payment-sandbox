@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Formulize | Build your checkout",
+  title: "Lab | Build your checkout",
   description:
     "Create your own checkout experience with our Adyen sandbox environment",
   icons: {
