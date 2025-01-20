@@ -270,28 +270,40 @@ const ShareableButton = (props: any) => {
               )}
               {view === "embed" && (
                 <DialogDescription className="text-[13px]">
-                  <p className="pb-1">
-                    Step 1: Save our{" "}
-                    <a 
-                      href={createBookmarkletUrl()} 
-                      className="text-blue-500"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // Optional: Show instructions to drag to bookmarks
-                        alert("Drag this link to your bookmarks bar");
-                      }}
-                    >
-                      bookmarklet
-                    </a>
-                    {" "}to your browser.
-                  </p>
-                  <p className="pb-1">
-                    Step 2: Navigate to the merchants checkout page
-                  </p>
-                  <p className="pb-1">Step 3: Click the bookmarklet</p>
-                  <p className="pb-1">
-                    Step 4: Enter the above url to embed your build
-                  </p>
+                  <div className="pb-1">
+                    <p className="inline-block text-foreground">Step 1: </p>{" "}
+                    <p className="inline-block">
+                      {` Save our `}
+                      <a
+                        href={createBookmarkletUrl()}
+                        className="text-blue-500"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // Optional: Show instructions to drag to bookmarks
+                          alert("Drag this link to your bookmarks bar");
+                        }}
+                      >
+                        bookmarklet
+                      </a>{" "}
+                      to your browser.
+                    </p>
+                  </div>
+                  <div className="pb-1">
+                    <p className="inline-block text-foreground">Step 2:</p>{" "}
+                    <p className="inline-block">
+                      Navigate to the merchants checkout page
+                    </p>
+                  </div>
+                  <div className="pb-1">
+                    <p className="inline-block text-foreground">Step 3:</p>{" "}
+                    <p className="inline-block">Click the bookmarklet</p>
+                  </div>
+                  <div className="pb-1">
+                    <p className="inline-block text-foreground">Step 4:</p>{" "}
+                    <p className="inline-block">
+                      Enter the above url to embed your build
+                    </p>
+                  </div>
                 </DialogDescription>
               )}
             </DialogContent>
