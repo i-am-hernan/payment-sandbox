@@ -10,7 +10,7 @@ import {
 const Enum = (props: any) => {
   const { title, value, set, onChange, disabled } = props;
   return (
-    <div className="p-1 text-foreground">
+    <div className="p-1 bg-background text-foreground">
       <Select
         value={value}
         onValueChange={(value) => {
@@ -21,7 +21,7 @@ const Enum = (props: any) => {
         <SelectTrigger>
           <SelectValue placeholder={title} />
         </SelectTrigger>
-        <SelectContent className="text-background bg-foreground">
+        <SelectContent className="!dark">
           <SelectGroup>
             {set.map((value: any) => (
               <SelectItem key={value} value={value}>
