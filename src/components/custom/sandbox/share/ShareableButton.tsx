@@ -283,9 +283,9 @@ const ShareableButton = (props: any) => {
                           alert("Drag this link to your bookmarks bar");
                         }}
                       >
-                        bookmarklet
+                        checkoutLab
                       </a>{" "}
-                      to your browser.
+                      bookmarklet to your browser.
                     </p>
                   </div>
                   <div className="pb-1">
