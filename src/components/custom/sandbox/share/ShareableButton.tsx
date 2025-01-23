@@ -37,6 +37,7 @@ const ShareableButton = (props: any) => {
     integration: string;
   }>();
   const state = useSelector((state: RootState) => state.formula);
+  const { merchantAccount } = useSelector((state: RootState) => state.user);
   const containerRef = useRef(null);
   const [formula, setFormula] = useState<any>({
     data: null,
@@ -84,7 +85,7 @@ const ShareableButton = (props: any) => {
     try {
       const url =
         view === "embed"
-          ? `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}/embed?id=${data._id}`
+          ? `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}/embed?id=${data._id}&merchantAccount=${merchantAccount}`
           : `${process.env.NEXT_PUBLIC_API_URL}/${integration}/${variant}?id=${data._id}&view=${view}`;
       await navigator.clipboard.writeText(url);
       setShowCheck(true);

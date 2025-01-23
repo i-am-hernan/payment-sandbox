@@ -5,24 +5,22 @@ import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAd
 import Loading from "@/components/custom/utils/Loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFormula } from "@/hooks/useFormula";
+import { useStyle } from "@/hooks/useStyle";
 import { useView } from "@/hooks/useView";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
-import UpdateMerchantCookie from "@/components/custom/adyen/account/UpdateMerchantCookie";
-import { useStyle } from "@/hooks/useStyle";
 
 const Page: any = () => {
-  const { theme, merchantAccount, view } = useSelector(
-    (state: RootState) => state.user
-  );
+  const { theme, view } = useSelector((state: RootState) => state.user);
   const { integration, variant } = useParams<{
     integration: string;
     variant: string;
   }>();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
+  const merchantAccount = searchParams.get("merchantAccount");
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(
     variant,
     view,
@@ -42,7 +40,6 @@ const Page: any = () => {
     <div className={`${theme}`}>
       <React.Fragment>
         <main className="h-[100vh] w-[100vw]">
-          <UpdateMerchantCookie showTrigger={false} />
           {formulaLoading || merchantAccount === null ? (
             <Loading className="text-foreground" />
           ) : integration !== "sessions" && integration !== "advance" ? (
