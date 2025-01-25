@@ -32,9 +32,7 @@ const OpenApiList = (props: any) => {
     >
       {propertyKeys.length === 0 && (
         <div className="pl-6 pr-4 py-3">
-          <p className="text-sm text-foreground">
-            {`0 matching results`}
-          </p>
+          <p className="text-sm text-foreground">{`0 matching results`}</p>
         </div>
       )}
       {propertyKeys.length > 0 &&
@@ -110,7 +108,7 @@ const OpenApiList = (props: any) => {
                         : ""
                     }
                     onChange={(value: any) => {
-                      let tidyValue = value === "true" ? true : false;
+                      let tidyValue = value === "true";
                       setValues({ ...values, [property]: tidyValue });
                     }}
                     set={["true", "false"]}
@@ -118,7 +116,7 @@ const OpenApiList = (props: any) => {
                 )}
                 {properties[property].type === "array" && (
                   <Array
-                    value={values[property] ? values[property] : []}
+                    value={values[property] || []}
                     onChange={(value: any) => {
                       let tidyValue = value !== undefined ? value : [];
                       setValues({ ...values, [property]: tidyValue });
@@ -128,49 +126,40 @@ const OpenApiList = (props: any) => {
                 {properties[property]["$ref"] && openApi && (
                   <div className="border-l-[1px]">
                     <OpenApiList
-                      schema={openApi}
+                      openApi={openApi}
                       properties={
-                        resolveRef(openApi, properties[property]["$ref"]) &&
                         resolveRef(openApi, properties[property]["$ref"])
-                          .properties
-                          ? resolveRef(openApi, properties[property]["$ref"])
-                              .properties
-                          : []
+                          ?.properties || {}
                       }
                       required={
-                        resolveRef(openApi, properties[property]["$ref"]) &&
                         resolveRef(openApi, properties[property]["$ref"])
-                          .required
-                          ? resolveRef(openApi, properties[property]["$ref"])
-                              .required
-                          : []
+                          ?.required || []
                       }
                       selectedProperties={
-                        values &&
-                        values[property] &&
-                        Object.keys(values[property])
+                        values && values[property]
                           ? Object.keys(values[property])
                           : []
                       }
-                      values={values[property] ? values[property] : {}}
+                      values={values[property] || {}}
                       setValues={(value: any) => {
                         setValues({ ...values, [property]: value });
                       }}
                       onChange={(value: any) => {
                         const requestParameters =
-                          values &&
-                          values[property] &&
-                          Object.keys(values[property]);
+                          values && values[property]
+                            ? Object.keys(values[property])
+                            : [];
                         const isNewProperty =
                           requestParameters.length < value.length;
+
                         if (isNewProperty) {
                           const latestKey = value[value.length - 1];
                           const latestValue = resolveRef(
                             openApi,
                             properties[property]["$ref"]
                           ).properties[latestKey];
+
                           let newProperty = null;
-                          let mergedProperties = null;
                           if (latestValue.type === "string") {
                             newProperty = { [latestKey]: "" };
                           } else if (latestValue.type === "boolean") {
@@ -179,31 +168,30 @@ const OpenApiList = (props: any) => {
                             newProperty = { [latestKey]: 0 };
                           } else if (latestValue.type === "array") {
                             newProperty = { [latestKey]: [] };
-                          } else if (!latestValue.type) {
-                            newProperty = { [latestKey]: {} };
-                          } else if (latestValue.type === "object") {
+                          } else if (
+                            !latestValue.type ||
+                            latestValue.type === "object"
+                          ) {
                             newProperty = { [latestKey]: {} };
                           }
-                          mergedProperties = {
-                            ...values[property],
-                            ...newProperty,
-                          };
+
                           setValues({
                             ...values,
-                            [property]: mergedProperties,
+                            [property]: {
+                              ...(values[property] || {}),
+                              ...newProperty,
+                            },
                           });
                         } else {
-                          const removedProperties: any =
-                            requestParameters.filter((i: any) => {
-                              return value.indexOf(i) < 0;
-                            });
+                          const removedProperties = requestParameters.filter(
+                            (i) => !value.includes(i)
+                          );
                           if (removedProperties.length > 0) {
-                            let updatedRequest = { ...values[property] };
-                            let removedProperty = removedProperties.pop();
-                            delete updatedRequest[removedProperty];
+                            const updatedNestedValues = { ...values[property] };
+                            delete updatedNestedValues[removedProperties[0]];
                             setValues({
                               ...values,
-                              [property]: updatedRequest,
+                              [property]: updatedNestedValues,
                             });
                           }
                         }
