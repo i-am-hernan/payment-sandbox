@@ -49,7 +49,13 @@ const apiRequestReducer = (state: any, action: any) => {
 };
 
 const Api = (props: any) => {
-  const { schema, api, request: globalRequest, updateRequest, description } = props;
+  const {
+    schema,
+    api,
+    request: globalRequest,
+    updateRequest,
+    description,
+  } = props;
 
   const { reset, checkoutAPIVersion, build } = useSelector(
     (state: RootState) => state.formula
@@ -291,6 +297,7 @@ const Api = (props: any) => {
             description={description}
             label={api}
             method="POST"
+            tab={true}
           />
         )}
         {!loadingApiSpecData && apiSpecsData && (

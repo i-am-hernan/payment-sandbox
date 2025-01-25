@@ -30,7 +30,6 @@ import { clearUrlParams } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
 import StorageIcon from "@mui/icons-material/Storage";
-import WebhookIcon from "@mui/icons-material/Webhook";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
 import { ChevronDown } from "lucide-react";
@@ -72,7 +71,6 @@ const Sidebar = (props: any) => {
 
   const serverButtonRef = useRef<HTMLButtonElement>(null);
   const clientButtonRef = useRef<HTMLButtonElement>(null);
-  const webhookButtonRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -97,11 +95,6 @@ const Sidebar = (props: any) => {
         event.preventDefault();
         if (clientButtonRef.current) {
           clientButtonRef.current.click();
-        }
-      } else if ((event.ctrlKey || event.metaKey) && event.key === "k") {
-        event.preventDefault();
-        if (webhookButtonRef.current) {
-          webhookButtonRef.current.click();
         }
       }
     };
@@ -149,15 +142,6 @@ const Sidebar = (props: any) => {
         jsUnsavedChanges,
       },
       ref: clientButtonRef,
-    },
-    {
-      name: "Webhooks",
-      hotKey: "⌘ + k",
-      icon: <WebhookIcon className="!text-foreground !text-[20px]" />,
-      unsavedChanges: {
-        eventsUnsavedChanges,
-      },
-      ref: webhookButtonRef,
     },
   ];
 

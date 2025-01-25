@@ -5,13 +5,13 @@ import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAd
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
+import FooterBar from "@/components/custom/sandbox/navbars/FooterBar";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
-import FooterBar from "@/components/custom/sandbox/navbars/FooterBar";
 import Api from "@/components/custom/sandbox/tabs/Api";
-import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
 import Sdk from "@/components/custom/sandbox/tabs/Sdk";
+import SdkTabs from "@/components/custom/sandbox/tabs/SdkTabs";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
@@ -26,7 +26,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 interface SectionType {
-  section: "Client" | "Server" | "Webhooks";
+  section: "Client" | "Server";
 }
 
 const {
@@ -130,40 +130,29 @@ const Page: any = () => {
           <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
         ),
         content: (
-          <Sdk
-            storeConfiguration={checkoutConfiguration}
-            updateStoreConfiguration={updateCheckoutConfiguration}
-            configurationType="checkoutConfiguration"
+          <SdkTabs
+            sdkMap={{
+              checkoutConfiguration: {
+                storeConfiguration: checkoutConfiguration,
+                updateStoreConfiguration: updateCheckoutConfiguration,
+                configurationType: "checkoutConfiguration",
+                description: "Create a configuration object for Checkout",
+              },
+              txVariantConfiguration: {
+                storeConfiguration: txVariantConfiguration,
+                updateStoreConfiguration: updateTxVariantConfiguration,
+                configurationType: "txVariantConfiguration",
+                description: `Create a configuration object for ${variant}`,
+              },
+            }}
             variant={variant}
             theme={theme}
             integration={integration}
             view={view}
             key={"checkout"}
-            description={"Create a configuration object for Checkout"}
           />
         ),
         value: `checkout`,
-        unsavedChanges: unsavedChanges.js,
-      },
-      {
-        title: `${variant}`,
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
-        ),
-        content: (
-          <Sdk
-            storeConfiguration={txVariantConfiguration}
-            updateStoreConfiguration={updateTxVariantConfiguration}
-            configurationType="txVariantConfiguration"
-            variant={variant}
-            theme={theme}
-            integration={integration}
-            view={view}
-            key={"variant"}
-            description={`Create a configuration object for ${variant}`}
-          />
-        ),
-        value: `${variant}`,
         unsavedChanges: unsavedChanges.js,
       },
       {
@@ -286,20 +275,6 @@ const Page: any = () => {
             ]
           : [];
     crumbs = [integration, variant, "server"];
-  } else if (section === "Webhooks") {
-    tabsMap = [
-      {
-        title: "webhooks",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-info">
-            {"event"}
-          </span>
-        ),
-        content: <Events key={"Events"} />,
-        value: "events",
-      },
-    ];
-    crumbs = [integration, variant];
   }
 
   return (
