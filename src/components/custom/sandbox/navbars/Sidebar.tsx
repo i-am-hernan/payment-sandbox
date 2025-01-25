@@ -24,13 +24,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RequestOptions, useApi } from "@/hooks/useApi";
+import { RequestOptions } from "@/hooks/useApi";
 import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
 import StorageIcon from "@mui/icons-material/Storage";
-import WebhookIcon from "@mui/icons-material/Webhook";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
 import { ChevronDown } from "lucide-react";
@@ -149,15 +148,6 @@ const Sidebar = (props: any) => {
         jsUnsavedChanges,
       },
       ref: clientButtonRef,
-    },
-    {
-      name: "Webhooks",
-      hotKey: "⌘ + k",
-      icon: <WebhookIcon className="!text-foreground !text-[20px]" />,
-      unsavedChanges: {
-        eventsUnsavedChanges,
-      },
-      ref: webhookButtonRef,
     },
   ];
 

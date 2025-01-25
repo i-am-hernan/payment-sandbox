@@ -5,11 +5,10 @@ import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAd
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
+import FooterBar from "@/components/custom/sandbox/navbars/FooterBar";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
-import FooterBar from "@/components/custom/sandbox/navbars/FooterBar";
 import Api from "@/components/custom/sandbox/tabs/Api";
-import Events from "@/components/custom/sandbox/tabs/Event";
 import Html from "@/components/custom/sandbox/tabs/Html";
 import Sdk from "@/components/custom/sandbox/tabs/Sdk";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
@@ -26,7 +25,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 interface SectionType {
-  section: "Client" | "Server" | "Webhooks";
+  section: "Client" | "Server";
 }
 
 const {
@@ -188,7 +187,7 @@ const Page: any = () => {
         unsavedChanges: unsavedChanges.style,
       },
       {
-        title: "checkout",
+        title: "page",
         icon: (
           <span className="font-semibold px-1 text-xxs text-warning">
             {"HTML"}
@@ -286,20 +285,6 @@ const Page: any = () => {
             ]
           : [];
     crumbs = [integration, variant, "server"];
-  } else if (section === "Webhooks") {
-    tabsMap = [
-      {
-        title: "webhooks",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-info">
-            {"event"}
-          </span>
-        ),
-        content: <Events key={"Events"} />,
-        value: "events",
-      },
-    ];
-    crumbs = [integration, variant];
   }
 
   return (
