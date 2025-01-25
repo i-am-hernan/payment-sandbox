@@ -9,6 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { resolveRef } from "@/utils/utils";
+import { useState } from "react";
 
 const OpenApiList = (props: any) => {
   const {
@@ -21,7 +22,75 @@ const OpenApiList = (props: any) => {
     required,
   } = props;
 
+  const [additionalPropertiesPath, setAdditionalPropertiesPath] = useState<
+    string | null
+  >(null);
+
   const propertyKeys = properties ? Object.keys(properties) : [];
+
+  const createOpenApiList = (path: string, property: string) => {
+    return (
+      <div className="border-l-[1px]">
+        <OpenApiList
+          openApi={openApi}
+          properties={resolveRef(openApi, path)?.properties || {}}
+          required={resolveRef(openApi, path)?.required || []}
+          selectedProperties={
+            values && values[property] ? Object.keys(values[property]) : []
+          }
+          values={values[property] || {}}
+          setValues={(value: any) => {
+            setValues({ ...values, [property]: value });
+          }}
+          onChange={(value: any) => {
+            const requestParameters =
+              values && values[property] ? Object.keys(values[property]) : [];
+            const isNewProperty = requestParameters.length < value.length;
+
+            if (isNewProperty) {
+              const latestKey = value[value.length - 1];
+              const latestValue = resolveRef(openApi, path).properties[
+                latestKey
+              ];
+
+              let newProperty = null;
+              if (latestValue.type === "string") {
+                newProperty = { [latestKey]: "" };
+              } else if (latestValue.type === "boolean") {
+                newProperty = { [latestKey]: true };
+              } else if (latestValue.type === "integer") {
+                newProperty = { [latestKey]: 0 };
+              } else if (latestValue.type === "array") {
+                newProperty = { [latestKey]: [] };
+              } else if (!latestValue.type || latestValue.type === "object") {
+                newProperty = { [latestKey]: {} };
+              }
+
+              setValues({
+                ...values,
+                [property]: {
+                  ...(values[property] || {}),
+                  ...newProperty,
+                },
+              });
+            } else {
+              const removedProperties = requestParameters.filter(
+                (i) => !value.includes(i)
+              );
+              if (removedProperties.length > 0) {
+                const updatedNestedValues = { ...values[property] };
+                delete updatedNestedValues[removedProperties[0]];
+                setValues({
+                  ...values,
+                  [property]: updatedNestedValues,
+                });
+              }
+            }
+          }}
+        />
+      </div>
+    );
+  };
 
   return (
     <Accordion
@@ -123,82 +192,30 @@ const OpenApiList = (props: any) => {
                     }}
                   />
                 )}
-                {properties[property]["$ref"] && openApi && (
-                  <div className="border-l-[1px]">
-                    <OpenApiList
-                      openApi={openApi}
-                      properties={
-                        resolveRef(openApi, properties[property]["$ref"])
-                          ?.properties || {}
+                {properties[property]["x-anyOf"]?.length > 0 && (
+                  <div>
+                    <Enum
+                      value={
+                        additionalPropertiesPath?.split("/").pop() ||
+                        properties[property]["x-anyOf"][0]["$ref"]
+                          .split("/")
+                          .pop()
                       }
-                      required={
-                        resolveRef(openApi, properties[property]["$ref"])
-                          ?.required || []
-                      }
-                      selectedProperties={
-                        values && values[property]
-                          ? Object.keys(values[property])
-                          : []
-                      }
-                      values={values[property] || {}}
-                      setValues={(value: any) => {
-                        setValues({ ...values, [property]: value });
-                      }}
                       onChange={(value: any) => {
-                        const requestParameters =
-                          values && values[property]
-                            ? Object.keys(values[property])
-                            : [];
-                        const isNewProperty =
-                          requestParameters.length < value.length;
-
-                        if (isNewProperty) {
-                          const latestKey = value[value.length - 1];
-                          const latestValue = resolveRef(
-                            openApi,
-                            properties[property]["$ref"]
-                          ).properties[latestKey];
-
-                          let newProperty = null;
-                          if (latestValue.type === "string") {
-                            newProperty = { [latestKey]: "" };
-                          } else if (latestValue.type === "boolean") {
-                            newProperty = { [latestKey]: true };
-                          } else if (latestValue.type === "integer") {
-                            newProperty = { [latestKey]: 0 };
-                          } else if (latestValue.type === "array") {
-                            newProperty = { [latestKey]: [] };
-                          } else if (
-                            !latestValue.type ||
-                            latestValue.type === "object"
-                          ) {
-                            newProperty = { [latestKey]: {} };
-                          }
-
-                          setValues({
-                            ...values,
-                            [property]: {
-                              ...(values[property] || {}),
-                              ...newProperty,
-                            },
-                          });
-                        } else {
-                          const removedProperties = requestParameters.filter(
-                            (i) => !value.includes(i)
-                          );
-                          if (removedProperties.length > 0) {
-                            const updatedNestedValues = { ...values[property] };
-                            delete updatedNestedValues[removedProperties[0]];
-                            setValues({
-                              ...values,
-                              [property]: updatedNestedValues,
-                            });
-                          }
-                        }
+                        let path = "#/components/schemas/" + value;
+                        setAdditionalPropertiesPath(path);
                       }}
+                      set={properties[property]["x-anyOf"].map((a: any) =>
+                        a["$ref"].split("/").pop()
+                      )}
                     />
+                    {additionalPropertiesPath &&
+                      createOpenApiList(additionalPropertiesPath, property)}
                   </div>
                 )}
+                {properties[property]["$ref"] &&
+                  openApi &&
+                  createOpenApiList(properties[property]["$ref"], property)}
               </div>
             </AccordionContent>
           </AccordionItem>
