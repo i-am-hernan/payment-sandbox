@@ -11,6 +11,7 @@ interface TabsProps {
   crumbs?: string[];
   onExpand?: () => void;
   onContract?: () => void;
+  type?: "subwindow" | "window";
 }
 
 export type { Tab, TabsProps };

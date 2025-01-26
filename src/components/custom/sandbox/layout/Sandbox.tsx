@@ -33,7 +33,7 @@ const Sandbox = ({
       refB.current?.resize(0);
     } else if (view === "developer") {
       refA.current?.resize(60);
-      refB.current?.resize(50);
+      refB.current?.resize(0);
     }
   }, [view]);
 
@@ -47,8 +47,11 @@ const Sandbox = ({
   };
 
   const handleBottomRightExpand = () => {
-    refA.current?.resize(0);
-    refB.current?.resize(100);
+    refB.current?.resize(50);
+  };
+
+  const handleBottomRightContract = () => {
+    refB.current?.resize(0);
   };
 
   const handleContract = () => {
@@ -107,12 +110,14 @@ const Sandbox = ({
             defaultSize={view === "developer" ? 50 : 0}
             maxSize={view === "preview" || view === "demo" ? 0 : 100}
             ref={refB}
-            className="transition-all duration-300 ease-in-out"
+            className={`transition-all duration-300 ease-in-out ${
+              view === "developer" ? "min-h-[33px]" : ""
+            }`}
           >
             <div className="items-center justify-center flex w-full h-full">
               {React.cloneElement(BottomRight, {
                 onExpand: handleBottomRightExpand,
-                onContract: handleContract,
+                onContract: handleBottomRightContract,
               })}
             </div>
           </ResizablePanel>

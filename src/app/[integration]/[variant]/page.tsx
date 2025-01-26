@@ -10,7 +10,6 @@ import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
 import Api from "@/components/custom/sandbox/tabs/Api";
 import Html from "@/components/custom/sandbox/tabs/Html";
-import Sdk from "@/components/custom/sandbox/tabs/Sdk";
 import SdkTabs from "@/components/custom/sandbox/tabs/SdkTabs";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
@@ -349,7 +348,7 @@ const Page: any = () => {
                   </AlertDescription>
                 </Alert>
               ) : (
-                <SandBoxTabs tabsMap={bottomRightTabsMap} />
+                <SandBoxTabs tabsMap={bottomRightTabsMap} type="subwindow" />
               )
             }
             view={view}

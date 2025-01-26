@@ -13,9 +13,12 @@ import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import { Button } from "@/components/ui/button";
 import { TabsProps } from "./types";
+import MinimizeIcon from '@mui/icons-material/Minimize';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
-  const { tabsMap, crumbs, onExpand, onContract } = props;
+  const { tabsMap, crumbs, onExpand, onContract, type } = props;
   const [tabTitle, setTabTitle] = useState(tabsMap[0].value);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [hasExpanded, setHasExpanded] = useState(false);
@@ -89,7 +92,11 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
                 }
               }}
             >
-              <OpenInFullIcon className="text-primary !text-xs" />
+              {type === "subwindow" ? (
+                <ExpandLessIcon className="text-primary !text-xs" />
+              ) : (
+                <OpenInFullIcon className="text-primary !text-xs" />
+              )}
             </Button>
           )}
           {hasExpanded && (
@@ -105,7 +112,11 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
                 }
               }}
             >
-              <CloseFullscreenIcon className="text-primary !text-xs" />
+              {type === "subwindow" ? (
+                <ExpandMoreIcon className="text-primary !text-xs" />
+              ) : (
+                <CloseFullscreenIcon className="text-primary !text-xs" />
+              )}
             </Button>
           )}
         </div>

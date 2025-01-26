@@ -321,7 +321,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
         maxSize={view === "preview" ? 0 : 100}
         ref={panelRef}
         className={cn(
-          "sm:flex bg-code flex-col items-stretch",
+          "sm:flex bg-code flex-col items-stretch transition-all duration-300 ease-in-out",
           view === "demo" && "opacity-0"
         )}
       >

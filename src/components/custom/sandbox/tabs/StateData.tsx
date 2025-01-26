@@ -1,15 +1,11 @@
 import Code from "@/components/custom/sandbox/editors/Code";
-import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { useEffect, useState } from "react";
 import {
   debounce,
-  prettify,
-  replaceKeyValue,
-  sanitizeString,
-  stringifyObject,
-  unstringifyObject,
+  prettify
 } from "@/utils/utils";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const StateData = (props: any) => {
   const { theme } = props;
