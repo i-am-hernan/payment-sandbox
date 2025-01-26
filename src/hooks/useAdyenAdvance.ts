@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 interface AdyenAdvanceHook {
   error: object | null;
   result: object | null;
+  hasMounted: boolean;
 }
 
 export const useAdyenAdvance = (
@@ -24,6 +25,7 @@ export const useAdyenAdvance = (
 ): AdyenAdvanceHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
+  const [hasMounted, setHasMounted] = useState<boolean>(false);
 
   const handleSubmit = async (state: any, dropin: any) => {
     const response = await fetch(
@@ -106,6 +108,7 @@ export const useAdyenAdvance = (
             ...txVariantConfiguration,
           });
           component.mount(checkoutRef.current);
+          setHasMounted(true);
         } catch (error: unknown) {
           if (error instanceof Error) {
             setError({
@@ -165,5 +168,5 @@ export const useAdyenAdvance = (
     adyenWebVersion,
   ]);
 
-  return { error, result };
+  return { error, result, hasMounted };
 };

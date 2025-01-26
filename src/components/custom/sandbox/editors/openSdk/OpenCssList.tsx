@@ -94,7 +94,7 @@ export const OpenCssList = (props: any) => {
                     )}
                   />
                 )}
-                {properties[property].type === "font-size" && values && (
+                {properties[property].type === "size" && values && (
                   <FomulaSlider
                     value={values[property] ? parseInt(values[property]) : 14}
                     max={25}
@@ -110,7 +110,7 @@ export const OpenCssList = (props: any) => {
                     }}
                   />
                 )}
-                {properties[property].type === "selector" && (
+                {properties[property].type === "class" && (
                   <div className="border-l-[1px]">
                     <OpenCssList
                       selectedProperties={
@@ -140,11 +140,11 @@ export const OpenCssList = (props: any) => {
                               latestKey
                             ];
                           let newProperty = null;
-                          if (latestValue.type === "selector") {
+                          if (latestValue.type === "class") {
                             newProperty = { [latestKey]: {} };
                           } else if (latestValue.type === "font-family") {
                             newProperty = { [latestKey]: "Arial;" };
-                          } else if (latestValue.type === "font-size") {
+                          } else if (latestValue.type === "size") {
                             newProperty = { [latestKey]: "14px;" };
                           } else if (latestValue.type === "color") {
                             newProperty = { [latestKey]: "#000000;" };

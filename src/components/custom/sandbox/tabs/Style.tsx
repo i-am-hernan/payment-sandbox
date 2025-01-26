@@ -77,16 +77,9 @@ const Style = (props: any) => {
     (state: RootState) => state.formula
   );
 
-  const url = `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/variant/style?txvariant=${variant}`;
-
-  const {
-    data: cssSpecsData,
-    loading: loadingCssSpecData,
-    error: cssSpecsError,
-  } = useApi(url, "GET");
-
-  const specs: any = useSelector((state: RootState) => state.specs);
-  const properties = specs?.[configurationType] ?? null;
+  const { style: properties }: any = useSelector(
+    (state: RootState) => state.specs
+  );
 
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const [config, dispatchConfig] = useReducer(configReducer, initialState);
@@ -143,22 +136,6 @@ const Style = (props: any) => {
   useEffect(() => {
     setFilteredProperties(properties);
   }, [properties]);
-
-  useEffect(() => {
-    if (cssSpecsData) {
-      dispatch(
-        updateSpecs({
-          [configurationType]: cssSpecsData,
-        })
-      );
-    } else if (cssSpecsData) {
-      dispatch(
-        updateSpecs({
-          [configurationType]: {},
-        })
-      );
-    }
-  }, [cssSpecsData, cssSpecsError]);
 
   useEffect(() => {
     if (view === "demo" || view === "preview") {
@@ -218,7 +195,7 @@ const Style = (props: any) => {
         const latestKey = value[value.length - 1];
         const latestValue = properties[latestKey];
         let newProperty = null;
-        if (latestValue.type === "selector") {
+        if (latestValue.type === "class") {
           newProperty = { [latestKey]: {} };
         } else if (latestValue.type === "color") {
           newProperty = { [latestKey]: "" };
@@ -323,7 +300,6 @@ const Style = (props: any) => {
         defaultSize={view === "developer" ? 50 : 100}
         className="!overflow-y-scroll"
       >
-        {loadingCssSpecData && <Loading className="text-foreground" />}
         {adyenWebVersion && (
           <Version
             label={"adyen web"}
@@ -338,14 +314,17 @@ const Style = (props: any) => {
             onChange={handleVersionChange}
           />
         )}
-        <div className="border-b-2 flex text-sm text-foreground">
-          <span className="border-r-2 p-[3px]">
-            <p className="inline-block border border-info border-dotted px-2 text-sm">
-              class
-            </p>
-          </span>
-        </div>
-        {!loadingCssSpecData && (
+        {!properties && <Loading className="text-foreground" />}
+        {properties && (
+          <div className="border-b-2 flex text-sm text-foreground">
+            <span className="border-r-2 p-[3px]">
+              <p className="inline-block border border-info border-dotted px-2 text-sm">
+                class
+              </p>
+            </span>
+          </div>
+        )}
+        {properties && (
           <Search
             properties={properties}
             onChange={handleOpenApiSearchChange}

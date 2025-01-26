@@ -1,12 +1,12 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useAdyenSessions } from "@/hooks/useAdyenSessions";
-import { useApi } from "@/hooks/useApi";
-import { useEffect, useRef, useState } from "react";
 import Error from "@/components/custom/utils/Error";
 import Loading from "@/components/custom/utils/Loading";
 import Result from "@/components/custom/utils/Result";
+import { useAdyenSessions } from "@/hooks/useAdyenSessions";
+import { useApi } from "@/hooks/useApi";
+import { useCalculatedClasses } from "@/hooks/useCalculatedClasses";
+import { useEffect, useRef, useState } from "react";
 
 export const InitSessionsComponent = (props: any) => {
   const {
@@ -17,6 +17,7 @@ export const InitSessionsComponent = (props: any) => {
     txVariantConfiguration,
     sessionsRequest,
     onSessionsResponse,
+    onClassesCalculated,
     onChange,
   } = props;
 
@@ -39,7 +40,11 @@ export const InitSessionsComponent = (props: any) => {
     }
   }, [sessionsResponse]);
 
-  const { result: adyenResult, error: adyenSDKError }: any = useAdyenSessions(
+  const {
+    result: adyenResult,
+    error: adyenSDKError,
+    hasMounted,
+  }: any = useAdyenSessions(
     variant,
     checkoutAPIVersion,
     checkoutConfiguration,
@@ -50,6 +55,20 @@ export const InitSessionsComponent = (props: any) => {
     readyToMount,
     adyenWebVersion
   );
+
+  const {
+    result: calculatedClasses,
+    loading: calculatedClassesLoading,
+    error: calculatedClassesError,
+  } = useCalculatedClasses(checkoutRef, hasMounted);
+
+  useEffect(() => {
+    onClassesCalculated(
+      calculatedClasses,
+      calculatedClassesLoading,
+      calculatedClassesError
+    );
+  }, [calculatedClasses]);
 
   const error =
     adyenSDKError || sessionError

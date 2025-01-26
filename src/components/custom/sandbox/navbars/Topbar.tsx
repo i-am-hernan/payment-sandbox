@@ -16,7 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { formulaActions, userActions } from "@/store/reducers";
+import { formulaActions, specsActions, userActions } from "@/store/reducers";
 import { RootState } from "@/store/store";
 import { clearUrlParams, refineFormula } from "@/utils/utils";
 import CodeIcon from "@mui/icons-material/Code";
@@ -37,14 +37,12 @@ const {
   updateApiRequestMerchantAccount,
   updateBuildMerchantAccount,
 } = formulaActions;
-
+const { updateSpecs } = specsActions;
 const { updateView } = userActions;
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
-  const { variantName } = useSelector(
-    (state: RootState) => state.sandbox
-  );
+  const { variantName } = useSelector((state: RootState) => state.sandbox);
   const { view, merchantAccount, integration } = props;
   const { unsavedChanges, errors } = storeFormula;
   const dispatch = useDispatch();
@@ -157,6 +155,11 @@ const Topbar = (props: any) => {
                           "sessionId",
                           "sessionData",
                         ]);
+                        dispatch(
+                          updateSpecs({
+                            style: null,
+                          })
+                        );
                       }}
                     >
                       Reset

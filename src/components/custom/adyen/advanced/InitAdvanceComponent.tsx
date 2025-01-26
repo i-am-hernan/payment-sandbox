@@ -5,6 +5,7 @@ import Loading from "@/components/custom/utils/Loading";
 import Result from "@/components/custom/utils/Result";
 import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
 import { useApi } from "@/hooks/useApi";
+import { useCalculatedClasses } from "@/hooks/useCalculatedClasses";
 import { useEffect, useRef, useState } from "react";
 
 export const InitAdvanceComponent = (props: any) => {
@@ -18,6 +19,7 @@ export const InitAdvanceComponent = (props: any) => {
     paymentsRequest,
     paymentsDetailsRequest,
     onPaymentMethodsResponse,
+    onClassesCalculated,
     onChange,
   } = props;
 
@@ -41,7 +43,11 @@ export const InitAdvanceComponent = (props: any) => {
     }
   }, [paymentMethodsResponse]);
 
-  const { result: adyenResult, error: adyenSDKError }: any = useAdyenAdvance(
+  const {
+    result: adyenResult,
+    error: adyenSDKError,
+    hasMounted,
+  }: any = useAdyenAdvance(
     variant,
     checkoutAPIVersion,
     adyenWebVersion,
@@ -55,6 +61,20 @@ export const InitAdvanceComponent = (props: any) => {
     readyToMount
   );
 
+  const {
+    result: calculatedClasses,
+    loading: calculatedClassesLoading,
+    error: calculatedClassesError,
+  } = useCalculatedClasses(checkoutRef, hasMounted);
+
+  useEffect(() => {
+    onClassesCalculated(
+      calculatedClasses,
+      calculatedClassesLoading,
+      calculatedClassesError
+    );
+  }, [calculatedClasses]);
+
   const error =
     adyenSDKError || paymentMethodsError
       ? { ...adyenSDKError, ...paymentMethodsError }
@@ -67,9 +87,7 @@ export const InitAdvanceComponent = (props: any) => {
       {loadingPaymentMethods && <Loading className="text-foreground" />}
       {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
         <div className="component-container">
-          <div 
-            ref={checkoutRef}
-          ></div>
+          <div ref={checkoutRef}></div>
         </div>
       )}
     </div>

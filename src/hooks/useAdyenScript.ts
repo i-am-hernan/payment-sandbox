@@ -34,13 +34,24 @@ const useAdyenScript = (version: string): AdyenScriptHook => {
     }; // Set error if there's an error loading the script
     document.body.appendChild(script);
 
-    // Add the new CSS
+    // Add the new CSS before the last link in head
     const link = document.createElement("link");
     link.id = cssId;
     link.href = `https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/sdk/${version}/adyen.css`;
     link.type = "text/css";
     link.rel = "stylesheet";
-    document.head.appendChild(link);
+
+    // Get all link elements in head
+    const links = document.head.getElementsByTagName("link");
+    const lastLink = links[links.length - 1];
+
+    if (lastLink) {
+      // Insert before the last link
+      document.head.insertBefore(link, lastLink);
+    } else {
+      // If no links exist, just append
+      document.head.appendChild(link);
+    }
 
     // Cleanup function to remove the script and CSS when the component unmounts
     return () => {

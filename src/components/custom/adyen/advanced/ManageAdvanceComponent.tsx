@@ -3,7 +3,11 @@
 import { InitAdvanceComponent } from "@/components/custom/adyen/advanced/InitAdvanceComponent";
 import { RedirectAdvanceComponent } from "@/components/custom/adyen/advanced/RedirectAdvanceComponent";
 import useAdyenScript from "@/hooks/useAdyenScript";
-import { componentActions, formulaActions } from "@/store/reducers";
+import {
+  componentActions,
+  formulaActions,
+  specsActions,
+} from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { stringifyObject, unstringifyObject } from "@/utils/utils";
 import { useParams, useSearchParams } from "next/navigation";
@@ -19,7 +23,7 @@ const {
   updateReset,
 } = formulaActions;
 const { updateComponentState, updateResponse } = componentActions;
-
+const { updateSpecs } = specsActions;
 export const ManageAdvanceComponent = () => {
   const { build, isRedirect, redirectResult } = useSelector(
     (state: RootState) => state.formula
@@ -71,6 +75,21 @@ export const ManageAdvanceComponent = () => {
           paymentsRequest={payments}
           onChange={(state: any) => {
             dispatch(updateComponentState(state));
+          }}
+          onClassesCalculated={(classes: any, loading: boolean, error: any) => {
+            if (classes && !error) {
+              dispatch(
+                updateSpecs({
+                  style: classes,
+                })
+              );
+            } else if (loading) {
+              dispatch(
+                updateSpecs({
+                  style: null,
+                })
+              );
+            }
           }}
           paymentsDetailsRequest={paymentsDetails}
           onPaymentMethodsResponse={(response: any) => {

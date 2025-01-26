@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 interface AdyenSessionsHook {
   error: object | null;
   result: object | null;
+  hasMounted: boolean;
 }
 
 export const useAdyenSessions = (
@@ -20,6 +21,7 @@ export const useAdyenSessions = (
 ): AdyenSessionsHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
+  const [hasMounted, setHasMounted] = useState<boolean>(false);
 
   const handlePaymentCompleted = (result: any, component: any) => {
     setResult(result);
@@ -45,6 +47,7 @@ export const useAdyenSessions = (
             ...txVariantConfiguration,
           });
           component.mount(checkoutRef.current);
+          setHasMounted(true);
         } catch (error: unknown) {
           if (error instanceof Error) {
             setError({
@@ -103,5 +106,5 @@ export const useAdyenSessions = (
     adyenWebVersion,
   ]);
 
-  return { error, result };
+  return { error, result, hasMounted };
 };

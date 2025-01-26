@@ -206,7 +206,7 @@ const ShareableButton = (props: any) => {
                   <Button
                     className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "preview" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
                     onClick={() => setView("preview")}
-                    key="reset"
+                    key="share"
                     variant="outline"
                     size="sm"
                   >
@@ -215,7 +215,7 @@ const ShareableButton = (props: any) => {
                   <Button
                     className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "demo" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
                     onClick={() => setView("demo")}
-                    key="reset"
+                    key="demo"
                     variant="outline"
                     size="sm"
                   >
@@ -224,7 +224,7 @@ const ShareableButton = (props: any) => {
                   <Button
                     className={`h-[1.5rem] shadow-none border-l-0 border-r-0 border-t-0 ${view === "embed" ? "border-b-2" : "border-b-0"} border-adyen rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden`}
                     onClick={() => setView("embed")}
-                    key="reset"
+                    key="embed"
                     variant="outline"
                     size="sm"
                   >
