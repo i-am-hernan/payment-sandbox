@@ -11,10 +11,8 @@ const Array = (props: any) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (typeof value === "string") {
-      onChange([...value, input]);
-      setInput("");
-    }
+    onChange([...value, input]);
+    setInput("");
   };
 
   return (
