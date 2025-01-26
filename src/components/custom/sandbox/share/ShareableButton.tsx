@@ -188,7 +188,13 @@ const ShareableButton = (props: any) => {
                   your build
                 </DialogTitle>
                 <DialogDescription className="text-[13px]">
-                  You can share your build by copying the link below
+                  {`You can ${
+                    view === "preview"
+                      ? "share"
+                      : view === "demo"
+                        ? "demo"
+                        : "embed"
+                  } your build by copying the link below`}
                 </DialogDescription>
               </DialogHeader>
               {error && (
@@ -274,13 +280,12 @@ const ShareableButton = (props: any) => {
                   <div className="pb-1">
                     <p className="inline-block text-foreground">Step 1: </p>{" "}
                     <p className="inline-block">
-                      {` Save our `}
+                      {` Save the `}
                       <a
                         href={createBookmarkletUrl()}
                         className="text-blue-500"
                         onClick={(e) => {
                           e.preventDefault();
-                          // Optional: Show instructions to drag to bookmarks
                           alert("Drag this link to your bookmarks bar");
                         }}
                       >
@@ -292,7 +297,7 @@ const ShareableButton = (props: any) => {
                   <div className="pb-1">
                     <p className="inline-block text-foreground">Step 2:</p>{" "}
                     <p className="inline-block">
-                      Navigate to the merchants checkout page
+                      Navigate to any checkout page
                     </p>
                   </div>
                   <div className="pb-1">
@@ -302,7 +307,7 @@ const ShareableButton = (props: any) => {
                   <div className="pb-1">
                     <p className="inline-block text-foreground">Step 4:</p>{" "}
                     <p className="inline-block">
-                      Enter the above url to embed your build
+                      Enter the above url and embed your build
                     </p>
                   </div>
                 </DialogDescription>
