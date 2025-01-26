@@ -288,6 +288,13 @@ const Api = (props: any) => {
             }}
           />
         )}
+        <div className="border-b-2 flex text-sm text-foreground">
+          <span className="border-r-2 p-[3px]">
+            <p className="inline-block border border-info border-dotted px-2 text-sm">
+              parameters
+            </p>
+          </span>
+        </div>
         {!loadingApiSpecData && apiSpecsData && (
           <Search
             properties={properties}

@@ -297,7 +297,6 @@ const Style = (props: any) => {
                     stringified: stringValue,
                   },
                 });
-
               }
             }}
             jsVariable={configurationType}
@@ -339,6 +338,13 @@ const Style = (props: any) => {
             onChange={handleVersionChange}
           />
         )}
+        <div className="border-b-2 flex text-sm text-foreground">
+          <span className="border-r-2 p-[3px]">
+            <p className="inline-block border border-info border-dotted px-2 text-sm">
+              class
+            </p>
+          </span>
+        </div>
         {!loadingCssSpecData && (
           <Search
             properties={properties}

@@ -177,7 +177,7 @@ const Page: any = () => {
         unsavedChanges: unsavedChanges.style,
       },
       {
-        title: "checkout",
+        title: "page",
         icon: (
           <span className="font-semibold px-1 text-xxs text-warning">
             {"HTML"}

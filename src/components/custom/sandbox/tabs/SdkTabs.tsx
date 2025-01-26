@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useApi } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 import { formulaActions, specsActions } from "@/store/reducers";
+import { SpecsList } from "@/store/reducers/specs";
 import type { RootState } from "@/store/store";
 import {
   debounce,
@@ -22,18 +23,17 @@ import {
   stringifyObject,
   unstringifyObject,
 } from "@/utils/utils";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
-import { SpecsList } from "@/store/reducers/specs";
 
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateAdyenWebVersion } = formulaActions;
 
 interface SdkMapValue {
   storeConfiguration: any;
-  updateStoreConfiguration: (value: any) => void;
+  updateStoreConfiguration: any;
   configurationType: string;
   description: string;
 }
@@ -95,10 +95,11 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
     activeTab === "checkoutConfiguration" ? "checkout" : "variant"
   }?${activeTab === "txVariantConfiguration" ? `txvariant=${variant}` : ""}`;
 
-  const { data: sdkSpecsData, loading: loadingSdkSpecData } = useApi(
-    url,
-    "GET"
-  );
+  const {
+    data: sdkSpecsData,
+    loading: loadingSdkSpecData,
+    error: sdkSpecsError,
+  } = useApi(url, "GET");
 
   // Update specs when data changes
   useEffect(() => {
@@ -112,8 +113,10 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
           filteredProperties: sdkSpecsData,
         },
       }));
+    } else if (sdkSpecsError) {
+      dispatch(updateSpecs({ [activeTab]: {} }));
     }
-  }, [sdkSpecsData, activeTab, dispatch]);
+  }, [sdkSpecsData, sdkSpecsError, activeTab, dispatch]);
 
   // Update the useEffect that handles specs changes
   useEffect(() => {
@@ -127,7 +130,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
         setConfigs((prev) => ({
           ...prev,
           [key]: {
-            ...prev[key],
+            ...prev[key as keyof ConfigsState],
             filteredProperties: schemaProps,
           },
         }));
@@ -145,7 +148,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
       setConfigs((prev) => ({
         ...prev,
         [key]: {
-          ...prev[key],
+          ...prev[key as keyof ConfigsState],
           parsed: unstringifyObject(value.storeConfiguration),
           stringified: prettifiedString,
         },
@@ -163,13 +166,29 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
   }, [view]);
 
   const syncGlobalState = useCallback(
-    debounce((value: any, configType: string) => {
+    debounce((localState: any, configType: keyof ConfigsState) => {
       const { updateStoreConfiguration } = sdkMap[configType];
-      const stringifiedValue = stringifyObject(value);
-      dispatch(updateStoreConfiguration(stringifiedValue));
-      dispatch(addUnsavedChanges({ js: true }));
+      const stringifiedLocalState = stringifyObject(localState);
+      const buildConfig = build[configType];
+
+      if (
+        sanitizeString(buildConfig) !== sanitizeString(stringifiedLocalState)
+      ) {
+        dispatch(updateStoreConfiguration(stringifiedLocalState));
+        dispatch(
+          addUnsavedChanges({
+            js: true,
+          })
+        );
+      } else {
+        dispatch(
+          addUnsavedChanges({
+            js: false,
+          })
+        );
+      }
     }, 1000),
-    []
+    [build, dispatch, sdkMap]
   );
 
   const handleCodeChange = async (jsValue: any, stringValue: string) => {
@@ -306,24 +325,30 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
           view === "demo" && "opacity-0"
         )}
       >
-        <Code
-          type="babel"
-          code={configs[activeTab].stringified}
-          readOnly={false}
-          theme={theme}
-          onChange={handleCodeChange}
-          jsVariable={sdkMap[activeTab].configurationType}
-        />
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-none border-l-[1px] h-5"
-          onClick={handlePrettify}
-        >
-          <span className="font-semibold text-xxs text-warning">{"{}"}</span>
-        </Button>
+        <div className="h-[calc(100%-var(--footerbar-width))]">
+          <Code
+            type="babel"
+            code={configs[activeTab].stringified}
+            readOnly={false}
+            theme={theme}
+            onChange={handleCodeChange}
+            jsVariable={sdkMap[activeTab].configurationType}
+          />
+          <div className={`flex justify-end border-t-2 bg-background h-[100%]`}>
+            <Button
+              key={"prettify"}
+              variant="ghost"
+              size="icon"
+              className={`rounded-none border-l-[1px] h-5`}
+              onClick={handlePrettify}
+            >
+              <span className="font-semibold text-xxs text-warning">
+                {"{}"}
+              </span>
+            </Button>
+          </div>
+        </div>
       </ResizablePanel>
-
       <ResizableHandle
         className={cn(
           view !== "developer" && "opacity-0 pointer-events-none hidden"
@@ -332,7 +357,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
 
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
-        className="!overflow-y-scroll"
+        className="!overflow-y-scroll flex flex-col"
       >
         {
           <Version
@@ -346,112 +371,88 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
             onChange={(v: any) => dispatch(updateAdyenWebVersion(v))}
           />
         }
-        {loadingSdkSpecData ? (
-          <Loading className="text-foreground" />
-        ) : (
-          <Tabs
-            value={activeTab}
-            onValueChange={(value: string) =>
-              setActiveTab(value as keyof ConfigsState)
-            }
-          >
-            <TabsList>
-              {Object.entries(sdkMap).map(([key, value]: [string, any]) => (
-                <TabsTrigger
-                  key={key}
-                  value={key}
-                  className="px-2 py-[2px] data-[state=active]:border-info data-[state=inactive]:hover:border-info"
-                >
-                  <p className="p-[3px] text-xs text-foreground">
-                    {value.configurationType}
-                  </p>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
+        <Tabs
+          value={activeTab}
+          onValueChange={(value: string) =>
+            setActiveTab(value as keyof ConfigsState)
+          }
+          className="flex flex-col flex-grow"
+        >
+          <TabsList className="bg-background border-b-2 justify-start">
             {Object.entries(sdkMap).map(([key, value]: [string, any]) => (
-              <TabsContent key={key} value={key} className="flex-grow">
-                <Search
-                  properties={specs[key as keyof SpecsList]}
-                  onChange={handleSearchChange}
-                  description={value.description}
-                  label={value.configurationType}
-                  method="object"
-                  tab={false}
-                />
-                <OpenSdkList
-                  openSdk={sdkSpecsData}
-                  properties={
-                    specs[key as keyof SpecsList]?.components?.schemas?.[key]
-                      ?.properties || configs[key].filteredProperties
-                  }
-                  selectedProperties={Object.keys(configs[key].parsed || {})}
-                  values={configs[key].parsed}
-                  setValues={async (
-                    newValue: any,
-                    keyString?: string,
-                    keyValue?: any,
-                    type?: string
-                  ) => {
-                    try {
-                      if (keyString && type) {
-                        // Handle individual property updates
-                        const newStringified = replaceKeyValue(
-                          configs[key].stringified,
-                          keyString,
-                          typeof keyValue === "string" ||
-                            typeof keyValue === "function"
-                            ? keyValue
-                            : JSON.stringify(keyValue),
-                          type
-                        );
-
-                        const prettifiedString = await prettify(
-                          newStringified,
-                          "babel"
-                        );
-
-                        setConfigs((prev) => ({
-                          ...prev,
-                          [key]: {
-                            ...prev[key],
-                            parsed: newValue,
-                            stringified: prettifiedString,
-                          },
-                        }));
-                      } else {
-                        // Handle bulk updates
-                        const newStringified = formatJsString(
-                          stringifyObject(newValue),
-                          sdkMap[key].configurationType
-                        );
-                        const prettifiedString = await prettify(
-                          newStringified,
-                          "babel"
-                        );
-
-                        setConfigs((prev) => ({
-                          ...prev,
-                          [key]: {
-                            ...prev[key],
-                            parsed: newValue,
-                            stringified: prettifiedString,
-                          },
-                        }));
-                      }
-                      syncGlobalState(newValue, key);
-                    } catch (error) {
-                      console.error("Error updating values:", error);
-                    }
-                  }}
-                  onChange={(value: any) =>
-                    handleOpenSdkListChange(value, key as keyof ConfigsState)
-                  }
-                />
-              </TabsContent>
+              <TabsTrigger
+                key={key}
+                value={key}
+                className="bg-background px-2 py-[2px] data-[state=active]:border-info data-[state=inactive]:hover:border-info"
+              >
+                <p className="p-[3px] text-xs text-foreground">
+                  {value.configurationType}
+                </p>
+              </TabsTrigger>
             ))}
-          </Tabs>
-        )}
+          </TabsList>
+          {Object.entries(sdkMap).map(([key, value]: [string, any]) => (
+            <TabsContent key={key} value={key} className="flex-grow">
+              {loadingSdkSpecData ? (
+                <Loading className="text-foreground" />
+              ) : (
+                <div>
+                  <Search
+                    properties={specs[key as keyof SpecsList]}
+                    onChange={handleSearchChange}
+                    description={value.description}
+                    label={value.configurationType}
+                    method="object"
+                    tab={false}
+                  />
+                  <OpenSdkList
+                    openSdk={sdkSpecsData}
+                    properties={
+                      specs[key as keyof SpecsList]?.components?.schemas?.[key]
+                        ?.properties ||
+                      configs[key as keyof ConfigsState].filteredProperties
+                    }
+                    selectedProperties={Object.keys(
+                      configs[key as keyof ConfigsState].parsed || {}
+                    )}
+                    values={configs[key as keyof ConfigsState].parsed}
+                    setValues={async (
+                      newValue: any,
+                      keyString?: string,
+                      keyValue?: any,
+                      type?: string
+                    ) => {
+                      try {
+                        const newStringified = replaceKeyValue(
+                          configs[key as keyof ConfigsState].stringified,
+                          keyString ?? "",
+                          JSON.stringify(keyValue),
+                          type ?? ""
+                        );
+
+                        setConfigs((prev) => ({
+                          ...prev,
+                          [key]: {
+                            ...prev[key as keyof ConfigsState],
+                            parsed: newValue,
+                            stringified: newStringified,
+                          },
+                        }));
+
+                        syncGlobalState(newValue, key);
+                      } catch (error) {
+                        console.error("Error updating values:", error);
+                      }
+                    }}
+                    onChange={(value: any) =>
+                      handleOpenSdkListChange(value, key as keyof ConfigsState)
+                    }
+                  />
+                </div>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

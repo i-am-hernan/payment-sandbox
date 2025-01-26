@@ -10,13 +10,16 @@ const Array = (props: any) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onChange([...value, input]);
-    setInput("");
+
+    if (typeof value === "string") {
+      onChange([...value, input]);
+      setInput("");
+    }
   };
 
   return (
     <div>
-      {value.map((item: any, index: number) => (
+      {value?.map?.((item: any, index: number) => (
         <div key={index} className="flex items-center pb-2">
           <Input
             className="text-xs py-0 rounded-r-none"

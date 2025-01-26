@@ -24,16 +24,7 @@ const Search = (props: any) => {
 
   return (
     <div className="border-b-2 z-10 sticky top-0 bg-background">
-      <div className="border-b-2 flex text-sm text-foreground">
-        {tab && (
-          <span className="border-r-2 p-[3px]">
-            <p className="inline-block border border-info border-dotted px-2 text-sm">
-              parameters
-            </p>
-          </span>
-        )}
-      </div>
-      <h4 className="text-[0.85rem] text-adyen px-4 py-2">
+      <h4 className="text-[0.85rem] z-15 sticky top-0 text-adyen px-4 py-2">
         {`${label}`}
         <code className="px-1 text-xs text-grey">{method}</code>
       </h4>

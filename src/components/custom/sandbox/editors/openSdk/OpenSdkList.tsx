@@ -1,17 +1,26 @@
 import Array from "@/components/custom/sandbox/editors/Array";
 import Enum from "@/components/custom/sandbox/editors/Enum";
 import { String } from "@/components/custom/sandbox/editors/String";
+import InfoAlert from "@/components/custom/utils/InfoAlert";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import InfoAlert from "@/components/custom/utils/InfoAlert";
+
+// Use the global Array.isArray instead
+const isValidArray = (value: unknown): boolean => {
+  // Use the global Array object instead of the imported component
+  return (
+    globalThis.Array.isArray(value) || value === undefined || value === null
+  );
+};
 
 export const OpenSdkList = (props: any) => {
   const { selectedProperties, properties, values, setValues, onChange } = props;
   const propertyKeys = properties ? Object.keys(properties) : [];
+
   return (
     <Accordion
       type="multiple"
@@ -117,22 +126,29 @@ export const OpenSdkList = (props: any) => {
                     set={["true", "false"]}
                   />
                 )}
-                {properties[property].type === "array" && (
-                  <Array
-                    value={values[property] ? values[property] : []}
-                    onChange={(value: any) => {
-                      let tidyValue = value !== undefined ? value : [];
-                      setValues(
-                        { ...values, [property]: tidyValue },
-                        property,
-                        tidyValue,
-                        "array"
-                      );
-                    }}
-                  />
-                )}
+                {properties[property].type === "array" &&
+                  isValidArray(values[property]) && (
+                    <Array
+                      value={values[property] ? values[property] : []}
+                      onChange={(value: any) => {
+                        let tidyValue = value !== undefined ? value : [];
+                        setValues(
+                          { ...values, [property]: tidyValue },
+                          property,
+                          tidyValue,
+                          "array"
+                        );
+                      }}
+                    />
+                  )}
                 {properties[property].type === "function" && (
                   <InfoAlert message="Update functions in developer mode" />
+                )}
+                {property === "paymentMethodsResponse" && (
+                  <InfoAlert message="This parameter gets automatically updated with the /paymentMethods response" />
+                )}
+                {property === "session" && (
+                  <InfoAlert message="This parameter gets automatically updated with the /paymentMethods response" />
                 )}
               </div>
             </AccordionContent>
