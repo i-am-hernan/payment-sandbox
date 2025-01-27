@@ -76,12 +76,12 @@ export const InitSessionsComponent = (props: any) => {
       : null;
 
   return (
-    <div className="sandbox-container">
+    <div className="sandbox-container flex justify-center align-center h-[100%]">
       {error && <Error error={error} />}
       {adyenResult && <Result adyenResult={adyenResult} />}
       {loadingSessions && <Loading className="text-foreground" />}
       {!adyenSDKError && !adyenResult && !loadingSessions && (
-        <div className="component-container">
+        <div className="component-container h-[100%] w-[100%] p-1">
           <div ref={checkoutRef}></div>
         </div>
       )}

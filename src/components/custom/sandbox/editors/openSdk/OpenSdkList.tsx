@@ -43,7 +43,7 @@ export const OpenSdkList = (props: any) => {
             value={property}
             className="hover:no-underline"
           >
-            <AccordionTrigger className="pl-6 pr-4 py-3">
+            <AccordionTrigger className="pl-6 pr-4 py-3 border-transparent border-[1px] hover:border-[1px] hover:border-adyen hover:border-dotted">
               <p className="text-[0.85rem] text-foreground">{property}</p>
               <p className="font-mono text-xs flex-grow text-left">
                 {properties[property].type && (

@@ -19,6 +19,25 @@ export const OpenCssList = (props: any) => {
   } = props;
   const propertyKeys = properties ? Object.keys(properties) : [];
 
+  // Update handlers to add/remove highlight class
+  const handleMouseEnter = (propertyValue: string) => {
+    // Remove leading dot if present
+    const className = propertyValue.replace(/^\./, '');
+    const elements = document.getElementsByClassName(className);
+    Array.from(elements).forEach((element) => {
+      element.classList.add('highlight-green');
+    });
+  };
+
+  const handleMouseLeave = (propertyValue: string) => {
+    // Remove leading dot if present
+    const className = propertyValue.replace(/^\./, '');
+    const elements = document.getElementsByClassName(className);
+    Array.from(elements).forEach((element) => {
+      element.classList.remove('highlight-green');
+    });
+  };
+
   return (
     <Accordion
       type="multiple"
@@ -39,7 +58,11 @@ export const OpenCssList = (props: any) => {
             value={property}
             className="hover:no-underline"
           >
-            <AccordionTrigger className="pl-6 pr-4 py-3">
+            <AccordionTrigger 
+              className="pl-6 pr-4 py-3 border-transparent border-[1px] hover:border-[1px] hover:border-adyen hover:border-dotted"
+              onMouseEnter={properties[property].type === "class" ? () => handleMouseEnter(property) : undefined}
+              onMouseLeave={properties[property].type === "class" ? () => handleMouseLeave(property) : undefined}
+            >
               <p className="text-[0.85rem] text-foreground">{property}</p>
               <p className="font-mono text-xs flex-grow text-left">
                 {properties[property].type && (
