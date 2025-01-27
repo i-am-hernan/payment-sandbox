@@ -93,7 +93,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               }}
             >
               {type === "subwindow" ? (
-                <ExpandLessIcon className="text-primary !text-xs" />
+                <ExpandLessIcon className="text-warning !text-xs" />
               ) : (
                 <OpenInFullIcon className="text-primary !text-xs" />
               )}
@@ -113,7 +113,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               }}
             >
               {type === "subwindow" ? (
-                <ExpandMoreIcon className="text-primary !text-xs" />
+                <ExpandMoreIcon className="text-warning !text-xs" />
               ) : (
                 <CloseFullscreenIcon className="text-primary !text-xs" />
               )}

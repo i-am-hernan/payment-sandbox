@@ -259,10 +259,10 @@ const Api = (props: any) => {
             key={"prettify"}
             variant="ghost"
             size="icon"
-            className={`rounded-none border-l-[1px] h-5`}
+            className={`rounded-none border-l-[2px] h-[var(--custom-prettify-height)]`}
             onClick={handlePrettify}
           >
-            <span className="font-semibold text-xxs text-warning">{"{}"}</span>
+            <span className="font-semibold text-xxs text-warning">{"{ }"}</span>
           </Button>
         </div>
       </ResizablePanel>

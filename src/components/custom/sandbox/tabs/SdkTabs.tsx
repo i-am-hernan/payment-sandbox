@@ -325,7 +325,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
           view === "demo" && "opacity-0"
         )}
       >
-        <div className="h-[calc(100%-var(--footerbar-width))]">
+        <div className="flex flex-1 overflow-scroll">
           <Code
             type="babel"
             code={configs[activeTab].stringified}
@@ -334,19 +334,17 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
             onChange={handleCodeChange}
             jsVariable={sdkMap[activeTab].configurationType}
           />
-          <div className={`flex justify-end border-t-2 bg-background h-[100%]`}>
-            <Button
-              key={"prettify"}
-              variant="ghost"
-              size="icon"
-              className={`rounded-none border-l-[1px] h-5`}
-              onClick={handlePrettify}
-            >
-              <span className="font-semibold text-xxs text-warning">
-                {"{}"}
-              </span>
-            </Button>
-          </div>
+        </div>
+        <div className={`flex justify-end border-t-2 bg-background`}>
+          <Button
+            key={"prettify"}
+            variant="ghost"
+            size="icon"
+            className={`rounded-none border-l-[2px] h-[var(--custom-prettify-height)]`}
+            onClick={handlePrettify}
+          >
+            <span className="font-semibold text-xxs text-warning">{"{ }"}</span>
+          </Button>
         </div>
       </ResizablePanel>
       <ResizableHandle
