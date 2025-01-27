@@ -56,7 +56,7 @@ const Sandbox = ({
 
   const handleContract = () => {
     refA.current?.resize(60);
-    refB.current?.resize(50);
+    refB.current?.resize(0);
   };
 
   return (

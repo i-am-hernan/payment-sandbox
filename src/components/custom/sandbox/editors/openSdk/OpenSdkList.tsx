@@ -19,7 +19,10 @@ const isValidArray = (value: unknown): boolean => {
 
 export const OpenSdkList = (props: any) => {
   const { selectedProperties, properties, values, setValues, onChange } = props;
-  const propertyKeys = properties ? Object.keys(properties) : [];
+  // Sort property keys alphabetically
+  const propertyKeys = properties ? 
+    Object.keys(properties).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())) : 
+    [];
 
   return (
     <Accordion
