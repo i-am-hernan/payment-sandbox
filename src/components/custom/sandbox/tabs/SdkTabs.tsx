@@ -384,7 +384,9 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
                 className="bg-background px-2 py-[2px] data-[state=active]:border-info data-[state=inactive]:hover:border-info"
               >
                 <p className="p-[3px] text-xs text-foreground">
-                  {value.configurationType}
+                  {value.configurationType === "checkoutConfiguration"
+                    ? "checkout"
+                    : variant}
                 </p>
               </TabsTrigger>
             ))}

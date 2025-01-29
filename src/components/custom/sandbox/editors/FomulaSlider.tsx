@@ -8,7 +8,7 @@ const FomulaSlider = (props: any) => {
       step={1}
       value={[value]}
       onValueChange={(value) => {
-        onChange(value.pop());
+        onChange(value.pop() + "px");
       }}
     />
   );

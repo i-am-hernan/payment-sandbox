@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import FomulaSlider from "../FomulaSlider";
+import CssImportant from "../CssImportant";
 
 export const OpenCssList = (props: any) => {
   const {
@@ -78,60 +79,58 @@ export const OpenCssList = (props: any) => {
                   {properties[property].description}
                 </p>
                 {properties[property].type === "color" && values && (
-                  <Color
-                    value={values[property] ? values[property] : "#000000"}
-                    onChange={(value: any) => {
-                      let tidyValue =
-                        value !== undefined ? value + ";" : "#000000;";
+                  <CssImportant
+                    value={values[property] ? values[property] : "#000000;"}
+                    onChange={(value: string) => {
                       setValues(
-                        { ...values, [property]: tidyValue },
+                        { ...values, [property]: value },
                         property,
-                        tidyValue,
+                        value,
                         "string"
                       );
                     }}
-                  />
+                  >
+                    <Color
+                      value={values[property] ? values[property].replace(/\s*!important\s*;/, ";") : "#000000"}
+                    />
+                  </CssImportant>
                 )}
                 {properties[property].type === "font-family" && values && (
-                  <Enum
-                    value={
-                      values[property] !== undefined
-                        ? values[property].replace(/;/g, "")
-                        : "Arial"
-                    }
-                    disabled={disabled}
-                    onChange={(value: any) => {
-                      let tidyValue =
-                        value !== undefined ? value + ";" : "Arial;";
+                  <CssImportant
+                    value={values[property] ? values[property] : "Arial;"}
+                    onChange={(value: string) => {
                       setValues(
-                        { ...values, [property]: tidyValue },
+                        { ...values, [property]: value },
                         property,
-                        tidyValue,
+                        value,
                         "string"
                       );
                     }}
-                    set={properties[property].values.map(
-                      (value: any, i: any) => {
-                        return value.replace(/'/g, "");
-                      }
-                    )}
-                  />
+                  >
+                    <Enum
+                      value={values[property] ? values[property].replace(/\s*!important\s*;/, ";").replace(/;/g, "") : "Arial"}
+                      disabled={disabled}
+                      set={properties[property].values.map((value: any) => value.replace(/'/g, ""))}
+                    />
+                  </CssImportant>
                 )}
                 {properties[property].type === "size" && values && (
-                  <FomulaSlider
-                    value={values[property] ? parseInt(values[property]) : 14}
-                    max={25}
-                    onChange={(value: number) => {
-                      let tidyValue =
-                        value !== undefined ? `${value}px;` : "14px;";
+                  <CssImportant
+                    value={values[property] ? values[property] : "14px !important;"}
+                    onChange={(value: string) => {
                       setValues(
-                        { ...values, [property]: tidyValue },
+                        { ...values, [property]: value },
                         property,
-                        tidyValue,
-                        "integer"
+                        value,
+                        "string"
                       );
                     }}
-                  />
+                  >
+                    <FomulaSlider
+                      value={values[property] ? parseInt(values[property]) : 14}
+                      max={25}
+                    />
+                  </CssImportant>
                 )}
                 {properties[property].type === "class" && (
                   <div className="border-l-[1px]">
@@ -166,11 +165,11 @@ export const OpenCssList = (props: any) => {
                           if (latestValue.type === "class") {
                             newProperty = { [latestKey]: {} };
                           } else if (latestValue.type === "font-family") {
-                            newProperty = { [latestKey]: "Arial;" };
+                            newProperty = { [latestKey]: "Arial !important;" };
                           } else if (latestValue.type === "size") {
-                            newProperty = { [latestKey]: "14px;" };
+                            newProperty = { [latestKey]: "14px !important;" };
                           } else if (latestValue.type === "color") {
-                            newProperty = { [latestKey]: "#000000;" };
+                            newProperty = { [latestKey]: "#000000 !important;" };
                           }
                           let mergedProperties = {
                             ...values[property],
