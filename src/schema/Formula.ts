@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface Formula extends Document {
+export interface Formula extends Document {
   configuration: {
     adyenWebVersion: string;
     checkoutAPIVersion: {
@@ -22,8 +22,10 @@ interface Formula extends Document {
   };
   title?: string;
   description?: string;
-  integrationType: string;
+  integrationType: 'advance' | 'session';
   txVariant: string;
+  icon: string;
+  builtBy: string;
   createdBy?: mongoose.Types.ObjectId;
 }
 
@@ -55,12 +57,16 @@ const FormulaSchema: Schema = new Schema(
     },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    integrationType: { type: String, required: true },
+    integrationType: { type: String, enum: ['advance', 'session'], required: true },
     txVariant: { type: String, required: true },
+    icon: { type: String, required: true, default: "Calculator" },
+    builtBy: { type: String, required: true, default: "Adyen" },
     createdBy: { type: Schema.Types.ObjectId, required: false },
   },
   { timestamps: true, minimize: false }
 );
+
+FormulaSchema.index({ title: 'text' });
 
 export default mongoose.models.Formula ||
   mongoose.model<Formula>("Formula", FormulaSchema);
