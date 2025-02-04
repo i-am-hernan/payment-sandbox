@@ -121,6 +121,7 @@ const Page: any = () => {
       value: "state",
     },
   ];
+
   if (section === "Client") {
     tabsMap = [
       {

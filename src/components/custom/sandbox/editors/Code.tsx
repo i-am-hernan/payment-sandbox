@@ -36,6 +36,7 @@ const Code = (props: any) => {
     const { code: valueCode } = generate(variableValue);
     // Use eval to get the JavaScript object representation
     const evaluatedValue = eval(`(${valueCode})`);
+
     return evaluatedValue;
   };
 

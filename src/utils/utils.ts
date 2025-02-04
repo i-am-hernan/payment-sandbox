@@ -96,16 +96,42 @@ export const resolveRef = (json: any, ref: string) => {
   return result;
 };
 
-export const stringifyObject = (obj: any) => {
-  const entries = [];
-  for (const [key, value] of Object.entries(obj)) {
-    if (typeof value === "function") {
-      entries.push(`${key}: ${value.toString()}`);
-    } else {
-      entries.push(`${key}: ${JSON.stringify(value)}`);
+export const stringifyObject: any = (obj: any) => {
+  const seen = new WeakSet();
+  
+  const stringify = (value: any): string => {
+    if (value === null) return 'null';
+    if (value === undefined) return 'undefined';
+    
+    const type = typeof value;
+    
+    if (type === 'string') return `"${value}"`;
+    if (type === 'number' || type === 'boolean') return String(value);
+    if (type === 'function') return value.toString();
+    if (value instanceof Date) return `new Date("${value.toISOString()}")`;
+    
+    if (type === 'object') {
+      if (seen.has(value)) {
+        return '[Circular]';
+      }
+      seen.add(value);
+      
+      if (Array.isArray(value)) {
+        const items = value.map(item => stringify(item));
+        return `[${items.join(', ')}]`;
+      }
+      
+      const entries = [];
+      for (const [key, val] of Object.entries(value)) {
+        entries.push(`${key}: ${stringify(val)}`);
+      }
+      return `{${entries.join(', ')}}`;
     }
-  }
-  return `{${entries.join(", ")}}`;
+    
+    return String(value);
+  };
+  
+  return stringify(obj);
 };
 
 export const objectToCSS = (obj: any) => {

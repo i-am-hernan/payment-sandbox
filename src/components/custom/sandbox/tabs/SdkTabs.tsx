@@ -366,7 +366,14 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
                 ? WEBVERSIONS.filter((v) => /^[5-9]/.test(v))
                 : WEBVERSIONS
             }
-            onChange={(v: any) => dispatch(updateAdyenWebVersion(v))}
+            onChange={(v: any) => {
+              dispatch(updateAdyenWebVersion(v));
+              dispatch(
+                addUnsavedChanges({
+                  js: adyenWebVersion !== v,
+                })
+              );
+            }}
           />
         }
         <Tabs
