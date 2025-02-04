@@ -179,16 +179,28 @@ export async function GET(
                   strictType = referencedTypeName;
                   typeString = "object";
 
-                  // Find the referenced interface
+                  // First try to find interface
                   const referencedInterface = findInterfaceDeclaration(sourceFile, referencedTypeName);
                   
                   if (referencedInterface) {
-                    // Create a new visitor result for the referenced interface
                     const referencedResult = visit(referencedInterface, referencedTypeName);
-                    
-                    // Use the properties from the referenced interface
                     if (referencedResult) {
                       additionalProperties = referencedResult;
+                    }
+                  } else {
+                    // If not an interface, try to find type alias
+                    const typeAlias = findTypeAlias(sourceFile, referencedTypeName);
+                    if (typeAlias && typeAlias.type.kind === ts.SyntaxKind.UnionType) {
+                      const unionType = typeAlias.type as ts.UnionTypeNode;
+                      const literalTypes = unionType.types.filter(
+                        type => type.kind === ts.SyntaxKind.LiteralType
+                      );
+                      
+                      if (literalTypes.length > 0) {
+                        typeString = "enum";
+                        values = literalTypes.map(type => type.getText().replace(/['"]/g, ''));
+                        strictType = literalTypes.map(type => type.getText()).join(" | ");
+                      }
                     }
                   }
                 } else if (member.type.kind === ts.SyntaxKind.StringKeyword) {
@@ -319,4 +331,23 @@ const findInterfaceDeclaration = (
 
   ts.forEachChild(sourceFile, visit);
   return foundInterface;
+};
+
+// Add this helper function to find type aliases
+const findTypeAlias = (
+  sourceFile: ts.SourceFile,
+  typeName: string
+): ts.TypeAliasDeclaration | undefined => {
+  let foundType: ts.TypeAliasDeclaration | undefined;
+
+  const visit = (node: ts.Node) => {
+    if (ts.isTypeAliasDeclaration(node) && node.name.text === typeName) {
+      foundType = node;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+
+  ts.forEachChild(sourceFile, visit);
+  return foundType;
 };
