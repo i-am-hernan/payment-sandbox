@@ -433,7 +433,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
                         const newStringified = replaceKeyValue(
                           configs[key as keyof ConfigsState].stringified,
                           keyString ?? "",
-                          JSON.stringify(keyValue),
+                          stringifyObject(keyValue),
                           type ?? ""
                         );
 

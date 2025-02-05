@@ -25,6 +25,89 @@ interface ParsedProperty {
   description?: string;
 }
 
+// Add interface to track imports and their content
+interface ImportMap {
+  [path: string]: {
+    content: string;
+    sourceFile: ts.SourceFile;
+  };
+}
+
+// Add function to resolve relative paths
+function resolveImportPath(basePath: string, importPath: string): string {
+  if (importPath.startsWith(".")) {
+    let baseDir = basePath.substring(0, basePath.lastIndexOf("/"));
+    const segments = importPath.split("/");
+
+    // Handle all '../' segments first
+    while (segments[0] === "..") {
+      baseDir = baseDir.substring(0, baseDir.lastIndexOf("/"));
+      segments.shift();
+    }
+
+    // Remove './' if present
+    if (segments[0] === ".") {
+      segments.shift();
+    }
+
+    // Join the remaining path
+    return `${baseDir}/${segments.join("/")}`;
+  }
+  return importPath;
+}
+
+// Add function to fetch and process imports recursively
+async function processImports(
+  sourceFile: ts.SourceFile,
+  basePath: string,
+  version: string,
+  processedPaths = new Set<string>()
+): Promise<ImportMap> {
+  const imports: ImportMap = {};
+
+  // Process imports in current file
+  for (const statement of sourceFile.statements) {
+    if (ts.isImportDeclaration(statement)) {
+      const importPath = (statement.moduleSpecifier as ts.StringLiteral).text;
+      const resolvedPath = resolveImportPath(basePath, importPath);
+      if (!processedPaths.has(resolvedPath)) {
+        processedPaths.add(resolvedPath);
+
+        const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${version}/${resolvedPath}/index.ts`;
+
+        try {
+          const response = await fetch(url, { cache: "force-cache" });
+          if (response.ok) {
+            const content = await response.text();
+            const importedSourceFile = ts.createSourceFile(
+              resolvedPath,
+              content,
+              ts.ScriptTarget.ES2015,
+              true
+            );
+            imports[resolvedPath] = {
+              content,
+              sourceFile: importedSourceFile,
+            };
+            // Recursively process imports in the imported file
+            const nestedImports = await processImports(
+              importedSourceFile,
+              resolvedPath,
+              version,
+              processedPaths
+            );
+            Object.assign(imports, nestedImports);
+          }
+        } catch (error) {
+          console.error(`Failed to fetch import: ${url}`, error);
+        }
+      }
+    }
+  }
+
+  return imports;
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { version: string } }
@@ -34,7 +117,6 @@ export async function GET(
   const txVariant = searchParams.get("txvariant");
   const parsedVersion = version.replaceAll("_", ".");
   const majorVersion = parsedVersion.split(".")[0];
-
   // Move validation inside try block
   try {
     if (!txVariant) {
@@ -63,6 +145,7 @@ export async function GET(
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "force-cache",
     });
 
     if (!response.ok) {
@@ -78,63 +161,102 @@ export async function GET(
       true
     );
 
-    const structureAdyenWebTypes = () => {
+    // Process all imports before analyzing types
+    const imports = await processImports(sourceFile, path!, parsedVersion);
+
+    const structureAdyenWebTypes = (imports: ImportMap) => {
       // Create a TypeChecker using a dummy program (no need to reference actual files)
       const program = ts.createProgram(["fetchedFile.ts"], {});
       const checker = program.getTypeChecker();
-      const result: { [name: string]: ParsedProperty } = {};
+      let result: { [name: string]: ParsedProperty } = {};
 
       const setAdditionalProperties = function (
-        member: ts.PropertySignature | ts.MethodSignature
+        member: ts.PropertySignature | ts.MethodSignature,
+        imports: ImportMap,
+        sourceFile: ts.SourceFile,
+        visit: (node: ts.Node, interfaceName: string) => any
       ) {
         let additionalProperties: { [name: string]: ParsedProperty } = {};
 
         member.forEachChild((child) => {
-          let strictType = "string";
-          let type = "any";
+          if (ts.isPropertySignature(child)) {
+            const property: ParsedProperty = {
+              name: child.name.getText(),
+              type: child.type?.getText() || "string",
+              strictType: child.type?.getText() || "string",
+              required: !child.questionToken,
+              description: String(map[child.name.getText()] || ""),
+            };
 
-          child.forEachChild((child) => {
-            if (ts.isPropertySignature(child)) {
-              const property: ParsedProperty = {
-                name: child.name.getText(),
-                type: child.type?.getText() || "string",
-                strictType: child.type?.getText() || "string",
-                required: !child.questionToken,
-                description: String(map[child.name.getText()] || ""),
-              };
+            if (child?.type?.kind === ts.SyntaxKind.TypeLiteral) {
+              property.type = "object";
+              property.strictType = "object";
+              property.additionalProperties = setAdditionalProperties(
+                child,
+                imports,
+                sourceFile,
+                visit
+              );
+            } else if (child?.type?.kind === ts.SyntaxKind.TypeReference) {
+              const typeRef = child.type as ts.TypeReferenceNode;
+              const referencedTypeName = typeRef.typeName.getText();
+              property.strictType = referencedTypeName;
+              property.type = "object";
 
-              if (child?.type?.kind === ts.SyntaxKind.TypeLiteral) {
-                property.type = "object";
-                property.strictType = "object";
-                property.additionalProperties = setAdditionalProperties(child);
-              } else if (child?.type?.kind === ts.SyntaxKind.StringKeyword) {
-                property.type = "string";
-              } else if (child?.type?.kind === ts.SyntaxKind.NumberKeyword) {
-                property.type = "number";
-              } else if (child?.type?.kind === ts.SyntaxKind.BooleanKeyword) {
-                property.type = "boolean";
-              } else if (child?.name?.getText().indexOf("^on") > -1) {
-                property.type = "function";
-              } else if (child?.type?.kind === ts.SyntaxKind.TypeReference) {
-                const typeName = (
-                  member.type as ts.TypeReferenceNode
-                ).typeName.getText();
-                strictType = typeName;
-                type = "object";
+              // Try to find type in current file and all imported files
+              let foundType =
+                findInterfaceDeclaration(sourceFile, referencedTypeName) ||
+                findTypeAlias(sourceFile, referencedTypeName);
+
+              if (foundType) {
+                if (ts.isInterfaceDeclaration(foundType)) {
+                  const referencedResult = visit(foundType, referencedTypeName);
+                  if (referencedResult) {
+                    property.additionalProperties = referencedResult;
+                  }
+                }
+              } else {
+                // If not found, check imported files
+                for (const [path, importInfo] of Object.entries(imports)) {
+                  foundType =
+                    findInterfaceDeclaration(
+                      importInfo.sourceFile,
+                      referencedTypeName
+                    ) ||
+                    findTypeAlias(importInfo.sourceFile, referencedTypeName);
+                  if (foundType) {
+                    if (ts.isInterfaceDeclaration(foundType)) {
+                      const referencedResult = visit(
+                        foundType,
+                        referencedTypeName
+                      );
+                      if (referencedResult) {
+                        property.additionalProperties = referencedResult;
+                      }
+                    }
+                    break;
+                  }
+                }
               }
-              // additionalProperties?.push(property);
-              additionalProperties[property.name] = property;
+            } else if (child?.type?.kind === ts.SyntaxKind.StringKeyword) {
+              property.type = "string";
+            } else if (child?.type?.kind === ts.SyntaxKind.NumberKeyword) {
+              property.type = "number";
+            } else if (child?.type?.kind === ts.SyntaxKind.BooleanKeyword) {
+              property.type = "boolean";
             }
-          });
+            additionalProperties[property.name] = property;
+          }
         });
         return additionalProperties;
       };
 
-      const visit = (node: ts.Node) => {
+      const visit = (node: ts.Node, interfaceName: string): any => {
         if (
           ts.isInterfaceDeclaration(node) &&
           node.name.text === interfaceName
         ) {
+          let result = {};
           node.members.forEach((member) => {
             if (
               ts.isPropertySignature(member) ||
@@ -157,12 +279,16 @@ export async function GET(
                 if (!type) return;
 
                 strictType = member.type.getText();
-
                 if (member.type.kind === ts.SyntaxKind.TypeLiteral) {
                   typeString = "object";
                   strictType = "object";
-                  additionalProperties[name] = setAdditionalProperties(member);
-                  // additionalProperties = setAdditionalProperties(member);
+
+                  additionalProperties = setAdditionalProperties(
+                    member,
+                    imports,
+                    sourceFile,
+                    visit
+                  );
                 } else if (member.type.kind === ts.SyntaxKind.ArrayType) {
                   typeString = "array";
                 } else if (member.type.kind === ts.SyntaxKind.UnionType) {
@@ -182,11 +308,54 @@ export async function GET(
                     typeString = "string";
                   }
                 } else if (member.type.kind === ts.SyntaxKind.TypeReference) {
-                  const typeName = (
-                    member.type as ts.TypeReferenceNode
-                  ).typeName.getText();
-                  strictType = typeName;
+                  const typeRef = member.type as ts.TypeReferenceNode;
+                  const referencedTypeName = typeRef.typeName.getText();
+                  strictType = referencedTypeName;
                   typeString = "object";
+
+                  const found = findTypeInAllFiles(
+                    referencedTypeName,
+                    sourceFile,
+                    imports
+                  );
+                  if (found) {
+                    const { type: foundType, file: foundFile } = found;
+                    if (ts.isInterfaceDeclaration(foundType)) {
+                      const referencedResult = visit(
+                        foundType,
+                        referencedTypeName
+                      );
+                      if (referencedResult) {
+                        additionalProperties = referencedResult;
+                      }
+                    } else if (ts.isTypeAliasDeclaration(foundType)) {
+                      // If it's a type alias, we need to follow it
+                      if (foundType.type.kind === ts.SyntaxKind.TypeReference) {
+                        // It's an alias to another type, follow it
+                        const aliasedTypeRef =
+                          foundType.type as ts.TypeReferenceNode;
+                        const aliasedTypeName =
+                          aliasedTypeRef.typeName.getText();
+                        const aliasedFound = findTypeInAllFiles(
+                          aliasedTypeName,
+                          foundFile,
+                          imports
+                        );
+                        if (
+                          aliasedFound &&
+                          ts.isInterfaceDeclaration(aliasedFound.type)
+                        ) {
+                          const referencedResult = visit(
+                            aliasedFound.type,
+                            aliasedTypeName
+                          );
+                          if (referencedResult) {
+                            additionalProperties = referencedResult;
+                          }
+                        }
+                      }
+                    }
+                  }
                 } else if (member.type.kind === ts.SyntaxKind.StringKeyword) {
                   typeString = "string";
                   strictType = member.type.getText();
@@ -224,27 +393,43 @@ export async function GET(
                   typeString = "indexedAccessType";
                 }
               }
-
-              result[name] = {
-                name,
-                type: typeString,
-                strictType,
-                required,
-                values,
-                description: typeof map[name] === "string" ? map[name] : "",
-                additionalProperties,
+              result = {
+                ...result,
+                [name]: {
+                  name,
+                  type: typeString,
+                  strictType,
+                  required,
+                  values,
+                  description: typeof map[name] === "string" ? map[name] : "",
+                  additionalProperties,
+                },
               };
             }
           });
+
+          return result;
         } else {
-          ts.forEachChild(node, visit);
+          let childResult = undefined;
+          ts.forEachChild(node, (child) => {
+            const visitResult = visit(child, interfaceName);
+            if (visitResult) {
+              childResult = visitResult;
+            }
+          });
+          return childResult;
         }
       };
-      ts.forEachChild(sourceFile, visit);
+
+      ts.forEachChild(sourceFile, (node) => {
+        let setResult = visit(node, interfaceName);
+        result = { ...result, ...setResult };
+      });
+
       return result;
     };
 
-    const result = structureAdyenWebTypes();
+    const result = structureAdyenWebTypes(imports);
     return Response.json({ ...result });
   } catch (error: any) {
     if (error instanceof Response) {
@@ -281,3 +466,70 @@ export async function GET(
     }
   }
 }
+
+// Add this helper function to find interface declarations
+const findInterfaceDeclaration = (
+  sourceFile: ts.SourceFile,
+  interfaceName: string
+): ts.InterfaceDeclaration | undefined => {
+  let foundInterface: ts.InterfaceDeclaration | undefined;
+
+  const visit = (node: ts.Node) => {
+    if (ts.isInterfaceDeclaration(node) && node.name.text === interfaceName) {
+      foundInterface = node;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+
+  ts.forEachChild(sourceFile, visit);
+  return foundInterface;
+};
+
+// Add this helper function to find type aliases
+const findTypeAlias = (
+  sourceFile: ts.SourceFile,
+  typeName: string
+): ts.TypeAliasDeclaration | undefined => {
+  let foundType: ts.TypeAliasDeclaration | undefined;
+
+  const visit = (node: ts.Node) => {
+    if (ts.isTypeAliasDeclaration(node) && node.name.text === typeName) {
+      foundType = node;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+
+  ts.forEachChild(sourceFile, visit);
+  return foundType;
+};
+
+// Add function to find type in all available files
+const findTypeInAllFiles = (
+  typeName: string,
+  sourceFile: ts.SourceFile,
+  imports: ImportMap
+):
+  | {
+      type: ts.InterfaceDeclaration | ts.TypeAliasDeclaration;
+      file: ts.SourceFile;
+    }
+  | undefined => {
+  // First check current file
+
+  let foundType =
+    findInterfaceDeclaration(sourceFile, typeName) ||
+    findTypeAlias(sourceFile, typeName);
+  if (foundType) return { type: foundType, file: sourceFile };
+
+  // Then check imported files
+  for (const [path, importInfo] of Object.entries(imports)) {
+    foundType =
+      findInterfaceDeclaration(importInfo.sourceFile, typeName) ||
+      findTypeAlias(importInfo.sourceFile, typeName);
+    if (foundType) return { type: foundType, file: importInfo.sourceFile };
+  }
+
+  return undefined;
+};

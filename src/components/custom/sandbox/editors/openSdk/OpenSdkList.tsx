@@ -17,12 +17,72 @@ const isValidArray = (value: unknown): boolean => {
   );
 };
 
-export const OpenSdkList = (props: any) => {
-  const { selectedProperties, properties, values, setValues, onChange } = props;
+export const OpenSdkList = ({
+  selectedProperties,
+  properties,
+  values,
+  setValues,
+  onChange,
+}: {
+  selectedProperties?: string[];
+  properties: any;
+  values: any;
+  setValues: (values: any, property: string, value: any, type: string) => void;
+  onChange?: (value: string[]) => void;
+}) => {
   // Sort property keys alphabetically
-  const propertyKeys = properties ? 
-    Object.keys(properties).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())) : 
-    [];
+  const propertyKeys = properties
+    ? Object.keys(properties).sort((a, b) =>
+        a.toLowerCase().localeCompare(b.toLowerCase())
+      )
+    : [];
+  const handleNestedChange = (value: any, property: any) => {
+    const currentProperties = Object.keys(values || {});
+    const isNewProperty = currentProperties.length < value.length;
+    let newProperty = null;
+
+    if (isNewProperty) {
+      // Handle adding new property
+      const latestKey = value[value.length - 1];
+      const latestValue = properties[latestKey];
+
+      if (latestValue.type === "string") {
+        newProperty = { [latestKey]: "" };
+      } else if (latestValue.type === "boolean") {
+        newProperty = { [latestKey]: true };
+      } else if (latestValue.type === "integer") {
+        newProperty = { [latestKey]: 0 };
+      } else if (latestValue.type === "array") {
+        newProperty = { [latestKey]: [] };
+      } else if (latestValue.type === "enum") {
+        newProperty = { [latestKey]: "" };
+      } else if (!latestValue.type || latestValue.type === "object") {
+        newProperty = { [latestKey]: {} };
+      } else if (latestValue.type === "function") {
+        newProperty = { [latestKey]: function () {} };
+      }
+
+      setValues(
+        { ...values, ...newProperty },
+        latestKey,
+        newProperty,
+        latestValue.type
+      );
+    } else {
+      // Handle property removal
+      const removedProperties = currentProperties.filter(
+        (i) => !value.includes(i)
+      );
+
+      if (removedProperties.length > 0) {
+        const updatedValues = { ...values };
+        const removedProperty = removedProperties[0];
+        delete updatedValues[removedProperty];
+
+        setValues(updatedValues, removedProperty, undefined, "remove");
+      }
+    }
+  };
 
   return (
     <Accordion
@@ -61,6 +121,101 @@ export const OpenSdkList = (props: any) => {
                 <p className="text-xs pb-2 text-foreground">
                   {properties[property].description}
                 </p>
+
+                {/* Handle object type recursively */}
+                {properties[property].type === "object" &&
+                  Object.keys(properties[property].additionalProperties)
+                    .length > 0 && (
+                    <div className="border-l-2 border-gray-200">
+                      <OpenSdkList
+                        properties={properties[property].additionalProperties}
+                        values={values[property] || {}}
+                        setValues={(newValues, prop, value, type) => {
+                          const updatedNestedValues = {
+                            ...(values[property] || {}),
+                            [prop]: value,
+                          };
+                          setValues(
+                            { ...values, [property]: updatedNestedValues },
+                            property,
+                            updatedNestedValues,
+                            "object"
+                          );
+                        }}
+                        selectedProperties={Object.keys(values[property] || {})}
+                        onChange={(value: any) => {
+                          const currentProperties = Object.keys(
+                            values[property] || {}
+                          );
+                          const isNewProperty =
+                            currentProperties.length < value.length;
+                          let newProperty = null;
+
+                          if (isNewProperty) {
+                            // Handle adding new property
+                            const latestKey = value[value.length - 1];
+                            const latestValue =
+                              properties[property].additionalProperties[
+                                latestKey
+                              ];
+                            if (latestValue.type === "string") {
+                              newProperty = { [latestKey]: "" };
+                            } else if (latestValue.type === "boolean") {
+                              newProperty = { [latestKey]: true };
+                            } else if (latestValue.type === "integer") {
+                              newProperty = { [latestKey]: 0 };
+                            } else if (latestValue.type === "number") {
+                              newProperty = { [latestKey]: 0 };
+                            } else if (latestValue.type === "array") {
+                              newProperty = { [latestKey]: [] };
+                            } else if (latestValue.type === "enum") {
+                              newProperty = { [latestKey]: "" };
+                            } else if (
+                              !latestValue.type ||
+                              latestValue.type === "object"
+                            ) {
+                              newProperty = { [latestKey]: {} };
+                            } else if (latestValue.type === "function") {
+                              newProperty = { [latestKey]: function () {} };
+                            }
+
+                            setValues(
+                              {
+                                ...values,
+                                [property]: {
+                                  ...values[property],
+                                  ...newProperty,
+                                },
+                              },
+                              property,
+                              newProperty,
+                              "object"
+                            );
+                          } else {
+                            // Handle property removal
+                            const removedProperties = currentProperties.filter(
+                              (i) => !value.includes(i)
+                            );
+
+                            if (removedProperties.length > 0) {
+                              const updatedNestedValues = { ...values[property] };
+                              const removedProperty = removedProperties[0];
+                              delete updatedNestedValues[removedProperty];
+
+                              setValues(
+                                { ...values, [property]: updatedNestedValues },
+                                property,
+                                updatedNestedValues,
+                                "object"
+                              );
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+
+                {/* Your existing type handlers */}
                 {properties[property].type === "string" && (
                   <String
                     value={values[property] ? values[property] : ""}
@@ -75,6 +230,8 @@ export const OpenSdkList = (props: any) => {
                     }}
                   />
                 )}
+
+                {/* Existing type handlers */}
                 {properties[property].type === "enum" && (
                   <Enum
                     value={
@@ -89,27 +246,28 @@ export const OpenSdkList = (props: any) => {
                         "string"
                       );
                     }}
-                    set={properties[property].values.map(
-                      (value: any, i: any) => {
-                        return value.replace(/'/g, "");
-                      }
-                    )}
+                    set={properties[property].values.map((value: any) => {
+                      return value.replace(/'/g, "");
+                    })}
                   />
                 )}
-                {properties[property].type === "integer" && (
-                  <String
-                    value={values[property] ? values[property] : 0}
-                    onChange={(value: any) => {
-                      let tidyValue = value !== undefined ? parseInt(value) : 0;
-                      setValues(
-                        { ...values, [property]: tidyValue },
-                        property,
-                        tidyValue,
-                        "integer"
-                      );
-                    }}
-                  />
-                )}
+
+                {properties[property].type === "integer" ||
+                  (properties[property].type === "number" && (
+                    <String
+                      value={values[property] ? values[property] : 0}
+                      onChange={(value: any) => {
+                        let tidyValue =
+                          value !== undefined ? parseInt(value) : 0;
+                        setValues(
+                          { ...values, [property]: tidyValue },
+                          property,
+                          tidyValue,
+                          "integer"
+                        );
+                      }}
+                    />
+                  ))}
                 {properties[property].type === "boolean" && (
                   <Enum
                     value={
