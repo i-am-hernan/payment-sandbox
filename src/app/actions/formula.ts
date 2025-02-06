@@ -12,8 +12,6 @@ export async function getFormulas() {
             .sort({ title: 1 })
             .lean()
 
-        console.log(formulas)
-
         return formulas.map(formula => ({
             _id: formula._id,
             title: formula.title || '',
