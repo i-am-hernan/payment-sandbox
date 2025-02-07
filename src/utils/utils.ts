@@ -237,9 +237,13 @@ export const replaceKeyValue = (
     key: string,
     newValue: string
   ) => {
-    const regex = new RegExp(`(${key}\\s*:\\s*)(\\{[^]*?\\})(,?)`, "g");
+    console.log("strObj", strObj);
+    console.log("key", key);
+    console.log("newValue", newValue);
+    const regex = new RegExp(`(${key}\\s*:\\s*)(\\{(?:[^{}]|(?:\\{(?:[^{}]|(?:\\{[^{}]*\\}))*\\}))*\\})(,?)`, "g");
     const match = strObj.match(regex);
-
+    console.log("regex", regex);
+    console.log("match", match);
     if (match) {
       return strObj.replace(regex, `$1${newValue}$3`);
     } else {
@@ -280,7 +284,7 @@ export const replaceKeyValueJSON = (
     key: string,
     newValue: string
   ) => {
-    const regex = new RegExp(`(${key}\\s*:\\s*)(\\{[^]*?\\})(,?)`, "g");
+    const regex = new RegExp(`(${key}\\s*:\\s*)(\\{(?:[^{}]|(?:\\{(?:[^{}]|(?:\\{[^{}]*\\}))*\\}))*\\})(,?)`, "g");
     const match = strObj.match(regex);
 
     if (match) {

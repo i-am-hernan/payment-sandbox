@@ -4,6 +4,16 @@ import { NextRequest } from "next/server";
 import * as ts from "typescript";
 import { descriptionMap } from "@/lib/descriptionMap";
 
+// First, create a custom error class at the top of the file
+class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
 interface ParsedProperty {
   name: string;
   type: string;
@@ -12,6 +22,11 @@ interface ParsedProperty {
   additionalProperties?: { [name: string]: ParsedProperty };
   values?: string[];
   description?: string;
+}
+
+interface ImportInfo {
+  sourceFile: ts.SourceFile;
+  importClause?: ts.ImportClause;
 }
 
 export async function GET(
@@ -23,33 +38,87 @@ export async function GET(
   const interfaceName = /^v6./.test(parsedVersion)
     ? "CoreConfiguration"
     : "CoreOptions";
-  const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/packages/lib/src/core/types.ts`;
+  const mainPath = "packages/lib/src/core/types.ts";
+  const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${mainPath}`;
 
   const map = descriptionMap as Record<string, string>;
+  let imports: Record<string, ImportInfo> = {};
+
   try {
     const response = await fetch(url, {
-      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-      },
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
+      }
     });
     if (!response.ok) {
       throw response;
     }
 
     const fileContent = await response.text();
-
-    // Create a TypeScript source file from the fetched content
     const sourceFile = ts.createSourceFile(
-      "fetchedFile.ts",
+      mainPath,
       fileContent,
       ts.ScriptTarget.ES2015,
       true
     );
 
+    // Process imports recursively
+    const processImports = async (sourceFile: ts.SourceFile, basePath: string, depth = 0) => {
+      if (depth > 2) return;
+
+      for (const statement of sourceFile.statements) {
+        if (ts.isImportDeclaration(statement)) {
+          const importPath = (statement.moduleSpecifier as ts.StringLiteral).text;
+          if (importPath.startsWith(".")) {
+            const currentDir = basePath.substring(0, basePath.lastIndexOf("/"));
+            // Split path into segments and resolve ../ properly
+            const pathSegments = `${currentDir}/${importPath}`.split("/");
+            const normalizedSegments = [];
+            
+            for (const segment of pathSegments) {
+              if (segment === "..") {
+                normalizedSegments.pop();
+              } else if (segment !== "." && segment !== "") {
+                normalizedSegments.push(segment);
+              }
+            }
+
+            const resolvedPath = `${normalizedSegments.join("/")}.ts`;
+            
+            if (!imports[resolvedPath]) {
+              const importUrl = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${resolvedPath}`;
+
+              const response = await fetch(importUrl, {
+                headers: {
+                  'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
+                }
+              });
+              if (response.ok) {
+                const content = await response.text();
+                const importedFile = ts.createSourceFile(
+                  resolvedPath,
+                  content,
+                  ts.ScriptTarget.ES2015,
+                  true
+                );
+                imports[resolvedPath] = {
+                  sourceFile: importedFile,
+                  importClause: statement.importClause,
+                };
+                await processImports(importedFile, resolvedPath, depth + 1);
+              }
+            }
+          }
+        }
+      }
+    };
+
+    // Start with depth 0
+    await processImports(sourceFile, mainPath, 0);
+
     const structureAdyenWebTypes = () => {
-      // Create a TypeChecker using a dummy program (no need to reference actual files)
-      const program = ts.createProgram(["fetchedFile.ts"], {});
+      // Create a single program with all files
+      const program = ts.createProgram([mainPath], {});
       const checker = program.getTypeChecker();
       const result: { [name: string]: ParsedProperty } = {};
 
@@ -91,7 +160,6 @@ export async function GET(
                 strictType = typeName;
                 type = "object";
               }
-              // additionalProperties?.push(property);
               additionalProperties[property.name] = property;
             }
           });
@@ -99,132 +167,109 @@ export async function GET(
         return additionalProperties;
       };
 
-      const visit = (node: ts.Node) => {
-        if (
-          ts.isInterfaceDeclaration(node) &&
-          node.name.text === interfaceName
-        ) {
-          node.members.forEach((member) => {
-            if (
-              ts.isPropertySignature(member) ||
-              ts.isMethodSignature(member)
-            ) {
-              const name = member.name.getText();
-              const required = !member.questionToken;
-              let typeString = "any";
-              let strictType = "any";
-              let additionalProperties:
-                | { [name: string]: ParsedProperty }
-                | any = {};
-              let values: string[] | undefined = undefined;
+      // Visit all source files to find types
+      Object.values(imports).forEach(({ sourceFile }) => {
+        const visit = (node: ts.Node) => {
+          if (
+            ts.isInterfaceDeclaration(node) &&
+            node.name.text === interfaceName
+          ) {
+            node.members.forEach((member) => {
+              if (ts.isPropertySignature(member) || ts.isMethodSignature(member)) {
+                const name = member.name.getText();
+                const required = !member.questionToken;
+                let typeString = "any";
+                let strictType = "any";
+                let additionalProperties: { [name: string]: ParsedProperty } = {};
+                let values: string[] | undefined = undefined;
 
-              if (/^on/.test(name) || /^before/.test(name)) {
-                typeString = "function";
-                strictType = "function";
-              } else if (member.type) {
-                const type = checker.getTypeAtLocation(member);
-                if (!type) return;
-
-                strictType = member.type.getText();
-
-                if (member.type.kind === ts.SyntaxKind.TypeLiteral) {
-                  typeString = "object";
-                  strictType = "object";
-                  additionalProperties[name] = setAdditionalProperties(member);
-                  // additionalProperties = setAdditionalProperties(member);
-                } else if (member.type.kind === ts.SyntaxKind.ArrayType) {
-                  typeString = "array";
-                } else if (member.type.kind === ts.SyntaxKind.UnionType) {
-                  const unionType = member.type as ts.UnionTypeNode;
-                  const filteredLiteralTypes = unionType.types.filter(
-                    (type) => type.kind === ts.SyntaxKind.LiteralType
-                  );
-                  const filteredStringTypes = unionType.types.map(
-                    (type) => type.kind === ts.SyntaxKind.StringKeyword
-                  );
-                  if (filteredLiteralTypes.length > 0) {
-                    typeString = "enum";
-                    values = filteredLiteralTypes.map((type) => {
-                      return type.getText();
-                    });
-                  } else if (filteredStringTypes.length > 0) {
-                    typeString = "string";
-                  }
-                } else if (member.type.kind === ts.SyntaxKind.TypeReference) {
-                  const typeName = (
-                    member.type as ts.TypeReferenceNode
-                  ).typeName.getText();
-                  strictType = typeName;
-                  typeString = "object";
-                } else if (member.type.kind === ts.SyntaxKind.StringKeyword) {
-                  typeString = "string";
-                  strictType = member.type.getText();
-                } else if (member.type.kind === ts.SyntaxKind.NumberKeyword) {
-                  typeString = "number";
-                } else if (member.type.kind === ts.SyntaxKind.BooleanKeyword) {
-                  typeString = "boolean";
-                } else if (member.type.kind === ts.SyntaxKind.AnyKeyword) {
-                  typeString = "any";
-                } else if (member.type.kind === ts.SyntaxKind.VoidKeyword) {
+                if (/^on/.test(name) || /^before/.test(name)) {
                   typeString = "function";
-                } else if (member.type.kind === ts.SyntaxKind.NullKeyword) {
-                  typeString = "null";
-                } else if (
-                  member.type.kind === ts.SyntaxKind.UndefinedKeyword
-                ) {
-                  typeString = "undefined";
-                } else if (member.type.kind === ts.SyntaxKind.NeverKeyword) {
-                  typeString = "never";
-                } else if (member.type.kind === ts.SyntaxKind.UnknownKeyword) {
-                  typeString = "unknown";
-                } else if (member.type.kind === ts.SyntaxKind.SymbolKeyword) {
-                  typeString = "symbol";
-                } else if (member.type.kind === ts.SyntaxKind.BigIntKeyword) {
-                  typeString = "bigint";
-                } else if (member.type.kind === ts.SyntaxKind.ObjectKeyword) {
-                  typeString = "object";
-                } else if (member.type.kind === ts.SyntaxKind.ThisKeyword) {
-                  typeString = "this";
-                } else if (member.type.kind === ts.SyntaxKind.TypeOperator) {
-                  typeString = "typeOperator";
-                } else if (
-                  member.type.kind === ts.SyntaxKind.IndexedAccessType
-                ) {
-                  typeString = "indexedAccessType";
+                  strictType = "function";
+                } else if (member.type) {
+                  const type = checker.getTypeAtLocation(member);
+                  if (!type) return;
+
+                  strictType = member.type.getText();
+
+                  if (member.type.kind === ts.SyntaxKind.TypeLiteral) {
+                    typeString = "object";
+                    strictType = "object";
+                    additionalProperties = setAdditionalProperties(member);
+                  } else if (member.type.kind === ts.SyntaxKind.ArrayType) {
+                    typeString = "array";
+                  } else if (member.type.kind === ts.SyntaxKind.UnionType) {
+                    const unionType = member.type as ts.UnionTypeNode;
+                    const filteredLiteralTypes = unionType.types.filter(
+                      (type) => type.kind === ts.SyntaxKind.LiteralType
+                    );
+                    const filteredStringTypes = unionType.types.map(
+                      (type) => type.kind === ts.SyntaxKind.StringKeyword
+                    );
+                    if (filteredLiteralTypes.length > 0) {
+                      typeString = "enum";
+                      values = filteredLiteralTypes.map((type) => {
+                        return type.getText();
+                      });
+                    } else if (filteredStringTypes.length > 0) {
+                      typeString = "string";
+                    }
+                  } else if (member.type.kind === ts.SyntaxKind.TypeReference) {
+                    const typeName = (
+                      member.type as ts.TypeReferenceNode
+                    ).typeName.getText();
+                    strictType = typeName;
+                    typeString = "object";
+                  } else if (member.type.kind === ts.SyntaxKind.StringKeyword) {
+                    typeString = "string";
+                    strictType = member.type.getText();
+                  } else if (member.type.kind === ts.SyntaxKind.NumberKeyword) {
+                    typeString = "number";
+                  } else if (member.type.kind === ts.SyntaxKind.BooleanKeyword) {
+                    typeString = "boolean";
+                  } else if (member.type.kind === ts.SyntaxKind.AnyKeyword) {
+                    typeString = "any";
+                  } else if (member.type.kind === ts.SyntaxKind.VoidKeyword) {
+                    typeString = "function";
+                  } // ... rest of the type checks
+
+                  result[name] = {
+                    name,
+                    type: typeString,
+                    strictType,
+                    required,
+                    values,
+                    description: map[name] ? map[name] : "",
+                    additionalProperties,
+                  };
                 }
               }
-
-              result[name] = {
-                name,
-                type: typeString,
-                strictType,
-                required,
-                values,
-                description: map[name] ? map[name] : "",
-                additionalProperties,
-              };
-            }
-          });
-        } else {
+            });
+          }
           ts.forEachChild(node, visit);
-        }
-      };
-      ts.forEachChild(sourceFile, visit);
+        };
+        ts.forEachChild(sourceFile, visit);
+      });
+
       return result;
     };
 
     const result = structureAdyenWebTypes();
-    return Response.json({ ...result });
+    
+    // Clean up
+    imports = {};
+    
+    return Response.json(result, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
+      }
+    });
+
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();
-      return new Response(JSON.stringify(data), {
-        status: error.status,
-      });
-    } else {
-      return new Response(JSON.stringify({ error: error.message }), {
-        status: 500,
-      });
+      return new Response(JSON.stringify(data), { status: error.status });
     }
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }

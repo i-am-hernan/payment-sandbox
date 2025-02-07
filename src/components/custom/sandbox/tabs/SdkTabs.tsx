@@ -115,6 +115,13 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
       }));
     } else if (sdkSpecsError) {
       dispatch(updateSpecs({ [activeTab]: {} }));
+      setConfigs((prev) => ({
+        ...prev,
+        [activeTab]: {
+          ...prev[activeTab],
+          filteredProperties: {},
+        },
+      }));
     }
   }, [sdkSpecsData, sdkSpecsError, activeTab, dispatch]);
 
@@ -413,7 +420,6 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
                     tab={false}
                   />
                   <OpenSdkList
-                    openSdk={sdkSpecsData}
                     properties={
                       specs[key as keyof SpecsList]?.components?.schemas?.[key]
                         ?.properties ||

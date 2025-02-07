@@ -352,7 +352,6 @@ const Sdk = (props: any) => {
         )}
         {properties && config.parsed && (
           <MemoizedOpenSdkList
-            openSdk={sdkSpecsData}
             properties={filteredProperties}
             selectedProperties={Object.keys(config.parsed)}
             values={config.parsed}

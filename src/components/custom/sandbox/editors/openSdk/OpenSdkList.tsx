@@ -36,53 +36,6 @@ export const OpenSdkList = ({
         a.toLowerCase().localeCompare(b.toLowerCase())
       )
     : [];
-  const handleNestedChange = (value: any, property: any) => {
-    const currentProperties = Object.keys(values || {});
-    const isNewProperty = currentProperties.length < value.length;
-    let newProperty = null;
-
-    if (isNewProperty) {
-      // Handle adding new property
-      const latestKey = value[value.length - 1];
-      const latestValue = properties[latestKey];
-
-      if (latestValue.type === "string") {
-        newProperty = { [latestKey]: "" };
-      } else if (latestValue.type === "boolean") {
-        newProperty = { [latestKey]: true };
-      } else if (latestValue.type === "integer") {
-        newProperty = { [latestKey]: 0 };
-      } else if (latestValue.type === "array") {
-        newProperty = { [latestKey]: [] };
-      } else if (latestValue.type === "enum") {
-        newProperty = { [latestKey]: "" };
-      } else if (!latestValue.type || latestValue.type === "object") {
-        newProperty = { [latestKey]: {} };
-      } else if (latestValue.type === "function") {
-        newProperty = { [latestKey]: function () {} };
-      }
-
-      setValues(
-        { ...values, ...newProperty },
-        latestKey,
-        newProperty,
-        latestValue.type
-      );
-    } else {
-      // Handle property removal
-      const removedProperties = currentProperties.filter(
-        (i) => !value.includes(i)
-      );
-
-      if (removedProperties.length > 0) {
-        const updatedValues = { ...values };
-        const removedProperty = removedProperties[0];
-        delete updatedValues[removedProperty];
-
-        setValues(updatedValues, removedProperty, undefined, "remove");
-      }
-    }
-  };
 
   return (
     <Accordion
@@ -126,7 +79,7 @@ export const OpenSdkList = ({
                 {properties[property].type === "object" &&
                   Object.keys(properties[property].additionalProperties)
                     .length > 0 && (
-                    <div className="border-l-2 border-gray-200">
+                    <div className="border-l-[1px]">
                       <OpenSdkList
                         properties={properties[property].additionalProperties}
                         values={values[property] || {}}
@@ -188,7 +141,10 @@ export const OpenSdkList = ({
                                 },
                               },
                               property,
-                              newProperty,
+                              {
+                                ...values[property],
+                                ...newProperty,
+                              },
                               "object"
                             );
                           } else {
@@ -198,7 +154,9 @@ export const OpenSdkList = ({
                             );
 
                             if (removedProperties.length > 0) {
-                              const updatedNestedValues = { ...values[property] };
+                              const updatedNestedValues = {
+                                ...values[property],
+                              };
                               const removedProperty = removedProperties[0];
                               delete updatedNestedValues[removedProperty];
 

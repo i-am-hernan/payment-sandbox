@@ -76,7 +76,12 @@ async function processImports(
         const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${version}/${resolvedPath}/index.ts`;
 
         try {
-          const response = await fetch(url, { cache: "force-cache" });
+          const response = await fetch(url, {
+            cache: "force-cache",
+            headers: {
+              "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=43200",
+            },
+          });
           if (response.ok) {
             const content = await response.text();
             const importedSourceFile = ts.createSourceFile(
@@ -144,6 +149,7 @@ export async function GET(
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=43200",
       },
       cache: "force-cache",
     });
