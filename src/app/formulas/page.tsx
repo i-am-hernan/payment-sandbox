@@ -11,14 +11,17 @@ import { getFormulas } from "../actions/formula";
 import { Formula } from "@/schema/Formula";
 
 export default function FormulasPage() {
-  const [allFormulas, setAllFormulas] = useState<Formula[]>([]);
-  const [filteredFormulas, setFilteredFormulas] = useState<Formula[]>([]);
+  const [allFormulas, setAllFormulas] = useState<any[]>([]);
+  const [filteredFormulas, setFilteredFormulas] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [fuse, setFuse] = useState<any | null>(null);
 
   // Initial load
   useEffect(() => {
-    Promise.all([import("fuse.js"), getFormulas()]).then(([Fuse, formulas]: [any, any[]]) => {
+    Promise.all([
+      import("fuse.js"),
+      getFormulas()
+    ]).then(([Fuse, formulas]: [any, any[]]) => {
       console.log(formulas);
       setAllFormulas(formulas);
       setFilteredFormulas(formulas);
