@@ -24,12 +24,19 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RequestOptions, useApi } from "@/hooks/useApi";
+import { RequestOptions } from "@/hooks/useApi";
 import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
+import CloudIcon from "@mui/icons-material/Cloud";
+import ComputerIcon from "@mui/icons-material/Computer";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import DnsIcon from "@mui/icons-material/Dns";
+import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import SettingsIcon from "@mui/icons-material/Settings";
 import StorageIcon from "@mui/icons-material/Storage";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
 import { ChevronDown } from "lucide-react";
@@ -124,7 +131,14 @@ const Sidebar = (props: any) => {
     {
       name: "Server",
       hotKey: "⌘ + i",
-      icon: <StorageIcon className="!text-foreground !text-[20px]" />,
+      icon: (
+        <div className="relative flex items-center justify-center">
+          <CloudQueueIcon className="!text-foreground !text-[28px]" />
+          <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-mono text-[8px] text-foreground bg-background flex leading-none mt-[3px]">
+            API
+          </p>
+        </div>
+      ),
       unsavedChanges: {
         paymentMethodsUnsavedChanges,
         paymentsUnsavedChanges,
@@ -135,7 +149,14 @@ const Sidebar = (props: any) => {
     {
       name: "Client",
       hotKey: "⌘ + j",
-      icon: <LanguageIcon className="!text-foreground !text-[20px]" />,
+      icon: (
+        <div className="relative flex items-center justify-center">
+          <LanguageIcon className="!text-foreground !text-[28px]" />
+          <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-mono text-[8px] text-foreground bg-background flex leading-none px-[2px] pt-[2px] border border-foreground rounded">
+            WEB
+          </p>
+        </div>
+      ),
       unsavedChanges: {
         htmlUnsavedChanges,
         styleUnsavedChanges,
@@ -188,11 +209,14 @@ const Sidebar = (props: any) => {
           <div>
             <div>
               <Drawer direction="left">
-                <span>
-                  <DrawerTrigger className="mt-2 px-2 pb-2 pt-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
-                    <WidgetsIcon className="!text-foreground !text-[19px]" />
-                  </DrawerTrigger>
-                </span>
+                <DrawerTrigger className="mt-1 rounded-none border-[1px] border-transparent hover:border-[1px]">
+                  <span className="flex items-center justify-center">
+                    <img
+                      src="/icons/logo.svg"
+                      className="text-adyen w-[44px]"
+                    />
+                  </span>
+                </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
                   <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2">
@@ -268,7 +292,7 @@ const Sidebar = (props: any) => {
                           variant="ghost"
                           size="icon"
                           ref={tab.ref}
-                          className={`mt-2 rounded-none ${
+                          className={`mt-1 rounded-none ${
                             section === tab.name
                               ? "border-[1px] border-adyen"
                               : "hover:border-[1px] hover:border-adyen hover:border-dotted"
