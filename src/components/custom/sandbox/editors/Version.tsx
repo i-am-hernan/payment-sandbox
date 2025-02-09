@@ -20,7 +20,7 @@ const Version = (props: any) => {
       <Accordion type="multiple" className="w-full py-0 border-b-[1px]">
         <AccordionItem value="item-1">
           <AccordionTrigger className="py-3 px-4 border-transparent border-[1px] hover:border-[1px] hover:border-adyen hover:border-dotted">
-            <h4 className="text-[0.85rem] text-adyen">
+            <h4 className="text-[0.95rem] text-adyen">
               {`${label}`}
               <code className="px-1 text-xs text-grey">{`v${value}`}</code>
             </h4>

@@ -51,6 +51,7 @@ const Topbar = (props: any) => {
   ).length;
 
   const containerRef = useRef<HTMLSpanElement>(null);
+  const tabErrors = Object.keys(errors).filter((key) => errors[key]);
 
   const storeToLocalStorage = (data: any) => {
     sessionStorage.setItem("formula", JSON.stringify(data));
@@ -98,13 +99,6 @@ const Topbar = (props: any) => {
                 </Button>
               </span>
             </Tooltip>
-          </div>
-        )}
-        {view !== "demo" && (
-          <div className="mr-2">
-            <ShareableButton
-              disabled={totalUnsavedChanges !== 0 || view == "user"}
-            />
           </div>
         )}
         {view !== "demo" && (
@@ -194,21 +188,28 @@ const Topbar = (props: any) => {
             </Tooltip>
           </div>
         )}
-        <span className="absolute top-0 right-0 transform -translate-x-1/4 -translate-y-1/4 bg-background text-xs rounded-full !opacity-100">
+        {view !== "demo" && (
+          <div className="mr-2">
+            <ShareableButton
+              disabled={totalUnsavedChanges !== 0 || view == "user"}
+            />
+          </div>
+        )}
+        <span className="absolute top-0 right-0 z-10 transform -translate-x-1/4 -translate-y-1/4 bg-background text-xs rounded-full">
           {Object.values(errors).filter((value) => value).length > 0 && (
-            <ErrorIcon className="text-warning !text-[16px] !opacity-100" />
+            <ErrorIcon className="text-warning !text-[16px]" />
           )}
         </span>
-        <Tooltip title="Build (⌘ + enter)">
+        <Tooltip
+          title={`${tabErrors.length > 0 ? `Resolve ${tabErrors.join(", ")} error` : "Build (⌘ + enter)"}`}
+        >
           <span>
             <Button
               key="run"
-              variant="default"
-              disabled={
-                Object.values(errors).filter((value) => value).length > 0
-              }
+              variant="outline"
+              disabled={tabErrors.length > 0}
               size="sm"
-              className="px-4"
+              className="px-4 border-adyen bg-adyen text-foreground hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
               onClick={() => {
                 storeToLocalStorage(refineFormula(storeFormula));
                 clearUrlParams([

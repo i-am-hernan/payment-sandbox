@@ -2,6 +2,7 @@ import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Search from "@/components/custom/sandbox/editors/Search";
 import Version from "@/components/custom/sandbox/editors/Version";
+import VersionCompact from "@/components/custom/sandbox/editors/VersionCompact";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
 import {
@@ -138,14 +139,6 @@ const Style = (props: any) => {
   }, [properties]);
 
   useEffect(() => {
-    if (view === "demo" || view === "preview") {
-      panelRef.current?.resize(0);
-    } else if (view === "developer") {
-      panelRef.current?.resize(50);
-    }
-  }, [view]);
-
-  useEffect(() => {
     if (config.parsed !== null) {
       syncGlobalState(config.stringified, build);
     }
@@ -243,6 +236,12 @@ const Style = (props: any) => {
     [config.parsed, properties, configurationType]
   );
 
+  if (view === "demo" || view === "preview") {
+    panelRef.current?.resize(0);
+  } else if (view === "developer") {
+    panelRef.current?.resize(50);
+  }
+
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -300,20 +299,6 @@ const Style = (props: any) => {
         defaultSize={view === "developer" ? 50 : 100}
         className="!overflow-y-scroll"
       >
-        {adyenWebVersion && (
-          <Version
-            label={"adyen web"}
-            value={adyenWebVersion}
-            options={
-              integration === "sessions"
-                ? WEBVERSIONS.filter((version: string) =>
-                    /^[5-9]/.test(version)
-                  )
-                : WEBVERSIONS
-            }
-            onChange={handleVersionChange}
-          />
-        )}
         {!properties && <Loading className="text-foreground" />}
         {properties && (
           <div className="border-b-2 flex text-sm text-foreground">
@@ -331,7 +316,20 @@ const Style = (props: any) => {
             description={description}
             label={configurationType}
             method="css"
-          />
+          >
+            <VersionCompact
+              label={"adyen web"}
+              value={adyenWebVersion}
+              options={
+                integration === "sessions"
+                  ? WEBVERSIONS.filter((version: string) =>
+                      /^[5-9]/.test(version)
+                    )
+                  : WEBVERSIONS
+              }
+              onChange={handleVersionChange}
+            />
+          </Search>
         )}
         {filteredProperties && (
           <MemoizedOpenCssList

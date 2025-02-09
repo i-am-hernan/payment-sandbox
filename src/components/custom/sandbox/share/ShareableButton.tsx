@@ -21,6 +21,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { bookmarkletCode } from "@/utils/bookmarklet";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ShareableButton = (props: any) => {
   const [copied, setCopied] = useState(false);
@@ -44,6 +45,7 @@ const ShareableButton = (props: any) => {
     loading: false,
     error: null,
   });
+  const [publicLibrary, setPublicLibrary] = useState(false);
   const { data, loading, error } = formula;
   const { title, description } = buildInfo;
   const handleShare = (request: any) => {
@@ -54,6 +56,7 @@ const ShareableButton = (props: any) => {
       integrationType: integration,
       title,
       description,
+      public: publicLibrary,
     });
 
     setFormula({ ...formula, loading: true });
@@ -115,15 +118,12 @@ const ShareableButton = (props: any) => {
         <DialogTrigger asChild>
           <Button
             key="clear"
-            variant="ghost"
+            variant="outline"
             disabled={disabled}
             size="sm"
-            className="border-[1px] border-transparent bg-background px-2 hover:border-[1px] hover:border-adyen hover:border-dotted rounded-none"
-            onClick={() => {
-              // handleShare(state);
-            }}
+            className="px-2 bg-background border-adyen text-foreground hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
           >
-            <ShareIcon className="!text-foreground !text-[16px]" />
+            share
           </Button>
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>
@@ -165,6 +165,17 @@ const ShareableButton = (props: any) => {
                       })
                     }
                   />
+                  <div className="flex items-center gap-2 pt-5">
+                    <Checkbox
+                      checked={publicLibrary}
+                      onCheckedChange={() => {
+                        setPublicLibrary(!publicLibrary);
+                      }}
+                    />
+                    <p className="text-[12px]">
+                      Add your build to our community library
+                    </p>
+                  </div>
                   <Button
                     type="submit"
                     className="mt-3 w-[30%] self-end"

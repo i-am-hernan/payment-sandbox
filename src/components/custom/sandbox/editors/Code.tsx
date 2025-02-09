@@ -2,6 +2,7 @@ import generate from "@babel/generator";
 import { parse as babelParser } from "@babel/parser"; // Import a JavaScript parser
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
+import { css } from "@codemirror/lang-css"; // Add this import
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { Diagnostic, linter } from "@codemirror/lint";
@@ -10,11 +11,11 @@ import { abyss } from "@uiw/codemirror-theme-abyss";
 import { duotoneLight } from "@uiw/codemirror-theme-duotone";
 import CodeMirror from "@uiw/react-codemirror";
 import * as jsonc from "jsonc-parser"; // Import jsonc-parser
-import { css } from "@codemirror/lang-css"; // Add this import
 const cssParse = require("css/lib/parse");
 
 const Code = (props: any) => {
-  const { code, type, readOnly, onChange, theme, jsVariable, handleError } = props;
+  const { code, type, readOnly, onChange, theme, jsVariable, handleError } =
+    props;
 
   const getVariableValueFromAST = (code: string, variableName: string) => {
     // Parse the code to get the AST
@@ -91,7 +92,10 @@ const Code = (props: any) => {
         });
         if (diagnostics.length === 0) {
           // Bug: What if the user doesn't have any bugs but also doesnt have checkout configuration in the code, we should still throw an error
+
           onChange(getVariableValueFromAST(value, jsVariable), value);
+        } else {
+          handleError(true);
         }
       } else if (type === "style") {
         diagnostics = await cssLinter({
@@ -100,10 +104,11 @@ const Code = (props: any) => {
         if (diagnostics.length === 0) {
           const styleObject = cssToObject(value);
           onChange(styleObject, value);
-        } 
+        }
       }
     } catch (error) {
       console.error("Error in handleChange:", error);
+      handleError(true);
     }
   };
 
@@ -186,15 +191,14 @@ const Code = (props: any) => {
         if (update.docChanged) {
           handleChange(update.state.doc.toString(), type);
         }
-      }),
-      EditorView.lineWrapping
+      })
     );
   }
 
   if (type === "html") {
     extensions.push(javascript({ jsx: true }));
   } else if (type === "json") {
-    extensions.push(json(), linter(jsonLinter));
+    extensions.push(json(), linter(jsonLinter)), EditorView.lineWrapping;
   } else if (type === "babel") {
     extensions.push(javascript(), linter(javascriptLinter));
   } else if (type === "style") {

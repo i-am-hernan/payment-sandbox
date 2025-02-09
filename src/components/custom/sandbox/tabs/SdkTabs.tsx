@@ -2,6 +2,7 @@ import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Search from "@/components/custom/sandbox/editors/Search";
 import Version from "@/components/custom/sandbox/editors/Version";
+import VersionCompact from "@/components/custom/sandbox/editors/VersionCompact";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +30,8 @@ import { ImperativePanelHandle } from "react-resizable-panels";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 
 const { updateSpecs } = specsActions;
-const { addUnsavedChanges, updateAdyenWebVersion } = formulaActions;
+const { addUnsavedChanges, updateAdyenWebVersion, updateErrors } =
+  formulaActions;
 
 interface SdkMapValue {
   storeConfiguration: any;
@@ -85,7 +87,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
 
   const panelRef = useRef<ImperativePanelHandle>(null);
   const dispatch = useDispatch();
-  const { reset, build, adyenWebVersion } = useSelector(
+  const { reset, build, adyenWebVersion, errors } = useSelector(
     (state: RootState) => state.formula
   );
   const specs = useSelector((state: RootState) => state.specs);
@@ -162,15 +164,6 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
       }));
     });
   }, [reset]);
-
-  // Handle panel resize based on view
-  useEffect(() => {
-    if (view === "demo" || view === "preview") {
-      panelRef.current?.resize(0);
-    } else if (view === "developer") {
-      panelRef.current?.resize(50);
-    }
-  }, [view]);
 
   const syncGlobalState = useCallback(
     debounce((localState: any, configType: keyof ConfigsState) => {
@@ -318,6 +311,12 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
     [configs, sdkMap, syncGlobalState]
   );
 
+  if (view === "demo" || view === "preview") {
+    panelRef.current?.resize(0);
+  } else if (view === "developer") {
+    panelRef.current?.resize(50);
+  }
+
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -338,8 +337,20 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
             code={configs[activeTab].stringified}
             readOnly={false}
             theme={theme}
-            onChange={handleCodeChange}
+            onChange={(jsValue: any, stringValue: any) => {
+              if (errors.js) {
+                dispatch(updateErrors({ js: false }));
+              }
+              handleCodeChange(jsValue, stringValue);
+            }}
             jsVariable={sdkMap[activeTab].configurationType}
+            handleError={(error: any) => {
+              dispatch(
+                updateErrors({
+                  js: true,
+                })
+              );
+            }}
           />
         </div>
         <div className={`flex justify-end border-t-2 bg-background`}>
@@ -364,25 +375,6 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
         defaultSize={view === "developer" ? 50 : 100}
         className="!overflow-y-scroll flex flex-col"
       >
-        {
-          <Version
-            label="adyen web"
-            value={adyenWebVersion}
-            options={
-              integration === "sessions"
-                ? WEBVERSIONS.filter((v) => /^[5-9]/.test(v))
-                : WEBVERSIONS
-            }
-            onChange={(v: any) => {
-              dispatch(updateAdyenWebVersion(v));
-              dispatch(
-                addUnsavedChanges({
-                  js: adyenWebVersion !== v,
-                })
-              );
-            }}
-          />
-        }
         <Tabs
           value={activeTab}
           onValueChange={(value: string) =>
@@ -415,10 +407,32 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
                     properties={specs[key as keyof SpecsList]}
                     onChange={handleSearchChange}
                     description={value.description}
-                    label={value.configurationType}
-                    method="object"
+                    method={"Object"}
+                    label={
+                      value.configurationType === "checkoutConfiguration"
+                        ? "Checkout"
+                        : `${variant[0].toUpperCase() + variant.slice(1)}`
+                    }
                     tab={false}
-                  />
+                  >
+                    <VersionCompact
+                      label="Adyen Web"
+                      value={adyenWebVersion}
+                      options={
+                        integration === "sessions"
+                          ? WEBVERSIONS.filter((v) => /^[5-9]/.test(v))
+                          : WEBVERSIONS
+                      }
+                      onChange={(v: any) => {
+                        dispatch(updateAdyenWebVersion(v));
+                        dispatch(
+                          addUnsavedChanges({
+                            js: adyenWebVersion !== v,
+                          })
+                        );
+                      }}
+                    />
+                  </Search>
                   <OpenSdkList
                     properties={
                       specs[key as keyof SpecsList]?.components?.schemas?.[key]

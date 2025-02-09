@@ -3,6 +3,7 @@ import Code from "@/components/custom/sandbox/editors/Code";
 import OpenApiList from "@/components/custom/sandbox/editors/openApi/OpenApiList";
 import Search from "@/components/custom/sandbox/editors/Search";
 import Version from "@/components/custom/sandbox/editors/Version";
+import VersionCompact from "@/components/custom/sandbox/editors/VersionCompact";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
 import {
@@ -186,14 +187,6 @@ const Api = (props: any) => {
   );
 
   useEffect(() => {
-    if (view === "demo" || view === "preview") {
-      panelRef.current?.resize(0);
-    } else if (view === "developer") {
-      panelRef.current?.resize(50);
-    }
-  }, [view]);
-
-  useEffect(() => {
     if (apiSpecsData) {
       dispatch(
         updateSpecs({
@@ -221,6 +214,11 @@ const Api = (props: any) => {
     return <div>Error</div>;
   }
 
+  if (view === "demo" || view === "preview") {
+    panelRef.current?.resize(0);
+  } else if (view === "developer") {
+    panelRef.current?.resize(50);
+  }
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -272,22 +270,6 @@ const Api = (props: any) => {
         )}
       />
       <ResizablePanel className="!overflow-y-scroll">
-        {loadingApiSpecData && <Loading className="text-foreground" />}
-        {!loadingApiSpecData && apiSpecsData && (
-          <Version
-            label={"checkout api"}
-            value={checkoutAPIVersion[api]}
-            options={APIVERSIONS}
-            onChange={(value: any) => {
-              dispatch(
-                addUnsavedChanges({
-                  [api]: build.checkoutAPIVersion[api] !== value,
-                })
-              );
-              dispatch(updateCheckoutAPIVersion({ [api]: value }));
-            }}
-          />
-        )}
         <div className="border-b-2 flex text-sm text-foreground">
           <span className="border-r-2 p-[3px]">
             <p className="inline-block border border-info border-dotted px-2 text-sm">
@@ -302,11 +284,36 @@ const Api = (props: any) => {
               setFilteredProperties(filteredProperties);
             }}
             description={description}
-            label={api}
+            label={
+              api === "paymentMethods"
+                ? "Payment Methods"
+                : api === "payments"
+                  ? "Payments"
+                  : api === "paymentsDetails"
+                    ? "Payment Details"
+                    : api === "sessions"
+                      ? "Sessions"
+                      : api
+            }
             method="POST"
             tab={true}
-          />
+          >
+            <VersionCompact
+              label={"Checkout API"}
+              value={checkoutAPIVersion[api]}
+              options={APIVERSIONS}
+              onChange={(value: any) => {
+                dispatch(updateCheckoutAPIVersion({ [api]: value }));
+                dispatch(
+                  addUnsavedChanges({
+                    [api]: build.checkoutAPIVersion[api] !== value,
+                  })
+                );
+              }}
+            />
+          </Search>
         )}
+        {loadingApiSpecData && <Loading className="text-foreground" />}
         {!loadingApiSpecData && apiSpecsData && (
           <OpenApiList
             openApi={apiSpecsData}

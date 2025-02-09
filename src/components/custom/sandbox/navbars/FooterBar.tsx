@@ -4,10 +4,12 @@ import ScienceIcon from "@mui/icons-material/Science";
 import TitleIcon from "@mui/icons-material/Title";
 import BuildIcon from "@mui/icons-material/Build";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const FooterBar = (props: any) => {
   const { integration } = props;
   const company = process.env.NEXT_PUBLIC_COMPANY_NAME;
+  const merchant = process.env.NEXT_PUBLIC_LIVE_MERCHANT_ACCOUNT;
   const { variantName, title } = useSelector(
     (state: RootState) => state.sandbox
   );
@@ -15,22 +17,27 @@ const FooterBar = (props: any) => {
     {
       name: "Company",
       icon: <StorefrontIcon className="!text-foreground !text-[1rem]" />,
-      message: `${company ? company : "default"}`,
+      message: `Company: ${company ? company : "default"}`,
+    },
+    {
+      name: "Merchant",
+      icon: <AccountBoxIcon className="!text-foreground !text-[1rem]" />,
+      message: `Account: ${merchant ? merchant : "default"}`,
     },
     {
       name: "Integration",
       icon: <BuildIcon className="!text-foreground !text-[1rem]" />,
-      message: `${integration ? integration : "default"}`,
+      message: `Integration: ${integration ? integration : "default"}`,
     },
     {
       name: "Variant",
       icon: <ScienceIcon className="!text-foreground !text-[1rem]" />,
-      message: `${variantName ? variantName : "default"}`,
+      message: `Variant: ${variantName ? variantName : "default"}`,
     },
     {
       name: "Formula",
       icon: <TitleIcon className="!text-foreground !text-[1rem]" />,
-      message: `${title ? title : "default"}`,
+      message: `Formula: ${title ? title : "default"}`,
     },
   ];
   return (
@@ -41,7 +48,7 @@ const FooterBar = (props: any) => {
       {footerButtons.map((button, index) => (
         <div
           key={index}
-          className="flex h-[100%] items-end max-w-[15rem] py-[0.2rem] pr-5"
+          className="flex h-[100%] items-end max-w-[20rem] py-[0.2rem] pr-7"
         >
           {button.icon}
           <p className="text-[0.6rem] text-foreground pl-[0.1rem] ">

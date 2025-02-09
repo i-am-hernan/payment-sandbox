@@ -10,7 +10,9 @@ import { formulaActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { cn, createHtmlCode } from "@/utils/utils";
 import { useParams } from "next/navigation";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ImperativePanelHandle } from "react-resizable-panels";
 
 const { updateAdyenWebVersion, addUnsavedChanges } = formulaActions;
 
@@ -22,6 +24,7 @@ const Html = () => {
   const { variant } = useParams<{
     variant: string;
   }>();
+  const panelRef = useRef<ImperativePanelHandle>(null);
 
   const handleVersionChange = (value: any) => {
     dispatch(addUnsavedChanges({ html: build.adyenWebVersion !== value }));
@@ -29,6 +32,11 @@ const Html = () => {
   };
   const dispatch = useDispatch();
 
+  if (view === "demo" || view === "preview") {
+    panelRef.current?.resize(0);
+  } else if (view === "developer") {
+    panelRef.current?.resize(50);
+  }
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -37,7 +45,11 @@ const Html = () => {
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "developer" ? 100 : 0}
-        className="sm:flex"
+        className={cn(
+          "sm:flex bg-code flex-col items-stretch transition-all duration-300 ease-in-out",
+          view === "demo" && "opacity-0"
+        )}
+        ref={panelRef}
       >
         <Code
           type="html"
@@ -53,7 +65,7 @@ const Html = () => {
       />
       <ResizablePanel>
         <Version
-          label={"Adyen Web"}
+          label={"adyen web"}
           value={adyenWebVersion}
           options={WEBVERSIONS}
           onChange={handleVersionChange}

@@ -8,9 +8,9 @@ import {
 } from "@/components/ui/select";
 
 const Enum = (props: any) => {
-  const { title, value, set, onChange, disabled } = props;
+  const { title, value, set, onChange, disabled, className } = props;
   return (
-    <div className="p-1 bg-background text-foreground">
+    <div className={`bg-background text-foreground`}>
       <Select
         value={value}
         onValueChange={(value) => {
@@ -18,7 +18,7 @@ const Enum = (props: any) => {
         }}
         disabled={disabled}
       >
-        <SelectTrigger>
+        <SelectTrigger className={`${className}`}>
           <SelectValue placeholder={title} />
         </SelectTrigger>
         <SelectContent className="!dark">

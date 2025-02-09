@@ -136,13 +136,13 @@ const Page: any = () => {
                 storeConfiguration: checkoutConfiguration,
                 updateStoreConfiguration: updateCheckoutConfiguration,
                 configurationType: "checkoutConfiguration",
-                description: "Create a configuration object for Checkout",
+                description: "Create a checkout configuration object for a Web Components integration",
               },
               txVariantConfiguration: {
                 storeConfiguration: txVariantConfiguration,
                 updateStoreConfiguration: updateTxVariantConfiguration,
                 configurationType: "txVariantConfiguration",
-                description: `Create a configuration object for ${variant}`,
+                description: `Create a ${variant} configuration object for a Web Components integration`,
               },
             }}
             variant={variant}
@@ -194,7 +194,7 @@ const Page: any = () => {
       integration === "advance"
         ? [
             {
-              title: `/v${paymentMethodsAPIVersion}/paymentMethods`,
+              title: "/paymentMethods",
               icon: (
                 <span className="font-semibold px-1 text-xxs text-adyen">
                   POST
@@ -206,14 +206,16 @@ const Page: any = () => {
                   schema="PaymentMethodsRequest"
                   request={paymentMethods}
                   updateRequest={updatePaymentMethodsRequest}
-                  description={"Configure /paymentMethods request parameters"}
+                  description={
+                    "Create a /paymentMethods request for a Web Components integration"
+                  }
                 />
               ),
               value: "paymentmethods",
               unsavedChanges: unsavedChanges.paymentMethods,
             },
             {
-              title: `/v${paymentsAPIVersion}/payments`,
+              title: "/payments",
               icon: (
                 <span className="font-semibold px-1 text-xxs text-adyen">
                   POST
@@ -225,14 +227,16 @@ const Page: any = () => {
                   schema="PaymentRequest"
                   request={payments}
                   updateRequest={updatePaymentsRequest}
-                  description={"Configure /payments request parameters"}
+                  description={
+                    "Create a /payments request for a Web Components integration"
+                  }
                 />
               ),
               value: "payments",
               unsavedChanges: unsavedChanges.payments,
             },
             {
-              title: `/v${paymentsDetailsAPIVersion}/payment/details`,
+              title: "/payments/details",
               icon: (
                 <span className="font-semibold px-1 text-xxs text-adyen">
                   POST
@@ -244,7 +248,9 @@ const Page: any = () => {
                   schema="PaymentDetailsRequest"
                   request={paymentsDetails}
                   updateRequest={updatePaymentsDetailsRequest}
-                  description={"Configure /payment/details request parameters"}
+                  description={
+                    "Create a /payment/details request for a Web Components integration"
+                  }
                 />
               ),
               value: "paymentsDetails",

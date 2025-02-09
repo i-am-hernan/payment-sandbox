@@ -129,7 +129,7 @@ const OpenApiList = (props: any) => {
             </AccordionTrigger>
             <AccordionContent>
               <div className="pl-6 pr-4">
-                <p className="text-xs pb-2 text-foreground">
+                <p className="text-xs pb-2 text-grey">
                   {properties[property] &&
                     properties[property].description &&
                     parseStringWithLinks(properties[property].description)}

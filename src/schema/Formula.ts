@@ -21,8 +21,9 @@ export interface Formula extends Document {
     isRedirect: boolean;
   };
   title?: string;
+  public?: boolean;
   description?: string;
-  integrationType: 'advance' | 'session';
+  integrationType: "advance" | "session";
   txVariant: string;
   icon: string;
   builtBy: string;
@@ -57,16 +58,21 @@ const FormulaSchema: Schema = new Schema(
     },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    integrationType: { type: String, enum: ['advance', 'session'], required: true },
+    integrationType: {
+      type: String,
+      enum: ["advance", "session"],
+      required: true,
+    },
     txVariant: { type: String, required: true },
     icon: { type: String, required: true, default: "Calculator" },
     builtBy: { type: String, required: true, default: "Adyen" },
+    public: { type: Boolean, required: false, default: false },
     createdBy: { type: Schema.Types.ObjectId, required: false },
   },
   { timestamps: true, minimize: false }
 );
 
-FormulaSchema.index({ title: 'text' });
+FormulaSchema.index({ title: "text" });
 
 export default mongoose.models.Formula ||
   mongoose.model<Formula>("Formula", FormulaSchema);

@@ -7,6 +7,7 @@ import { useAdyenAdvance } from "@/hooks/useAdyenAdvance";
 import { useApi } from "@/hooks/useApi";
 import { useCalculatedClasses } from "@/hooks/useCalculatedClasses";
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from 'next/navigation';
 
 export const InitAdvanceComponent = (props: any) => {
   const {
@@ -22,6 +23,9 @@ export const InitAdvanceComponent = (props: any) => {
     onClassesCalculated,
     onChange,
   } = props;
+
+  const pathname = usePathname();
+  const isEmbedPage = pathname?.includes('/embed');
 
   const {
     data: paymentMethodsResponse,
@@ -81,12 +85,12 @@ export const InitAdvanceComponent = (props: any) => {
       : null;
 
   return (
-    <div className="sandbox-container flex justify-center align-center h-[100%]">
+    <div className="flex justify-center align-center h-[100%]">
       {error && <Error error={error} />}
       {adyenResult && <Result adyenResult={adyenResult} />}
       {loadingPaymentMethods && <Loading className="text-foreground" />}
-      {!adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div className="component-container h-[100%] w-[100%] p-1">
+      {!error && !adyenSDKError && !adyenResult && !loadingPaymentMethods && (
+        <div className={`h-[100%] w-[100%] ${isEmbedPage ? '' : 'p-5'}`}>
           <div ref={checkoutRef}></div>
         </div>
       )}
