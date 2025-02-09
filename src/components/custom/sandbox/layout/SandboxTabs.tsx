@@ -13,9 +13,9 @@ import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import { Button } from "@/components/ui/button";
 import { TabsProps } from "./types";
-import MinimizeIcon from '@mui/icons-material/Minimize';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MinimizeIcon from "@mui/icons-material/Minimize";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   const { tabsMap, crumbs, onExpand, onContract, type } = props;
@@ -62,20 +62,22 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
       <span className="border-b-2 flex justify-between">
         <TabsList>
           {tabsMap.map((tab, index) => (
-            <TabsTrigger
-              key={index}
-              value={tab.value}
-              className={`flex px-2 py-[2px] justify-space-between ${tabsMap.length < 2 ? "border-dotted" : ""}`}
-              ref={(el) => {
-                tabRefs.current[index] = el;
-              }}
-            >
-              <span>{tab.icon}</span>
-              <p className="px-1 text-xs text-foreground">{tab.title}</p>
-              {tab.unsavedChanges && (
-                <span className="ml-1 w-2 h-2 bg-background border border-primary rounded-full inline-block"></span>
-              )}
-            </TabsTrigger>
+            <div key={index} className="p-[3px] border-r-2">
+              <TabsTrigger
+                key={index}
+                value={tab.value}
+                className={`flex px-2 py-[2px] justify-space-between ${tabsMap.length < 2 ? "border-dotted" : ""}`}
+                ref={(el) => {
+                  tabRefs.current[index] = el;
+                }}
+              >
+                <span>{tab.icon}</span>
+                <p className="px-1 text-xs text-foreground">{tab.title}</p>
+                {tab.unsavedChanges && (
+                  <span className="ml-1 w-2 h-2 bg-background border border-primary rounded-full inline-block"></span>
+                )}
+              </TabsTrigger>
+            </div>
           ))}
         </TabsList>
         <div>

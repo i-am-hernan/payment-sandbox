@@ -367,6 +367,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
       </ResizablePanel>
       <ResizableHandle
         className={cn(
+          "transition-opacity duration-300 ease-in-out",
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )}
       />
@@ -382,20 +383,30 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
           }
           className="flex flex-col flex-grow"
         >
-          <TabsList className="bg-background border-b-2 justify-start">
-            {Object.entries(sdkMap).map(([key, value]: [string, any]) => (
-              <TabsTrigger
-                key={key}
-                value={key}
-                className="bg-background px-2 py-[2px] data-[state=active]:border-info data-[state=inactive]:hover:border-info"
-              >
-                <p className="p-[3px] text-xs text-foreground">
-                  {value.configurationType === "checkoutConfiguration"
-                    ? "checkout"
-                    : variant}
-                </p>
-              </TabsTrigger>
-            ))}
+          <TabsList className="flex items-stretch bg-background justify-end">
+            <span className="border-b-2 p-[3px] flex-1"></span>
+            {Object.entries(sdkMap)
+              .reverse()
+              .map(([key, value], i: number) => (
+                <div key={i} className={`p-[3px] border-l-2 relative`}>
+                  <div
+                    className={`absolute bottom-0 left-0 w-full h-[2px] bg-border transform origin-left transition-transform duration-200 ease-in-out ${
+                      key !== activeTab ? "scale-x-100" : "scale-x-0"
+                    }`}
+                  />
+                  <TabsTrigger
+                    key={i}
+                    value={key}
+                    className="bg-background px-2 py-[2px] data-[state=inactive]:hover:border-info data-[state=active]:border-info"
+                  >
+                    <p className="p-[3px] text-xs text-foreground">
+                      {value.configurationType === "checkoutConfiguration"
+                        ? "checkout"
+                        : variant}
+                    </p>
+                  </TabsTrigger>
+                </div>
+              ))}
           </TabsList>
           {Object.entries(sdkMap).map(([key, value]: [string, any]) => (
             <TabsContent key={key} value={key} className="flex-grow">

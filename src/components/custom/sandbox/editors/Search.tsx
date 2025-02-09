@@ -25,13 +25,13 @@ const Search = (props: any) => {
 
   return (
     <div className="border-b-2 z-10 sticky top-0 bg-background">
-      <h4 className="text-[0.95rem] text-adyen z-15 sticky top-0 px-4 pt-2">
+      <h4 className="text-[0.95rem] text-adyen z-15 sticky top-0 px-5 pt-3">
         {`${label}`}
         {method && <code className="px-1 text-xs text-grey font-normal">{method}</code>}
       </h4>
-      <div className="px-4 pt-0">{children}</div>
-      <p className="text-[0.8rem] text-grey px-4">{`${description}`}</p>
-      <div className="flex pb-3 pt-2 px-4">
+      <div className="px-6 pt-0">{children}</div>
+      <p className="text-[0.8rem] text-grey px-6">{`${description}`}</p>
+      <div className="flex pb-3 pt-2 pl-6 pr-4">
         <Input
           className="text-xs py-0 rounded-r-none text-foreground"
           ref={inputRef}

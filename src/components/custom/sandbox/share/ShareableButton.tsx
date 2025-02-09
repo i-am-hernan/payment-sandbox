@@ -207,6 +207,9 @@ const ShareableButton = (props: any) => {
                         : "embed"
                   } your build by copying the link below`}
                 </DialogDescription>
+                <DialogDescription className="text-[13px]">
+                  {`Build ID: ${data ? data._id : "loading..."}`}
+                </DialogDescription>
               </DialogHeader>
               {error && (
                 <div className="text-red-500 text-xs mb-2">{error}</div>

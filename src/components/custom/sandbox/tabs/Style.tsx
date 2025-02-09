@@ -1,7 +1,6 @@
 import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Search from "@/components/custom/sandbox/editors/Search";
-import Version from "@/components/custom/sandbox/editors/Version";
 import VersionCompact from "@/components/custom/sandbox/editors/VersionCompact";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
@@ -10,16 +9,15 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useApi } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 import { formulaActions, specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   cssToObject,
   debounce,
+  objectToCSS,
   prettify,
   sanitizeString,
-  objectToCSS,
 } from "@/utils/utils";
 import {
   memo,
@@ -301,9 +299,10 @@ const Style = (props: any) => {
       >
         {!properties && <Loading className="text-foreground" />}
         {properties && (
-          <div className="border-b-2 flex text-sm text-foreground">
-            <span className="border-r-2 p-[3px]">
-              <p className="inline-block border border-info border-dotted px-2 text-sm">
+          <div className="flex justify-end text-sm text-foreground">
+            <span className="border-b-2 p-[3px] flex-1"></span>
+            <span className="border-l-2 p-[3px]">
+              <p className="inline-block border border-info border-solid px-3 py-1 text-xs text-foreground">
                 class
               </p>
             </span>

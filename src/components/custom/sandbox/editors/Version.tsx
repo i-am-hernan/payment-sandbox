@@ -10,9 +10,10 @@ const Version = (props: any) => {
   const { label, value, options, onChange } = props;
   return (
     <div>
-      <span className="border-b-2 flex text-sm">
-        <span className="border-r-2 p-[3px] text-foreground">
-          <p className="inline-block border border-info border-dotted px-2 text-sm">
+      <span className="flex justify-end text-sm text-foreground">
+        <span className="border-b-2 p-[3px] flex-1"></span>
+        <span className="border-l-2 p-[3px]">
+          <p className="inline-block border border-info border-solid px-3 py-1 text-xs text-foreground">
             version
           </p>
         </span>

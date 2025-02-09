@@ -270,9 +270,10 @@ const Api = (props: any) => {
         )}
       />
       <ResizablePanel className="!overflow-y-scroll">
-        <div className="border-b-2 flex text-sm text-foreground">
-          <span className="border-r-2 p-[3px]">
-            <p className="inline-block border border-info border-dotted px-2 text-sm">
+        <div className="flex justify-end text-sm text-foreground">
+          <span className="border-b-2 p-[3px] flex-1"></span>
+          <span className="border-l-2 p-[3px]">
+            <p className="inline-block border border-info border-solid px-3 py-1 text-xs text-foreground">
               parameters
             </p>
           </span>
