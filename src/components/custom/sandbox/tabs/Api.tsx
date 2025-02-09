@@ -331,7 +331,7 @@ const Api = (props: any) => {
                 let replacedValue = replaceKeyValueJSON(
                   apiRequest.stringified,
                   keyString,
-                  stringifyObject(keyValue),
+                  JSON.stringify(keyValue),
                   type
                 );
                 dispatchApiRequest({
@@ -347,7 +347,7 @@ const Api = (props: any) => {
                   payload: {
                     parsed: { ...apiRequest.parsed, ...value },
                     stringified: await prettify(
-                      stringifyObject({ ...apiRequest.parsed, ...value }),
+                      JSON.stringify({ ...apiRequest.parsed, ...value }),
                       "json"
                     ),
                   },
