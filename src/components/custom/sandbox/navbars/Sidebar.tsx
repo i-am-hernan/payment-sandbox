@@ -286,22 +286,20 @@ const Sidebar = (props: any) => {
                       title={`${tab.name} (${tab.hotKey})`}
                       placement="right-start"
                     >
-                      <span>
-                        <Button
-                          key={tab.name}
-                          variant="ghost"
-                          size="icon"
-                          ref={tab.ref}
-                          className={`mt-1 rounded-none ${
-                            section === tab.name
-                              ? "border-[1px] border-adyen"
-                              : "hover:border-[1px] hover:border-adyen hover:border-dotted"
-                          }`}
-                          onClick={() => setSection(tab.name)}
-                        >
-                          {tab.icon}
-                        </Button>
-                      </span>
+                      <Button
+                        key={tab.name}
+                        variant="ghost"
+                        size="icon"
+                        ref={tab.ref}
+                        className={`rounded-none ${
+                          section === tab.name
+                            ? "border-[1px] border-adyen mb-2"
+                            : "hover:border-[1px] hover:border-adyen hover:border-dotted"
+                        }`}
+                        onClick={() => setSection(tab.name)}
+                      >
+                        {tab.icon}
+                      </Button>
                     </Tooltip>
                     {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
                       <div className="w-4 h-4 border border-foreground rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-background text-foreground text-xxs">
