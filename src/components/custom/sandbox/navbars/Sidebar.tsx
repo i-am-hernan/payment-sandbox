@@ -125,11 +125,8 @@ const Sidebar = (props: any) => {
       name: "Server",
       hotKey: "⌘ + i",
       icon: (
-        <div className="relative flex items-center justify-center">
-          <CloudQueueIcon className="!text-foreground !text-[28px]" />
-          <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-mono text-[8px] text-foreground bg-background flex leading-none mt-[3px]">
-            API
-          </p>
+        <div className="relative flex flex-col items-center justify-center">
+          <CloudQueueIcon className="!text-foreground !text-[26px]" />
         </div>
       ),
       unsavedChanges: {
@@ -143,11 +140,8 @@ const Sidebar = (props: any) => {
       name: "Client",
       hotKey: "⌘ + j",
       icon: (
-        <div className="relative flex items-center justify-center">
-          <LanguageIcon className="!text-foreground !text-[28px]" />
-          <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-mono text-[8px] text-foreground bg-background flex leading-none px-[2px] pt-[2px] border border-foreground rounded">
-            WEB
-          </p>
+        <div className="relative flex flex-col items-center justify-center">
+          <LanguageIcon className="!text-foreground !text-[26px]" />
         </div>
       ),
       unsavedChanges: {
