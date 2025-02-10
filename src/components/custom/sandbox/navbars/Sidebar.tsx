@@ -208,14 +208,12 @@ const Sidebar = (props: any) => {
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>
+              <span className="flex items-center justify-center">
+                <img src="/icons/logo.svg" className="text-adyen w-[44px]" />
+              </span>
               <Drawer direction="left">
-                <DrawerTrigger className="mt-1 rounded-none border-[1px] border-transparent hover:border-[1px]">
-                  <span className="flex items-center justify-center">
-                    <img
-                      src="/icons/logo.svg"
-                      className="text-adyen w-[44px]"
-                    />
-                  </span>
+                <DrawerTrigger className="mt-3 mb-2 px-2 pb-2 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
+                  <WidgetsIcon className="!text-foreground !text-[26px]" />
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
@@ -293,7 +291,7 @@ const Sidebar = (props: any) => {
                         ref={tab.ref}
                         className={`rounded-none ${
                           section === tab.name
-                            ? "border-[1px] border-adyen mb-2"
+                            ? "border-[1px] border-adyen mt-3"
                             : "hover:border-[1px] hover:border-adyen hover:border-dotted"
                         }`}
                         onClick={() => setSection(tab.name)}
