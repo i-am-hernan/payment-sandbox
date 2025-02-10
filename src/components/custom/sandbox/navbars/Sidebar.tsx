@@ -27,16 +27,9 @@ import {
 import { RequestOptions } from "@/hooks/useApi";
 import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
-import LanguageIcon from "@mui/icons-material/Language";
-import CloudIcon from "@mui/icons-material/Cloud";
-import ComputerIcon from "@mui/icons-material/Computer";
-import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import DnsIcon from "@mui/icons-material/Dns";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
+import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
-import StorageIcon from "@mui/icons-material/Storage";
-import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
 import { ChevronDown } from "lucide-react";
@@ -212,8 +205,8 @@ const Sidebar = (props: any) => {
                 <img src="/icons/logo.svg" className="text-adyen w-[44px]" />
               </span>
               <Drawer direction="left">
-                <DrawerTrigger className="mt-3 mb-2 px-2 pb-2 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
-                  <WidgetsIcon className="!text-foreground !text-[26px]" />
+                <DrawerTrigger className="mt-1 px-[3px] py-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
+                  <WidgetsIcon className="!text-foreground !text-[28px]" />
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
@@ -289,9 +282,9 @@ const Sidebar = (props: any) => {
                         variant="ghost"
                         size="icon"
                         ref={tab.ref}
-                        className={`rounded-none ${
+                        className={`mt-2 rounded-none ${
                           section === tab.name
-                            ? "border-[1px] border-adyen mt-3"
+                            ? "border-[1px] border-adyen"
                             : "hover:border-[1px] hover:border-adyen hover:border-dotted"
                         }`}
                         onClick={() => setSection(tab.name)}

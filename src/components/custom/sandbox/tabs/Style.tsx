@@ -299,16 +299,6 @@ const Style = (props: any) => {
       >
         {!properties && <Loading className="text-foreground" />}
         {properties && (
-          <div className="flex justify-end text-sm text-foreground">
-            <span className="border-b-2 p-[3px] flex-1"></span>
-            <span className="border-l-2 p-[3px]">
-              <p className="inline-block border border-info border-solid px-3 py-1 text-xs text-foreground">
-                class
-              </p>
-            </span>
-          </div>
-        )}
-        {properties && (
           <Search
             properties={properties}
             onChange={handleOpenApiSearchChange}
