@@ -18,10 +18,7 @@ export default function FormulasPage() {
 
   // Initial load
   useEffect(() => {
-    Promise.all([
-      import("fuse.js"),
-      getFormulas()
-    ]).then(([Fuse, formulas]: [any, any[]]) => {
+    Promise.all([import("fuse.js"), getFormulas()]).then(([Fuse, formulas]: [any, any[]]) => {
       console.log(formulas);
       setAllFormulas(formulas);
       setFilteredFormulas(formulas);
@@ -97,10 +94,7 @@ export default function FormulasPage() {
               </CardContent>
               <CardFooter>
                 {/* TODO: Figure out how to determine the txVariant and integrationType and pass it along with the formula id */}
-                <Link
-                  className="w-full"
-                  href={`/formulas/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
-                >
+                <Link className="w-full" href={`/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}>
                   <Button className="w-full bg-[#0abf53] hover:bg-[#0a9f45] text-white" variant="outline">
                     Use Formula
                   </Button>
