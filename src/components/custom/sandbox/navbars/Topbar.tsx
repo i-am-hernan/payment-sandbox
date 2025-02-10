@@ -77,32 +77,6 @@ const Topbar = (props: any) => {
       <div className="flex justify-end">
         {view !== "demo" && (
           <div className="mr-2">
-            <Tooltip title="Developer Tools">
-              <span>
-                <Button
-                  key="developer"
-                  variant="ghost"
-                  size="sm"
-                  className="border-[1px] border-transparent bg-background px-2 hover:border-[1px] hover:border-adyen hover:border-dotted rounded-none"
-                  onClick={() => {
-                    if (view === "developer") {
-                      dispatch(updateView("preview"));
-                    } else if (view === "preview") {
-                      dispatch(updateView("developer"));
-                    }
-                    clearUrlParams(["view"]);
-                  }}
-                >
-                  <CodeIcon
-                    className={`!text-[16px] ${view === "developer" ? "text-adyen" : "text-foreground"}`}
-                  />
-                </Button>
-              </span>
-            </Tooltip>
-          </div>
-        )}
-        {view !== "demo" && (
-          <div className="mr-2">
             <AlertDialog>
               <Tooltip title="Reset (⌘ + delete)">
                 <AlertDialogTrigger asChild>

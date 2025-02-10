@@ -201,12 +201,12 @@ const Sidebar = (props: any) => {
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>
-              <span className="flex items-center justify-center">
+              <span className="flex items-center justify-center mt-[2px]">
                 <img src="/icons/logo.svg" className="text-adyen w-[44px]" />
               </span>
               <Drawer direction="left">
-                <DrawerTrigger className="mt-1 px-[3px] py-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
-                  <WidgetsIcon className="!text-foreground !text-[28px]" />
+                <DrawerTrigger className="px-[4px] py-[3px] rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
+                  <WidgetsIcon className="!text-foreground !text-[26px]" />
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
@@ -282,7 +282,7 @@ const Sidebar = (props: any) => {
                         variant="ghost"
                         size="icon"
                         ref={tab.ref}
-                        className={`mt-2 rounded-none ${
+                        className={`mt-3 rounded-none ${
                           section === tab.name
                             ? "border-[1px] border-adyen"
                             : "hover:border-[1px] hover:border-adyen hover:border-dotted"

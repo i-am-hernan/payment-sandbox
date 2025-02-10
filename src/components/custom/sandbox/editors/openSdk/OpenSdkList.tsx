@@ -261,7 +261,7 @@ export const OpenSdkList = ({
                     />
                   )}
                 {properties[property].type === "function" && (
-                  <InfoAlert message="Update functions in developer mode" />
+                  <InfoAlert message="Update functions in developer mode under settings > view > developer" />
                 )}
                 {property === "paymentMethodsResponse" && (
                   <InfoAlert message="This parameter gets automatically updated with the /paymentMethods response" />
