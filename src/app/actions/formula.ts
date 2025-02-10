@@ -15,11 +15,10 @@ export async function getFormulas() {
       .lean();
 
     return formulas.map((formula) => ({
-      _id: formula._id,
-      title: formula.title || "",
-      description: formula.description || "",
+      ...formula,
+      title: formula.title || "No title provided",
+      description: formula.description || "No description provided",
       icon: formula.icon || "Calculator",
-      integrationType: formula.integrationType,
       // TODO: Implement builtBy either community or Adyen
       builtBy: "Adyen",
     }));
