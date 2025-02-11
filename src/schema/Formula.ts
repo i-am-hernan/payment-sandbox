@@ -60,7 +60,7 @@ const FormulaSchema: Schema = new Schema(
     description: { type: String, required: true },
     integrationType: {
       type: String,
-      enum: ["advance", "session"],
+      enum: ["advance", "sessions"],
       required: true,
     },
     txVariant: { type: String, required: true },
