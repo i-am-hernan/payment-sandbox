@@ -126,7 +126,7 @@ const Sidebar = (props: any) => {
       hotKey: "⌘ + i",
       icon: (
         <div className="relative flex flex-col items-center justify-center">
-          <CloudQueueIcon className="!text-foreground !text-[26px]" />
+          <CloudQueueIcon className="!text-foreground !text-[20px]" />
         </div>
       ),
       unsavedChanges: {
@@ -141,7 +141,7 @@ const Sidebar = (props: any) => {
       hotKey: "⌘ + j",
       icon: (
         <div className="relative flex flex-col items-center justify-center">
-          <LanguageIcon className="!text-foreground !text-[26px]" />
+          <LanguageIcon className="!text-foreground !text-[20px]" />
         </div>
       ),
       unsavedChanges: {
@@ -199,8 +199,8 @@ const Sidebar = (props: any) => {
                 <img src="/icons/logo.svg" className="text-adyen w-[44px]" />
               </span>
               <Drawer direction="left">
-                <DrawerTrigger className="px-[4px] py-[3px] rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
-                  <WidgetsIcon className="!text-foreground !text-[26px]" />
+                <DrawerTrigger className="px-[7px] pt-1 pb-2 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-adyen hover:border-dotted hover:bg-accent hover:text-accent-foreground">
+                  <WidgetsIcon className="!text-foreground !text-[20px]" />
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
