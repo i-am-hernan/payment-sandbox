@@ -23,7 +23,7 @@ export interface Formula extends Document {
   title?: string;
   public?: boolean;
   description?: string;
-  integrationType: "advance" | "session";
+  integrationType: "advance" | "sessions";
   txVariant: string;
   icon: string;
   builtBy: string;
