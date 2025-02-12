@@ -45,11 +45,7 @@ export async function GET(
   let imports: Record<string, ImportInfo> = {};
 
   try {
-    const response = await fetch(url, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
-      }
-    });
+    const response = await fetch(url);
     if (!response.ok) {
       throw response;
     }
@@ -63,18 +59,23 @@ export async function GET(
     );
 
     // Process imports recursively
-    const processImports = async (sourceFile: ts.SourceFile, basePath: string, depth = 0) => {
+    const processImports = async (
+      sourceFile: ts.SourceFile,
+      basePath: string,
+      depth = 0
+    ) => {
       if (depth > 2) return;
 
       for (const statement of sourceFile.statements) {
         if (ts.isImportDeclaration(statement)) {
-          const importPath = (statement.moduleSpecifier as ts.StringLiteral).text;
+          const importPath = (statement.moduleSpecifier as ts.StringLiteral)
+            .text;
           if (importPath.startsWith(".")) {
             const currentDir = basePath.substring(0, basePath.lastIndexOf("/"));
             // Split path into segments and resolve ../ properly
             const pathSegments = `${currentDir}/${importPath}`.split("/");
             const normalizedSegments = [];
-            
+
             for (const segment of pathSegments) {
               if (segment === "..") {
                 normalizedSegments.pop();
@@ -83,30 +84,41 @@ export async function GET(
               }
             }
 
-            const resolvedPath = `${normalizedSegments.join("/")}.ts`;
-            
-            if (!imports[resolvedPath]) {
-              const importUrl = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${resolvedPath}`;
+            // Try direct path first
+            let resolvedPath = `${normalizedSegments.join("/")}`;
+            let importUrl = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${resolvedPath}.ts`;
 
-              const response = await fetch(importUrl, {
+            let response = await fetch(importUrl, {
+              headers: {
+                "Cache-Control":
+                  "public, s-maxage=86400, stale-while-revalidate=43200",
+              },
+            });
+
+            // If not found, try with /index.ts
+            if (!response.ok && response.status === 404) {
+              importUrl = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${resolvedPath}/index.ts`;
+              response = await fetch(importUrl, {
                 headers: {
-                  'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
-                }
+                  "Cache-Control":
+                    "public, s-maxage=86400, stale-while-revalidate=43200",
+                },
               });
-              if (response.ok) {
-                const content = await response.text();
-                const importedFile = ts.createSourceFile(
-                  resolvedPath,
-                  content,
-                  ts.ScriptTarget.ES2015,
-                  true
-                );
-                imports[resolvedPath] = {
-                  sourceFile: importedFile,
-                  importClause: statement.importClause,
-                };
-                await processImports(importedFile, resolvedPath, depth + 1);
-              }
+            }
+
+            if (response.ok) {
+              const content = await response.text();
+              const importedFile = ts.createSourceFile(
+                resolvedPath,
+                content,
+                ts.ScriptTarget.ES2015,
+                true
+              );
+              imports[resolvedPath] = {
+                sourceFile: importedFile,
+                importClause: statement.importClause,
+              };
+              await processImports(importedFile, resolvedPath, depth + 1);
             }
           }
         }
@@ -154,11 +166,61 @@ export async function GET(
               } else if (child?.type?.kind === ts.SyntaxKind.BooleanKeyword) {
                 property.type = "boolean";
               } else if (child?.type?.kind === ts.SyntaxKind.TypeReference) {
-                const typeName = (
-                  member.type as ts.TypeReferenceNode
-                ).typeName.getText();
+                const typeRef = child.type as ts.TypeReferenceNode;
+                const typeName = typeRef.typeName.getText();
                 strictType = typeName;
                 type = "object";
+
+                // Handle extended interfaces
+                for (const [_, importInfo] of Object.entries(imports)) {
+                  importInfo.sourceFile.forEachChild((node) => {
+                    if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) {
+                      // Get properties from this interface
+                      node.members.forEach((member) => {
+                        if (ts.isPropertySignature(member)) {
+                          const prop: ParsedProperty = {
+                            name: member.name.getText(),
+                            type: getTypeString(member.type),
+                            strictType: member.type?.getText() || "string",
+                            required: !member.questionToken,
+                            description: map[member.name.getText()] ? map[member.name.getText()] : "",
+                          };
+                          additionalProperties[prop.name] = prop;
+                        }
+                      });
+
+                      // Handle extends clause if it exists
+                      if (node.heritageClauses) {
+                        node.heritageClauses.forEach((clause) => {
+                          if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
+                            clause.types.forEach((baseType) => {
+                              const baseTypeName = baseType.expression.getText();
+                              // Look for base interface in all imported files
+                              for (const [_, baseImportInfo] of Object.entries(imports)) {
+                                baseImportInfo.sourceFile.forEachChild((baseNode) => {
+                                  if (ts.isInterfaceDeclaration(baseNode) && baseNode.name.text === baseTypeName) {
+                                    baseNode.members.forEach((member) => {
+                                      if (ts.isPropertySignature(member)) {
+                                        const baseProp: ParsedProperty = {
+                                          name: member.name.getText(),
+                                          type: getTypeString(member.type),
+                                          strictType: member.type?.getText() || "string",
+                                          required: !member.questionToken,
+                                          description: map[member.name.getText()] ? map[member.name.getText()] : "",
+                                        };
+                                        additionalProperties[baseProp.name] = baseProp;
+                                      }
+                                    });
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        });
+                      }
+                    }
+                  });
+                }
               }
               additionalProperties[property.name] = property;
             }
@@ -175,12 +237,16 @@ export async function GET(
             node.name.text === interfaceName
           ) {
             node.members.forEach((member) => {
-              if (ts.isPropertySignature(member) || ts.isMethodSignature(member)) {
+              if (
+                ts.isPropertySignature(member) ||
+                ts.isMethodSignature(member)
+              ) {
                 const name = member.name.getText();
                 const required = !member.questionToken;
                 let typeString = "any";
                 let strictType = "any";
-                let additionalProperties: { [name: string]: ParsedProperty } = {};
+                let additionalProperties: { [name: string]: ParsedProperty } =
+                  {};
                 let values: string[] | undefined = undefined;
 
                 if (/^on/.test(name) || /^before/.test(name)) {
@@ -215,17 +281,69 @@ export async function GET(
                       typeString = "string";
                     }
                   } else if (member.type.kind === ts.SyntaxKind.TypeReference) {
-                    const typeName = (
-                      member.type as ts.TypeReferenceNode
-                    ).typeName.getText();
+                    const typeRef = member.type as ts.TypeReferenceNode;
+                    const typeName = typeRef.typeName.getText();
                     strictType = typeName;
                     typeString = "object";
+
+                    // Handle extended interfaces
+                    for (const [_, importInfo] of Object.entries(imports)) {
+                      importInfo.sourceFile.forEachChild((node) => {
+                        if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) {
+                          // Get properties from this interface
+                          node.members.forEach((member) => {
+                            if (ts.isPropertySignature(member)) {
+                              const prop: ParsedProperty = {
+                                name: member.name.getText(),
+                                type: getTypeString(member.type),
+                                strictType: member.type?.getText() || "string",
+                                required: !member.questionToken,
+                                description: map[member.name.getText()] ? map[member.name.getText()] : "",
+                              };
+                              additionalProperties[prop.name] = prop;
+                            }
+                          });
+
+                          // Handle extends clause if it exists
+                          if (node.heritageClauses) {
+                            node.heritageClauses.forEach((clause) => {
+                              if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
+                                clause.types.forEach((baseType) => {
+                                  const baseTypeName = baseType.expression.getText();
+                                  // Look for base interface in all imported files
+                                  for (const [_, baseImportInfo] of Object.entries(imports)) {
+                                    baseImportInfo.sourceFile.forEachChild((baseNode) => {
+                                      if (ts.isInterfaceDeclaration(baseNode) && baseNode.name.text === baseTypeName) {
+                                        baseNode.members.forEach((member) => {
+                                          if (ts.isPropertySignature(member)) {
+                                            const baseProp: ParsedProperty = {
+                                              name: member.name.getText(),
+                                              type: getTypeString(member.type),
+                                              strictType: member.type?.getText() || "string",
+                                              required: !member.questionToken,
+                                              description: map[member.name.getText()] ? map[member.name.getText()] : "",
+                                            };
+                                            additionalProperties[baseProp.name] = baseProp;
+                                          }
+                                        });
+                                      }
+                                    });
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        }
+                      });
+                    }
                   } else if (member.type.kind === ts.SyntaxKind.StringKeyword) {
                     typeString = "string";
                     strictType = member.type.getText();
                   } else if (member.type.kind === ts.SyntaxKind.NumberKeyword) {
                     typeString = "number";
-                  } else if (member.type.kind === ts.SyntaxKind.BooleanKeyword) {
+                  } else if (
+                    member.type.kind === ts.SyntaxKind.BooleanKeyword
+                  ) {
                     typeString = "boolean";
                   } else if (member.type.kind === ts.SyntaxKind.AnyKeyword) {
                     typeString = "any";
@@ -255,21 +373,29 @@ export async function GET(
     };
 
     const result = structureAdyenWebTypes();
-    
-    // Clean up
-    imports = {};
-    
-    return Response.json(result, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
-      }
-    });
 
+    // Clean up
+    console.log("imports:", Object.keys(imports));
+    imports = {};
+
+    return Response.json(result);
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();
       return new Response(JSON.stringify(data), { status: error.status });
     }
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+    });
   }
+}
+
+// Helper function to get type string
+function getTypeString(type: ts.TypeNode | undefined): string {
+  if (!type) return "string";
+  if (type.kind === ts.SyntaxKind.StringKeyword) return "string";
+  if (type.kind === ts.SyntaxKind.NumberKeyword) return "number";
+  if (type.kind === ts.SyntaxKind.BooleanKeyword) return "boolean";
+  if (type.kind === ts.SyntaxKind.TypeLiteral) return "object";
+  return "string";
 }

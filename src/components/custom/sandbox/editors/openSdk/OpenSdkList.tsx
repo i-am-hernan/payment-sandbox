@@ -77,7 +77,7 @@ export const OpenSdkList = ({
 
                 {/* Handle object type recursively */}
                 {properties[property].type === "object" &&
-                  Object.keys(properties[property].additionalProperties)
+                  Object.keys(properties[property]?.additionalProperties || {})
                     .length > 0 && (
                     <div className="border-l-[1px]">
                       <OpenSdkList
