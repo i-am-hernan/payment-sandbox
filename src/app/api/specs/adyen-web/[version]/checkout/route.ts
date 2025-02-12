@@ -280,7 +280,6 @@ export async function GET(
                                   ? map[member.name.getText()]
                                   : "",
                               };
-
                               // Handle nested type literals in interface properties
                               if (
                                 member.type?.kind === ts.SyntaxKind.TypeLiteral
@@ -300,30 +299,97 @@ export async function GET(
                   ).typeName.getText();
                                 prop.strictType = nestedTypeName;
 
-                                // Recursively process the referenced type (like PaymentAmount)
-                                for (const [_, importInfo] of Object.entries(imports)) {
-                                  importInfo.sourceFile.forEachChild((nestedNode) => {
-                                    if (ts.isInterfaceDeclaration(nestedNode) && nestedNode.name.text === nestedTypeName) {
-                                      prop.additionalProperties = {};
-                                      nestedNode.members.forEach((nestedMember) => {
-                                        if (ts.isPropertySignature(nestedMember)) {
-                                          const nestedProp: ParsedProperty = {
-                                            name: nestedMember.name.getText(),
-                                            type: getTypeString(nestedMember.type),
-                                            strictType: nestedMember.type?.getText() || "string",
-                                            required: !nestedMember.questionToken,
-                                            description: map[nestedMember.name.getText()]
-                                              ? map[nestedMember.name.getText()]
-                                              : "",
-                                          };
-                                          
-                                          if (prop.additionalProperties) {
-                                            prop.additionalProperties[nestedProp.name] = nestedProp;
+                                // Recursively process the referenced type
+                                for (const [_, importInfo] of Object.entries(
+                                  imports
+                                )) {
+                                  importInfo.sourceFile.forEachChild(
+                                    (nestedNode) => {
+                                      if (
+                                        ts.isInterfaceDeclaration(nestedNode) &&
+                                        nestedNode.name.text === nestedTypeName
+                                      ) {
+                                        prop.additionalProperties = {};
+                                        nestedNode.members.forEach(
+                                          (nestedMember) => {
+                                            if (
+                                              ts.isPropertySignature(
+                                                nestedMember
+                                              )
+                                            ) {
+                                              const nestedProp: ParsedProperty =
+                                                {
+                                                  name: nestedMember.name.getText(),
+                                                  type: getTypeString(
+                                                    nestedMember.type
+                                                  ),
+                                                  strictType:
+                                                    nestedMember.type?.getText() ||
+                                                    "string",
+                                                  required:
+                                                    !nestedMember.questionToken,
+                                                  description: map[
+                                                    nestedMember.name.getText()
+                                                  ]
+                                                    ? map[
+                                                        nestedMember.name.getText()
+                                                      ]
+                                                    : "",
+                                                };
+
+                                              // Continue recursion for nested properties
+                                              if (
+                                                nestedMember.type?.kind ===
+                                                ts.SyntaxKind.TypeLiteral
+                                              ) {
+                                                nestedProp.type = "object";
+                                                nestedProp.strictType =
+                                                  "object";
+                                                nestedProp.additionalProperties =
+                                                  setAdditionalProperties(
+                                                    nestedMember
+                                                  );
+                                              } else if (nestedMember.type?.kind === ts.SyntaxKind.TypeReference) {
+                                                // Handle nested type references recursively
+                                                nestedProp.type = "object";
+                                                const nestedTypeName = (nestedMember.type as ts.TypeReferenceNode).typeName.getText();
+                                                nestedProp.strictType = nestedTypeName;
+                                                
+                                                // Recursively process the referenced type
+                                                for (const [_, importInfo] of Object.entries(imports)) {
+                                                  importInfo.sourceFile.forEachChild((deepNode) => {
+                                                    if (ts.isInterfaceDeclaration(deepNode) && deepNode.name.text === nestedTypeName) {
+                                                      nestedProp.additionalProperties = {};
+                                                      deepNode.members.forEach((deepMember) => {
+                                                        if (ts.isPropertySignature(deepMember)) {
+                                                          const deepProp: ParsedProperty = {
+                                                            name: deepMember.name.getText(),
+                                                            type: getTypeString(deepMember.type),
+                                                            strictType: deepMember.type?.getText() || "string",
+                                                            required: !deepMember.questionToken,
+                                                            description: map[deepMember.name.getText()]
+                                                              ? map[deepMember.name.getText()]
+                                                              : "",
+                                                          };
+                                                          
+                                                          if (nestedProp.additionalProperties) {
+                                                            nestedProp.additionalProperties[deepProp.name] = deepProp;
+                                                          }
+                                                        }
+                                                      });
+                                                    }
+                                                  });
+                                                }
+                                              }
+                                              if (prop.additionalProperties) {
+                                                prop.additionalProperties[nestedProp.name] = nestedProp;
+                                              }
+                                            }
                                           }
-                                        }
-                                      });
+                                        );
+                                      }
                                     }
-                                  });
+                                  );
                                 }
                               }
                               additionalProperties[prop.name] = prop;
@@ -354,6 +420,7 @@ export async function GET(
                                             if (
                                               ts.isPropertySignature(member)
                                             ) {
+                                              console.log("member.name.getText()",member.name.getText());
                                               const baseProp: ParsedProperty = {
                                                 name: member.name.getText(),
                                                 type: getTypeString(
@@ -405,28 +472,28 @@ export async function GET(
                                                           } else if (nestedMember.type?.kind === ts.SyntaxKind.TypeReference) {
                                                             // Handle nested type references recursively
                                                             nestedProp.type = "object";
-                                                            const deepNestedTypeName = (nestedMember.type as ts.TypeReferenceNode).typeName.getText();
-                                                            nestedProp.strictType = deepNestedTypeName;
+                                                            const nestedTypeName = (nestedMember.type as ts.TypeReferenceNode).typeName.getText();
+                                                            nestedProp.strictType = nestedTypeName;
                                                             
                                                             // Recursively process the referenced type
                                                             for (const [_, importInfo] of Object.entries(imports)) {
-                                                              importInfo.sourceFile.forEachChild((deepNestedNode) => {
-                                                                if (ts.isInterfaceDeclaration(deepNestedNode) && deepNestedNode.name.text === deepNestedTypeName) {
+                                                              importInfo.sourceFile.forEachChild((deepNode) => {
+                                                                if (ts.isInterfaceDeclaration(deepNode) && deepNode.name.text === nestedTypeName) {
                                                                   nestedProp.additionalProperties = {};
-                                                                  deepNestedNode.members.forEach((deepNestedMember) => {
-                                                                    if (ts.isPropertySignature(deepNestedMember)) {
-                                                                      const deepNestedProp: ParsedProperty = {
-                                                                        name: deepNestedMember.name.getText(),
-                                                                        type: getTypeString(deepNestedMember.type),
-                                                                        strictType: deepNestedMember.type?.getText() || "string",
-                                                                        required: !deepNestedMember.questionToken,
-                                                                        description: map[deepNestedMember.name.getText()]
-                                                                          ? map[deepNestedMember.name.getText()]
+                                                                  deepNode.members.forEach((deepMember) => {
+                                                                    if (ts.isPropertySignature(deepMember)) {
+                                                                      const deepProp: ParsedProperty = {
+                                                                        name: deepMember.name.getText(),
+                                                                        type: getTypeString(deepMember.type),
+                                                                        strictType: deepMember.type?.getText() || "string",
+                                                                        required: !deepMember.questionToken,
+                                                                        description: map[deepMember.name.getText()]
+                                                                          ? map[deepMember.name.getText()]
                                                                           : "",
                                                                       };
                                                                       
                                                                       if (nestedProp.additionalProperties) {
-                                                                        nestedProp.additionalProperties[deepNestedProp.name] = deepNestedProp;
+                                                                        nestedProp.additionalProperties[deepProp.name] = deepProp;
                                                                       }
                                                                     }
                                                                   });
@@ -461,8 +528,8 @@ export async function GET(
                 } else if (member.type.kind === ts.SyntaxKind.NumberKeyword) {
                   typeString = "number";
                 } else if (
-                  member.type.kind === ts.SyntaxKind.BooleanKeyword
-                ) {
+                    member.type.kind === ts.SyntaxKind.BooleanKeyword
+                  ) {
                   typeString = "boolean";
                 } else if (member.type.kind === ts.SyntaxKind.AnyKeyword) {
                   typeString = "any";
