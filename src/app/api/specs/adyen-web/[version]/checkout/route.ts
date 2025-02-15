@@ -64,7 +64,12 @@ export async function GET(
       basePath: string,
       depth = 0
     ) => {
-      if (depth > 2) return;
+      if (depth > 3) {
+        console.log(`Reached max depth at: ${basePath}`);
+        return;
+      }
+
+      console.log(`Processing file at depth ${depth}: ${basePath}`);
 
       for (const statement of sourceFile.statements) {
         if (ts.isImportDeclaration(statement)) {
@@ -225,14 +230,13 @@ export async function GET(
                 let additionalProperties: { [name: string]: ParsedProperty } =
                   {};
               let values: string[] | undefined = undefined;
-
+              console.log("member.name.getText()",member.name.getText(), member?.type?.getText(), member?.type?.kind);
               if (/^on/.test(name) || /^before/.test(name)) {
                 typeString = "function";
                 strictType = "function";
               } else if (member.type) {
                 const type = checker.getTypeAtLocation(member);
                 if (!type) return;
-
                 strictType = member.type.getText();
                 if (member.type.kind === ts.SyntaxKind.TypeLiteral) {
                   typeString = "object";
@@ -257,6 +261,7 @@ export async function GET(
                     typeString = "string";
                   }
                 } else if (member.type.kind === ts.SyntaxKind.TypeReference) {
+                  console.log("member.name.getText()",member.name.getText(), member.type.getText(), member.type.kind);
                     const typeRef = member.type as ts.TypeReferenceNode;
                     const typeName = typeRef.typeName.getText();
                     strictType = typeName;
@@ -420,7 +425,6 @@ export async function GET(
                                             if (
                                               ts.isPropertySignature(member)
                                             ) {
-                                              console.log("member.name.getText()",member.name.getText());
                                               const baseProp: ParsedProperty = {
                                                 name: member.name.getText(),
                                                 type: getTypeString(
@@ -441,6 +445,7 @@ export async function GET(
                                                 baseProp.type = "object";
                                                 baseProp.strictType = "object";
                                                 baseProp.additionalProperties = setAdditionalProperties(member);
+
                                               } else if (member.type?.kind === ts.SyntaxKind.TypeReference) {
                                                 // Handle nested type references recursively
                                                 baseProp.type = "object";
@@ -547,6 +552,9 @@ export async function GET(
                 additionalProperties,
               };
                 }
+            }
+            else {
+              console.log("Error: member.name.getText()",member?.name?.getText());
             }
           });
           }
