@@ -1,4 +1,3 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,15 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import React from "react";
-import { useState, useRef, useEffect } from "react";
-import OpenInFullIcon from "@mui/icons-material/OpenInFull";
-import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import { Button } from "@/components/ui/button";
-import { TabsProps } from "./types";
-import MinimizeIcon from "@mui/icons-material/Minimize";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import React, { useEffect, useRef, useState } from "react";
+import { TabsProps } from "./types";
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   const { tabsMap, crumbs, onExpand, onContract, type } = props;
@@ -66,7 +64,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               <TabsTrigger
                 key={index}
                 value={tab.value}
-                className={`flex px-2 py-[2px] justify-space-between ${tabsMap.length < 2 ? "border-dotted" : ""}`}
+                className={`flex px-2 py-[2px] justify-space-between ${tabsMap.length < 2 ? "border-none" : ""}`}
                 ref={(el) => {
                   tabRefs.current[index] = el;
                 }}

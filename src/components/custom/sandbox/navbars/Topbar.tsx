@@ -63,14 +63,6 @@ const Topbar = (props: any) => {
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
       ref={containerRef}
     >
-      <div className="flex items-baseline">
-        <div className="flex text-center text-preview pl-[8px] pr-1 text-[0.73rem] rounded-xs">{`${integration.toUpperCase()}`}</div>
-        <div className="flex text-center text-[0.9rem] relative w-[max-content]">
-          {variantName && (
-            <h3 className="flex text-center text-[0.9rem] relative w-[max-content] text-foreground">{`${variantName}`}</h3>
-          )}
-        </div>
-      </div>
       <div className="flex-1 text-center">
         <UpdateMerchantCookie />
       </div>
