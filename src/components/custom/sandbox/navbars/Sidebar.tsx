@@ -127,7 +127,7 @@ const Sidebar = (props: any) => {
       icon: (
         <div className="relative flex flex-col items-center justify-center">
           <CloudQueueIcon className="!text-foreground !text-[20px]" />
-          <p className="font-mono text-[8px] text-foreground bg-background flex leading-none mt-[3px]">
+          <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
             API
           </p>
         </div>
@@ -145,7 +145,7 @@ const Sidebar = (props: any) => {
       icon: (
         <div className="relative flex flex-col items-center justify-center">
           <LanguageIcon className="!text-foreground !text-[20px]" />
-          <p className="font-mono text-[8px] text-foreground bg-background flex leading-none mt-[3px]">
+          <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
             SDK
           </p>
         </div>
@@ -206,10 +206,10 @@ const Sidebar = (props: any) => {
           <div>
             <div>
               <Drawer direction="left">
-                <DrawerTrigger className="mt-[0.4rem] rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-foreground hover:border-dotted hover:bg-accent hover:text-accent-foreground">
-                  <div className="h-9 w-9 rounded-sm bg-primary/10 flex flex-col items-center justify-center">
-                    <FlaskConical className="!text-[20px] text-adyen" />
-                    <p className="font-mono text-[8px] text-foreground bg-background flex leading-none mt-[3px]">
+                <DrawerTrigger className="mt-[0.7rem] p-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-foreground hover:border-dotted hover:bg-accent hover:text-accent-foreground">
+                  <div className="flex flex-col items-center justify-center">
+                    <FlaskConical className="!text-[20px] text-foreground" />
+                    <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
                       CREATE
                     </p>
                   </div>
@@ -288,7 +288,7 @@ const Sidebar = (props: any) => {
                         variant="ghost"
                         size="icon"
                         ref={tab.ref}
-                        className={`mt-3 rounded-none ${
+                        className={`mt-5 rounded-none ${
                           section === tab.name
                             ? "border-[1px] border-foreground"
                             : "hover:border-[1px] hover:border-foreground hover:border-dotted"
@@ -299,7 +299,7 @@ const Sidebar = (props: any) => {
                       </Button>
                     </Tooltip>
                     {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
-                      <div className="w-4 h-4 border border-foreground rounded-full absolute bottom-1 right-1 transform translate-x-1/2 translate-y-1/2 bg-background text-foreground text-xxs">
+                      <div className="w-4 h-4 border border-foreground rounded-full absolute -top-2 -right-2 transform bg-background text-foreground text-xxs flex items-center justify-center">
                         {totalUnsavedChanges(tab.unsavedChanges)}
                       </div>
                     )}

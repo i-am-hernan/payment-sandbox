@@ -100,63 +100,65 @@ export default function FormulasPage() {
 
       {/* Cards Grid */}
       <div className="container mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredFormulas.map((formula, index) => {
-            const IconComponent = iconMap[formula.icon] || Calculator;
+        <div className="max-w-[1200px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredFormulas.map((formula, index) => {
+              const IconComponent = iconMap[formula.icon] || Calculator;
 
-            return (
-              <Card 
-                key={index} 
-                className="flex flex-col bg-card border-border/40 hover:border-primary/20 transition-colors duration-200"
-              >
-                <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-                  <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                    <IconComponent className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-1 ml-4">
-                    <CardTitle className="text-base font-medium text-foreground">
-                      {formula.title}
-                    </CardTitle>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {formula.integrationType}
-                    </p>
-                  </div>
-                  <Badge
-                    variant={formula.integrationType === "advance" ? "secondary" : "default"}
-                    className="ml-2 capitalize bg-primary/10 text-primary hover:bg-primary/20"
-                  >
-                    {formula.txVariant}
-                  </Badge>
-                </CardHeader>
-
-                <CardContent className="flex-grow pt-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {formula.description}
-                  </p>
-                  <div className="flex items-center mt-4 pt-4 border-t border-border/40">
-                    <span className="text-xs text-muted-foreground">Built by</span>
-                    <span className="text-xs font-medium ml-1 text-foreground">
-                      {formula.builtBy}
-                    </span>
-                  </div>
-                </CardContent>
-
-                <CardFooter className="pt-0">
-                  <Link 
-                    className="w-full" 
-                    href={`/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
-                  >
-                    <Button 
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                      variant="default"
+              return (
+                <Card 
+                  key={index} 
+                  className="flex flex-col bg-card border-border/40 hover:border-primary/20 transition-colors duration-200"
+                >
+                  <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                    <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
+                      <IconComponent className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1 ml-4">
+                      <CardTitle className="text-base font-medium text-foreground">
+                        {formula.title}
+                      </CardTitle>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {formula.integrationType}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={formula.integrationType === "advance" ? "secondary" : "default"}
+                      className="ml-2 capitalize bg-primary/10 text-primary hover:bg-primary/20"
                     >
-                      Use Formula
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-            );
-          })}
+                      {formula.txVariant}
+                    </Badge>
+                  </CardHeader>
+
+                  <CardContent className="flex-grow pt-4">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {formula.description}
+                    </p>
+                    <div className="flex items-center mt-4 pt-4 border-t border-border/40">
+                      <span className="text-xs text-muted-foreground">Built by</span>
+                      <span className="text-xs font-medium ml-1 text-foreground">
+                        {formula.builtBy}
+                      </span>
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="pt-0">
+                    <Link 
+                      className="w-full" 
+                      href={`/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
+                    >
+                      <Button 
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                        variant="default"
+                      >
+                        Use Formula
+                      </Button>
+                    </Link>
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
