@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 type UseApi = (
   endpoint: string,
   method: string,
-  payload?: any
+  payload?: any,
+  options?: {
+    cache?: string;
+  }
 ) => { data: any; loading: boolean; error: any };
 
 export type RequestOptions = {
@@ -12,10 +15,11 @@ export type RequestOptions = {
     "Content-type": string;
     Authorization?: string;
   };
+  cache?: string;
   body?: string;
 };
 
-export const useApi: UseApi = (endpoint, method, payload) => {
+export const useApi: UseApi = (endpoint, method, payload, options) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,6 +31,10 @@ export const useApi: UseApi = (endpoint, method, payload) => {
         "Content-type": "application/json",
       },
     };
+
+    if (options?.cache) {
+      requestOptions.cache = options.cache;
+    }
 
     if (payload) {
       requestOptions.body = JSON.stringify(payload);
