@@ -171,7 +171,11 @@ const Sidebar = (props: any) => {
       const domain = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_API_URL;
       const response = await fetch(
         `${domain}/api/checkout/v71/paymentMethods`,
-        requestOptions
+        {
+          method: requestOptions.method,
+          headers: requestOptions.headers,
+          body: requestOptions.body,
+        }
       );
       const data = await response.json();
       if (data.status >= 400) {
