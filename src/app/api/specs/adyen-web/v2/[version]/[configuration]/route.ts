@@ -1,8 +1,8 @@
 // app/api/data/[file]/route.ts
-import { strict } from "assert";
+import { descriptionMap } from "@/lib/descriptionMap";
+import { variantToInterfaceName, VariantToInterfaceName } from "@/lib/variantToInterfaceName";
 import { NextRequest } from "next/server";
 import * as ts from "typescript";
-import { descriptionMap } from "@/lib/descriptionMap";
 
 // First, create a custom error class at the top of the file
 class ApiError extends Error {
@@ -29,16 +29,43 @@ interface ImportInfo {
   importClause?: ts.ImportClause;
 }
 
+const map = variantToInterfaceName as Record<
+  string,
+  Record<string, VariantToInterfaceName>
+>;
+
+const getCheckoutInterfaceName = (version: string) => {
+  return /^v6./.test(version) ? "CoreConfiguration" : "CoreOptions";
+};
+
+const getCheckoutMainPath = (version: string) => {
+  return "packages/lib/src/core/types.ts";
+};
+
+const getVariantInterfaceName = (configuration: string, version: string) => {
+  return map[configuration][version].interfaceName;
+};
+
+const getVariantMainPath = (configuration: string, version: string) => {
+  return map[configuration][version].path;
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { version: string } }
+  { params }: { params: { version: string; configuration: string } }
 ) {
-  const { version } = params;
+  const { version, configuration } = params;
   const parsedVersion = version.replaceAll("_", ".");
-  const interfaceName = /^v6./.test(parsedVersion)
-    ? "CoreConfiguration"
-    : "CoreOptions";
-  const mainPath = "packages/lib/src/core/types.ts";
+  const majorVersion = parsedVersion.split(".")[0];
+  console.log("configuration", configuration);
+  const interfaceName =
+    configuration === "checkout"
+      ? getCheckoutInterfaceName(parsedVersion)
+      : getVariantInterfaceName(configuration, majorVersion);
+  const mainPath =
+    configuration === "checkout"
+      ? getCheckoutMainPath(parsedVersion)
+      : getVariantMainPath(configuration, majorVersion);
   const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${mainPath}`;
 
   const map = descriptionMap as Record<string, string>;

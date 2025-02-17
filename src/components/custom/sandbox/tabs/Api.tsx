@@ -2,7 +2,6 @@ import { APIVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import OpenApiList from "@/components/custom/sandbox/editors/openApi/OpenApiList";
 import Search from "@/components/custom/sandbox/editors/Search";
-import Version from "@/components/custom/sandbox/editors/Version";
 import VersionCompact from "@/components/custom/sandbox/editors/VersionCompact";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
@@ -12,19 +11,18 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
+import { cn } from "@/lib/utils";
 import { formulaActions, specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   debounce,
   deepEqual,
   prettify,
-  replaceKeyValueJSON,
-  stringifyObject,
+  replaceKeyValueJSON
 } from "@/utils/utils";
-import { useCallback, useEffect, useReducer, useState, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ImperativePanelHandle } from "react-resizable-panels";
-import { cn } from "@/lib/utils";
 
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateCheckoutAPIVersion } = formulaActions;
@@ -183,7 +181,11 @@ const Api = (props: any) => {
     error: apiSpecsError,
   } = useApi(
     `api/specs/checkout/CheckoutService-v${checkoutAPIVersion[api]}.json`,
-    "GET"
+    "GET",
+    null,
+    {
+      cache: "force-cache",
+    }
   );
 
   useEffect(() => {

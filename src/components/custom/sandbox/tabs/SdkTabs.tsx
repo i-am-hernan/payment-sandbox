@@ -93,15 +93,17 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
   const specs = useSelector((state: RootState) => state.specs);
 
   // Fetch SDK specs based on active tab
-  const url = `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/${
-    activeTab === "checkoutConfiguration" ? "checkout" : "variant"
-  }?${activeTab === "txVariantConfiguration" ? `txvariant=${variant}` : ""}`;
+  const url = `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/${
+    activeTab === "checkoutConfiguration" ? "checkout" : variant
+  }`;
 
   const {
     data: sdkSpecsData,
     loading: loadingSdkSpecData,
     error: sdkSpecsError,
-  } = useApi(url, "GET");
+  } = useApi(url, "GET", null, {
+    cache: "force-cache", // Next.js will cache this response
+  });
 
   // Update specs when data changes
   useEffect(() => {
