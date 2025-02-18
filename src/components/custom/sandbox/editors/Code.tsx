@@ -207,7 +207,7 @@ const Code = (props: any) => {
 
   return (
     <div
-      className={`flex w-[100%] h-[100%] flex-col codemirror-wrapper border-t-none ${readOnly ? "cursor-not-allowed" : ""}`}
+      className={`flex w-[100%] h-[100%] flex-col codemirror-wrapper border-t-none rounded-md ${readOnly ? "cursor-not-allowed" : ""}`}
     >
       <CodeMirror
         value={code}

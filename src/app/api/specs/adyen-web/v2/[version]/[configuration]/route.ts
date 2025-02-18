@@ -57,7 +57,7 @@ export async function GET(
   const { version, configuration } = params;
   const parsedVersion = version.replaceAll("_", ".");
   const majorVersion = parsedVersion.split(".")[0];
-  console.log("configuration", configuration);
+
   const interfaceName =
     configuration === "checkout"
       ? getCheckoutInterfaceName(parsedVersion)
@@ -92,15 +92,8 @@ export async function GET(
       depth = 0
     ) => {
       if (depth > 3) {
-        console.log(
-          "max depth reached",
-          sourceFile.fileName,
-          "at depth",
-          depth
-        );
         return;
       }
-      console.log("sourceFile", sourceFile.fileName, "at depth", depth);
 
       for (const statement of sourceFile.statements) {
         if (ts.isImportDeclaration(statement)) {

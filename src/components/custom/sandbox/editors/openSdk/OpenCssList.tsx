@@ -23,32 +23,32 @@ export const OpenCssList = (props: any) => {
   // Update handlers to add/remove highlight class
   const handleMouseEnter = (propertyValue: string) => {
     // Remove leading dot if present
-    const className = propertyValue.replace(/^\./, '');
+    const className = propertyValue.replace(/^\./, "");
     const elements = document.getElementsByClassName(className);
     Array.from(elements).forEach((element) => {
-      element.classList.add('highlight-green');
+      element.classList.add("highlight-green");
     });
   };
 
   const handleMouseLeave = (propertyValue: string) => {
     // Remove leading dot if present
-    const className = propertyValue.replace(/^\./, '');
+    const className = propertyValue.replace(/^\./, "");
     const elements = document.getElementsByClassName(className);
     Array.from(elements).forEach((element) => {
-      element.classList.remove('highlight-green');
+      element.classList.remove("highlight-green");
     });
   };
 
   return (
     <Accordion
       type="multiple"
-      className="w-full"
+      className="w-full px-3"
       value={selectedProperties}
       onValueChange={onChange}
       disabled={disabled}
     >
       {propertyKeys.length === 0 && (
-        <div className="pl-6 pr-4 py-3">
+        <div className="p-3">
           <p className="text-sm text-foreground">{`0 matching results`}</p>
         </div>
       )}
@@ -57,21 +57,31 @@ export const OpenCssList = (props: any) => {
           <AccordionItem
             key={property}
             value={property}
-            className="hover:no-underline"
+            className="hover:no-underline border-[1px] border-border rounded-md my-2"
           >
-            <AccordionTrigger 
-              className="pl-6 pr-4 py-3 border-transparent border-[1px] hover:border-[1px] hover:border-adyen hover:border-dotted"
-              onMouseEnter={properties[property].type === "class" ? () => handleMouseEnter(property) : undefined}
-              onMouseLeave={properties[property].type === "class" ? () => handleMouseLeave(property) : undefined}
+            <AccordionTrigger
+              className="px-4 pt-2 pb-1 border-transparent border-[1px] hover:bg-foreground/10 flex flex-col"
+              onMouseEnter={
+                properties[property].type === "class"
+                  ? () => handleMouseEnter(property)
+                  : undefined
+              }
+              onMouseLeave={
+                properties[property].type === "class"
+                  ? () => handleMouseLeave(property)
+                  : undefined
+              }
             >
-              <p className="text-[0.85rem] text-foreground">{property}</p>
-              <p className="font-mono text-xs flex-grow text-left">
-                {properties[property].type && (
-                  <span className="pl-2 text-grey">
-                    {properties[property].type}
-                  </span>
-                )}
-              </p>
+              <div className="flex justify-start w-full items-center mb-2">
+                <p className="text-[0.85rem] text-foreground">{property}</p>
+                <p className="font-mono text-xs flex-grow text-left">
+                  {properties[property].type && (
+                    <span className="pl-2 text-grey">
+                      {properties[property].type}
+                    </span>
+                  )}
+                </p>
+              </div>
             </AccordionTrigger>
             <AccordionContent>
               <div className="pl-6 pr-4">
@@ -91,7 +101,11 @@ export const OpenCssList = (props: any) => {
                     }}
                   >
                     <Color
-                      value={values[property] ? values[property].replace(/\s*!important\s*;/, ";") : "#000000"}
+                      value={
+                        values[property]
+                          ? values[property].replace(/\s*!important\s*;/, ";")
+                          : "#000000"
+                      }
                     />
                   </CssImportant>
                 )}
@@ -108,15 +122,25 @@ export const OpenCssList = (props: any) => {
                     }}
                   >
                     <Enum
-                      value={values[property] ? values[property].replace(/\s*!important\s*;/, ";").replace(/;/g, "") : "Arial"}
+                      value={
+                        values[property]
+                          ? values[property]
+                              .replace(/\s*!important\s*;/, ";")
+                              .replace(/;/g, "")
+                          : "Arial"
+                      }
                       disabled={disabled}
-                      set={properties[property].values.map((value: any) => value.replace(/'/g, ""))}
+                      set={properties[property].values.map((value: any) =>
+                        value.replace(/'/g, "")
+                      )}
                     />
                   </CssImportant>
                 )}
                 {properties[property].type === "size" && values && (
                   <CssImportant
-                    value={values[property] ? values[property] : "14px !important;"}
+                    value={
+                      values[property] ? values[property] : "14px !important;"
+                    }
                     onChange={(value: string) => {
                       setValues(
                         { ...values, [property]: value },
@@ -169,7 +193,9 @@ export const OpenCssList = (props: any) => {
                           } else if (latestValue.type === "size") {
                             newProperty = { [latestKey]: "14px !important;" };
                           } else if (latestValue.type === "color") {
-                            newProperty = { [latestKey]: "#000000 !important;" };
+                            newProperty = {
+                              [latestKey]: "#000000 !important;",
+                            };
                           }
                           let mergedProperties = {
                             ...values[property],

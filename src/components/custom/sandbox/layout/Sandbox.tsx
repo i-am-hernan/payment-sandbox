@@ -111,7 +111,7 @@ const Sandbox = ({
             maxSize={view === "preview" || view === "demo" ? 0 : 100}
             ref={refB}
             className={`transition-all duration-300 ease-in-out ${
-              view === "developer" ? "min-h-[33px]" : ""
+              view === "developer" ? "min-h-[40px]" : ""
             }`}
           >
             <div className="items-center justify-center flex w-full h-full">

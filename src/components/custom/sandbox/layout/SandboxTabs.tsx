@@ -52,39 +52,46 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   }, [tabTitle, tabsMap]);
 
   return (
-    <Tabs
-      defaultValue={tabTitle}
-      className="w-full h-full flex flex-col"
-      onValueChange={(value) => setTabTitle(value)}
-    >
-      <span className="border-b-2 flex justify-between">
-        <TabsList>
-          {tabsMap.map((tab, index) => (
-            <div key={index} className="p-[3px] border-r-2">
-              <TabsTrigger
-                key={index}
-                value={tab.value}
-                className={`flex px-2 py-[2px] justify-space-between ${tabsMap.length < 2 ? "border-none" : ""}`}
-                ref={(el) => {
-                  tabRefs.current[index] = el;
-                }}
-              >
-                <span>{tab.icon}</span>
-                <p className="px-1 text-xs text-foreground">{tab.title}</p>
-                {tab.unsavedChanges && (
-                  <span className="ml-1 w-2 h-2 bg-background border border-primary rounded-full inline-block"></span>
-                )}
-              </TabsTrigger>
-            </div>
-          ))}
-        </TabsList>
-        <div>
+    <div className="w-full h-full flex flex-col">
+      {crumbs && (
+        <div className="flex justify-between pl-3">
+          {
+            <span className="flex">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/">
+                      <span className="font-semibold px-0 text-xxs">
+                        {"home"}
+                      </span>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  {crumbs.map((crumb, index) => (
+                    <React.Fragment key={index}>
+                      <BreadcrumbItem key={index}>
+                        <span className="font-semibold px-0 text-xxs">
+                          {crumb}
+                        </span>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                    </React.Fragment>
+                  ))}
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>
+                      <p className="font-semibold px-0 text-xxs">{tabTitle}</p>
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </span>
+          }
           {!hasExpanded && (
             <Button
               key="clear"
               variant="outline"
-              size="sm"
-              className="shadow-none px-2 mb-0 pt-0 pb-0 border-r-0 border-t-0 border-b-0 rounded-none border-l-[2px] border-border"
+              size="icon"
+              className="shadow-none border-none w-7 h-7 rounded-none"
               onClick={(e) => {
                 if (onExpand) {
                   onExpand();
@@ -104,7 +111,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               key="clear"
               variant="outline"
               size="sm"
-              className="shadow-none px-2 mb-0 pt-0 pb-0 border-r-0 border-t-0 border-b-0 rounded-none border-l-[2px] border-border"
+              className="shadow-none px-2 mb-0 pt-0 pb-0 border-none"
               onClick={(e) => {
                 if (onContract) {
                   onContract();
@@ -120,44 +127,85 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
             </Button>
           )}
         </div>
-      </span>
-      {crumbs && (
-        <span className="border-b-2 pl-3 flex">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">
-                  <span className="font-semibold px-0 text-xxs">{"home"}</span>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              {crumbs.map((crumb, index) => (
-                <React.Fragment key={index}>
-                  <BreadcrumbItem key={index}>
-                    <span className="font-semibold px-0 text-xxs">{crumb}</span>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                </React.Fragment>
-              ))}
-              <BreadcrumbItem>
-                <BreadcrumbPage>
-                  <p className="font-semibold px-0 text-xxs">{tabTitle}</p>
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </span>
       )}
-      {tabsMap.map((tab, index) => (
-        <TabsContent
-          key={index}
-          value={tab.value}
-          className="w-full flex-grow overflow-y-scroll"
-        >
-          {tab.content}
-        </TabsContent>
-      ))}
-    </Tabs>
+      <Tabs
+        defaultValue={tabTitle}
+        className="w-full h-full flex flex-col"
+        onValueChange={(value) => setTabTitle(value)}
+      >
+        <span className="flex justify-between mb-2 pl-3">
+          <TabsList className="mt-1">
+            {tabsMap.map((tab, index) => (
+              <div key={index} className="p-[3px]">
+                <TabsTrigger
+                  key={index}
+                  value={tab.value}
+                  className={`flex px-2 py-[2px] justify-space-between`}
+                  ref={(el) => {
+                    tabRefs.current[index] = el;
+                  }}
+                >
+                  <span>{tab.icon}</span>
+                  <p className="px-1 text-xs text-foreground">{tab.title}</p>
+                  {tab.unsavedChanges && (
+                    <span className="ml-1 w-2 h-2 bg-foreground rounded-full inline-block"></span>
+                  )}
+                </TabsTrigger>
+              </div>
+            ))}
+          </TabsList>
+          {!crumbs && !hasExpanded && (
+            <Button
+              key="clear"
+              variant="outline"
+              size="sm"
+              className="shadow-none border-none w-7 h-7 rounded-none"
+              onClick={(e) => {
+                if (onExpand) {
+                  onExpand();
+                  setHasExpanded(!hasExpanded);
+                }
+              }}
+            >
+              {type === "subwindow" ? (
+                <ExpandLessIcon className="text-warning !text-xxs" />
+              ) : (
+                <OpenInFullIcon className="text-primary !text-xxs" />
+              )}
+            </Button>
+          )}
+          {!crumbs && hasExpanded && (
+            <Button
+              key="clear"
+              variant="outline"
+              size="sm"
+              className="shadow-none px-2 mb-0 pt-0 pb-0 border-none"
+              onClick={(e) => {
+                if (onContract) {
+                  onContract();
+                  setHasExpanded(!hasExpanded);
+                }
+              }}
+            >
+              {type === "subwindow" ? (
+                <ExpandMoreIcon className="text-warning !text-xxs" />
+              ) : (
+                <CloseFullscreenIcon className="text-primary !text-xxs" />
+              )}
+            </Button>
+          )}
+        </span>
+        {tabsMap.map((tab, index) => (
+          <TabsContent
+            key={index}
+            value={tab.value}
+            className="w-full flex-grow overflow-y-scroll rounded-md"
+          >
+            {tab.content}
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
   );
 };
 

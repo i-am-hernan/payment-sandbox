@@ -27,10 +27,10 @@ import {
 import { RequestOptions } from "@/hooks/useApi";
 import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
+import BrushIcon from "@mui/icons-material/Brush";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
-import WidgetsIcon from "@mui/icons-material/Widgets";
 import Tooltip from "@mui/material/Tooltip";
 import { ChevronDown, FlaskConical } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -71,6 +71,7 @@ const Sidebar = (props: any) => {
 
   const serverButtonRef = useRef<HTMLButtonElement>(null);
   const clientButtonRef = useRef<HTMLButtonElement>(null);
+  const styleButtonRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +96,11 @@ const Sidebar = (props: any) => {
         event.preventDefault();
         if (clientButtonRef.current) {
           clientButtonRef.current.click();
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key === "k") {
+        event.preventDefault();
+        if (styleButtonRef.current) {
+          styleButtonRef.current.click();
         }
       }
     };
@@ -151,11 +157,25 @@ const Sidebar = (props: any) => {
         </div>
       ),
       unsavedChanges: {
-        htmlUnsavedChanges,
-        styleUnsavedChanges,
         jsUnsavedChanges,
       },
       ref: clientButtonRef,
+    },
+    {
+      name: "Style",
+      hotKey: "⌘ + k",
+      icon: (
+        <div className="relative flex flex-col items-center justify-center">
+          <BrushIcon className="!text-foreground !text-[20px]" />
+          <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
+            CSS
+          </p>
+        </div>
+      ),
+      unsavedChanges: {
+        styleUnsavedChanges,
+      },
+      ref: styleButtonRef,
     },
   ];
 
@@ -201,16 +221,18 @@ const Sidebar = (props: any) => {
   };
   return (
     <div ref={sidebarRef}>
-      <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-2 text-center">
+      <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>
               <Drawer direction="left">
-                <DrawerTrigger className="mt-[0.7rem] p-1 rounded-none border-[1px] border-transparent hover:border-[1px] hover:border-foreground hover:border-dotted hover:bg-accent hover:text-accent-foreground">
-                  <div className="flex flex-col items-center justify-center">
-                    <FlaskConical className="!text-[20px] text-foreground" />
+                <DrawerTrigger
+                  className={`mt-4 px-2 py-[2px] inline items-center justify-center rounded-md hover:bg-foreground/10`}
+                >
+                  <div className="relative flex flex-col items-center justify-center">
+                    <FlaskConical className="!text-foreground !text-[20px]" />
                     <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
-                      CREATE
+                      NEW
                     </p>
                   </div>
                 </DrawerTrigger>
@@ -288,10 +310,10 @@ const Sidebar = (props: any) => {
                         variant="ghost"
                         size="icon"
                         ref={tab.ref}
-                        className={`mt-5 rounded-none ${
+                        className={`mt-5 rounded-md p-5 ${
                           section === tab.name
-                            ? "border-[1px] border-foreground"
-                            : "hover:border-[1px] hover:border-foreground hover:border-dotted"
+                            ? "bg-foreground/10"
+                            : "hover:bg-foreground/10"
                         }`}
                         onClick={() => setSection(tab.name)}
                       >

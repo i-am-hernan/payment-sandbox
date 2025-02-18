@@ -25,7 +25,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 interface SectionType {
-  section: "Client" | "Server";
+  section: "Client" | "Server" | "Style";
 }
 
 const {
@@ -136,7 +136,8 @@ const Page: any = () => {
                 storeConfiguration: checkoutConfiguration,
                 updateStoreConfiguration: updateCheckoutConfiguration,
                 configurationType: "checkoutConfiguration",
-                description: "Create a checkout configuration object for a Web Components integration",
+                description:
+                  "Create a checkout configuration object for a Web Components integration",
               },
               txVariantConfiguration: {
                 storeConfiguration: txVariantConfiguration,
@@ -154,38 +155,6 @@ const Page: any = () => {
         ),
         value: `checkout`,
         unsavedChanges: unsavedChanges.js,
-      },
-      {
-        title: "style",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-info">{"CSS"}</span>
-        ),
-        content: (
-          <Style
-            key={"style"}
-            storeConfiguration={style}
-            updateStoreConfiguration={updateStyle}
-            configurationType="style"
-            variant={variant}
-            theme={theme}
-            integration={integration}
-            view={view}
-            description={`Customize the style of ${variant}. Inspect the browser console to view all selectors.`}
-          />
-        ),
-        value: "style",
-        unsavedChanges: unsavedChanges.style,
-      },
-      {
-        title: "page",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-warning">
-            {"HTML"}
-          </span>
-        ),
-        content: <Html key={"html"} />,
-        value: "checkout.html",
-        unsavedChanges: unsavedChanges.html,
       },
     ];
     crumbs = [integration, variant, "client"];
@@ -281,6 +250,31 @@ const Page: any = () => {
             ]
           : [];
     crumbs = [integration, variant, "server"];
+  } else if (section === "Style") {
+    tabsMap = [
+      {
+        title: "style",
+        icon: (
+          <span className="font-semibold px-1 text-xxs text-info">{"CSS"}</span>
+        ),
+        content: (
+          <Style
+            key={"style"}
+            storeConfiguration={style}
+            updateStoreConfiguration={updateStyle}
+            configurationType="style"
+            variant={variant}
+            theme={theme}
+            integration={integration}
+            view={view}
+            description={`Customize the style of ${variant}. Inspect the browser console to view all selectors.`}
+          />
+        ),
+        value: "style",
+        unsavedChanges: unsavedChanges.style,
+      },
+    ];
+    crumbs = [integration, variant];
   }
 
   return (
