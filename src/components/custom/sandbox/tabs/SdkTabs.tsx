@@ -1,7 +1,6 @@
 import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Search from "@/components/custom/sandbox/editors/Search";
-import Version from "@/components/custom/sandbox/editors/Version";
 import VersionCompact from "@/components/custom/sandbox/editors/VersionCompact";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";

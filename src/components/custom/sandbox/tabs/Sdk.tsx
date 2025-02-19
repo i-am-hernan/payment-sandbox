@@ -1,7 +1,6 @@
 import { WEBVERSIONS } from "@/assets/constants/constants";
 import Code from "@/components/custom/sandbox/editors/Code";
 import Search from "@/components/custom/sandbox/editors/Search";
-import Version from "@/components/custom/sandbox/editors/Version";
 import Loading from "@/components/custom/utils/Loading";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +9,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
+import { cn } from "@/lib/utils";
 import { formulaActions, specsActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
@@ -25,13 +25,13 @@ import {
   useCallback,
   useEffect,
   useReducer,
-  useState,
   useRef,
+  useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 import { ImperativePanelHandle } from "react-resizable-panels";
-import { cn } from "@/lib/utils";
+import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
+import VersionCompact from "../editors/VersionCompact";
 
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateAdyenWebVersion } = formulaActions;
@@ -327,55 +327,54 @@ const Sdk = (props: any) => {
         className="!overflow-y-scroll"
       >
         {loadingSdkSpecData && <Loading className="text-foreground" />}
-        {adyenWebVersion && (
-          <Version
-            label={"adyen web"}
-            value={adyenWebVersion}
-            options={
-              integration === "sessions"
-                ? WEBVERSIONS.filter((version: string) =>
-                    /^[5-9]/.test(version)
-                  )
-                : WEBVERSIONS
-            }
-            onChange={handleVersionChange}
-          />
-        )}
-        {!loadingSdkSpecData && (
-          <Search
-            properties={properties}
-            onChange={handleOpenApiSearchChange}
-            description={description}
-            label={configurationType}
-            method="object"
-          />
-        )}
-        {properties && config.parsed && (
-          <MemoizedOpenSdkList
-            properties={filteredProperties}
-            selectedProperties={Object.keys(config.parsed)}
-            values={config.parsed}
-            setValues={(
-              value: any,
-              keyString: any,
-              keyValue: any,
-              type: string
-            ) => {
-              dispatchConfig({
-                type: "SET_BOTH",
-                payload: {
-                  parsed: value,
-                  stringified: replaceKeyValue(
-                    config.stringified,
-                    keyString,
-                    JSON.stringify(keyValue),
-                    type
-                  ),
-                },
-              });
-            }}
-            onChange={handleOpenSdkListChange}
-          />
+        {properties && (
+          <div>
+            <Search
+              properties={properties}
+              onChange={handleOpenApiSearchChange}
+              description={description}
+              label={configurationType}
+              method="object"
+            >
+              <VersionCompact
+                label={"Adyen Web"}
+                value={adyenWebVersion}
+                options={
+                  integration === "sessions"
+                    ? WEBVERSIONS.filter((version: string) =>
+                        /^[5-9]/.test(version)
+                      )
+                    : WEBVERSIONS
+                }
+                onChange={handleVersionChange}
+              />
+            </Search>
+            <MemoizedOpenSdkList
+              properties={filteredProperties}
+              selectedProperties={Object.keys(config.parsed)}
+              values={config.parsed}
+              setValues={(
+                value: any,
+                keyString: any,
+                keyValue: any,
+                type: string
+              ) => {
+                dispatchConfig({
+                  type: "SET_BOTH",
+                  payload: {
+                    parsed: value,
+                    stringified: replaceKeyValue(
+                      config.stringified,
+                      keyString,
+                      stringifyObject(keyValue),
+                      type
+                    ),
+                  },
+                });
+              }}
+              onChange={handleOpenSdkListChange}
+            />
+          </div>
         )}
       </ResizablePanel>
     </ResizablePanelGroup>
