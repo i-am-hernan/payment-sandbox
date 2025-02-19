@@ -9,8 +9,7 @@ import FooterBar from "@/components/custom/sandbox/navbars/FooterBar";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
 import Api from "@/components/custom/sandbox/tabs/Api";
-import Html from "@/components/custom/sandbox/tabs/Html";
-import SdkTabs from "@/components/custom/sandbox/tabs/SdkTabs";
+import Sdk from "@/components/custom/sandbox/tabs/Sdk";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
@@ -130,34 +129,44 @@ const Page: any = () => {
           <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
         ),
         content: (
-          <SdkTabs
-            sdkMap={{
-              checkoutConfiguration: {
-                storeConfiguration: checkoutConfiguration,
-                updateStoreConfiguration: updateCheckoutConfiguration,
-                configurationType: "checkoutConfiguration",
-                description:
-                  "Create a checkout configuration object for a Web Components integration",
-              },
-              txVariantConfiguration: {
-                storeConfiguration: txVariantConfiguration,
-                updateStoreConfiguration: updateTxVariantConfiguration,
-                configurationType: "txVariantConfiguration",
-                description: `Create a ${variant} configuration object for a Web Components integration`,
-              },
-            }}
+          <Sdk
+            storeConfiguration={checkoutConfiguration}
+            updateStoreConfiguration={updateCheckoutConfiguration}
+            configurationType="checkoutConfiguration"
             variant={variant}
             theme={theme}
             integration={integration}
             view={view}
             key={"checkout"}
+            description={"Create a configuration object for Checkout"}
           />
         ),
         value: `checkout`,
         unsavedChanges: unsavedChanges.js,
       },
+      {
+        title: `${variant}`,
+        icon: (
+          <span className="font-semibold px-1 text-xxs text-js">{"JS"}</span>
+        ),
+        content: (
+          <Sdk
+            storeConfiguration={txVariantConfiguration}
+            updateStoreConfiguration={updateTxVariantConfiguration}
+            configurationType="txVariantConfiguration"
+            variant={variant}
+            theme={theme}
+            integration={integration}
+            view={view}
+            key={"variant"}
+            description={`Create a configuration object for ${variant}`}
+          />
+        ),
+        value: `${variant}`,
+        unsavedChanges: unsavedChanges.js,
+      },
     ];
-    crumbs = [integration, variant, "client"];
+    crumbs = [integration, variant, "sdk"];
   } else if (section === "Server") {
     tabsMap =
       integration === "advance"
@@ -249,7 +258,7 @@ const Page: any = () => {
               },
             ]
           : [];
-    crumbs = [integration, variant, "server"];
+    crumbs = [integration, variant, "api"];
   } else if (section === "Style") {
     tabsMap = [
       {

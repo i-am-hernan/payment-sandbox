@@ -232,6 +232,29 @@ export async function GET(
                 property.strictType = (
                   child.type as ts.TypeReferenceNode
                 ).typeName.getText();
+              } else if (child?.type?.kind === ts.SyntaxKind.UnionType) {
+                const unionType = child.type as ts.UnionTypeNode;
+                // Check if this is an enum-like union (all literals)
+                const isEnum = unionType.types.every(t => 
+                  ts.isLiteralTypeNode(t) || 
+                  t.kind === ts.SyntaxKind.StringLiteral ||
+                  t.kind === ts.SyntaxKind.NullKeyword
+                );
+
+                if (isEnum) {
+                  property.type = "enum";
+                  property.values = unionType.types.map(t => {
+                    if (ts.isLiteralTypeNode(t)) {
+                      return t.literal.getText().replace(/['"]/g, '');
+                    } else if (t.kind === ts.SyntaxKind.NullKeyword) {
+                      return 'null';
+                    }
+                    return t.getText().replace(/['"]/g, '');
+                  });
+                } else {
+                  property.type = "string";
+                }
+                property.strictType = child.type.getText();
               }
               additionalProperties[property.name] = property;
             }
@@ -374,6 +397,18 @@ export async function GET(
                                                     : "",
                                                 };
 
+                                              // Add union type handling
+                                              if (nestedMember.type?.kind === ts.SyntaxKind.UnionType) {
+                                                const unionType = nestedMember.type as ts.UnionTypeNode;
+                                                const filteredLiteralTypes = unionType.types.filter(
+                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
+                                                );
+                                                if (filteredLiteralTypes.length > 0) {
+                                                  nestedProp.type = "enum";
+                                                  nestedProp.values = filteredLiteralTypes.map((type) => type.getText());
+                                                }
+                                              }
+
                                               // Continue recursion for nested properties
                                               if (
                                                 nestedMember.type?.kind ===
@@ -441,6 +476,18 @@ export async function GET(
                                                                         ]
                                                                       : "",
                                                                 };
+
+                                                              // Add union type handling
+                                                              if (deepMember.type?.kind === ts.SyntaxKind.UnionType) {
+                                                                const unionType = deepMember.type as ts.UnionTypeNode;
+                                                                const filteredLiteralTypes = unionType.types.filter(
+                                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
+                                                                );
+                                                                if (filteredLiteralTypes.length > 0) {
+                                                                  deepProp.type = "enum";
+                                                                  deepProp.values = filteredLiteralTypes.map((type) => type.getText());
+                                                                }
+                                                              }
 
                                                               if (
                                                                 nestedProp.additionalProperties
@@ -580,6 +627,18 @@ export async function GET(
                                                                       : "",
                                                                 };
 
+                                                              // Add union type handling
+                                                              if (nestedMember.type?.kind === ts.SyntaxKind.UnionType) {
+                                                                const unionType = nestedMember.type as ts.UnionTypeNode;
+                                                                const filteredLiteralTypes = unionType.types.filter(
+                                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
+                                                                );
+                                                                if (filteredLiteralTypes.length > 0) {
+                                                                  nestedProp.type = "enum";
+                                                                  nestedProp.values = filteredLiteralTypes.map((type) => type.getText());
+                                                                }
+                                                              }
+
                                                               // Continue recursion for nested properties
                                                               if (
                                                                 nestedMember
@@ -665,13 +724,24 @@ export async function GET(
                                                                                       : "",
                                                                                 };
 
+                                                                              // Add union type handling
+                                                                              if (deepMember.type?.kind === ts.SyntaxKind.UnionType) {
+                                                                                const unionType = deepMember.type as ts.UnionTypeNode;
+                                                                                const filteredLiteralTypes = unionType.types.filter(
+                                                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
+                                                                                );
+                                                                                if (filteredLiteralTypes.length > 0) {
+                                                                                  deepProp.type = "enum";
+                                                                                  deepProp.values = filteredLiteralTypes.map((type) => type.getText());
+                                                                                }
+                                                                              }
+
                                                                               if (
                                                                                 nestedProp.additionalProperties
                                                                               ) {
                                                                                 nestedProp.additionalProperties[
                                                                                   deepProp.name
-                                                                                ] =
-                                                                                  deepProp;
+                                                                                ] = deepProp;
                                                                               }
                                                                             }
                                                                           }
@@ -752,7 +822,15 @@ export async function GET(
     // Clean up
     imports = {};
 
-    return Response.json(result);
+    return new Response(JSON.stringify(result), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=31536000, immutable', // Cache for 1 year
+        'CDN-Cache-Control': 'public, max-age=31536000, immutable',
+        'Vercel-CDN-Cache-Control': 'public, max-age=31536000, immutable',
+        'Access-Control-Allow-Origin': '*',
+      }
+    });
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();

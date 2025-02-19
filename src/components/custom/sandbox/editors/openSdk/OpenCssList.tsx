@@ -85,7 +85,7 @@ export const OpenCssList = (props: any) => {
             </AccordionTrigger>
             <AccordionContent>
               <div className="pl-6 pr-4">
-                <p className="text-xs pb-2 text-grey">
+                <p className="w-full text-xs pb-2 text-grey text-left no-underline">
                   {properties[property].description}
                 </p>
                 {properties[property].type === "color" && values && (

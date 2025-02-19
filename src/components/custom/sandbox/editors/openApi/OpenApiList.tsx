@@ -129,7 +129,7 @@ const OpenApiList = (props: any) => {
                 </p>
               </div>
               {properties[property]?.description && (
-                <p className="text-xs pb-2 text-grey text-left no-underline">
+                <p className="w-full text-xs pb-2 text-grey text-left no-underline">
                   {parseStringWithLinks(properties[property].description)}
                 </p>
               )}

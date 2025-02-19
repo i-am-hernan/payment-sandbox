@@ -40,12 +40,12 @@ export const OpenSdkList = ({
   return (
     <Accordion
       type="multiple"
-      className="w-full"
+      className="w-full px-3"
       value={selectedProperties}
       onValueChange={onChange}
     >
       {propertyKeys.length === 0 && (
-        <div className="pl-6 pr-4 py-3">
+      <div className="p-3">
           <p className="text-sm text-foreground">{`0 matching results`}</p>
         </div>
       )}
@@ -54,28 +54,30 @@ export const OpenSdkList = ({
           <AccordionItem
             key={property}
             value={property}
-            className="hover:no-underline"
+            className="hover:no-underline border-[1px] border-border rounded-md my-2"
           >
-            <AccordionTrigger className="pl-6 pr-4 py-3 border-transparent border-[1px] hover:border-[1px] hover:border-adyen hover:border-dotted">
-              <p className="text-[0.85rem] text-foreground">{property}</p>
-              <p className="font-mono text-xs flex-grow text-left">
-                {properties[property].type && (
-                  <span className="pl-2 text-grey">
-                    {properties[property].type}
-                  </span>
-                )}
-                {properties[property]?.required && (
-                  <span className="pl-2 text-warning">Required</span>
-                )}
-              </p>
+            <AccordionTrigger className="px-4 py-3 border-transparent border-[1px] hover:bg-foreground/10 flex flex-col">
+            <div className="flex justify-start w-full items-center mb-2">
+                <p className="text-[0.85rem] text-foreground">{property}</p>
+                <p className="font-mono text-xs flex-grow text-left">
+                  {properties[property].type && (
+                    <span className="pl-2 text-grey">
+                      {properties[property].type}
+                    </span>
+                  )}
+                  {properties[property]?.required && (
+                    <span className="pl-2 text-warning">Required</span>
+                  )}
+                </p>
+              </div>
+              {properties[property]?.description && (
+                <p className="w-full text-xs pb-2 text-grey text-left no-underline">
+                  {properties[property].description}
+                </p>
+              )}
             </AccordionTrigger>
             <AccordionContent>
               <div className="pl-6 pr-4">
-                <p className="text-xs pb-2 text-grey">
-                  {properties[property].description}
-                </p>
-
-                {/* Handle object type recursively */}
                 {properties[property].type === "object" &&
                   Object.keys(properties[property]?.additionalProperties || {})
                     .length > 0 && (

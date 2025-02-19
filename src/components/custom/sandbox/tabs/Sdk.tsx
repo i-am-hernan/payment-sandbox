@@ -77,7 +77,13 @@ const Sdk = (props: any) => {
     (state: RootState) => state.formula
   );
 
-  const url = `api/specs/adyen-web/v${adyenWebVersion.replaceAll(".", "_")}/${configurationType === "checkoutConfiguration" ? "checkout" : "variant"}?${configurationType === "txVariantConfiguration" ? `txvariant=${variant}` : ""}`;
+// v2 is not working well with components
+
+  const url =
+    configurationType === "checkoutConfiguration"
+      ? `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/checkout`
+      : `api/specs/adyen-web/v1/v${adyenWebVersion.replaceAll(".", "_")}/variant?txvariant=${variant}`;
+
   const {
     data: sdkSpecsData,
     loading: loadingSdkSpecData,
@@ -272,68 +278,76 @@ const Sdk = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block !overflow-y-scroll"
+      className="bg-background inline-block !overflow-y-scroll pb-[calc(var(--footerbar-width)+8px)]"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "preview" ? 0 : 100}
         className={cn(
-          "sm:flex bg-code flex-col items-stretch transition-all duration-300 ease-in-out",
+          "bg-background sm:flex flex-col transition-all duration-300 ease-in-out",
           view === "demo" && "opacity-0"
         )}
         ref={panelRef}
       >
-        <div className="flex flex-1 overflow-scroll">
-          <Code
-            type="babel"
-            code={config.stringified}
-            readOnly={false}
-            theme={theme}
-            onChange={(jsValue: any, stringValue: string) => {
-              if (stringValue === config.stringified) {
-                return;
-              } else {
-                dispatchConfig({
-                  type: "SET_BOTH",
-                  payload: {
-                    parsed: jsValue,
-                    stringified: stringValue,
-                  },
-                });
-              }
-            }}
-            jsVariable={configurationType}
-          />
-        </div>
-        <div className={`flex justify-end border-t-2 bg-background`}>
-          <Button
-            key={"prettify"}
-            variant="ghost"
-            size="icon"
-            className={`rounded-none border-l-[1px] h-5`}
-            onClick={handlePrettify}
-          >
-            <span className="font-semibold text-xxs text-warning">{"{}"}</span>
-          </Button>
+        <div className="h-full pl-3 pb-2 rounded-md">
+          <div className="flex flex-col h-full border-[1px] rounded-md p-[1px]">
+            <Code
+              type="babel"
+              code={config.stringified}
+              readOnly={false}
+              theme={theme}
+              onChange={(jsValue: any, stringValue: string) => {
+                if (stringValue === config.stringified) {
+                  return;
+                } else {
+                  dispatchConfig({
+                    type: "SET_BOTH",
+                    payload: {
+                      parsed: jsValue,
+                      stringified: stringValue,
+                    },
+                  });
+                }
+              }}
+              jsVariable={configurationType}
+            />
+            <div className={`flex justify-end bg-background border-t-[1px]`}>
+              <Button
+                key={"prettify"}
+                variant="ghost"
+                size="icon"
+                className={`rounded-none border-l-[1px] h-[var(--custom-prettify-height)]`}
+                onClick={handlePrettify}
+              >
+                <span className="font-semibold text-xxs text-warning">
+                  {"{ }"}
+                </span>
+              </Button>
+            </div>
+          </div>
         </div>
       </ResizablePanel>
       <ResizableHandle
-        className={cn(
+        className={`${cn(
           view !== "developer" && "opacity-0 pointer-events-none hidden"
-        )}
+        )} border-none bg-transparent`}
       />
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
         className="!overflow-y-scroll"
       >
         {loadingSdkSpecData && <Loading className="text-foreground" />}
-        {properties && (
+        {properties && config.parsed && (
           <div>
             <Search
               properties={properties}
               onChange={handleOpenApiSearchChange}
               description={description}
-              label={configurationType}
+              label={
+                configurationType === "checkoutConfiguration"
+                  ? "Checkout"
+                  : `${variant[0].toUpperCase() + variant.slice(1)}`
+              }
               method="object"
             >
               <VersionCompact
