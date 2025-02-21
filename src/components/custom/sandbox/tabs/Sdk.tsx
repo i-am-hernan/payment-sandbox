@@ -77,7 +77,7 @@ const Sdk = (props: any) => {
     (state: RootState) => state.formula
   );
 
-// v2 is not working well with components
+  // v2 is not working well with components
 
   const url =
     configurationType === "checkoutConfiguration"
@@ -238,6 +238,7 @@ const Sdk = (props: any) => {
           ...config.parsed,
           ...newProperty,
         };
+
         dispatchConfig({
           type: "SET_BOTH",
           payload: {
@@ -373,6 +374,17 @@ const Sdk = (props: any) => {
                 keyValue: any,
                 type: string
               ) => {
+                console.log("value", value);
+                console.log("stringifyObject(keyValue)", stringifyObject(keyValue));
+                console.log(
+                  "replaceKeyValue",
+                  replaceKeyValue(
+                    config.stringified,
+                    keyString,
+                    stringifyObject(keyValue),
+                    type
+                  )
+                );
                 dispatchConfig({
                   type: "SET_BOTH",
                   payload: {
