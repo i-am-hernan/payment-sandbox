@@ -29,12 +29,13 @@ import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import BrushIcon from "@mui/icons-material/Brush";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
-import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
+import WebIcon from "@mui/icons-material/Web";
 import Tooltip from "@mui/material/Tooltip";
 import { ChevronDown, FlaskConical } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import UpdateMerchantCookie from "../../adyen/account/UpdateMerchantCookie";
 import Loading from "../../utils/Loading";
 
 interface SideTab {
@@ -131,10 +132,10 @@ const Sidebar = (props: any) => {
       name: "Server",
       hotKey: "⌘ + i",
       icon: (
-        <div className="relative flex flex-col items-center justify-center">
-          <CloudQueueIcon className="!text-foreground !text-[20px]" />
-          <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
-            API
+        <div className="relative flex flex-col items-center justify-center ">
+          <CloudQueueIcon className="!text-[20px]" />
+          <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
+            APIs
           </p>
         </div>
       ),
@@ -149,10 +150,10 @@ const Sidebar = (props: any) => {
       name: "Client",
       hotKey: "⌘ + j",
       icon: (
-        <div className="relative flex flex-col items-center justify-center">
-          <LanguageIcon className="!text-foreground !text-[20px]" />
-          <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
-            SDK
+        <div className="relative flex flex-col items-center justify-center ">
+          <WebIcon className="!text-[20px]" />
+          <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
+            UI
           </p>
         </div>
       ),
@@ -166,9 +167,9 @@ const Sidebar = (props: any) => {
       hotKey: "⌘ + k",
       icon: (
         <div className="relative flex flex-col items-center justify-center">
-          <BrushIcon className="!text-foreground !text-[20px]" />
-          <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
-            CSS
+          <BrushIcon className="!text-[20px]" />
+          <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
+            Style
           </p>
         </div>
       ),
@@ -227,11 +228,11 @@ const Sidebar = (props: any) => {
             <div>
               <Drawer direction="left">
                 <DrawerTrigger
-                  className={`mt-4 px-2 py-[2px] inline items-center justify-center rounded-md hover:bg-foreground/10`}
+                  className={`mt-4 px-2 py-[2px] inline items-center justify-center rounded-md hover:bg-foreground/10 hover:text-adyen text-foreground`}
                 >
                   <div className="relative flex flex-col items-center justify-center">
-                    <FlaskConical className="!text-foreground !text-[20px]" />
-                    <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
+                    <FlaskConical className="!text-[20px]" />
+                    <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
                       NEW
                     </p>
                   </div>
@@ -312,8 +313,8 @@ const Sidebar = (props: any) => {
                         ref={tab.ref}
                         className={`mt-5 rounded-md p-5 ${
                           section === tab.name
-                            ? "bg-foreground/10"
-                            : "hover:bg-foreground/10"
+                            ? "bg-foreground/10 !text-adyen"
+                            : "hover:bg-foreground/10 !text-foreground"
                         }`}
                         onClick={() => setSection(tab.name)}
                       >
@@ -331,8 +332,8 @@ const Sidebar = (props: any) => {
           </div>
           <div className="pb-3">
             <DropdownMenu>
-              <DropdownMenuTrigger className="p-2 pt-1 rounded-none border-none hover:border-[1px] hover:border-foreground hover:border-dotted">
-                <SettingsIcon className="!text-foreground !text-[20px]" />
+              <DropdownMenuTrigger className="p-2 pt-1 rounded-md hover:bg-foreground/10 !text-foreground">
+                <SettingsIcon className="!text-[20px]" />
               </DropdownMenuTrigger>
               <DropdownMenuPortal container={sidebarRef.current}>
                 <DropdownMenuContent side="top" className="ml-1 rounded-none">
@@ -341,7 +342,7 @@ const Sidebar = (props: any) => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted">
+                    <DropdownMenuItem className="text-xs rounded-none border-transparent border-[1px]">
                       <p className="px-2">Shortcuts</p>
                       <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
                     </DropdownMenuItem>
@@ -349,12 +350,12 @@ const Sidebar = (props: any) => {
                   <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuGroup>
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted">
+                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px]">
                         <p className="px-2">Theme</p>
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="ml-1 rounded-none">
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted"
+                          className="text-xs rounded-none border-transparent border-[1px]"
                           onClick={() => {
                             dispatch(updateTheme("dark"));
                           }}
@@ -362,7 +363,7 @@ const Sidebar = (props: any) => {
                           <span>Dark</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted"
+                          className="text-xs rounded-none border-transparent border-[1px]"
                           onClick={() => {
                             dispatch(updateTheme("light"));
                           }}
@@ -372,12 +373,12 @@ const Sidebar = (props: any) => {
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted">
+                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px]">
                         <p className="px-2">View</p>
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="ml-1 rounded-none">
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted"
+                          className="text-xs rounded-none border-transparent border-[1px]"
                           onClick={() => {
                             dispatch(updateView("developer"));
                             clearUrlParams(["view"]);
@@ -386,7 +387,7 @@ const Sidebar = (props: any) => {
                           <span>Developer</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted"
+                          className="text-xs rounded-none border-transparent border-[1px]"
                           onClick={() => {
                             dispatch(updateView("preview"));
                             clearUrlParams(["view"]);
@@ -395,7 +396,7 @@ const Sidebar = (props: any) => {
                           <span>Preview</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px] hover:border-foreground hover:border-dotted"
+                          className="text-xs rounded-none border-transparent border-[1px]"
                           onClick={() => {
                             dispatch(updateView("demo"));
                             clearUrlParams(["view"]);
@@ -403,6 +404,14 @@ const Sidebar = (props: any) => {
                         >
                           <span>Demo</span>
                         </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px]">
+                        <p className="px-2">Merchant Account</p>
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuSubContent className="ml-1 rounded-none">
+                        <UpdateMerchantCookie containerRef={sidebarRef} />
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                   </DropdownMenuGroup>

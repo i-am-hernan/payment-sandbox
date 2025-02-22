@@ -243,7 +243,7 @@ const Style = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block !overflow-y-scroll pb-[calc(var(--footerbar-width)+8px)]"
+      className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
@@ -299,56 +299,58 @@ const Style = (props: any) => {
       />
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
-        className="!overflow-y-scroll"
+        className="!overflow-y-scroll px-3 pb-2"
       >
-        {!properties && <Loading className="text-foreground" />}
-        {properties && (
-          <Search
-            properties={properties}
-            onChange={handleOpenApiSearchChange}
-            description={description}
-            label={configurationType}
-            method="css"
-          >
-            <VersionCompact
-              label={"adyen web"}
-              value={adyenWebVersion}
-              options={
-                integration === "sessions"
-                  ? WEBVERSIONS.filter((version: string) =>
-                      /^[5-9]/.test(version)
-                    )
-                  : WEBVERSIONS
-              }
-              onChange={handleVersionChange}
+        <div className="!overflow-y-scroll h-full rounded-md border-[1px] border-border">
+          {!properties && <Loading className="text-foreground" />}
+          {properties && (
+            <Search
+              properties={properties}
+              onChange={handleOpenApiSearchChange}
+              description={description}
+              label={configurationType}
+              method="css"
+            >
+              <VersionCompact
+                label={"adyen web"}
+                value={adyenWebVersion}
+                options={
+                  integration === "sessions"
+                    ? WEBVERSIONS.filter((version: string) =>
+                        /^[5-9]/.test(version)
+                      )
+                    : WEBVERSIONS
+                }
+                onChange={handleVersionChange}
+              />
+            </Search>
+          )}
+          {filteredProperties && (
+            <MemoizedOpenCssList
+              properties={filteredProperties}
+              selectedProperties={Object.keys(config.parsed)}
+              values={config.parsed}
+              disabled={errors.style}
+              setValues={async (value: any) => {
+                const stringifiedAndFormatted = formatCssString(
+                  objectToCSS(value)
+                );
+                const prettifiedString = await prettify(
+                  stringifiedAndFormatted,
+                  "css"
+                );
+                dispatchConfig({
+                  type: "SET_BOTH",
+                  payload: {
+                    parsed: value,
+                    stringified: prettifiedString,
+                  },
+                });
+              }}
+              onChange={handleOpenCssListChange}
             />
-          </Search>
-        )}
-        {filteredProperties && (
-          <MemoizedOpenCssList
-            properties={filteredProperties}
-            selectedProperties={Object.keys(config.parsed)}
-            values={config.parsed}
-            disabled={errors.style}
-            setValues={async (value: any) => {
-              const stringifiedAndFormatted = formatCssString(
-                objectToCSS(value)
-              );
-              const prettifiedString = await prettify(
-                stringifiedAndFormatted,
-                "css"
-              );
-              dispatchConfig({
-                type: "SET_BOTH",
-                payload: {
-                  parsed: value,
-                  stringified: prettifiedString,
-                },
-              });
-            }}
-            onChange={handleOpenCssListChange}
-          />
-        )}
+          )}
+        </div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

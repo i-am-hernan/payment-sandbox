@@ -59,13 +59,10 @@ const Topbar = (props: any) => {
 
   return (
     <span
-      className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] stretch flex items-center justify-center px-2"
+      className="absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] stretch flex items-center justify-end px-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
       ref={containerRef}
     >
-      <div className="flex-1 text-center">
-        <UpdateMerchantCookie />
-      </div>
       <div className="flex justify-end">
         {view !== "demo" && (
           <div className="mr-2">

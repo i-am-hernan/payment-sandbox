@@ -77,12 +77,12 @@ const Sdk = (props: any) => {
     (state: RootState) => state.formula
   );
 
-// v2 is not working well with components
+  // v2 is not working well with components
 
   const url =
     configurationType === "checkoutConfiguration"
       ? `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/checkout`
-      : `api/specs/adyen-web/v1/v${adyenWebVersion.replaceAll(".", "_")}/variant?txvariant=${variant}`;
+      : `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/${variant}`;
 
   const {
     data: sdkSpecsData,
@@ -278,7 +278,7 @@ const Sdk = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block !overflow-y-scroll pb-[calc(var(--footerbar-width)+8px)]"
+      className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
@@ -334,11 +334,11 @@ const Sdk = (props: any) => {
       />
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 100}
-        className="!overflow-y-scroll"
+        className="!overflow-y-scroll px-3 pb-2"
       >
         {loadingSdkSpecData && <Loading className="text-foreground" />}
         {properties && config.parsed && (
-          <div>
+          <div className="!overflow-y-scroll h-full rounded-md border-[1px] border-border">
             <Search
               properties={properties}
               onChange={handleOpenApiSearchChange}

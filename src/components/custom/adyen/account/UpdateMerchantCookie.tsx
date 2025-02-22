@@ -28,7 +28,7 @@ const {
 } = formulaActions;
 
 const UpdateMerchantCookie = (props: any) => {
-  const { showTrigger = true } = props;
+  const { showTrigger = true, containerRef } = props;
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false); // New state variable
@@ -47,12 +47,14 @@ const UpdateMerchantCookie = (props: any) => {
   const rebuildCheckout = () => {
     dispatch(updateRun());
   };
-  const containerRef = useRef(null);
-
+  console.log(containerRef);
   useEffect(() => {
     const merchantAccountCookie = Cookies.get("merchantAccount");
     if (!merchantAccountCookie) {
-      setOpen(true);
+      Cookies.set("merchantAccount", defaultMerchantAccount, {
+        expires: 365,
+      });
+      dispatch(updateMerchantAccount(defaultMerchantAccount));
     } else {
       dispatch(updateApiRequestMerchantAccount(merchantAccountCookie));
       dispatch(updateBuildMerchantAccount(merchantAccountCookie));
@@ -88,48 +90,24 @@ const UpdateMerchantCookie = (props: any) => {
   };
 
   return (
-    <div ref={containerRef}>
-      <Dialog
-        open={open}
-        onOpenChange={(open) => {
-          if (!open) {
-            if (!Cookies.get("merchantAccount")) {
-              Cookies.set("merchantAccount", defaultMerchantAccount, {
-                expires: 365,
-              });
-              dispatch(updateMerchantAccount(defaultMerchantAccount));
-            }
-            setOpen(false);
-          }
-        }}
-      >
+    <div>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {showTrigger && (
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              className="w-[50%] rounded-md border-border"
+              className="border-none"
               onClick={() => {
-                setOpen(true);
-                setMerchantAccountLocal(
-                  process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || ""
-                );
+                setMerchantAccountLocal("");
                 setError("");
               }}
             >
-              {merchantAccount && (
-                <div>
-                  <TuneIcon className="!text-foreground !text-[14px]" />
-                  <p className="px-1 !text-xs !text-foreground inline-block">
-                    {merchantAccount}
-                  </p>
-                </div>
-              )}
-              {!merchantAccount && <Loading className="text-foreground" />}
+              <p className="text-foreground">Choose Merchant Account</p>
             </Button>
           )}
         </DialogTrigger>
-        <DialogPortal container={containerRef.current}>
+        <DialogPortal container={containerRef?.current}>
           <DialogOverlay />
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>

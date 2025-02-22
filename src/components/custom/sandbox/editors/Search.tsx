@@ -25,7 +25,7 @@ const Search = (props: any) => {
 
   return (
     <div className="z-10 sticky top-0 bg-background">
-      <h4 className="text-[0.95rem] text-adyen z-15 sticky top-0 px-5">
+      <h4 className="text-[0.95rem] text-adyen z-15 sticky top-0 px-5 pt-3">
         {`${label}`}
         {method && (
           <code className="px-1 text-xs text-grey font-normal">{method}</code>

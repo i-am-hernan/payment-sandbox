@@ -224,7 +224,7 @@ const Api = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block !overflow-y-scroll pb-[calc(var(--footerbar-width)+8px)]"
+      className="bg-background inline-block !overflow-y-scroll"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
@@ -277,87 +277,89 @@ const Api = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )} border-none bg-transparent`}
       />
-      <ResizablePanel className="!overflow-y-scroll">
-        {!loadingApiSpecData && apiSpecsData && (
-          <Search
-            properties={properties}
-            onChange={(filteredProperties: any) => {
-              setFilteredProperties(filteredProperties);
-            }}
-            description={description}
-            label={
-              api === "paymentMethods"
-                ? "Payment Methods"
-                : api === "payments"
-                  ? "Payments"
-                  : api === "paymentsDetails"
-                    ? "Payment Details"
-                    : api === "sessions"
-                      ? "Sessions"
-                      : api
-            }
-            method="POST"
-            tab={true}
-          >
-            <VersionCompact
-              label={"Checkout API"}
-              value={checkoutAPIVersion[api]}
-              options={APIVERSIONS}
-              onChange={(value: any) => {
-                dispatch(updateCheckoutAPIVersion({ [api]: value }));
-                dispatch(
-                  addUnsavedChanges({
-                    [api]: build.checkoutAPIVersion[api] !== value,
-                  })
-                );
+      <ResizablePanel className="px-3 pb-2">
+        <div className="!overflow-y-scroll h-full rounded-md border-[1px] border-border">
+          {!loadingApiSpecData && apiSpecsData && (
+            <Search
+              properties={properties}
+              onChange={(filteredProperties: any) => {
+                setFilteredProperties(filteredProperties);
               }}
-            />
-          </Search>
-        )}
-        {loadingApiSpecData && <Loading className="text-foreground" />}
-        {!loadingApiSpecData && apiSpecsData && (
-          <OpenApiList
-            openApi={apiSpecsData}
-            properties={filteredProperties}
-            required={required}
-            selectedProperties={Object.keys(apiRequest.parsed)}
-            values={apiRequest.parsed}
-            setValues={async (
-              value: any,
-              keyString?: any,
-              keyValue?: any,
-              type?: string
-            ) => {
-              if (keyString && keyValue && type) {
-                let replacedValue = replaceKeyValueJSON(
-                  apiRequest.stringified,
-                  keyString,
-                  JSON.stringify(keyValue),
-                  type
-                );
-                dispatchApiRequest({
-                  type: "SET_BOTH",
-                  payload: {
-                    parsed: value,
-                    stringified: replacedValue,
-                  },
-                });
-              } else {
-                dispatchApiRequest({
-                  type: "SET_BOTH",
-                  payload: {
-                    parsed: { ...apiRequest.parsed, ...value },
-                    stringified: await prettify(
-                      JSON.stringify({ ...apiRequest.parsed, ...value }),
-                      "json"
-                    ),
-                  },
-                });
+              description={description}
+              label={
+                api === "paymentMethods"
+                  ? "Payment Methods"
+                  : api === "payments"
+                    ? "Payments"
+                    : api === "paymentsDetails"
+                      ? "Payment Details"
+                      : api === "sessions"
+                        ? "Sessions"
+                        : api
               }
-            }}
-            onChange={handleOpenApiChange}
-          />
-        )}
+              method="POST"
+              tab={true}
+            >
+              <VersionCompact
+                label={"Checkout API"}
+                value={checkoutAPIVersion[api]}
+                options={APIVERSIONS}
+                onChange={(value: any) => {
+                  dispatch(updateCheckoutAPIVersion({ [api]: value }));
+                  dispatch(
+                    addUnsavedChanges({
+                      [api]: build.checkoutAPIVersion[api] !== value,
+                    })
+                  );
+                }}
+              />
+            </Search>
+          )}
+          {loadingApiSpecData && <Loading className="text-foreground" />}
+          {!loadingApiSpecData && apiSpecsData && (
+            <OpenApiList
+              openApi={apiSpecsData}
+              properties={filteredProperties}
+              required={required}
+              selectedProperties={Object.keys(apiRequest.parsed)}
+              values={apiRequest.parsed}
+              setValues={async (
+                value: any,
+                keyString?: any,
+                keyValue?: any,
+                type?: string
+              ) => {
+                if (keyString && keyValue && type) {
+                  let replacedValue = replaceKeyValueJSON(
+                    apiRequest.stringified,
+                    keyString,
+                    JSON.stringify(keyValue),
+                    type
+                  );
+                  dispatchApiRequest({
+                    type: "SET_BOTH",
+                    payload: {
+                      parsed: value,
+                      stringified: replacedValue,
+                    },
+                  });
+                } else {
+                  dispatchApiRequest({
+                    type: "SET_BOTH",
+                    payload: {
+                      parsed: { ...apiRequest.parsed, ...value },
+                      stringified: await prettify(
+                        JSON.stringify({ ...apiRequest.parsed, ...value }),
+                        "json"
+                      ),
+                    },
+                  });
+                }
+              }}
+              onChange={handleOpenApiChange}
+            />
+          )}
+        </div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

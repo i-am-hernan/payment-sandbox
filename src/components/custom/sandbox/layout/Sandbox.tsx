@@ -62,7 +62,7 @@ const Sandbox = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background sm:!h-screen inline-block pt-[var(--topbar-width)] pb-[var(--footerbar-width)] pl-[var(--sidebar-width)]"
+      className="bg-background sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)] border-b-[1px]"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 60 : view === "preview" ? 50 : 0}
@@ -110,9 +110,7 @@ const Sandbox = ({
             defaultSize={view === "developer" ? 50 : 0}
             maxSize={view === "preview" || view === "demo" ? 0 : 100}
             ref={refB}
-            className={`transition-all duration-300 ease-in-out ${
-              view === "developer" ? "min-h-[40px]" : ""
-            }`}
+            className={"transition-all duration-300 ease-in-out"}
           >
             <div className="items-center justify-center flex w-full h-full">
               {React.cloneElement(BottomRight, {

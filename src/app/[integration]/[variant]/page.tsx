@@ -5,7 +5,6 @@ import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAd
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
-import FooterBar from "@/components/custom/sandbox/navbars/FooterBar";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
 import Api from "@/components/custom/sandbox/tabs/Api";
@@ -88,7 +87,7 @@ const Page: any = () => {
             title: `${variant}`,
             icon: (
               <span className="font-semibold px-1 text-xxs text-preview">
-                preview
+                {integration}
               </span>
             ),
             content: <ManageAdvanceComponent key={run ? "run" : "default"} />,
@@ -337,7 +336,7 @@ const Page: any = () => {
                   </AlertDescription>
                 </Alert>
               ) : (
-                <SandBoxTabs tabsMap={topRightTabsMap} />
+                <SandBoxTabs tabsMap={topRightTabsMap} className="bg-foreground/10"/>
               )
             }
             bottomRight={
@@ -374,7 +373,6 @@ const Page: any = () => {
             view={view}
             integration={integration}
           />
-          <FooterBar integration={integration} />
         </footer>
       </React.Fragment>
       <ScreenSizeDialog />

@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { TabsProps } from "./types";
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
-  const { tabsMap, crumbs, onExpand, onContract, type } = props;
+  const { tabsMap, crumbs, onExpand, onContract, type, className } = props;
   const [tabTitle, setTabTitle] = useState(tabsMap[0].value);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [hasExpanded, setHasExpanded] = useState(false);
@@ -52,89 +52,14 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   }, [tabTitle, tabsMap]);
 
   return (
-    <div className="w-full h-full flex flex-col">
-      {crumbs && (
-        <div className="flex justify-between pl-3">
-          {
-            <span className="flex">
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/">
-                      <span className="font-semibold px-0 text-xxs">
-                        {"home"}
-                      </span>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  {crumbs.map((crumb, index) => (
-                    <React.Fragment key={index}>
-                      <BreadcrumbItem key={index}>
-                        <span className="font-semibold px-0 text-xxs">
-                          {crumb}
-                        </span>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator />
-                    </React.Fragment>
-                  ))}
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>
-                      <p className="font-semibold px-0 text-xxs">{tabTitle}</p>
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </span>
-          }
-          {!hasExpanded && (
-            <Button
-              key="clear"
-              variant="outline"
-              size="icon"
-              className="shadow-none border-none w-7 h-7 rounded-none"
-              onClick={(e) => {
-                if (onExpand) {
-                  onExpand();
-                  setHasExpanded(!hasExpanded);
-                }
-              }}
-            >
-              {type === "subwindow" ? (
-                <ExpandLessIcon className="text-warning !text-xs" />
-              ) : (
-                <OpenInFullIcon className="text-primary !text-xs" />
-              )}
-            </Button>
-          )}
-          {hasExpanded && (
-            <Button
-              key="clear"
-              variant="outline"
-              size="sm"
-              className="shadow-none px-2 mb-0 pt-0 pb-0 border-none"
-              onClick={(e) => {
-                if (onContract) {
-                  onContract();
-                  setHasExpanded(!hasExpanded);
-                }
-              }}
-            >
-              {type === "subwindow" ? (
-                <ExpandMoreIcon className="text-warning !text-xs" />
-              ) : (
-                <CloseFullscreenIcon className="text-primary !text-xs" />
-              )}
-            </Button>
-          )}
-        </div>
-      )}
+    <div className={`w-full h-full flex flex-col ${className}`}>
       <Tabs
         defaultValue={tabTitle}
         className="w-full h-full flex flex-col"
         onValueChange={(value) => setTabTitle(value)}
       >
         <span className="flex justify-between mb-2 pl-3">
-          <TabsList className="mt-1">
+          <TabsList className="mt-3">
             {tabsMap.map((tab, index) => (
               <div key={index} className="p-[3px]">
                 <TabsTrigger
@@ -154,7 +79,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               </div>
             ))}
           </TabsList>
-          {!crumbs && !hasExpanded && (
+          {!hasExpanded && (
             <Button
               key="clear"
               variant="outline"

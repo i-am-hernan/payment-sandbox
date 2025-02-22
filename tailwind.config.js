@@ -118,6 +118,12 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         typing: "typing 2s steps(40), cursor 1s step-end infinite",
       },
+      backgroundImage: {
+        'dotted-grid': 'radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        'grid': '5px 5px',
+      },
     },
   },
   plugins: [
