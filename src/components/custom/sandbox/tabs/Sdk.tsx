@@ -88,7 +88,9 @@ const Sdk = (props: any) => {
     data: sdkSpecsData,
     loading: loadingSdkSpecData,
     error: sdkSpecsError,
-  } = useApi(url, "GET");
+  } = useApi(url, "GET", null, { 
+    cache: "force-cache"
+  });
 
   const specs: any = useSelector((state: RootState) => state.specs);
   const { checkoutConfiguration, txVariantConfiguration } = specs;
@@ -278,18 +280,18 @@ const Sdk = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block !overflow-y-scroll"
+      className="inline-block !overflow-y-scroll pl-3 pt-1 pb-3"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "preview" ? 0 : 100}
         className={cn(
-          "bg-background sm:flex flex-col transition-all duration-300 ease-in-out",
+          "sm:flex flex-col transition-all duration-300 ease-in-out",
           view === "demo" && "opacity-0"
         )}
         ref={panelRef}
       >
-        <div className="h-full pl-3 pb-2 rounded-md">
+        <div className="h-full pr-3 rounded-md">
           <div className="flex flex-col h-full border-[1px] rounded-md p-[1px]">
             <Code
               type="babel"
@@ -332,64 +334,63 @@ const Sdk = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )} border-none bg-transparent`}
       />
-      <ResizablePanel
-        defaultSize={view === "developer" ? 50 : 100}
-        className="!overflow-y-scroll px-3 pb-2"
-      >
-        {loadingSdkSpecData && <Loading className="text-foreground" />}
-        {properties && config.parsed && (
-          <div className="!overflow-y-scroll h-full rounded-md border-[1px] border-border">
-            <Search
-              properties={properties}
-              onChange={handleOpenApiSearchChange}
-              description={description}
-              label={
-                configurationType === "checkoutConfiguration"
-                  ? "Checkout"
-                  : `${variant[0].toUpperCase() + variant.slice(1)}`
-              }
-              method="object"
-            >
-              <VersionCompact
-                label={"Adyen Web"}
-                value={adyenWebVersion}
-                options={
-                  integration === "sessions"
-                    ? WEBVERSIONS.filter((version: string) =>
-                        /^[5-9]/.test(version)
-                      )
-                    : WEBVERSIONS
+      <ResizablePanel>
+        <div className="bg-background !overflow-y-scroll h-full rounded-md border-[1px] border-border">
+          {loadingSdkSpecData && <Loading className="text-foreground" />}
+          {!loadingSdkSpecData && properties && config.parsed && (
+            <div>
+              <Search
+                properties={properties}
+                onChange={handleOpenApiSearchChange}
+                description={description}
+                label={
+                  configurationType === "checkoutConfiguration"
+                    ? "Checkout"
+                    : `${variant[0].toUpperCase() + variant.slice(1)}`
                 }
-                onChange={handleVersionChange}
+                method="object"
+              >
+                <VersionCompact
+                  label={"Adyen Web"}
+                  value={adyenWebVersion}
+                  options={
+                    integration === "sessions"
+                      ? WEBVERSIONS.filter((version: string) =>
+                          /^[5-9]/.test(version)
+                        )
+                      : WEBVERSIONS
+                  }
+                  onChange={handleVersionChange}
+                />
+              </Search>
+              <MemoizedOpenSdkList
+                properties={filteredProperties}
+                selectedProperties={Object.keys(config.parsed)}
+                values={config.parsed}
+                setValues={(
+                  value: any,
+                  keyString: any,
+                  keyValue: any,
+                  type: string
+                ) => {
+                  dispatchConfig({
+                    type: "SET_BOTH",
+                    payload: {
+                      parsed: value,
+                      stringified: replaceKeyValue(
+                        config.stringified,
+                        keyString,
+                        stringifyObject(keyValue),
+                        type
+                      ),
+                    },
+                  });
+                }}
+                onChange={handleOpenSdkListChange}
               />
-            </Search>
-            <MemoizedOpenSdkList
-              properties={filteredProperties}
-              selectedProperties={Object.keys(config.parsed)}
-              values={config.parsed}
-              setValues={(
-                value: any,
-                keyString: any,
-                keyValue: any,
-                type: string
-              ) => {
-                dispatchConfig({
-                  type: "SET_BOTH",
-                  payload: {
-                    parsed: value,
-                    stringified: replaceKeyValue(
-                      config.stringified,
-                      keyString,
-                      stringifyObject(keyValue),
-                      type
-                    ),
-                  },
-                });
-              }}
-              onChange={handleOpenSdkListChange}
-            />
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

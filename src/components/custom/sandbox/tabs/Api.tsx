@@ -224,18 +224,18 @@ const Api = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block !overflow-y-scroll"
+      className="inline-block !overflow-y-scroll pl-3 pt-1 pb-3"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "product" ? 0 : 100}
         ref={panelRef}
         className={cn(
-          "bg-background sm:flex flex-col transition-all duration-300 ease-in-out",
+          "sm:flex flex-col transition-all duration-300 ease-in-out",
           view === "demo" && "opacity-0"
         )}
       >
-        <div className="h-full pl-3 pb-2 rounded-md">
+        <div className="h-full pr-3 rounded-md">
           <div className="flex flex-col h-full border-[1px] rounded-md p-[1px]">
             <Code
               type="json"
@@ -277,8 +277,8 @@ const Api = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )} border-none bg-transparent`}
       />
-      <ResizablePanel className="px-3 pb-2">
-        <div className="!overflow-y-scroll h-full rounded-md border-[1px] border-border">
+      <ResizablePanel>
+        <div className="bg-background !overflow-y-scroll h-full rounded-md border-[1px] border-border">
           {!loadingApiSpecData && apiSpecsData && (
             <Search
               properties={properties}

@@ -243,18 +243,18 @@ const Style = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background inline-block !overflow-y-scroll"
+      className="inline-block !overflow-y-scroll pl-3 pt-1 pb-3"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "preview" ? 0 : 100}
         className={cn(
-          "bg-background sm:flex flex-col transition-all duration-300 ease-in-out",
+          "sm:flex flex-col transition-all duration-300 ease-in-out",
           view === "demo" && "opacity-0"
         )}
         ref={panelRef}
       >
-        <div className="h-full pl-3 pb-2 rounded-md">
+        <div className="h-full pr-3 rounded-md">
           <div className="flex flex-col h-full border-[1px] rounded-md p-[1px]">
             <Code
               type="style"
@@ -297,11 +297,8 @@ const Style = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )} border-none bg-transparent`}
       />
-      <ResizablePanel
-        defaultSize={view === "developer" ? 50 : 100}
-        className="!overflow-y-scroll px-3 pb-2"
-      >
-        <div className="!overflow-y-scroll h-full rounded-md border-[1px] border-border">
+      <ResizablePanel>
+        <div className="bg-background !overflow-y-scroll h-full rounded-md border-[1px] border-border">
           {!properties && <Loading className="text-foreground" />}
           {properties && (
             <Search

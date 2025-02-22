@@ -47,21 +47,21 @@ const UpdateMerchantCookie = (props: any) => {
   const rebuildCheckout = () => {
     dispatch(updateRun());
   };
-  console.log(containerRef);
-  useEffect(() => {
-    const merchantAccountCookie = Cookies.get("merchantAccount");
-    if (!merchantAccountCookie) {
-      Cookies.set("merchantAccount", defaultMerchantAccount, {
-        expires: 365,
-      });
-      dispatch(updateMerchantAccount(defaultMerchantAccount));
-    } else {
-      dispatch(updateApiRequestMerchantAccount(merchantAccountCookie));
-      dispatch(updateBuildMerchantAccount(merchantAccountCookie));
-      dispatch(updateMerchantAccount(merchantAccountCookie));
-      syncSandBoxWithFormula();
-    }
-  }, []);
+
+  // useEffect(() => {
+  //   const merchantAccountCookie = Cookies.get("merchantAccount");
+  //   if (!merchantAccountCookie) {
+  //     Cookies.set("merchantAccount", defaultMerchantAccount, {
+  //       expires: 365,
+  //     });
+  //     dispatch(updateMerchantAccount(defaultMerchantAccount));
+  //   } else {
+  //     dispatch(updateApiRequestMerchantAccount(merchantAccountCookie));
+  //     dispatch(updateBuildMerchantAccount(merchantAccountCookie));
+  //     dispatch(updateMerchantAccount(merchantAccountCookie));
+  //     syncSandBoxWithFormula();
+  //   }
+  // }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();

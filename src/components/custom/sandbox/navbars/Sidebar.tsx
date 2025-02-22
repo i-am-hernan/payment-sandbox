@@ -169,7 +169,7 @@ const Sidebar = (props: any) => {
         <div className="relative flex flex-col items-center justify-center">
           <BrushIcon className="!text-[20px]" />
           <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
-            Style
+            STYLE
           </p>
         </div>
       ),
@@ -222,7 +222,7 @@ const Sidebar = (props: any) => {
   };
   return (
     <div ref={sidebarRef}>
-      <span className="absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] text-center">
+      <span className="bg-background absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>

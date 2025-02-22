@@ -13,6 +13,7 @@ interface SandboxContentProps {
   topRight: any;
   bottomRight: any;
   view: "developer" | "preview" | "demo";
+  className?: string;
 }
 
 const Sandbox = ({
@@ -20,6 +21,7 @@ const Sandbox = ({
   topRight: TopRight,
   bottomRight: BottomRight,
   view,
+  className,
 }: SandboxContentProps) => {
   const refA = useRef<ImperativePanelHandle>(null);
   const refB = useRef<ImperativePanelHandle>(null);
@@ -62,7 +64,10 @@ const Sandbox = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="bg-background sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)] border-b-[1px]"
+      className={cn(
+        "sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)] border-b-[1px]",
+        className
+      )}
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 60 : view === "preview" ? 50 : 0}
@@ -70,7 +75,8 @@ const Sandbox = ({
         maxSize={view === "demo" ? 0 : 100}
         className={cn(
           "transition-all duration-300 ease-in-out",
-          view === "demo" && "opacity-0"
+          view === "demo" && "opacity-0",
+          className
         )}
       >
         <div className="items-center justify-center flex w-full h-full">
@@ -82,7 +88,8 @@ const Sandbox = ({
       </ResizablePanel>
       <ResizableHandle
         className={cn(
-          view === "demo" && "opacity-0 pointer-events-none hidden"
+          view === "demo" && "opacity-0 pointer-events-none hidden",
+          "border-none bg-transparent"
         )}
       />
       <ResizablePanel
@@ -110,7 +117,7 @@ const Sandbox = ({
             defaultSize={view === "developer" ? 50 : 0}
             maxSize={view === "preview" || view === "demo" ? 0 : 100}
             ref={refB}
-            className={"transition-all duration-300 ease-in-out"}
+            className={cn("transition-all duration-300 ease-in-out", className)}
           >
             <div className="items-center justify-center flex w-full h-full">
               {React.cloneElement(BottomRight, {
@@ -126,3 +133,4 @@ const Sandbox = ({
 };
 
 export default Sandbox;
+//bg-dotted-grid bg-grid bg-background

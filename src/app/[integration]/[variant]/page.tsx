@@ -14,13 +14,14 @@ import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFormula } from "@/hooks/useFormula";
+import useMerchantInCookie from "@/hooks/useMerchantInCookie";
 import { useStyle } from "@/hooks/useStyle";
 import { useView } from "@/hooks/useView";
-import { formulaActions } from "@/store/reducers";
+import { formulaActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface SectionType {
   section: "Client" | "Server" | "Style";
@@ -34,11 +35,16 @@ const {
   updateCheckoutConfiguration,
   updateTxVariantConfiguration,
   updateStyle,
+  updateApiRequestMerchantAccount,
+  updateBuildMerchantAccount,
+  updateReset,
 } = formulaActions;
+
+const { updateMerchantAccount } = userActions;
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
-  const { theme, merchantAccount, view } = useSelector(
+  const { theme, defaultMerchantAccount, merchantAccount, view } = useSelector(
     (state: RootState) => state.user
   );
   const { integration, variant } = useParams<{
@@ -47,6 +53,7 @@ const Page: any = () => {
   }>();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
+
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(
     variant,
     view,
@@ -77,6 +84,15 @@ const Page: any = () => {
     paymentsDetails: paymentsDetailsAPIVersion,
     sessions: sessionsAPIVersion,
   } = checkoutAPIVersion;
+
+  const dispatch = useDispatch();
+
+  useMerchantInCookie(defaultMerchantAccount, (merchantAccount: string) => {
+    dispatch(updateApiRequestMerchantAccount(merchantAccount));
+    dispatch(updateBuildMerchantAccount(merchantAccount));
+    dispatch(updateMerchantAccount(merchantAccount));
+    dispatch(updateReset());
+  });
 
   let tabsMap: any = [];
   let crumbs: Array<string> = [];
@@ -184,7 +200,7 @@ const Page: any = () => {
                   request={paymentMethods}
                   updateRequest={updatePaymentMethodsRequest}
                   description={
-                    "Create a /paymentMethods request for a Web Components integration"
+                    "Configure the request for the payment methods endpoint"
                   }
                 />
               ),
@@ -205,7 +221,7 @@ const Page: any = () => {
                   request={payments}
                   updateRequest={updatePaymentsRequest}
                   description={
-                    "Create a /payments request for a Web Components integration"
+                    "Configure the request for the payments endpoint"
                   }
                 />
               ),
@@ -226,7 +242,7 @@ const Page: any = () => {
                   request={paymentsDetails}
                   updateRequest={updatePaymentsDetailsRequest}
                   description={
-                    "Create a /payment/details request for a Web Components integration"
+                    "Configure the request for the payment details endpoint"
                   }
                 />
               ),
@@ -286,7 +302,7 @@ const Page: any = () => {
   }
 
   return (
-    <div className={`${theme} border-r-2`}>
+    <div className={`${theme} border-r-2 bg-dotted-grid bg-grid bg-background`}>
       <React.Fragment>
         <header>
           <Topbar
@@ -336,7 +352,7 @@ const Page: any = () => {
                   </AlertDescription>
                 </Alert>
               ) : (
-                <SandBoxTabs tabsMap={topRightTabsMap} className="bg-foreground/10"/>
+                <SandBoxTabs tabsMap={topRightTabsMap} />
               )
             }
             bottomRight={

@@ -73,7 +73,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
                   <span>{tab.icon}</span>
                   <p className="px-1 text-xs text-foreground">{tab.title}</p>
                   {tab.unsavedChanges && (
-                    <span className="ml-1 w-2 h-2 bg-foreground rounded-full inline-block"></span>
+                    <span className="ml-1 w-2 h-2 rounded-full inline-block"></span>
                   )}
                 </TabsTrigger>
               </div>

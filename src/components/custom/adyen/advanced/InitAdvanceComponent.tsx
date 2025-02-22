@@ -90,7 +90,7 @@ export const InitAdvanceComponent = (props: any) => {
       {adyenResult && <Result adyenResult={adyenResult} />}
       {loadingPaymentMethods && <Loading className="text-foreground" />}
       {!error && !adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div className={`h-[100%] w-[100%] ${isEmbedPage ? '' : 'p-3'}`}>
+        <div className={`h-[100%] w-[100%] ${isEmbedPage ? '' : 'px-3 py-1'}`}>
           <div ref={checkoutRef}></div>
         </div>
       )}
