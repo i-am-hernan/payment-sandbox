@@ -134,7 +134,7 @@ const Sidebar = (props: any) => {
         <div className="relative flex flex-col items-center justify-center">
           <CloudQueueIcon className="!text-foreground !text-[20px]" />
           <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
-            API
+            APIs
           </p>
         </div>
       ),
@@ -152,7 +152,7 @@ const Sidebar = (props: any) => {
         <div className="relative flex flex-col items-center justify-center">
           <LanguageIcon className="!text-foreground !text-[20px]" />
           <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
-            SDK
+            UI
           </p>
         </div>
       ),
@@ -168,7 +168,7 @@ const Sidebar = (props: any) => {
         <div className="relative flex flex-col items-center justify-center">
           <BrushIcon className="!text-foreground !text-[20px]" />
           <p className="font-mono text-[0.6rem] text-foreground bg-background flex leading-none mt-[3px]">
-            CSS
+            STYLE
           </p>
         </div>
       ),

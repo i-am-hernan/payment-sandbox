@@ -1,6 +1,8 @@
-// app/api/data/[file]/route.ts
 import { descriptionMap } from "@/lib/descriptionMap";
-import { variantToInterfaceName, VariantToInterfaceName } from "@/lib/variantToInterfaceName";
+import {
+  variantToInterfaceName,
+  VariantToInterfaceName,
+} from "@/lib/variantToInterfaceName";
 import { NextRequest } from "next/server";
 import * as ts from "typescript";
 
@@ -161,658 +163,246 @@ export async function GET(
       const checker = program.getTypeChecker();
       const result: { [name: string]: ParsedProperty } = {};
 
-      const setAdditionalProperties = function (
-        member: ts.PropertySignature | ts.MethodSignature
-      ) {
-        let additionalProperties: { [name: string]: ParsedProperty } = {};
+      // Helper function to process a property node recursively
+      const processPropertyNode = (
+        node: ts.PropertySignature | ts.MethodSignature,
+        imports: Record<string, ImportInfo>
+      ): ParsedProperty => {
+        const name = node.name.getText();
+        const type = node.type;
+        let property: ParsedProperty = {
+          name,
+          type: getTypeString(type),
+          strictType: type?.getText() || "string",
+          required: !node.questionToken,
+          description: map[name] ? map[name] : "",
+        };
 
-        member.forEachChild((child) => {
-          let strictType = "string";
-          let type = "any";
+        if (!type || /^_/.test(name)) {
+          return property;
+        }
 
-          child.forEachChild((child) => {
-            if (ts.isPropertySignature(child)) {
-              const property: ParsedProperty = {
-                name: child.name.getText(),
-                type: child.type?.getText() || "string",
-                strictType: child.type?.getText() || "string",
-                required: !child.questionToken,
-                description: map[child.name.getText()]
-                  ? map[child.name.getText()]
-                  : "",
-              };
-              if (/^_/.test(child.name.getText())) {
-                return;
+        // If it's a method signature, treat it as a function type
+        if (ts.isMethodSignature(node)) {
+          property.type = "function";
+          property.strictType = type.getText();
+          return property;
+        }
+
+        // Handle array types
+        if (
+          type.kind === ts.SyntaxKind.ArrayType ||
+          (type.getText() && type.getText().endsWith("[]"))
+        ) {
+          property.type = "array";
+          property.strictType = type.getText();
+        }
+
+        // Handle function types
+        else if (
+          type.kind === ts.SyntaxKind.FunctionType ||
+          type.kind === ts.SyntaxKind.VoidKeyword ||
+          (type.getText() &&
+            (type.getText().includes("Promise") ||
+              type.getText().includes("void"))) ||
+          /^on/.test(name) ||
+          /^before/.test(name)
+        ) {
+          property.type = "function";
+          property.strictType = type.getText();
+        }
+
+        // Handle union types (enums)
+        else if (type.kind === ts.SyntaxKind.UnionType) {
+          const unionType = type as ts.UnionTypeNode;
+          const filteredLiteralTypes = unionType.types.filter(
+            (t) =>
+              ts.isLiteralTypeNode(t) ||
+              t.kind === ts.SyntaxKind.StringLiteral ||
+              t.kind === ts.SyntaxKind.NullKeyword
+          );
+          if (filteredLiteralTypes.length > 0) {
+            property.type = "enum";
+            property.values = filteredLiteralTypes.map((t) => {
+              if (ts.isLiteralTypeNode(t)) {
+                return t.literal.getText().replace(/['"]/g, "");
+              } else if (t.kind === ts.SyntaxKind.NullKeyword) {
+                return "null";
               }
-              if (child?.type?.kind === ts.SyntaxKind.TypeLiteral) {
+              return t.getText().replace(/['"]/g, "");
+            });
+          }
+        }
+
+        // Handle type literals (nested objects)
+        else if (type.kind === ts.SyntaxKind.TypeLiteral) {
                 property.type = "object";
                 property.strictType = "object";
-                // Recursively process nested type literals
-                const typeLiteral = child.type as ts.TypeLiteralNode;
+          property.additionalProperties = {};
+
+          const typeLiteral = type as ts.TypeLiteralNode;
+          typeLiteral.members.forEach((member) => {
+            if (ts.isPropertySignature(member)) {
+              const nestedProp = processPropertyNode(member, imports);
+              if (property.additionalProperties) {
+                property.additionalProperties[nestedProp.name] = nestedProp;
+              }
+            }
+          });
+        }
+
+        // Handle type references
+        else if (type.kind === ts.SyntaxKind.TypeReference) {
+          property.type = "object";
+          const typeRef = type as ts.TypeReferenceNode;
+          const refName = typeRef.typeName.getText();
+          property.strictType = refName;
+
+          // Find referenced type in imports
+          for (const [_, importInfo] of Object.entries(imports)) {
+            importInfo.sourceFile.forEachChild((refNode) => {
+              // Handle both interfaces and type aliases
+              if (ts.isInterfaceDeclaration(refNode) && refNode.name.text === refName) {
                 property.additionalProperties = {};
 
-                typeLiteral.members.forEach((member) => {
+                // First handle heritage clauses (extends)
+                if (refNode.heritageClauses) {
+                  refNode.heritageClauses.forEach((clause) => {
+                    if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
+                      clause.types.forEach((baseType) => {
+                        const baseTypeName = baseType.expression.getText();
+                        // Look for base interface in all imported files
+                        for (const [_, baseImportInfo] of Object.entries(imports)) {
+                          baseImportInfo.sourceFile.forEachChild((baseNode) => {
+                            if (ts.isInterfaceDeclaration(baseNode) && baseNode.name.text === baseTypeName) {
+                              baseNode.members.forEach((member) => {
                   if (ts.isPropertySignature(member)) {
-                    const propName = member.name.getText();
-                    const nestedProp: ParsedProperty = {
-                      name: propName,
-                      type: getTypeString(member.type),
-                      strictType:
-                        member.type?.kind === ts.SyntaxKind.TypeReference
-                          ? (
-                              member.type as ts.TypeReferenceNode
-                            ).typeName.getText()
-                          : member.type?.getText() || "string",
-                      required: !member.questionToken,
-                      description: map[propName] ? map[propName] : "",
-                    };
-                    // If this nested property is also a type literal, process it recursively
-                    if (member.type?.kind === ts.SyntaxKind.TypeLiteral) {
-                      nestedProp.type = "object";
-                      nestedProp.strictType = "object";
-                      nestedProp.additionalProperties =
-                        setAdditionalProperties(member);
+                                  const baseProp = processPropertyNode(member, imports);
+                                  if (property.additionalProperties) {
+                                    property.additionalProperties[baseProp.name] = baseProp;
+                                  }
+                                }
+                              });
+                            }
+                          });
+                        }
+                      });
                     }
+                  });
+                }
 
+                // Then handle the interface's own members
+                refNode.members.forEach((member) => {
+                  if (ts.isPropertySignature(member)) {
+                    const refProp = processPropertyNode(member, imports);
                     if (property.additionalProperties) {
-                      property.additionalProperties[propName] = nestedProp;
+                      property.additionalProperties[refProp.name] = refProp;
                     }
                   }
                 });
-              } else if (child?.type?.kind === ts.SyntaxKind.StringKeyword) {
-                property.type = "string";
-              } else if (child?.type?.kind === ts.SyntaxKind.NumberKeyword) {
-                property.type = "number";
-              } else if (child?.type?.kind === ts.SyntaxKind.BooleanKeyword) {
-                property.type = "boolean";
-              } else if (child?.type?.kind === ts.SyntaxKind.VoidKeyword) {
-                property.type = "function";
-              } else if (child?.type?.kind === ts.SyntaxKind.TypeReference) {
-                property.type = "object";
-                property.strictType = (
-                  child.type as ts.TypeReferenceNode
-                ).typeName.getText();
-              } else if (child?.type?.kind === ts.SyntaxKind.UnionType) {
-                const unionType = child.type as ts.UnionTypeNode;
-                // Check if this is an enum-like union (all literals)
-                const isEnum = unionType.types.every(t => 
-                  ts.isLiteralTypeNode(t) || 
-                  t.kind === ts.SyntaxKind.StringLiteral ||
-                  t.kind === ts.SyntaxKind.NullKeyword
-                );
-
-                if (isEnum) {
-                  property.type = "enum";
-                  property.values = unionType.types.map(t => {
-                    if (ts.isLiteralTypeNode(t)) {
-                      return t.literal.getText().replace(/['"]/g, '');
-                    } else if (t.kind === ts.SyntaxKind.NullKeyword) {
-                      return 'null';
-                    }
-                    return t.getText().replace(/['"]/g, '');
-                  });
-                } else {
-                  property.type = "string";
-                }
-                property.strictType = child.type.getText();
               }
-              additionalProperties[property.name] = property;
-            }
-          });
-        });
-        return additionalProperties;
+              // Add type alias handling
+              else if (ts.isTypeAliasDeclaration(refNode) && refNode.name.text === refName) {
+                // Handle union types in type aliases
+                if (ts.isUnionTypeNode(refNode.type)) {
+                  const unionType = refNode.type;
+                  const filteredLiteralTypes = unionType.types.filter(
+                    t => ts.isLiteralTypeNode(t) || 
+                        t.kind === ts.SyntaxKind.StringLiteral ||
+                        t.kind === ts.SyntaxKind.NullKeyword
+                  );
+                  if (filteredLiteralTypes.length > 0) {
+                    property.type = "enum";
+                    property.values = filteredLiteralTypes.map(t => {
+                      if (ts.isLiteralTypeNode(t)) {
+                        return t.literal.getText().replace(/['"]/g, "");
+                      } else if (t.kind === ts.SyntaxKind.NullKeyword) {
+                        return "null";
+                      }
+                      return t.getText().replace(/['"]/g, "");
+                    });
+                  }
+                }
+                // Existing type literal handling
+                else if (ts.isTypeLiteralNode(refNode.type)) {
+                  property.additionalProperties = {};
+                  refNode.type.members.forEach((member) => {
+                    if (ts.isPropertySignature(member)) {
+                      const refProp = processPropertyNode(member, imports);
+                      if (property.additionalProperties) {
+                        property.additionalProperties[refProp.name] = refProp;
+                      }
+                    }
+                  });
+                }
+                // Existing type reference handling
+                else if (ts.isTypeReferenceNode(refNode.type)) {
+                  const aliasedTypeRef = refNode.type;
+                  const aliasedTypeName = aliasedTypeRef.typeName.getText();
+                  // Recursively look up the aliased type
+                  for (const [_, aliasImportInfo] of Object.entries(imports)) {
+                    aliasImportInfo.sourceFile.forEachChild((aliasNode) => {
+                      if ((ts.isInterfaceDeclaration(aliasNode) || ts.isTypeAliasDeclaration(aliasNode)) 
+                          && aliasNode.name.text === aliasedTypeName) {
+                        const aliasedProp = processPropertyNode(aliasNode as any, imports);
+                        property.additionalProperties = aliasedProp.additionalProperties;
+                      }
+                    });
+                  }
+                }
+              }
+            });
+          }
+        }
+
+        return property;
       };
 
       // Visit all source files to find types
-      Object.values(imports).forEach(({ sourceFile }) => {
         const visit = (node: ts.Node) => {
-          if (
-            ts.isInterfaceDeclaration(node) &&
-            node.name.text === interfaceName
-          ) {
+        if (ts.isInterfaceDeclaration(node) && node.name.text === interfaceName) {
             node.members.forEach((member) => {
-              if (
-                ts.isPropertySignature(member) ||
-                ts.isMethodSignature(member)
-              ) {
-                const name = member.name.getText();
-                const required = !member.questionToken;
-                let typeString = "any";
-                let strictType = "any";
-                let additionalProperties: { [name: string]: ParsedProperty } =
-                  {};
-                let values: string[] | undefined = undefined;
-                if (member.type && !/^_/.test(name)) {
-                  const type = checker.getTypeAtLocation(member);
-                  if (!type) return;
-                  strictType = member.type.getText();
-                  if (
-                    member.type.kind === ts.SyntaxKind.VoidKeyword ||
-                    member.type.getText().includes("Promise<void>") ||
-                    /^on/.test(name) ||
-                    /^before/.test(name)
-                  ) {
-                    typeString = "function";
-                    strictType = "function";
-                  } else if (member.type.kind === ts.SyntaxKind.TypeLiteral) {
-                    typeString = "object";
-                    strictType = "object";
-                    additionalProperties = setAdditionalProperties(member);
-                  } else if (member.type.kind === ts.SyntaxKind.ArrayType) {
-                    typeString = "array";
-                  } else if (member.type.kind === ts.SyntaxKind.UnionType) {
-                    const unionType = member.type as ts.UnionTypeNode;
-                    const filteredLiteralTypes = unionType.types.filter(
-                      (type) => type.kind === ts.SyntaxKind.LiteralType
-                    );
-                    const filteredStringTypes = unionType.types.map(
-                      (type) => type.kind === ts.SyntaxKind.StringKeyword
-                    );
-                    if (filteredLiteralTypes.length > 0) {
-                      typeString = "enum";
-                      values = filteredLiteralTypes.map((type) => {
-                        return type.getText();
-                      });
-                    } else if (filteredStringTypes.length > 0) {
-                      typeString = "string";
-                    }
-                  } else if (member.type.kind === ts.SyntaxKind.TypeReference) {
-                    const typeRef = member.type as ts.TypeReferenceNode;
-                    const typeName = typeRef.typeName.getText();
-                    strictType = typeName;
-                    typeString = "object";
-                    // Handle extended interfaces
-                    for (const [_, importInfo] of Object.entries(imports)) {
-                      importInfo.sourceFile.forEachChild((node) => {
-                        if (
-                          ts.isInterfaceDeclaration(node) &&
-                          node.name.text === typeName
-                        ) {
-                          // Get properties from this interface
-                          node.members.forEach((member) => {
-                            if (ts.isPropertySignature(member)) {
-                              const prop: ParsedProperty = {
-                                name: member.name.getText(),
-                                type: getTypeString(member.type),
-                                strictType: member.type?.getText() || "string",
-                                required: !member.questionToken,
-                                description: map[member.name.getText()]
-                                  ? map[member.name.getText()]
-                                  : "",
-                              };
-                              // Handle nested type literals in interface properties
-                              if (
-                                member.type?.kind === ts.SyntaxKind.TypeLiteral
-                              ) {
-                                prop.type = "object";
-                                prop.strictType = "object";
-                                prop.additionalProperties =
-                                  setAdditionalProperties(member);
-                              } else if (
-                                member.type?.kind ===
-                                ts.SyntaxKind.TypeReference
-                              ) {
-                                // Handle nested type references recursively
-                                prop.type = "object";
-                                const nestedTypeName = (
-                                  member.type as ts.TypeReferenceNode
-                                ).typeName.getText();
-                                prop.strictType = nestedTypeName;
-
-                                // Recursively process the referenced type
-                                for (const [_, importInfo] of Object.entries(
-                                  imports
-                                )) {
-                                  importInfo.sourceFile.forEachChild(
-                                    (nestedNode) => {
-                                      if (
-                                        ts.isInterfaceDeclaration(nestedNode) &&
-                                        nestedNode.name.text === nestedTypeName
-                                      ) {
-                                        prop.additionalProperties = {};
-                                        nestedNode.members.forEach(
-                                          (nestedMember) => {
-                                            if (
-                                              ts.isPropertySignature(
-                                                nestedMember
-                                              )
-                                            ) {
-                                              const nestedProp: ParsedProperty =
-                                                {
-                                                  name: nestedMember.name.getText(),
-                                                  type: getTypeString(
-                                                    nestedMember.type
-                                                  ),
-                                                  strictType:
-                                                    nestedMember.type?.getText() ||
-                                                    "string",
-                                                  required:
-                                                    !nestedMember.questionToken,
-                                                  description: map[
-                                                    nestedMember.name.getText()
-                                                  ]
-                                                    ? map[
-                                                        nestedMember.name.getText()
-                                                      ]
-                                                    : "",
-                                                };
-
-                                              // Add union type handling
-                                              if (nestedMember.type?.kind === ts.SyntaxKind.UnionType) {
-                                                const unionType = nestedMember.type as ts.UnionTypeNode;
-                                                const filteredLiteralTypes = unionType.types.filter(
-                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
-                                                );
-                                                if (filteredLiteralTypes.length > 0) {
-                                                  nestedProp.type = "enum";
-                                                  nestedProp.values = filteredLiteralTypes.map((type) => type.getText());
-                                                }
-                                              }
-
-                                              // Continue recursion for nested properties
-                                              if (
-                                                nestedMember.type?.kind ===
-                                                ts.SyntaxKind.TypeLiteral
-                                              ) {
-                                                nestedProp.type = "object";
-                                                nestedProp.strictType =
-                                                  "object";
-                                                nestedProp.additionalProperties =
-                                                  setAdditionalProperties(
-                                                    nestedMember
-                                                  );
-                                              } else if (
-                                                nestedMember.type?.kind ===
-                                                ts.SyntaxKind.TypeReference
-                                              ) {
-                                                // Handle nested type references recursively
-                                                nestedProp.type = "object";
-                                                const nestedTypeName = (
-                                                  nestedMember.type as ts.TypeReferenceNode
-                                                ).typeName.getText();
-                                                nestedProp.strictType =
-                                                  nestedTypeName;
-
-                                                // Recursively process the referenced type
-                                                for (const [
-                                                  _,
-                                                  importInfo,
-                                                ] of Object.entries(imports)) {
-                                                  importInfo.sourceFile.forEachChild(
-                                                    (deepNode) => {
-                                                      if (
-                                                        ts.isInterfaceDeclaration(
-                                                          deepNode
-                                                        ) &&
-                                                        deepNode.name.text ===
-                                                          nestedTypeName
-                                                      ) {
-                                                        nestedProp.additionalProperties =
-                                                          {};
-                                                        deepNode.members.forEach(
-                                                          (deepMember) => {
-                                                            if (
-                                                              ts.isPropertySignature(
-                                                                deepMember
-                                                              )
-                                                            ) {
-                                                              const deepProp: ParsedProperty =
-                                                                {
-                                                                  name: deepMember.name.getText(),
-                                                                  type: getTypeString(
-                                                                    deepMember.type
-                                                                  ),
-                                                                  strictType:
-                                                                    deepMember.type?.getText() ||
-                                                                    "string",
-                                                                  required:
-                                                                    !deepMember.questionToken,
-                                                                  description:
-                                                                    map[
-                                                                      deepMember.name.getText()
-                                                                    ]
-                                                                      ? map[
-                                                                          deepMember.name.getText()
-                                                                        ]
-                                                                      : "",
-                                                                };
-
-                                                              // Add union type handling
-                                                              if (deepMember.type?.kind === ts.SyntaxKind.UnionType) {
-                                                                const unionType = deepMember.type as ts.UnionTypeNode;
-                                                                const filteredLiteralTypes = unionType.types.filter(
-                                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
-                                                                );
-                                                                if (filteredLiteralTypes.length > 0) {
-                                                                  deepProp.type = "enum";
-                                                                  deepProp.values = filteredLiteralTypes.map((type) => type.getText());
-                                                                }
-                                                              }
-
-                                                              if (
-                                                                nestedProp.additionalProperties
-                                                              ) {
-                                                                nestedProp.additionalProperties[
-                                                                  deepProp.name
-                                                                ] = deepProp;
-                                                              }
-                                                            }
-                                                          }
-                                                        );
-                                                      }
-                                                    }
-                                                  );
-                                                }
-                                              }
-                                              if (prop.additionalProperties) {
-                                                prop.additionalProperties[
-                                                  nestedProp.name
-                                                ] = nestedProp;
-                                              }
-                                            }
-                                          }
-                                        );
-                                      }
-                                    }
-                                  );
-                                }
-                              }
-                              additionalProperties[prop.name] = prop;
+            // Handle both property and method signatures
+            if (ts.isPropertySignature(member) || ts.isMethodSignature(member)) {
+              const propertyInfo = processPropertyNode(member, imports);
+              result[propertyInfo.name] = propertyInfo;
                             }
                           });
 
                           // Handle extends clause if it exists
                           if (node.heritageClauses) {
                             node.heritageClauses.forEach((clause) => {
-                              if (
-                                clause.token === ts.SyntaxKind.ExtendsKeyword
-                              ) {
+              if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
                                 clause.types.forEach((baseType) => {
-                                  const baseTypeName =
-                                    baseType.expression.getText();
+                  const baseTypeName = baseType.expression.getText();
                                   // Look for base interface in all imported files
-                                  for (const [
-                                    _,
-                                    baseImportInfo,
-                                  ] of Object.entries(imports)) {
-                                    baseImportInfo.sourceFile.forEachChild(
-                                      (baseNode) => {
+                  for (const [_, importInfo] of Object.entries(imports)) {
+                    importInfo.sourceFile.forEachChild((baseNode) => {
                                         if (
                                           ts.isInterfaceDeclaration(baseNode) &&
                                           baseNode.name.text === baseTypeName
                                         ) {
                                           baseNode.members.forEach((member) => {
-                                            if (
-                                              ts.isPropertySignature(member)
-                                            ) {
-                                              const baseProp: ParsedProperty = {
-                                                name: member.name.getText(),
-                                                type: getTypeString(
-                                                  member.type
-                                                ),
-                                                strictType:
-                                                  member.type?.getText() ||
-                                                  "string",
-                                                required: !member.questionToken,
-                                                description: map[
-                                                  member.name.getText()
-                                                ]
-                                                  ? map[member.name.getText()]
-                                                  : "",
-                                              };
-                                              // Handle nested types in base interface properties
-                                              if (
-                                                member.type?.kind ===
-                                                ts.SyntaxKind.TypeLiteral
-                                              ) {
-                                                baseProp.type = "object";
-                                                baseProp.strictType = "object";
-                                                baseProp.additionalProperties =
-                                                  setAdditionalProperties(
-                                                    member
-                                                  );
-                                              } else if (
-                                                member.type?.kind ===
-                                                ts.SyntaxKind.TypeReference
-                                              ) {
-                                                // Handle nested type references recursively
-                                                baseProp.type = "object";
-                                                const nestedTypeName = (
-                                                  member.type as ts.TypeReferenceNode
-                                                ).typeName.getText();
-                                                baseProp.strictType =
-                                                  nestedTypeName;
-
-                                                // Recursively process the referenced type
-                                                for (const [
-                                                  _,
-                                                  importInfo,
-                                                ] of Object.entries(imports)) {
-                                                  importInfo.sourceFile.forEachChild(
-                                                    (nestedNode) => {
-                                                      if (
-                                                        ts.isInterfaceDeclaration(
-                                                          nestedNode
-                                                        ) &&
-                                                        nestedNode.name.text ===
-                                                          nestedTypeName
-                                                      ) {
-                                                        baseProp.additionalProperties =
-                                                          {};
-                                                        nestedNode.members.forEach(
-                                                          (nestedMember) => {
-                                                            if (
-                                                              ts.isPropertySignature(
-                                                                nestedMember
-                                                              )
-                                                            ) {
-                                                              const nestedProp: ParsedProperty =
-                                                                {
-                                                                  name: nestedMember.name.getText(),
-                                                                  type: getTypeString(
-                                                                    nestedMember.type
-                                                                  ),
-                                                                  strictType:
-                                                                    nestedMember.type?.getText() ||
-                                                                    "string",
-                                                                  required:
-                                                                    !nestedMember.questionToken,
-                                                                  description:
-                                                                    map[
-                                                                      nestedMember.name.getText()
-                                                                    ]
-                                                                      ? map[
-                                                                          nestedMember.name.getText()
-                                                                        ]
-                                                                      : "",
-                                                                };
-
-                                                              // Add union type handling
-                                                              if (nestedMember.type?.kind === ts.SyntaxKind.UnionType) {
-                                                                const unionType = nestedMember.type as ts.UnionTypeNode;
-                                                                const filteredLiteralTypes = unionType.types.filter(
-                                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
-                                                                );
-                                                                if (filteredLiteralTypes.length > 0) {
-                                                                  nestedProp.type = "enum";
-                                                                  nestedProp.values = filteredLiteralTypes.map((type) => type.getText());
-                                                                }
-                                                              }
-
-                                                              // Continue recursion for nested properties
-                                                              if (
-                                                                nestedMember
-                                                                  .type
-                                                                  ?.kind ===
-                                                                ts.SyntaxKind
-                                                                  .TypeLiteral
-                                                              ) {
-                                                                nestedProp.type =
-                                                                  "object";
-                                                                nestedProp.strictType =
-                                                                  "object";
-                                                                nestedProp.additionalProperties =
-                                                                  setAdditionalProperties(
-                                                                    nestedMember
-                                                                  );
-                                                              } else if (
-                                                                nestedMember
-                                                                  .type
-                                                                  ?.kind ===
-                                                                ts.SyntaxKind
-                                                                  .TypeReference
-                                                              ) {
-                                                                // Handle nested type references recursively
-                                                                nestedProp.type =
-                                                                  "object";
-                                                                const nestedTypeName =
-                                                                  (
-                                                                    nestedMember.type as ts.TypeReferenceNode
-                                                                  ).typeName.getText();
-                                                                nestedProp.strictType =
-                                                                  nestedTypeName;
-
-                                                                // Recursively process the referenced type
-                                                                for (const [
-                                                                  _,
-                                                                  importInfo,
-                                                                ] of Object.entries(
+                          if (ts.isPropertySignature(member)) {
+                            const propertyInfo = processPropertyNode(
+                              member,
                                                                   imports
-                                                                )) {
-                                                                  importInfo.sourceFile.forEachChild(
-                                                                    (
-                                                                      deepNode
-                                                                    ) => {
-                                                                      if (
-                                                                        ts.isInterfaceDeclaration(
-                                                                          deepNode
-                                                                        ) &&
-                                                                        deepNode
-                                                                          .name
-                                                                          .text ===
-                                                                          nestedTypeName
-                                                                      ) {
-                                                                        nestedProp.additionalProperties =
-                                                                          {};
-                                                                        deepNode.members.forEach(
-                                                                          (
-                                                                            deepMember
-                                                                          ) => {
-                                                                            if (
-                                                                              ts.isPropertySignature(
-                                                                                deepMember
-                                                                              )
-                                                                            ) {
-                                                                              const deepProp: ParsedProperty =
-                                                                                {
-                                                                                  name: deepMember.name.getText(),
-                                                                                  type: getTypeString(
-                                                                                    deepMember.type
-                                                                                  ),
-                                                                                  strictType:
-                                                                                    deepMember.type?.getText() ||
-                                                                                    "string",
-                                                                                  required:
-                                                                                    !deepMember.questionToken,
-                                                                                  description:
-                                                                                    map[
-                                                                                      deepMember.name.getText()
-                                                                                    ]
-                                                                                      ? map[
-                                                                                          deepMember.name.getText()
-                                                                                        ]
-                                                                                      : "",
-                                                                                };
-
-                                                                              // Add union type handling
-                                                                              if (deepMember.type?.kind === ts.SyntaxKind.UnionType) {
-                                                                                const unionType = deepMember.type as ts.UnionTypeNode;
-                                                                                const filteredLiteralTypes = unionType.types.filter(
-                                                                                  (type) => type.kind === ts.SyntaxKind.LiteralType
-                                                                                );
-                                                                                if (filteredLiteralTypes.length > 0) {
-                                                                                  deepProp.type = "enum";
-                                                                                  deepProp.values = filteredLiteralTypes.map((type) => type.getText());
-                                                                                }
-                                                                              }
-
-                                                                              if (
-                                                                                nestedProp.additionalProperties
-                                                                              ) {
-                                                                                nestedProp.additionalProperties[
-                                                                                  deepProp.name
-                                                                                ] = deepProp;
-                                                                              }
-                                                                            }
-                                                                          }
-                                                                        );
-                                                                      }
-                                                                    }
-                                                                  );
-                                                                }
-                                                              }
-                                                              additionalProperties[
-                                                                nestedProp.name
-                                                              ] = nestedProp;
-                                                            }
-                                                          }
-                                                        );
-                                                      }
-                                                    }
-                                                  );
-                                                }
-                                              }
-                                              additionalProperties[
-                                                baseProp.name
-                                              ] = baseProp;
-                                            }
-                                          });
-                                        }
-                                      }
-                                    );
+                            );
+                            result[propertyInfo.name] = propertyInfo;
                                   }
                                 });
                               }
                             });
-                          }
-                        }
-                      });
-                    }
-                  } else if (member.type.kind === ts.SyntaxKind.StringKeyword) {
-                    typeString = "string";
-                    strictType = member.type.getText();
-                  } else if (member.type.kind === ts.SyntaxKind.NumberKeyword) {
-                    typeString = "number";
-                  } else if (
-                    member.type.kind === ts.SyntaxKind.BooleanKeyword
-                  ) {
-                    typeString = "boolean";
-                  } else if (member.type.kind === ts.SyntaxKind.AnyKeyword) {
-                    typeString = "any";
                   }
-
-                  result[name] = {
-                    name,
-                    type: typeString,
-                    strictType,
-                    required,
-                    values,
-                    description: map[name] ? map[name] : "",
-                    additionalProperties,
-                  };
-                }
-              } else {
-                console.log(
-                  "Error: member.name.getText()",
-                  member?.name?.getText()
-                );
+                });
               }
             });
           }
+          }
           ts.forEachChild(node, visit);
         };
+
         ts.forEachChild(sourceFile, visit);
-      });
 
       return result;
     };
@@ -822,15 +412,7 @@ export async function GET(
     // Clean up
     imports = {};
 
-    return new Response(JSON.stringify(result), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=31536000, immutable', // Cache for 1 year
-        'CDN-Cache-Control': 'public, max-age=31536000, immutable',
-        'Vercel-CDN-Cache-Control': 'public, max-age=31536000, immutable',
-        'Access-Control-Allow-Origin': '*',
-      }
-    });
+    return new Response(JSON.stringify(result));
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();

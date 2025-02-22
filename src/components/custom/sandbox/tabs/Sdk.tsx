@@ -79,10 +79,15 @@ const Sdk = (props: any) => {
 
   // v2 is not working well with components
 
+  // const url =
+  //   configurationType === "checkoutConfiguration"
+  //     ? `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/checkout`
+  //     : `api/specs/adyen-web/v1/v${adyenWebVersion.replaceAll(".", "_")}/variant?txvariant=${variant}`;
+
   const url =
-    configurationType === "checkoutConfiguration"
-      ? `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/checkout`
-      : `api/specs/adyen-web/v1/v${adyenWebVersion.replaceAll(".", "_")}/variant?txvariant=${variant}`;
+  configurationType === "checkoutConfiguration"
+    ? `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/checkout`
+    : `api/specs/adyen-web/v2/v${adyenWebVersion.replaceAll(".", "_")}/${variant}`;
 
   const {
     data: sdkSpecsData,
@@ -374,17 +379,6 @@ const Sdk = (props: any) => {
                 keyValue: any,
                 type: string
               ) => {
-                console.log("value", value);
-                console.log("stringifyObject(keyValue)", stringifyObject(keyValue));
-                console.log(
-                  "replaceKeyValue",
-                  replaceKeyValue(
-                    config.stringified,
-                    keyString,
-                    stringifyObject(keyValue),
-                    type
-                  )
-                );
                 dispatchConfig({
                   type: "SET_BOTH",
                   payload: {
