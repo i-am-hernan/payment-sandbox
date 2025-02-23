@@ -120,6 +120,10 @@ module.exports = {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(0)" }
         },
+        "slide-in-from-top": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -127,6 +131,7 @@ module.exports = {
         typing: "typing 2s steps(40), cursor 1s step-end infinite",
         "slide-in": "slide-in 0.3s ease-out",
         "slide-in-right": "slide-in-right 0.3s ease-out",
+        "slide-in-from-top": "slide-in-from-top 0.3s ease-out",
       },
       backgroundImage: {
         'dotted-grid': 'radial-gradient(circle, hsla(var(--border) / 0.3) 1.3px, transparent 0.5px)',
