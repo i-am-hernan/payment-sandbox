@@ -35,3 +35,6 @@ package-lock.json
 .DS_Store
 
 .next
+
+# Redis
+dump.rdb

@@ -82,6 +82,7 @@ export async function GET(
     const cached = await redis.get(cacheKey);
     
     if (cached) {
+      console.log("Cache hit for adyen-web:specs:", version, configuration);
       return new Response(cached, {
         headers: { 'Cache-Control': 'public, max-age=86400' }
       });
