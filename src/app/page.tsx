@@ -90,7 +90,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="dark min-h-screen bg-dotted-grid bg-grid bg-background">
+    <div className="min-h-screen bg-dotted-grid bg-grid bg-background">
       <div className="max-w-[1200px] mx-auto pt-24 pb-16 px-4">
         <div className="space-y-5 text-center mb-16">
           <h1 className="text-4xl font-bold tracking-tight text-foreground">

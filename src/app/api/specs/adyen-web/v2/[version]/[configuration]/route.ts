@@ -1,4 +1,5 @@
 import { descriptionMap } from "@/lib/descriptionMap";
+import redisConnect from '@/lib/redis';
 import {
   variantToInterfaceName,
   VariantToInterfaceName,
@@ -71,9 +72,21 @@ export async function GET(
   const url = `https://raw.githubusercontent.com/Adyen/adyen-web/refs/tags/${parsedVersion}/${mainPath}`;
 
   const map = descriptionMap as Record<string, string>;
+  let redis = null;
   let imports: Record<string, ImportInfo> = {};
 
   try {
+    redis = await redisConnect();
+    
+    const cacheKey = `adyen-web:specs:${version}:${configuration}`;
+    const cached = await redis.get(cacheKey);
+    
+    if (cached) {
+      return new Response(cached, {
+        headers: { 'Cache-Control': 'public, max-age=86400' }
+      });
+    }
+
     const response = await fetch(url);
     if (!response.ok) {
       throw response;
@@ -236,8 +249,8 @@ export async function GET(
 
         // Handle type literals (nested objects)
         else if (type.kind === ts.SyntaxKind.TypeLiteral) {
-                property.type = "object";
-                property.strictType = "object";
+          property.type = "object";
+          property.strictType = "object";
           property.additionalProperties = {};
 
           const typeLiteral = type as ts.TypeLiteralNode;
@@ -276,7 +289,7 @@ export async function GET(
                           baseImportInfo.sourceFile.forEachChild((baseNode) => {
                             if (ts.isInterfaceDeclaration(baseNode) && baseNode.name.text === baseTypeName) {
                               baseNode.members.forEach((member) => {
-                  if (ts.isPropertySignature(member)) {
+                                if (ts.isPropertySignature(member)) {
                                   const baseProp = processPropertyNode(member, imports);
                                   if (property.additionalProperties) {
                                     property.additionalProperties[baseProp.name] = baseProp;
@@ -307,9 +320,9 @@ export async function GET(
                 if (ts.isUnionTypeNode(refNode.type)) {
                   const unionType = refNode.type;
                   const filteredLiteralTypes = unionType.types.filter(
-                    t => ts.isLiteralTypeNode(t) || 
-                        t.kind === ts.SyntaxKind.StringLiteral ||
-                        t.kind === ts.SyntaxKind.NullKeyword
+                    t => ts.isLiteralTypeNode(t) ||
+                      t.kind === ts.SyntaxKind.StringLiteral ||
+                      t.kind === ts.SyntaxKind.NullKeyword
                   );
                   if (filteredLiteralTypes.length > 0) {
                     property.type = "enum";
@@ -342,8 +355,8 @@ export async function GET(
                   // Recursively look up the aliased type
                   for (const [_, aliasImportInfo] of Object.entries(imports)) {
                     aliasImportInfo.sourceFile.forEachChild((aliasNode) => {
-                      if ((ts.isInterfaceDeclaration(aliasNode) || ts.isTypeAliasDeclaration(aliasNode)) 
-                          && aliasNode.name.text === aliasedTypeName) {
+                      if ((ts.isInterfaceDeclaration(aliasNode) || ts.isTypeAliasDeclaration(aliasNode))
+                        && aliasNode.name.text === aliasedTypeName) {
                         const aliasedProp = processPropertyNode(aliasNode as any, imports);
                         property.additionalProperties = aliasedProp.additionalProperties;
                       }
@@ -359,50 +372,50 @@ export async function GET(
       };
 
       // Visit all source files to find types
-        const visit = (node: ts.Node) => {
+      const visit = (node: ts.Node) => {
         if (ts.isInterfaceDeclaration(node) && node.name.text === interfaceName) {
-            node.members.forEach((member) => {
+          node.members.forEach((member) => {
             // Handle both property and method signatures
             if (ts.isPropertySignature(member) || ts.isMethodSignature(member)) {
               const propertyInfo = processPropertyNode(member, imports);
               result[propertyInfo.name] = propertyInfo;
-                            }
-                          });
+            }
+          });
 
-                          // Handle extends clause if it exists
-                          if (node.heritageClauses) {
-                            node.heritageClauses.forEach((clause) => {
+          // Handle extends clause if it exists
+          if (node.heritageClauses) {
+            node.heritageClauses.forEach((clause) => {
               if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
-                                clause.types.forEach((baseType) => {
+                clause.types.forEach((baseType) => {
                   const baseTypeName = baseType.expression.getText();
-                                  // Look for base interface in all imported files
+                  // Look for base interface in all imported files
                   for (const [_, importInfo] of Object.entries(imports)) {
                     importInfo.sourceFile.forEachChild((baseNode) => {
-                                        if (
-                                          ts.isInterfaceDeclaration(baseNode) &&
-                                          baseNode.name.text === baseTypeName
-                                        ) {
-                                          baseNode.members.forEach((member) => {
+                      if (
+                        ts.isInterfaceDeclaration(baseNode) &&
+                        baseNode.name.text === baseTypeName
+                      ) {
+                        baseNode.members.forEach((member) => {
                           if (ts.isPropertySignature(member)) {
                             const propertyInfo = processPropertyNode(
                               member,
-                                                                  imports
+                              imports
                             );
                             result[propertyInfo.name] = propertyInfo;
-                                  }
-                                });
-                              }
-                            });
+                          }
+                        });
+                      }
+                    });
                   }
                 });
               }
             });
           }
-          }
-          ts.forEachChild(node, visit);
-        };
+        }
+        ts.forEachChild(node, visit);
+      };
 
-        ts.forEachChild(sourceFile, visit);
+      ts.forEachChild(sourceFile, visit);
 
       return result;
     };
@@ -412,7 +425,18 @@ export async function GET(
     // Clean up
     imports = {};
 
-    return new Response(JSON.stringify(result));
+    // Set with expiration (e.g., 24 hours)
+    await redis.set(cacheKey, JSON.stringify(result), {
+      EX: 2592000,
+      NX: true
+    });
+
+    // return new Response(JSON.stringify(result), {
+    //   headers: { 'Cache-Control': 'public, max-age=86400' }
+    // });
+    return new Response(JSON.stringify(result), {
+      headers: { 'Cache-Control': 'public, max-age=86400' }
+    });
   } catch (error: any) {
     if (error instanceof Response) {
       const data = await error.json();
@@ -421,6 +445,8 @@ export async function GET(
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
+  } finally {
+    // No need to disconnect here as we're reusing connections
   }
 }
 

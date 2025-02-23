@@ -88,9 +88,7 @@ const Sdk = (props: any) => {
     data: sdkSpecsData,
     loading: loadingSdkSpecData,
     error: sdkSpecsError,
-  } = useApi(url, "GET", null, {
-    cache: "force-cache"
-  });
+  } = useApi(url, "GET");
 
   const specs: any = useSelector((state: RootState) => state.specs);
   const { checkoutConfiguration, txVariantConfiguration } = specs;

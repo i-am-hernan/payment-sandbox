@@ -181,11 +181,7 @@ const Api = (props: any) => {
     error: apiSpecsError,
   } = useApi(
     `api/specs/checkout/CheckoutService-v${checkoutAPIVersion[api]}.json`,
-    "GET",
-    null,
-    {
-      cache: "force-cache",
-    }
+    "GET"
   );
 
   useEffect(() => {
