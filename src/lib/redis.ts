@@ -6,6 +6,7 @@ declare global {
 const REDIS_URL = process.env.REDIS_URL;
 
 if (!REDIS_URL) {
+  console.error("Redis URL not found");
   throw new Error(
     "Please define the REDIS_URL environment variable inside .env.local"
   );
@@ -31,19 +32,23 @@ async function redisConnect() {
       }
     });
 
-    // Error logging
-    client.on('error', (err) => console.error('Redis Client Error', err));
+    // Simple error logging
+    client.on('error', (err) => {
+      console.error('Redis Client Error:', err);
+    });
 
     cached.promise = client.connect().then(() => {
+      console.log('Redis connected');
       return client;
     });
   }
 
   try {
     cached.conn = await cached.promise;
-  } catch (e) {
+  } catch (err: any) {
+    console.error('Redis Connection Error:', err);
     cached.promise = null;
-    throw e;
+    throw err;
   }
 
   return cached.conn;
