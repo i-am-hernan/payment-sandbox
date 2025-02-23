@@ -14,6 +14,8 @@ const Layout: React.FC<LayoutProps> = ({ children }: any) => {
     <html lang="en">
       <head>
         <title>Lab | Build your checkout</title>
+        <meta name="robots" content="noindex, nofollow, noarchive" />
+        <meta name="googlebot" content="noindex, nofollow, noimageindex" />
         <link
           rel="icon"
           type="image/svg+xml"
