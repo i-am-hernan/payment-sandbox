@@ -23,6 +23,7 @@ const {
 const { updateComponentState, updateResponse } = componentActions;
 const { updateSpecs } = specsActions;
 export const ManageAdyenSessions = (props: any) => {
+  const { className } = props;
   const { build, isRedirect, redirectResult, sessionId } = useSelector(
     (state: RootState) => state.formula
   );
@@ -66,7 +67,7 @@ export const ManageAdyenSessions = (props: any) => {
   }
   
   return (
-    <div className="h-[100%]">
+    <div className={`h-[100%] ${className}`}>
       {!isRedirect && (
         <InitSessionsComponent
           checkoutAPIVersion={checkoutAPIVersion}

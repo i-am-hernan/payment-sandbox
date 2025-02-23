@@ -224,51 +224,49 @@ const Api = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="inline-block !overflow-y-scroll pl-3 pt-1 pb-3"
+      className="inline-block !overflow-y-scroll pl-6 pt-1 pb-6"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
         maxSize={view === "product" ? 0 : 100}
         ref={panelRef}
         className={cn(
-          "sm:flex flex-col transition-all duration-300 ease-in-out",
+          `shadow-hover sm:flex flex-col transition-all duration-300 ease-in-out rounded-lg ${view === "developer" ? "mr-6" : ""}`,
           view === "demo" && "opacity-0"
         )}
       >
-        <div className="h-full pr-3 rounded-md">
-          <div className="flex flex-col h-full border-[1px] rounded-md p-[1px]">
-            <Code
-              type="json"
-              code={apiRequest.stringified}
-              readOnly={false}
-              theme={theme}
-              onChange={(jsValue: any, stringValue: string) => {
-                if (stringValue === apiRequest.stringified) {
-                  return;
-                } else {
-                  dispatchApiRequest({
-                    type: "SET_BOTH",
-                    payload: {
-                      parsed: jsValue,
-                      stringified: stringValue,
-                    },
-                  });
-                }
-              }}
-            />
-            <div className={`flex justify-end bg-background border-t-[1px]`}>
-              <Button
-                key={"prettify"}
-                variant="ghost"
-                size="icon"
-                className={`rounded-none border-l-[1px] h-[var(--custom-prettify-height)]`}
-                onClick={handlePrettify}
-              >
-                <span className="font-semibold text-xxs text-warning">
-                  {"{ }"}
-                </span>
-              </Button>
-            </div>
+        <div className="flex flex-col h-full border-[1px] rounded-lg p-[1px] border-border">
+          <Code
+            type="json"
+            code={apiRequest.stringified}
+            readOnly={false}
+            theme={theme}
+            onChange={(jsValue: any, stringValue: string) => {
+              if (stringValue === apiRequest.stringified) {
+                return;
+              } else {
+                dispatchApiRequest({
+                  type: "SET_BOTH",
+                  payload: {
+                    parsed: jsValue,
+                    stringified: stringValue,
+                  },
+                });
+              }
+            }}
+          />
+          <div className={`flex justify-end bg-background border-t-[1px] border-border`}>
+            <Button
+              key={"prettify"}
+              variant="ghost"
+              size="icon"
+              className={`border-border rounded-none border-l-[1px] h-[var(--custom-prettify-height)]`}
+              onClick={handlePrettify}
+            >
+              <span className="font-semibold text-xxs text-warning">
+                {"{ }"}
+              </span>
+            </Button>
           </div>
         </div>
       </ResizablePanel>
@@ -277,9 +275,9 @@ const Api = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )} border-none bg-transparent`}
       />
-      <ResizablePanel>
-        <div className="bg-background !overflow-y-scroll h-full rounded-md border-[1px] border-border">
-          {!loadingApiSpecData && apiSpecsData && (
+      <ResizablePanel className="bg-background !overflow-y-scroll h-full rounded-lg border-[1px] border-border shadow-hover">
+        {!loadingApiSpecData && apiSpecsData && (
+          <div>
             <Search
               properties={properties}
               onChange={(filteredProperties: any) => {
@@ -314,9 +312,6 @@ const Api = (props: any) => {
                 }}
               />
             </Search>
-          )}
-          {loadingApiSpecData && <Loading className="text-foreground" />}
-          {!loadingApiSpecData && apiSpecsData && (
             <OpenApiList
               openApi={apiSpecsData}
               properties={filteredProperties}
@@ -357,9 +352,8 @@ const Api = (props: any) => {
                 }
               }}
               onChange={handleOpenApiChange}
-            />
-          )}
-        </div>
+            /></div>
+        )}
       </ResizablePanel>
     </ResizablePanelGroup>
   );

@@ -8,7 +8,7 @@ import { json } from "@codemirror/lang-json";
 import { Diagnostic, linter } from "@codemirror/lint";
 import { EditorView, ViewUpdate } from "@codemirror/view";
 import { abyss } from "@uiw/codemirror-theme-abyss";
-import { duotoneLight } from "@uiw/codemirror-theme-duotone";
+import { materialLight } from "@uiw/codemirror-theme-material";
 import CodeMirror from "@uiw/react-codemirror";
 import * as jsonc from "jsonc-parser"; // Import jsonc-parser
 const cssParse = require("css/lib/parse");
@@ -213,7 +213,7 @@ const Code = (props: any) => {
         value={code}
         height="100%"
         readOnly={readOnly}
-        theme={theme === "light" ? duotoneLight : abyss}
+        theme={theme === "light" ? materialLight : abyss}
         extensions={extensions}
       />
     </div>

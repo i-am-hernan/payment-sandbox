@@ -65,7 +65,7 @@ const Sandbox = ({
     <ResizablePanelGroup
       direction="horizontal"
       className={cn(
-        "sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)] border-b-[1px]",
+        "sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)] border-b-[1px] border-border",
         className
       )}
     >

@@ -56,7 +56,7 @@ export const OpenSdkList = ({
             value={property}
             className="hover:no-underline border-[1px] border-border rounded-md my-2"
           >
-            <AccordionTrigger className="px-4 py-3 border-transparent border-[1px] hover:bg-foreground/10 flex flex-col">
+          <AccordionTrigger className="px-4 py-3 hover:bg-muted flex flex-col">
             <div className="flex justify-start w-full items-center mb-2">
                 <p className="text-[0.85rem] text-foreground">{property}</p>
                 <p className="font-mono text-xs flex-grow text-left">

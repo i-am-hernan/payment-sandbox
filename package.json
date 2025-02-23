@@ -53,6 +53,7 @@
     "@uiw/codemirror-theme-abyss": "^4.23.5",
     "@uiw/codemirror-theme-duotone": "^4.23.6",
     "@uiw/codemirror-theme-github": "^4.22.2",
+    "@uiw/codemirror-theme-material": "^4.23.8",
     "@uiw/react-codemirror": "^4.22.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

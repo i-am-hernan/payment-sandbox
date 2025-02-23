@@ -24,7 +24,8 @@ const {
 } = formulaActions;
 const { updateComponentState, updateResponse } = componentActions;
 const { updateSpecs } = specsActions;
-export const ManageAdvanceComponent = () => {
+export const ManageAdvanceComponent = (props: any) => {
+  const { className } = props;
   const { build, isRedirect, redirectResult } = useSelector(
     (state: RootState) => state.formula
   );
@@ -63,7 +64,7 @@ export const ManageAdvanceComponent = () => {
   }
 
   return (
-    <div className="h-[100%]">
+    <div className={`h-[100%] ${className}`}>
       {!isRedirect && (
         <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}

@@ -16,63 +16,63 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+    colors: {
+      border: "hsl(var(--border))",
+      adyen: "var(--custom-accent)",
+      code: "hsl(var(--custom-accent-code))",
+      variable: "var(--code-variable)",
+      property: "var(--code-property)",
+      reserved: "var(--code-reserved)",
+      grey: "hsl(var(--grey))",
+      input: "hsl(var(--input))",
+      ring: "hsl(var(--ring))",
+      background: "hsl(var(--background))",
+      foreground: "hsl(var(--foreground))",
+      primary: {
+        DEFAULT: "hsl(var(--primary))",
+        foreground: "hsl(var(--primary-foreground))",
+      },
+      secondary: {
+        DEFAULT: "hsl(var(--secondary))",
+        foreground: "hsl(var(--secondary-foreground))",
+      },
+
+      destructive: {
+        DEFAULT: "hsl(var(--destructive))",
+        foreground: "hsl(var(--destructive-foreground))",
+      },
+      muted: {
+        DEFAULT: "hsl(var(--muted))",
+        foreground: "hsl(var(--muted-foreground))",
+      },
+      accent: {
+        DEFAULT: "hsl(var(--accent))",
+        foreground: "hsl(var(--accent-foreground))",
+      },
+      popover: {
+        DEFAULT: "hsl(var(--popover))",
+        foreground: "hsl(var(--popover-foreground))",
+      },
+      card: {
+        DEFAULT: "hsl(var(--card))",
+        foreground: "hsl(var(--card-foreground))",
+      },
+      warning: {
+        DEFAULT: "var(--color-warning)",
+      },
+      info: {
+        DEFAULT: "var(--custom-accent-info)",
+      },
+      js: {
+        DEFAULT: "var(--color-js-icon)",
+      },
+      preview: {
+        DEFAULT: "var(--color-preview-icon)",
+      },
+    },
     extend: {
       fontSize: {
         xxs: "var(--custom-font-xxs)", // Example: 10px
-      },
-      colors: {
-        border: "hsl(var(--border))",
-        adyen: "var(--custom-accent)",
-        code: "hsl(var(--custom-accent-code))",
-        variable: "var(--code-variable)",
-        property: "var(--code-property)",
-        reserved: "var(--code-reserved)",
-        grey: "hsl(var(--grey))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        warning: {
-          DEFAULT: "var(--color-warning)",
-        },
-        info: {
-          DEFAULT: "var(--custom-accent-info)",
-        },
-        js: {
-          DEFAULT: "var(--color-js-icon)",
-        },
-        preview: {
-          DEFAULT: "var(--color-preview-icon)",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -111,24 +111,37 @@ module.exports = {
           "50%": {
             borderRightColor: "transparent"
           }
-        }
+        },
+        "slide-in": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" }
+        },
+        "slide-in-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         typing: "typing 2s steps(40), cursor 1s step-end infinite",
+        "slide-in": "slide-in 0.3s ease-out",
+        "slide-in-right": "slide-in-right 0.3s ease-out",
       },
       backgroundImage: {
-        'dotted-grid': 'radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px)',
+        'dotted-grid': 'radial-gradient(circle, hsla(var(--border) / 0.3) 1.3px, transparent 0.5px)',
       },
       backgroundSize: {
-        'grid': '5px 5px',
+        'grid': '8px 8px',
+      },
+      boxShadow: {
+        'hover': '0 1px 1px 0 rgba(0, 0, 0, .12), 0 2px 5px 0 rgba(48, 49, 61, .08)',
       },
     },
   },
   plugins: [
     require("tailwindcss-animate"),
-    function({ addVariant }) {
+    function ({ addVariant }) {
       addVariant('embed-iframe', '.embed-iframe &')
     },
   ],

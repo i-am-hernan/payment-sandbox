@@ -59,7 +59,7 @@ const Topbar = (props: any) => {
 
   return (
     <span
-      className="bg-background absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] stretch flex items-center justify-end px-2"
+      className="bg-background absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] border-r-[1px] border-border stretch flex items-center justify-end px-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
       ref={containerRef}
     >
@@ -75,7 +75,7 @@ const Topbar = (props: any) => {
                       disabled={view === "user"}
                       variant="ghost"
                       size="sm"
-                      className="border-[1px] border-transparent bg-background px-2 hover:border-[1px] hover:border-adyen hover:border-dotted rounded-none"
+                      className="rounded-md"
                     >
                       <RestartAltIcon className="!text-foreground !text-[16px]" />
                     </Button>
@@ -138,7 +138,7 @@ const Topbar = (props: any) => {
                   key="clear"
                   variant="ghost"
                   size="sm"
-                  className="border-[1px] border-transparent bg-background px-2 hover:border-[1px] hover:border-adyen hover:border-dotted rounded-none"
+                  className="rounded-md"
                   disabled={totalUnsavedChanges === 0}
                   onClick={() => {
                     dispatch(clearOnDeckInfo());
@@ -172,7 +172,7 @@ const Topbar = (props: any) => {
               variant="outline"
               disabled={tabErrors.length > 0}
               size="sm"
-              className="px-4 border-adyen bg-adyen text-foreground hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
+              className="px-4 border-adyen bg-adyen text-[#fff] hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
               onClick={() => {
                 storeToLocalStorage(refineFormula(storeFormula));
                 clearUrlParams([

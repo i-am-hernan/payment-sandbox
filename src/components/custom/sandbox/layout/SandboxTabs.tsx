@@ -58,7 +58,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
         className="w-full h-full flex flex-col"
         onValueChange={(value) => setTabTitle(value)}
       >
-        <span className="flex justify-between mb-2 pl-3">
+        <span className="flex justify-between mb-2 pl-6">
           <TabsList className="mt-3">
             {tabsMap.map((tab, index) => (
               <div key={index} className="p-[3px]">
@@ -71,7 +71,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
                   }}
                 >
                   <span>{tab.icon}</span>
-                  <p className="px-1 text-xs text-foreground">{tab.title}</p>
+                  <p className="px-1 text-xs">{tab.title}</p>
                   {tab.unsavedChanges && (
                     <span className="ml-1 w-2 h-2 rounded-full inline-block"></span>
                   )}

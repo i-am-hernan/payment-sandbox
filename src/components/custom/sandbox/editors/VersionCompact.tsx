@@ -9,7 +9,7 @@ const VersionCompact = (props: any) => {
 
   return (
     <div className="flex items-center">
-      <p className="text-xs pr-2 text-foreground">{`${label}`}</p>
+      <p className="text-[0.82rem] pr-2 text-foreground font-bold">{`${label}`}</p>
       <div>
         <Enum
           value={`v${value}`}

@@ -60,7 +60,7 @@ export const OpenCssList = (props: any) => {
             className="hover:no-underline border-[1px] border-border rounded-md my-2"
           >
             <AccordionTrigger
-              className="px-4 pt-2 pb-1 border-transparent border-[1px] hover:bg-foreground/10 flex flex-col"
+              className="px-4 pt-2 pb-1 border-transparent hover:bg-muted flex flex-col"
               onMouseEnter={
                 properties[property].type === "class"
                   ? () => handleMouseEnter(property)

@@ -99,37 +99,37 @@ const Page: any = () => {
   let topRightTabsMap =
     integration === "advance"
       ? [
+        {
+          title: `${variant}`,
+          icon: (
+            <span className="font-semibold px-1 text-xxs text-adyen">
+              {integration.toUpperCase()}
+            </span>
+          ),
+          content: <ManageAdvanceComponent key={run ? "run" : "default"} />,
+          value: variant,
+        },
+      ]
+      : integration === "sessions"
+        ? [
           {
             title: `${variant}`,
             icon: (
               <span className="font-semibold px-1 text-xxs text-preview">
-                {integration}
+                preview
               </span>
             ),
-            content: <ManageAdvanceComponent key={run ? "run" : "default"} />,
+            content: <ManageAdyenSessions key={run ? "run" : "default"} />,
             value: variant,
           },
         ]
-      : integration === "sessions"
-        ? [
-            {
-              title: `${variant}`,
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-preview">
-                  preview
-                </span>
-              ),
-              content: <ManageAdyenSessions key={run ? "run" : "default"} />,
-              value: variant,
-            },
-          ]
         : [];
 
   let bottomRightTabsMap = [
     {
       title: `${variant} (read-only)`,
       icon: (
-        <span className="font-semibold px-1 text-xxs text-info">state</span>
+        <span className="font-semibold px-1 text-xxs text-info">STATE</span>
       ),
       content: <StateData theme={theme} />,
       value: "state",
@@ -186,92 +186,92 @@ const Page: any = () => {
     tabsMap =
       integration === "advance"
         ? [
-            {
-              title: "/paymentMethods",
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-adyen">
-                  POST
-                </span>
-              ),
-              content: (
-                <Api
-                  api="paymentMethods"
-                  schema="PaymentMethodsRequest"
-                  request={paymentMethods}
-                  updateRequest={updatePaymentMethodsRequest}
-                  description={
-                    "Configure the request for the payment methods endpoint"
-                  }
-                />
-              ),
-              value: "paymentmethods",
-              unsavedChanges: unsavedChanges.paymentMethods,
-            },
-            {
-              title: "/payments",
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-adyen">
-                  POST
-                </span>
-              ),
-              content: (
-                <Api
-                  api="payments"
-                  schema="PaymentRequest"
-                  request={payments}
-                  updateRequest={updatePaymentsRequest}
-                  description={
-                    "Configure the request for the payments endpoint"
-                  }
-                />
-              ),
-              value: "payments",
-              unsavedChanges: unsavedChanges.payments,
-            },
-            {
-              title: "/payments/details",
-              icon: (
-                <span className="font-semibold px-1 text-xxs text-adyen">
-                  POST
-                </span>
-              ),
-              content: (
-                <Api
-                  api="paymentsDetails"
-                  schema="PaymentDetailsRequest"
-                  request={paymentsDetails}
-                  updateRequest={updatePaymentsDetailsRequest}
-                  description={
-                    "Configure the request for the payment details endpoint"
-                  }
-                />
-              ),
-              value: "paymentsDetails",
-              unsavedChanges: unsavedChanges.paymentsDetails,
-            },
-          ]
+          {
+            title: "/paymentMethods",
+            icon: (
+              <span className="font-semibold px-1 text-xxs text-adyen">
+                POST
+              </span>
+            ),
+            content: (
+              <Api
+                api="paymentMethods"
+                schema="PaymentMethodsRequest"
+                request={paymentMethods}
+                updateRequest={updatePaymentMethodsRequest}
+                description={
+                  "Configure the request for the payment methods endpoint"
+                }
+              />
+            ),
+            value: "paymentmethods",
+            unsavedChanges: unsavedChanges.paymentMethods,
+          },
+          {
+            title: "/payments",
+            icon: (
+              <span className="font-semibold px-1 text-xxs text-adyen">
+                POST
+              </span>
+            ),
+            content: (
+              <Api
+                api="payments"
+                schema="PaymentRequest"
+                request={payments}
+                updateRequest={updatePaymentsRequest}
+                description={
+                  "Configure the request for the payments endpoint"
+                }
+              />
+            ),
+            value: "payments",
+            unsavedChanges: unsavedChanges.payments,
+          },
+          {
+            title: "/payments/details",
+            icon: (
+              <span className="font-semibold px-1 text-xxs text-adyen">
+                POST
+              </span>
+            ),
+            content: (
+              <Api
+                api="paymentsDetails"
+                schema="PaymentDetailsRequest"
+                request={paymentsDetails}
+                updateRequest={updatePaymentsDetailsRequest}
+                description={
+                  "Configure the request for the payment details endpoint"
+                }
+              />
+            ),
+            value: "paymentsDetails",
+            unsavedChanges: unsavedChanges.paymentsDetails,
+          },
+        ]
         : integration === "sessions"
           ? [
-              {
-                title: `/v${sessionsAPIVersion}/sessions`,
-                icon: (
-                  <span className="font-semibold px-1 text-xxs text-adyen">
-                    {"POST"}
-                  </span>
-                ),
-                content: (
-                  <Api
-                    api="sessions"
-                    schema="CreateCheckoutSessionRequest"
-                    request={sessions}
-                    updateRequest={updateSessionsRequest}
-                    description={"Create a /sessions request"}
-                  />
-                ),
-                value: "sessions",
-                unsavedChanges: unsavedChanges.sessions,
-              },
-            ]
+            {
+              title: `/v${sessionsAPIVersion}/sessions`,
+              icon: (
+                <span className="font-semibold px-1 text-xxs text-adyen">
+                  {"POST"}
+                </span>
+              ),
+              content: (
+                <Api
+                  api="sessions"
+                  schema="CreateCheckoutSessionRequest"
+                  request={sessions}
+                  updateRequest={updateSessionsRequest}
+                  description={"Create a /sessions request"}
+                />
+              ),
+              value: "sessions",
+              unsavedChanges: unsavedChanges.sessions,
+            },
+          ]
           : [];
     crumbs = [integration, variant, "api"];
   } else if (section === "Style") {
@@ -302,7 +302,7 @@ const Page: any = () => {
   }
 
   return (
-    <div className={`${theme} border-r-2 bg-dotted-grid bg-grid bg-background`}>
+    <div className={`${theme} border-r-2 border-border bg-dotted-grid bg-grid bg-background`}>
       <React.Fragment>
         <header>
           <Topbar

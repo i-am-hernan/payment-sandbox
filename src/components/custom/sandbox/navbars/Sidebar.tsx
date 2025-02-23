@@ -32,7 +32,7 @@ import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import SettingsIcon from "@mui/icons-material/Settings";
 import WebIcon from "@mui/icons-material/Web";
 import Tooltip from "@mui/material/Tooltip";
-import { ChevronDown, FlaskConical } from "lucide-react";
+import { ChevronDown, ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import UpdateMerchantCookie from "../../adyen/account/UpdateMerchantCookie";
@@ -222,16 +222,16 @@ const Sidebar = (props: any) => {
   };
   return (
     <div ref={sidebarRef}>
-      <span className="bg-background absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] text-center">
+      <span className="bg-background absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] border-border text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>
               <Drawer direction="left">
                 <DrawerTrigger
-                  className={`mt-4 px-2 py-[2px] inline items-center justify-center rounded-md hover:bg-foreground/10 hover:text-adyen text-foreground`}
+                  className={`mt-4 px-2 py-[2px] inline items-center justify-center rounded-md hover:bg-foreground/10 text-foreground`}
                 >
                   <div className="relative flex flex-col items-center justify-center">
-                    <FlaskConical className="!text-[20px]" />
+                    <ShoppingCart className="!text-[20px]" />
                     <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
                       NEW
                     </p>
@@ -239,7 +239,7 @@ const Sidebar = (props: any) => {
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
-                  <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2">
+                  <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2 border-border">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-sm py-0">
                         {paymentMethods && paymentMethods.data && (
@@ -336,13 +336,13 @@ const Sidebar = (props: any) => {
                 <SettingsIcon className="!text-[20px]" />
               </DropdownMenuTrigger>
               <DropdownMenuPortal container={sidebarRef.current}>
-                <DropdownMenuContent side="top" className="ml-1 rounded-none">
+                <DropdownMenuContent side="top" className="ml-1 rounded-lg">
                   <DropdownMenuLabel className="text-xs">
                     Settings
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem className="text-xs rounded-none border-transparent border-[1px]">
+                    <DropdownMenuItem className="text-xs rounded-none">
                       <p className="px-2">Shortcuts</p>
                       <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
                     </DropdownMenuItem>
@@ -350,12 +350,12 @@ const Sidebar = (props: any) => {
                   <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuGroup>
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px]">
+                      <DropdownMenuSubTrigger className="text-xs rounded-none">
                         <p className="px-2">Theme</p>
                       </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent className="ml-1 rounded-none">
+                      <DropdownMenuSubContent className="ml-1 rounded-lg">
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px]"
+                          className="text-xs rounded-lg"
                           onClick={() => {
                             dispatch(updateTheme("dark"));
                           }}
@@ -363,7 +363,7 @@ const Sidebar = (props: any) => {
                           <span>Dark</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px]"
+                          className="text-xs rounded-none"
                           onClick={() => {
                             dispatch(updateTheme("light"));
                           }}
@@ -373,12 +373,12 @@ const Sidebar = (props: any) => {
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px]">
+                      <DropdownMenuSubTrigger className="text-xs rounded-none">
                         <p className="px-2">View</p>
                       </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent className="ml-1 rounded-none">
+                      <DropdownMenuSubContent className="ml-1 rounded-lg">
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px]"
+                          className="text-xs rounded-lg"
                           onClick={() => {
                             dispatch(updateView("developer"));
                             clearUrlParams(["view"]);
@@ -387,7 +387,7 @@ const Sidebar = (props: any) => {
                           <span>Developer</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px]"
+                          className="text-xs rounded-none"
                           onClick={() => {
                             dispatch(updateView("preview"));
                             clearUrlParams(["view"]);
@@ -396,7 +396,7 @@ const Sidebar = (props: any) => {
                           <span>Preview</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs rounded-none border-transparent border-[1px]"
+                          className="text-xs rounded-none"
                           onClick={() => {
                             dispatch(updateView("demo"));
                             clearUrlParams(["view"]);
@@ -407,10 +407,10 @@ const Sidebar = (props: any) => {
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="text-xs rounded-none border-transparent border-[1px]">
+                      <DropdownMenuSubTrigger className="text-xs rounded-none">
                         <p className="px-2">Merchant Account</p>
                       </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent className="ml-1 rounded-none">
+                      <DropdownMenuSubContent className="ml-1 rounded-lg">
                         <UpdateMerchantCookie containerRef={sidebarRef} />
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>

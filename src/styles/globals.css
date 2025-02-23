@@ -10,7 +10,7 @@
     --screen-xl: 1280px;
     --screen-2xl: 1536px; */
 
-    --background: transparent;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -19,7 +19,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 222.2 84% 4.9%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -37,7 +37,7 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222.2 84% 4.9%;
+    --border: 210 20% 87%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
@@ -54,6 +54,11 @@
     --custom-font-xxs: 0.65rem;
     --custom-prettify-height: 31px;
   }
+
+  /* .light {
+    --border: 217.2 32.6% 17.5%;
+  } */
+
 
   .dark {
     --background: 222.2 84% 4.9%;
@@ -130,16 +135,17 @@
     @apply border-border;
   }
 
-  :is(:root, .embed-iframe) body {
+  /* :is(:root, .embed-iframe) body {
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
-  }
+  } */
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
@@ -147,12 +153,22 @@
 }
 
 .adyen-checkout__payment-method {
-  @apply !bg-code;
+  @apply !bg-background;
+  @apply !border-border;
+  @apply !rounded-lg;
+  @apply text-foreground;
+  @apply mb-1;
+  @apply shadow-hover;
+}
+
+.adyen-checkout__payment-method__name_wrapper {
+  @apply !text-foreground;
 }
 
 .cm-theme {
   @apply w-[100%] h-[100%];
 }
+
 .highlight-green {
   background-color: rgba(0, 255, 0, 0.2) !important;
   transition: background-color 0.2s ease !important;
@@ -161,19 +177,8 @@
   position: relative !important;
   z-index: 999999 !important;
 }
+
 .highlight-green:hover {
   background-color: rgba(0, 255, 0, 0.3) !important;
   border-width: 1px !important;
 }
-/* main, nav {
-  @apply max-w-6xl mx-auto my-12;
-}
-p {
-  @apply mt-20;
-}
-h1 {
-  @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
-}
-h2 {
-  @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
-} */
