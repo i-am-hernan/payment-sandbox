@@ -122,7 +122,7 @@ const Page = () => {
             <CardFooter>
               <Link href="/formulas" className="w-full">
                 <Button
-                  className="w-full bg-adyen hover:bg-primary/90 text-white"
+                  className="w-full bg-adyen hover:bg-adyen text-[#fff]"
                   onClick={() => setShowSandboxButton(true)}
                 >
                   Browse formulas
@@ -186,7 +186,7 @@ const Page = () => {
                 className="w-full"
               >
                 <Button
-                  className="w-full bg-adyen hover:bg-primary/90 text-white"
+                  className="w-full bg-adyen hover:bg-adyen text-[#fff]"
                   disabled={!selectedVariant || !selectedIntegration}
                 >
                   Start building

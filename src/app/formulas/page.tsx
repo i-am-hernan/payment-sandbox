@@ -63,7 +63,7 @@ export default function FormulasPage() {
   };
 
   return (
-    <div className="bg-background min-h-screen min-w-screen">
+    <div className="bg-dotted-grid bg-grid bg-background min-h-screen min-w-screen">
       <div className="min-h-screen animate-slide-in-from-top">      {/* Hero Section */}
         <div className="max-w-[800px] mx-auto pt-24 pb-16 px-4">
           <div className="space-y-6">

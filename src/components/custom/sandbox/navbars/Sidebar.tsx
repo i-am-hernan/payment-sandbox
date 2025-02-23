@@ -37,6 +37,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import UpdateMerchantCookie from "../../adyen/account/UpdateMerchantCookie";
 import Loading from "../../utils/Loading";
+import Link from "next/link";
 
 interface SideTab {
   name: string;
@@ -242,6 +243,20 @@ const Sidebar = (props: any) => {
                   <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2 border-border">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-sm py-0">
+                        <span className="flex items-center">
+                          <ChevronDown className="h-4 w-4 pr-1 text-grey" />
+                          <span className="display-inline">
+                            Prebuild Integrations
+                          </span>
+                        </span>
+                        <Link
+                          href="/formulas"
+                          className="text-xs ml-1 text-grey font-thin border-l-[1px] border-border pl-2"
+                        >
+                          Browse formulas
+                        </Link>
+                      </DrawerTitle>
+                      <DrawerTitle className="text-foreground text-sm py-0">
                         {paymentMethods && paymentMethods.data && (
                           <span className="flex items-center">
                             <ChevronDown className="h-4 w-4 pr-1 text-grey" />
@@ -311,11 +326,10 @@ const Sidebar = (props: any) => {
                         variant="ghost"
                         size="icon"
                         ref={tab.ref}
-                        className={`mt-5 rounded-md p-5 ${
-                          section === tab.name
-                            ? "bg-foreground/10 !text-adyen"
-                            : "hover:bg-foreground/10 !text-foreground"
-                        }`}
+                        className={`mt-5 rounded-md p-5 ${section === tab.name
+                          ? "bg-foreground/10 !text-adyen"
+                          : "hover:bg-foreground/10 !text-foreground"
+                          }`}
                         onClick={() => setSection(tab.name)}
                       >
                         {tab.icon}

@@ -26,11 +26,11 @@ export function ExpandableCards(props: ExpandableCardsProps) {
 
   return (
     <div className="w-full px-5">
-      <div className="border-l-2 px-1">
+      <div className="border-l-[1px] px-1">
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className="px-0 py-[3px] h-auto bg-background flex flex-auto w-full justify-start text-xs text-foreground !py-none border-transparent shadow-none rounded-none hover:bg-background hover:border-[1px] hover:border-adyen hover:border-dotted font-thin"
+          className="px-0 py-[3px] h-auto bg-background flex flex-auto w-full justify-start text-xs text-foreground !py-none border-transparent shadow-none rounded-lg font-thin"
           onClick={toggleExpand}
         >
           {isExpanded ? (
@@ -41,10 +41,10 @@ export function ExpandableCards(props: ExpandableCardsProps) {
           <span className="flex items-center">{props.paymentMethodName}</span>
         </Button>
         {isExpanded && (
-          <div className="flex md:flex-col justify-start pl-2 border-l-2 ml-1">
+          <div className="flex md:flex-col justify-start pl-2 border-l-[1px] ml-1">
             <Button
-              variant="outline"
-              className="pl-1 h-auto py-1 bg-background text-xs text-foreground border-transparent shadow-none rounded-none hover:bg-background hover:border-[1px] hover:border-adyen hover:border-dotted justify-start"
+              variant="ghost"
+              className="pl-1 h-auto py-1 bg-background text-xs text-foreground border-transparent shadow-none rounded-lg justify-start"
               asChild
             >
               <Link
@@ -67,8 +67,8 @@ export function ExpandableCards(props: ExpandableCardsProps) {
               </Link>
             </Button>
             <Button
-              variant="outline"
-              className="pl-1 h-auto py-1 bg-background text-xs text-foreground border-transparent shadow-none rounded-none hover:bg-background hover:border-[1px] hover:border-adyen hover:border-dotted justify-start"
+              variant="ghost"
+              className="pl-1 h-auto py-1 bg-background text-xs text-foreground border-transparent shadow-none rounded-lg justify-start"
               asChild
             >
               <Link
