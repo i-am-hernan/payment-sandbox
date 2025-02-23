@@ -102,7 +102,6 @@ const Page = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[900px] mx-auto">
-          {/* Pre-built Formula Card */}
           <Card className="flex flex-col bg-card border-border hover:border-adyen transition-colors duration-200 animate-slide-in shadow-xl">
             <CardHeader>
               <div className="flex items-center gap-3 mb-4">
@@ -123,7 +122,7 @@ const Page = () => {
             <CardFooter>
               <Link href="/formulas" className="w-full">
                 <Button
-                  className="w-full bg-adyen hover:bg-primary/90"
+                  className="w-full bg-adyen hover:bg-primary/90 text-white"
                   onClick={() => setShowSandboxButton(true)}
                 >
                   Browse formulas
@@ -187,7 +186,7 @@ const Page = () => {
                 className="w-full"
               >
                 <Button
-                  className="w-full bg-adyen hover:bg-primary/90"
+                  className="w-full bg-adyen hover:bg-primary/90 text-white"
                   disabled={!selectedVariant || !selectedIntegration}
                 >
                   Start building
