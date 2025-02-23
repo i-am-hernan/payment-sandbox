@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
-import { formulaActions, specsActions } from "@/store/reducers";
+import { formulaActions, specsActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   debounce,
@@ -23,7 +23,7 @@ import {
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ImperativePanelHandle } from "react-resizable-panels";
-
+import { clearUrlParams } from "@/utils/utils";
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateCheckoutAPIVersion } = formulaActions;
 const initialState = {
@@ -46,6 +46,8 @@ const apiRequestReducer = (state: any, action: any) => {
       return state;
   }
 };
+
+const { updateView } = userActions;
 
 const Api = (props: any) => {
   const {
@@ -276,6 +278,16 @@ const Api = (props: any) => {
           <div>
             <Search
               properties={properties}
+              checked={view === "developer"}
+              onCheckedChange={(checked: boolean) => {
+                if (checked) {
+                  dispatch(updateView("developer"));
+                  clearUrlParams(["view"]);
+                } else {
+                  dispatch(updateView("preview"));
+                  clearUrlParams(["view"]);
+                }
+              }}
               onChange={(filteredProperties: any) => {
                 setFilteredProperties(filteredProperties);
               }}

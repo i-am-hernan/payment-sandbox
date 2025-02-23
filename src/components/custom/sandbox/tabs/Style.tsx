@@ -10,7 +10,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
-import { formulaActions, specsActions } from "@/store/reducers";
+import { formulaActions, specsActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   cssToObject,
@@ -30,10 +30,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { OpenCssList } from "../editors/openSdk/OpenCssList";
-
+import { clearUrlParams } from "@/utils/utils";
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateAdyenWebVersion, updateErrors } =
   formulaActions;
+const { updateView } = userActions;
 
 const formatCssString = (code: any) => {
   return code.slice(1, -1);
@@ -299,6 +300,16 @@ const Style = (props: any) => {
         {!properties && <Loading className="text-foreground" />}
         {properties && (
           <Search
+            checked={view === "developer"}
+            onCheckedChange={(checked: boolean) => {
+              if (checked) {
+                dispatch(updateView("developer"));
+                clearUrlParams(["view"]);
+              } else {
+                dispatch(updateView("preview"));
+                clearUrlParams(["view"]);
+              }
+            }}
             properties={properties}
             onChange={handleOpenApiSearchChange}
             description={description}

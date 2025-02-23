@@ -1,10 +1,12 @@
 import { Input } from "@/components/ui/input";
 import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import React, { useRef, useEffect } from "react";
 
 const Search = (props: any) => {
-  const { onChange, properties, description, label, method, tab, children } =
+  const { onChange, properties, description, label, method, tab, children, onCheckedChange, checked } =
     props;
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -25,12 +27,17 @@ const Search = (props: any) => {
 
   return (
     <div className="z-10 sticky top-0 bg-background">
-      <h4 className="text-[1rem] text-adyen font-bold z-15 sticky top-0 px-5 pt-3">
-        {`${label}`}
-        {method && (
-          <code className="px-1 text-xs text-grey font-normal">{method}</code>
-        )}
-      </h4>
+      <div className="flex items-center justify-between">
+        <h4 className="text-[1rem] text-adyen font-bold z-15 sticky top-0 px-5 pt-3">
+          {`${label}`}
+          {method && (
+            <code className="px-1 text-xs text-grey font-normal">{method}</code>
+          )}
+        </h4>
+        <div className="flex items-center space-x-2 px-5 pt-3">
+          <code className="text-xs text-grey font-normal">code</code>
+          <Switch id="dev-mode" onCheckedChange={onCheckedChange} checked={checked} />
+        </div></div>
       <div className="px-6 pt-0">{children}</div>
       <p className="text-[0.8rem] text-grey px-6">{`${description}`}</p>
       <div className="flex pb-3 pt-2 px-3">

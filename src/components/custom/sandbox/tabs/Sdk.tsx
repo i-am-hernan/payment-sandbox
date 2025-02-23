@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
-import { formulaActions, specsActions } from "@/store/reducers";
+import { formulaActions, specsActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   debounce,
@@ -32,9 +32,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 import VersionCompact from "../editors/VersionCompact";
-
+import { clearUrlParams } from "@/utils/utils";
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateAdyenWebVersion } = formulaActions;
+const { updateView } = userActions;
 
 const formatJsString = (code: any, varName: string) => {
   return `var ${varName} = ${code};`;
@@ -336,6 +337,16 @@ const Sdk = (props: any) => {
           <div>
             <Search
               properties={properties}
+              checked={view === "developer"}
+              onCheckedChange={(checked: boolean) => {
+                if (checked) {
+                  dispatch(updateView("developer"));
+                  clearUrlParams(["view"]);
+                } else {
+                  dispatch(updateView("preview"));
+                  clearUrlParams(["view"]);
+                }
+              }}
               onChange={handleOpenApiSearchChange}
               description={description}
               label={
