@@ -30,10 +30,17 @@ module.exports = {
         source: "/:path*",
         headers: [
           { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
-          { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "no-referrer" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
+        ],
+      },
+      {
+        // Add specific headers for the embed page
+        source: "/[integration]/[variant]/embed",
+        headers: [
+          { key: "X-Frame-Options", value: "ALLOWALL" },
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
         ],
       },
     ];
