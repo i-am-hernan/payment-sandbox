@@ -27,17 +27,18 @@ import {
 import { RequestOptions } from "@/hooks/useApi";
 import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
+import AddCardIcon from '@mui/icons-material/AddCard';
 import BrushIcon from "@mui/icons-material/Brush";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import SettingsIcon from "@mui/icons-material/Settings";
 import WebIcon from "@mui/icons-material/Web";
 import Tooltip from "@mui/material/Tooltip";
-import { ChevronDown, ShoppingCart } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import UpdateMerchantCookie from "../../adyen/account/UpdateMerchantCookie";
 import Loading from "../../utils/Loading";
-import Link from "next/link";
 
 interface SideTab {
   name: string;
@@ -223,7 +224,7 @@ const Sidebar = (props: any) => {
   };
   return (
     <div ref={sidebarRef}>
-      <span className="bg-background absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] border-border text-center">
+      <span className="bg-card absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] border-border text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>
@@ -232,7 +233,7 @@ const Sidebar = (props: any) => {
                   className={`mt-4 px-2 py-[2px] inline items-center justify-center rounded-md hover:bg-foreground/10 text-foreground`}
                 >
                   <div className="relative flex flex-col items-center justify-center">
-                    <ShoppingCart className="!text-[20px]" />
+                    <AddCardIcon className="!text-[20px]" />
                     <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
                       NEW
                     </p>

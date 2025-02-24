@@ -59,7 +59,7 @@ const Topbar = (props: any) => {
 
   return (
     <span
-      className="bg-background absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] border-r-[1px] border-border stretch flex items-center justify-end px-2"
+      className="bg-card absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] border-r-[1px] border-border stretch flex items-center justify-end px-2"
       style={{ width: `calc(100vw - var(--sidebar-width))` }}
       ref={containerRef}
     >
