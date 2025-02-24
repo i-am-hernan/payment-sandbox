@@ -18,7 +18,7 @@ const VersionCompact = (props: any) => {
           onChange={(value: any) => {
             onChange(value.replace("v", ""));
           }}
-          className="text-adyen border-none p-0 text-xs"
+          className="text-adyen border-none p-0 text-xs shadow-none bg-card"
         />
       </div>
     </div>

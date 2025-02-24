@@ -153,7 +153,7 @@
 }
 
 .adyen-checkout__payment-method {
-  @apply !bg-background;
+  @apply !bg-card;
   @apply !border-border;
   @apply !rounded-lg;
   @apply text-foreground;

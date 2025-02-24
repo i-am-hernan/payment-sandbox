@@ -26,7 +26,7 @@ const Search = (props: any) => {
   }, []);
 
   return (
-    <div className="z-10 sticky top-0 bg-background">
+    <div className="z-10 sticky top-0 bg-card">
       <div className="flex items-center justify-between">
         <h4 className="text-[1rem] text-adyen font-bold z-15 sticky top-0 px-5 pt-3">
           {`${label}`}

@@ -276,7 +276,7 @@ const Style = (props: any) => {
             }}
             jsVariable={configurationType}
           />
-          <div className={`flex justify-end bg-background border-t-[1px]`}>
+          <div className={`flex justify-end bg-card border-t-[1px]`}>
             <Button
               key={"prettify"}
               variant="ghost"
@@ -296,7 +296,7 @@ const Style = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )} border-none bg-transparent`}
       />
-      <ResizablePanel className="bg-background !overflow-y-scroll h-full rounded-lg border-[1px] border-border shadow-hover">
+      <ResizablePanel className="bg-card !overflow-y-scroll h-full rounded-lg border-[1px] border-border shadow-hover">
         {!properties && <Loading className="text-foreground" />}
         {properties && (
           <Search

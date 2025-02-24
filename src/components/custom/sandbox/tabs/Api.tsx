@@ -253,7 +253,7 @@ const Api = (props: any) => {
               }
             }}
           />
-          <div className={`flex justify-end bg-background border-t-[1px] border-border`}>
+          <div className={`flex justify-end bg-card border-t-[1px] border-border`}>
             <Button
               key={"prettify"}
               variant="ghost"
@@ -273,7 +273,7 @@ const Api = (props: any) => {
           view !== "developer" && "opacity-0 pointer-events-none hidden"
         )} border-none bg-transparent`}
       />
-      <ResizablePanel className="bg-background !overflow-y-scroll h-full rounded-lg border-[1px] border-border shadow-hover">
+      <ResizablePanel className="bg-card !overflow-y-scroll h-full rounded-lg border-[1px] border-border shadow-hover">
         {!loadingApiSpecData && apiSpecsData && (
           <div>
             <Search
