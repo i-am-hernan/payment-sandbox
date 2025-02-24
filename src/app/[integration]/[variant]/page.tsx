@@ -115,8 +115,8 @@ const Page: any = () => {
           {
             title: `${variant}`,
             icon: (
-              <span className="font-semibold px-1 text-xxs text-preview">
-                preview
+              <span className="font-semibold px-1 text-xxs text-adyen">
+                {integration.toUpperCase()}
               </span>
             ),
             content: <ManageAdyenSessions key={run ? "run" : "default"} />,
