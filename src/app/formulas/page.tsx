@@ -14,6 +14,9 @@ import { Calculator, FlaskConical, Search, Triangle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getFormulas } from "../actions/formula";
+import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
+import Loading from "@/components/custom/utils/Loading";
 
 export default function FormulasPage() {
   const [allFormulas, setAllFormulas] = useState<any[]>([]);
@@ -69,110 +72,121 @@ export default function FormulasPage() {
   };
 
   return (
-    <div className="bg-dotted-grid bg-grid bg-background min-h-screen min-w-screen">
+    <div className="min-h-screen bg-dotted-grid bg-grid bg-background">
       <div className="min-h-screen animate-slide-in-from-top">
-        (
-        <div>
-          {/* Hero Section */}
-          <div className="max-w-[800px] mx-auto pt-24 pb-16 px-4">
-            <div className="space-y-6">
-              <div className="flex justify-center mb-2 items-end">
-                <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                  <FlaskConical className="h-7 w-7 text-adyen" />
+        {loading ? (
+          <div className="h-screen flex items-center justify-center">
+            <Loading className="text-foreground" />
+          </div>
+        ) : (
+          <div>
+            {/* Hero Section */}
+            <div className="max-w-[1400px] mx-auto pt-32 pb-16 px-6">
+              <div className="space-y-8 mb-16">
+                <div className="flex justify-center items-center gap-4">
+                  <div className="h-14 w-14 rounded-xl bg-primary/5 flex items-center justify-center text-adyen">
+                    <FlaskConical className="h-8 w-8" />
+                  </div>
+                  <h1 className="text-5xl font-semibold tracking-tight text-foreground bg-clip-text">
+                    formulas
+                  </h1>
                 </div>
-                <h1 className="ml-1 text-4xl font-light tracking-tight text-foreground">
-                  formulas
-                </h1>
-              </div>
-              <div className="space-y-4 text-center">
-                <p className="text-muted-foreground text-sm max-w-[600px] mx-auto">
-                  Browse our collection of pre-built payment formulas to accelerate your Adyen integration
-                </p>
+                <div className="space-y-4 text-center animate-fade-in">
+                  <p className="text-muted-foreground text-lg max-w-[600px] mx-auto leading-relaxed">
+                    Browse our collection of pre-built payment formulas to accelerate your Adyen integration
+                  </p>
+                </div>
+
+                <div className="relative max-w-[500px] mx-auto mt-12 animate-slide-in-from-bottom">
+                  <div className="relative group">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 transition-colors group-hover:text-adyen z-10" />
+                    <Input
+                      className="pl-12 h-14 bg-background/50 backdrop-blur-sm border-border/40 hover:border-adyen/40 focus:border-adyen focus:ring-adyen/20 transition-all duration-300 text-base"
+                      placeholder="Search formulas..."
+                      value={search}
+                      onChange={handleSearch}
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-3 text-center">
+                    {!loading ? `${filteredFormulas.length} formulas available` : "Loading..."}
+                  </p>
+                </div>
               </div>
 
-              <div className="relative max-w-[500px] mx-auto mt-8">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input
-                    className="pl-10 h-12 bg-background border-border focus:ring-primary/20"
-                    placeholder="Search formulas..."
-                    value={search}
-                    onChange={handleSearch}
-                  />
+              {/* Cards Grid */}
+              <div className="container mx-auto px-4 pb-16">
+                <div className="max-w-[1400px] mx-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredFormulas.map((formula, index) => {
+                      const IconComponent = iconMap[formula.icon] || Calculator;
+
+                      return (
+                        <Card
+                          key={index}
+                          className="group flex flex-col bg-card/50 backdrop-blur-sm border-border/40 hover:border-adyen/40 transition-all duration-300 shadow-lg hover:shadow-adyen/5"
+                        >
+                          <CardHeader className="flex flex-row items-start space-y-0 pb-2">
+                            <div className="flex items-start gap-4">
+                              <div className="h-12 w-12 rounded-xl bg-primary/5 flex items-center justify-center text-adyen group-hover:scale-110 transition-transform duration-300">
+                                <IconComponent className="h-6 w-6" />
+                              </div>
+                              <div className="space-y-1">
+                                <CardTitle className="text-xl font-medium text-foreground">
+                                  {formula.title}
+                                </CardTitle>
+                                <p className="text-sm text-muted-foreground">
+                                  {formula.integrationType}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge
+                              variant={formula.integrationType === "advance" ? "secondary" : "default"}
+                              className="ml-auto capitalize bg-primary/5 text-primary hover:bg-primary/10 transition-colors"
+                            >
+                              {formula.txVariant}
+                            </Badge>
+                          </CardHeader>
+
+                          <CardContent className="flex-grow pt-4">
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {formula.description}
+                            </p>
+                            <div className="flex items-center mt-6 pt-4 border-t border-border/20">
+                              <span className="text-xs text-muted-foreground">Built by</span>
+                              <span className="text-xs font-medium ml-1.5 text-foreground">
+                                {formula.builtBy}
+                              </span>
+                            </div>
+                          </CardContent>
+
+                          <CardFooter className="pt-4">
+                            <Link
+                              className="w-full"
+                              href={`/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
+                            >
+                              <Button
+                                className={cn(
+                                  "w-full group/button relative overflow-hidden bg-adyen hover:bg-adyen/90 text-[#fff]",
+                                  "transition-all duration-300"
+                                )}
+                                variant="default"
+                              >
+                                <span className="flex items-center justify-center gap-2">
+                                  Use Formula
+                                  <ArrowRight className="h-4 w-4 group-hover/button:translate-x-1 transition-transform" />
+                                </span>
+                              </Button>
+                            </Link>
+                          </CardFooter>
+                        </Card>
+                      );
+                    })}
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2 text-center">
-                  {!loading ? `${filteredFormulas.length} formulas available` : "Loading..."}
-                </p>
               </div>
             </div>
           </div>
-
-          {/* Cards Grid */}
-          <div className="container mx-auto px-4 pb-16">
-            <div className="max-w-[1200px] mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredFormulas.map((formula, index) => {
-                  const IconComponent = iconMap[formula.icon] || Calculator;
-
-                  return (
-                    <Card
-                      key={index}
-                      className="flex flex-col bg-card border-border/40 hover:border-primary/20 transition-colors duration-200"
-                    >
-                      <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-                        <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                          <IconComponent className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="flex-1 ml-4">
-                          <CardTitle className="text-base font-medium text-foreground">
-                            {formula.title}
-                          </CardTitle>
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {formula.integrationType}
-                          </p>
-                        </div>
-                        <Badge
-                          variant={formula.integrationType === "advance" ? "secondary" : "default"}
-                          className="ml-2 capitalize bg-primary/10 text-primary hover:bg-primary/20"
-                        >
-                          {formula.txVariant}
-                        </Badge>
-                      </CardHeader>
-
-                      <CardContent className="flex-grow pt-4">
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {formula.description}
-                        </p>
-                        <div className="flex items-center mt-4 pt-4 border-t border-border/40">
-                          <span className="text-xs text-muted-foreground">Built by</span>
-                          <span className="text-xs font-medium ml-1 text-foreground">
-                            {formula.builtBy}
-                          </span>
-                        </div>
-                      </CardContent>
-
-                      <CardFooter className="pt-0">
-                        <Link
-                          className="w-full"
-                          href={`/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
-                        >
-                          <Button
-                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                            variant="default"
-                          >
-                            Use Formula
-                          </Button>
-                        </Link>
-                      </CardFooter>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-          <div />
-
-        </div>
+        )}
       </div>
     </div>
   );
