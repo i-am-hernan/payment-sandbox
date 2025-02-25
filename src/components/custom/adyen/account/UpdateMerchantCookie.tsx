@@ -48,21 +48,6 @@ const UpdateMerchantCookie = (props: any) => {
     dispatch(updateRun());
   };
 
-  // useEffect(() => {
-  //   const merchantAccountCookie = Cookies.get("merchantAccount");
-  //   if (!merchantAccountCookie) {
-  //     Cookies.set("merchantAccount", defaultMerchantAccount, {
-  //       expires: 365,
-  //     });
-  //     dispatch(updateMerchantAccount(defaultMerchantAccount));
-  //   } else {
-  //     dispatch(updateApiRequestMerchantAccount(merchantAccountCookie));
-  //     dispatch(updateBuildMerchantAccount(merchantAccountCookie));
-  //     dispatch(updateMerchantAccount(merchantAccountCookie));
-  //     syncSandBoxWithFormula();
-  //   }
-  // }, []);
-
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -103,7 +88,7 @@ const UpdateMerchantCookie = (props: any) => {
                 setError("");
               }}
             >
-              <p className="text-foreground">Choose Merchant Account</p>
+              <p className="text-foreground">Select Merchant Account</p>
             </Button>
           )}
         </DialogTrigger>

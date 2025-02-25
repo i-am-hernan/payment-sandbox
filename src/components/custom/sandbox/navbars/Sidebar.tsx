@@ -33,7 +33,7 @@ import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import SettingsIcon from "@mui/icons-material/Settings";
 import WebIcon from "@mui/icons-material/Web";
 import Tooltip from "@mui/material/Tooltip";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -393,37 +393,25 @@ const Sidebar = (props: any) => {
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="ml-1 rounded-lg">
                         <DropdownMenuItem
-                          className="text-xs rounded-lg"
+                          className="text-xs rounded-none text-center flex items-center justify-between"
                           onClick={() => {
-                            dispatch(updateView("developer"));
-                            clearUrlParams(["view"]);
-                          }}
-                        >
-                          <span>Developer</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-xs rounded-none"
-                          onClick={() => {
-                            dispatch(updateView("preview"));
-                            clearUrlParams(["view"]);
-                          }}
-                        >
-                          <span>Preview</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-xs rounded-none"
-                          onClick={() => {
-                            dispatch(updateView("demo"));
-                            clearUrlParams(["view"]);
+                            if (view === "demo") {
+                              dispatch(updateView("preview"));
+                              clearUrlParams(["view"]);
+                            } else {
+                              dispatch(updateView("demo"));
+                              clearUrlParams(["view"]);
+                            }
                           }}
                         >
                           <span>Demo</span>
+                          {view === "demo" && <Check className="h-4 w-4 ml-2" />}
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger className="text-xs rounded-none">
-                        <p className="px-2">Merchant Account</p>
+                        <p className="px-2">Account</p>
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="ml-1 rounded-lg">
                         <UpdateMerchantCookie containerRef={sidebarRef} />

@@ -37,9 +37,9 @@ const Page: any = () => {
   } = useStyle(variant, style);
 
   return (
-    <div className={`${theme}`}>
+    <div className={`${theme} embed-iframe`}>
       <React.Fragment>
-        <main className="h-[100vh] w-[100vw]">
+        <main className="h-[100vh] w-[100vw] bg-transparent">
           {formulaLoading || merchantAccount === null ? (
             <Loading className="text-foreground" />
           ) : integration !== "sessions" && integration !== "advance" ? (
