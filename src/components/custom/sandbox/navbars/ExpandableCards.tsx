@@ -30,7 +30,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="px-0 py-[3px] h-auto bg-background flex flex-auto w-full justify-start text-xs text-foreground !py-none border-transparent shadow-none rounded-lg font-thin"
+          className="px-0 py-[3px] h-auto flex flex-auto w-full justify-start text-xs text-foreground !py-none border-transparent shadow-none rounded-lg font-thin"
           onClick={toggleExpand}
         >
           {isExpanded ? (
@@ -44,7 +44,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
           <div className="flex md:flex-col justify-start pl-2 border-l-[1px] ml-1">
             <Button
               variant="ghost"
-              className="pl-1 h-auto py-1 bg-background text-xs text-foreground border-transparent shadow-none rounded-lg justify-start"
+              className="pl-1 h-auto py-1 text-xs text-foreground border-transparent shadow-none rounded-lg justify-start"
               asChild
             >
               <Link

@@ -2,6 +2,8 @@
 
 A powerful low-code sandbox environment for rapidly prototyping Adyen payment integrations. This tool provides an interactive development environment with real-time parsing and validation of JavaScript, CSS, and JSON configurations.
 
+> 💡 Check out it out live at [checkoutlab.dev](https://checkoutlab.dev)
+
 ## Features
 
 ### Low-Code Development Environment

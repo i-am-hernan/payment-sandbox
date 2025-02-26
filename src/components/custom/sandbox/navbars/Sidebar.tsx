@@ -241,7 +241,7 @@ const Sidebar = (props: any) => {
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
-                  <DrawerContent className="h-full w-[20vw] rounded-none border-r-2 border-t-2 border-b-2 border-border">
+                  <DrawerContent className="h-full w-[20vw] rounded-none border-[1px] border-border bg-card">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-sm py-0">
                         <span className="flex items-center">
@@ -337,7 +337,7 @@ const Sidebar = (props: any) => {
                       </Button>
                     </Tooltip>
                     {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
-                      <div className="w-4 h-4 border border-foreground rounded-full absolute -top-2 -right-2 transform bg-background text-foreground text-xxs flex items-center justify-center">
+                      <div className="w-4 h-4 border border-foreground rounded-full absolute -top-2 -right-2 transform bg-card text-foreground text-xxs flex items-center justify-center">
                         {totalUnsavedChanges(tab.unsavedChanges)}
                       </div>
                     )}
