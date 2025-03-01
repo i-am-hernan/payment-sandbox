@@ -93,13 +93,13 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               }}
             >
               {type === "subwindow" ? (
-                <ExpandLessIcon className="text-warning !text-xxs" />
+                <ExpandLessIcon className="text-primary !text-xs" />
               ) : (
-                <OpenInFullIcon className="text-primary !text-xxs" />
+                <OpenInFullIcon className="text-primary !text-xs" />
               )}
             </Button>
           )}
-          {!crumbs && hasExpanded && (
+          {hasExpanded && (
             <Button
               key="clear"
               variant="outline"
@@ -113,9 +113,9 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               }}
             >
               {type === "subwindow" ? (
-                <ExpandMoreIcon className="text-warning !text-xxs" />
+                <ExpandMoreIcon className="text-primary !text-xs" />
               ) : (
-                <CloseFullscreenIcon className="text-primary !text-xxs" />
+                <CloseFullscreenIcon className="text-primary !text-xs" />
               )}
             </Button>
           )}

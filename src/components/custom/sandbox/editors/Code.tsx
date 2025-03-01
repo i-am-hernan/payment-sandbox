@@ -225,6 +225,11 @@ const Code = (props: any) => {
         readOnly={readOnly}
         theme={theme === "light" ? materialLight : abyss}
         extensions={extensions}
+        basicSetup={{
+          lineNumbers: !readOnly,
+          highlightActiveLine: !readOnly,
+          foldGutter: !readOnly,
+        }}
       />
     </div>
   );

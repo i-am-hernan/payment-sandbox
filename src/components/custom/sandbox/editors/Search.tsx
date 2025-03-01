@@ -42,7 +42,7 @@ const Search = (props: any) => {
       <p className="text-[0.8rem] text-grey px-6">{`${description}`}</p>
       <div className="flex pb-3 pt-2 px-3">
         <Input
-          className="text-xs py-0 rounded-r-none text-foreground"
+          className="text-xs py-0 rounded-r-nones"
           ref={inputRef}
           type="search"
           placeholder="search"

@@ -84,7 +84,7 @@ const UpdateMerchantCookie = (props: any) => {
               size="sm"
               className="border-none"
               onClick={() => {
-                setMerchantAccountLocal("");
+                setMerchantAccountLocal(merchantAccount);
                 setError("");
               }}
             >
@@ -105,7 +105,7 @@ const UpdateMerchantCookie = (props: any) => {
             </DialogHeader>
             <form onSubmit={handleSave}>
               {error && (
-                <p className="text-red-500 text-xs mb-1 text-left">{error}</p>
+                <p className="text-warning text-xs mb-1 text-left">{error}</p>
               )}
               <div className="flex items-center">
                 <div className="flex-1">

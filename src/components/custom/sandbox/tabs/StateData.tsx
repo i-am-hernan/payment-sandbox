@@ -23,8 +23,10 @@ const StateData = (props: any) => {
   }, [componentState]);
 
   return (
-    <div className="flex h-[100%]">
-      <Code code={formattedCode} theme={theme} type="json" readOnly={true} />
+    <div className="flex h-full w-full px-6 pt-2 pb-6">
+      <div className="flex h-full w-full border-[1px] rounded-lg p-[1px] border-border">
+        <Code code={formattedCode} theme={theme} type="json" readOnly={true} />
+      </div>
     </div>
   );
 };

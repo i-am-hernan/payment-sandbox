@@ -11,6 +11,7 @@ export interface User {
   defaultMerchantAccount: FormulaPropType;
   theme: "light" | "dark";
   view: "developer" | "preview" | "demo";
+  logs: boolean;
 }
 
 // Define the initial state
@@ -19,6 +20,7 @@ const initialState: FormulaPropType = {
   defaultMerchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
   theme: "light",
   view: "preview",
+  logs: false,
 };
 
 // Create the slice with typed reducers
@@ -40,6 +42,9 @@ const formulaSlice = createSlice({
       action: PayloadAction<"developer" | "preview" | "demo">
     ) => {
       state.view = action.payload;
+    },
+    updateLogs: (state, action: PayloadAction<boolean>) => {
+      state.logs = action.payload;
     },
   },
 });

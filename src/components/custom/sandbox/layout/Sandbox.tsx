@@ -13,6 +13,7 @@ interface SandboxContentProps {
   topRight: any;
   bottomRight: any;
   view: "developer" | "preview" | "demo";
+  logs: boolean;
   className?: string;
 }
 
@@ -21,6 +22,7 @@ const Sandbox = ({
   topRight: TopRight,
   bottomRight: BottomRight,
   view,
+  logs,
   className,
 }: SandboxContentProps) => {
   const refA = useRef<ImperativePanelHandle>(null);
@@ -28,16 +30,22 @@ const Sandbox = ({
 
   useEffect(() => {
     if (view === "demo") {
-      refA.current?.resize(0);
-      refB.current?.resize(100);
+      refA.current?.resize(100);
+      refB.current?.resize(0);
     } else if (view === "preview") {
       refA.current?.resize(50);
-      refB.current?.resize(0);
     } else if (view === "developer") {
       refA.current?.resize(60);
-      refB.current?.resize(0);
     }
   }, [view]);
+
+  useEffect(() => {
+    if (logs) {
+      refB.current?.resize(50);
+    } else {
+      refB.current?.resize(0);
+    }
+  }, [logs]);
 
   const handleMainExpand = () => {
     refA.current?.resize(100);
@@ -53,7 +61,7 @@ const Sandbox = ({
   };
 
   const handleBottomRightContract = () => {
-    refB.current?.resize(0);
+    refB.current?.resize(7);
   };
 
   const handleContract = () => {
@@ -98,7 +106,7 @@ const Sandbox = ({
       >
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel
-            defaultSize={view === "developer" ? 50 : 100}
+            defaultSize={100}
             className="transition-all duration-300 ease-in-out"
           >
             <div className="items-center justify-center flex w-full h-full animate-slide-in-right">
@@ -114,8 +122,8 @@ const Sandbox = ({
             )}
           />
           <ResizablePanel
-            defaultSize={view === "developer" ? 50 : 0}
-            maxSize={view === "preview" || view === "demo" ? 0 : 100}
+            defaultSize={0}
+            maxSize={50}
             ref={refB}
             className={cn("transition-all duration-300 ease-in-out", className)}
           >

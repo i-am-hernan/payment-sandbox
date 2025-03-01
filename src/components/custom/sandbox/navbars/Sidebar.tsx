@@ -48,7 +48,7 @@ interface SideTab {
   ref: any;
 }
 
-const { updateTheme, updateView } = userActions;
+const { updateTheme, updateView, updateLogs } = userActions;
 const { updateVariantName } = sandboxActions;
 const { clearOnDeckInfo } = formulaActions;
 
@@ -61,6 +61,7 @@ const Sidebar = (props: any) => {
     variant,
     view,
     integration,
+    logs,
   } = props;
   const {
     html: htmlUnsavedChanges,
@@ -252,7 +253,7 @@ const Sidebar = (props: any) => {
                         <span className="flex items-center">
                           <ChevronDown className="h-4 w-4 pr-1 text-grey" />
                           <span className="display-inline">
-                            Prebuild Integrations
+                            Prebuilt Integrations
                           </span>
                         </span>
                         <Link
@@ -411,6 +412,19 @@ const Sidebar = (props: any) => {
                         >
                           <span>Demo</span>
                           {view === "demo" && <Check className="h-4 w-4 ml-2" />}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-xs rounded-none text-center flex items-center justify-between"
+                          onClick={() => {
+                            if (logs) {
+                              dispatch(updateLogs(false));
+                            } else {
+                              dispatch(updateLogs(true));
+                            }
+                          }}
+                        >
+                          <span>Logs</span>
+                          {logs && <Check className="h-4 w-4 ml-2" />}
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>

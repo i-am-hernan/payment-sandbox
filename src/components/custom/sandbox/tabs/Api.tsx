@@ -64,6 +64,7 @@ const Api = (props: any) => {
   const { checkoutConfiguration }: any = useSelector(
     (state: RootState) => state.specs
   );
+
   const { theme, view } = useSelector((state: RootState) => state.user);
   const schemas = checkoutConfiguration?.components?.schemas ?? null;
   const properties = schemas?.[schema]?.properties ?? null;
@@ -214,6 +215,14 @@ const Api = (props: any) => {
   }, [reset]);
 
   useEffect(() => {
+    if (view === "demo" || view === "preview") {
+      panelRef.current?.resize(0);
+    } else if (view === "developer") {
+      panelRef.current?.resize(50);
+    }
+  }, [view]);
+
+  useEffect(() => {
     if (apiRequest.parsed !== null) {
       syncGlobalState(apiRequest.parsed, build);
     }
@@ -227,11 +236,6 @@ const Api = (props: any) => {
     return <div>Error</div>;
   }
 
-  if (view === "demo" || view === "preview") {
-    panelRef.current?.resize(0);
-  } else if (view === "developer") {
-    panelRef.current?.resize(50);
-  }
   return (
     <ResizablePanelGroup
       direction="horizontal"

@@ -45,7 +45,7 @@ const { updateMerchantAccount } = userActions;
 
 const Page: any = () => {
   const [section, setSection] = useState<SectionType["section"]>("Server");
-  const { theme, defaultMerchantAccount, merchantAccount, view } = useSelector(
+  const { theme, defaultMerchantAccount, merchantAccount, view, logs } = useSelector(
     (state: RootState) => state.user
   );
   const { integration, variant } = useParams<{
@@ -390,6 +390,7 @@ const Page: any = () => {
               )
             }
             view={view}
+            logs={logs}
           />
         </main>
         <footer className="h-[100%]">
@@ -401,6 +402,7 @@ const Page: any = () => {
             variant={variant}
             view={view}
             integration={integration}
+            logs={logs}
           />
         </footer>
       </React.Fragment>

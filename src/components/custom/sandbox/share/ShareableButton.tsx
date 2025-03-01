@@ -208,7 +208,7 @@ const ShareableButton = (props: any) => {
                   } your build by copying the link below`}
                 </DialogDescription>
                 <DialogDescription className="text-[13px]">
-                  {`Build ID: ${data ? data._id : "loading..."}`}
+                  {`ID: ${data ? data._id : "loading..."}`}
                 </DialogDescription>
               </DialogHeader>
               {error && (
@@ -297,7 +297,7 @@ const ShareableButton = (props: any) => {
                       {` Save the `}
                       <a
                         href={createBookmarkletUrl()}
-                        className="text-blue-500"
+                        className="text-info"
                         onClick={(e) => {
                           e.preventDefault();
                           alert("Drag this link to your bookmarks bar");

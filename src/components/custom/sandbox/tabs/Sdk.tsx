@@ -42,7 +42,7 @@ const formatJsString = (code: any, varName: string, variant: string, integration
 
   if (isCheckout) {
     return `// Create a checkout configuration object
-  // ${integration === "sessions" ? "Session" : "Payment methods"} are automatically generated
+  // ${integration === "sessions" ? "Session is" : "Payment methods are"} automatically generated
 
   var ${varName} = ${code};`;
   } else {

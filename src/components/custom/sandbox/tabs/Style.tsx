@@ -146,6 +146,14 @@ const Style = (props: any) => {
   }, [properties]);
 
   useEffect(() => {
+    if (view === "demo" || view === "preview") {
+      panelRef.current?.resize(0);
+    } else if (view === "developer") {
+      panelRef.current?.resize(50);
+    }
+  }, [view]);
+
+  useEffect(() => {
     if (config.parsed !== null) {
       syncGlobalState(config.stringified, build);
     }
@@ -246,12 +254,6 @@ const Style = (props: any) => {
     },
     [config.parsed, properties, configurationType]
   );
-
-  if (view === "demo" || view === "preview") {
-    panelRef.current?.resize(0);
-  } else if (view === "developer") {
-    panelRef.current?.resize(50);
-  }
 
   return (
     <ResizablePanelGroup
