@@ -199,13 +199,12 @@ const ShareableButton = (props: any) => {
                   your build
                 </DialogTitle>
                 <DialogDescription className="text-[13px]">
-                  {`You can ${
-                    view === "preview"
-                      ? "share"
-                      : view === "demo"
-                        ? "demo"
-                        : "embed"
-                  } your build by copying the link below`}
+                  {`You can ${view === "preview"
+                    ? "share"
+                    : view === "demo"
+                      ? "demo"
+                      : "embed"
+                    } your build by copying the link below`}
                 </DialogDescription>
                 <DialogDescription className="text-[13px]">
                   {`ID: ${data ? data._id : "loading..."}`}
@@ -290,10 +289,10 @@ const ShareableButton = (props: any) => {
                 </div>
               )}
               {view === "embed" && (
-                <DialogDescription className="text-[13px]">
+                <div className="pb-1 text-[13px]">
                   <div className="pb-1">
-                    <p className="inline-block text-foreground">Step 1: </p>{" "}
-                    <p className="inline-block">
+                    <DialogDescription className="inline-block text-foreground">Step 1: </DialogDescription>{" "}
+                    <DialogDescription className="inline-block">
                       {` Save the `}
                       <a
                         href={createBookmarkletUrl()}
@@ -306,25 +305,24 @@ const ShareableButton = (props: any) => {
                         checkoutLab
                       </a>{" "}
                       bookmarklet to your browser.
-                    </p>
+                    </DialogDescription>
                   </div>
                   <div className="pb-1">
-                    <p className="inline-block text-foreground">Step 2:</p>{" "}
-                    <p className="inline-block">
+                    <DialogDescription className="inline-block text-foreground">Step 2:</DialogDescription>{" "}
+                    <DialogDescription className="inline-block">
                       Navigate to any checkout page
-                    </p>
+                    </DialogDescription>
                   </div>
                   <div className="pb-1">
-                    <p className="inline-block text-foreground">Step 3:</p>{" "}
-                    <p className="inline-block">Click the bookmarklet</p>
+                    <DialogDescription className="inline-block text-foreground">Step 3:</DialogDescription>{" "}
+                    <DialogDescription className="inline-block">Click the bookmarklet</DialogDescription>
                   </div>
                   <div className="pb-1">
-                    <p className="inline-block text-foreground">Step 4:</p>{" "}
-                    <p className="inline-block">
+                    <DialogDescription className="inline-block text-foreground">Step 4:</DialogDescription>{" "}
+                    <DialogDescription className="inline-block">
                       Enter the above url and embed your build
-                    </p>
-                  </div>
-                </DialogDescription>
+                    </DialogDescription>
+                  </div></div>
               )}
             </DialogContent>
           )}

@@ -258,7 +258,7 @@ const Sidebar = (props: any) => {
                         </span>
                         <Link
                           href="/formulas"
-                          className="text-xs ml-1 text-grey font-thin border-l-[1px] border-border pl-2"
+                          className="text-sm ml-1 text-grey font-thin border-l-[1px] border-border pl-2"
                         >
                           Browse formulas
                         </Link>
