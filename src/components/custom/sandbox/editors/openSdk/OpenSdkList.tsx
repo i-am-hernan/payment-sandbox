@@ -175,7 +175,6 @@ export const OpenSdkList = ({
                     </div>
                   )}
 
-                {/* Your existing type handlers */}
                 {properties[property].type === "string" && (
                   <String
                     value={values[property] ? values[property] : ""}
@@ -191,7 +190,6 @@ export const OpenSdkList = ({
                   />
                 )}
 
-                {/* Existing type handlers */}
                 {properties[property].type === "enum" && (
                   <Enum
                     value={

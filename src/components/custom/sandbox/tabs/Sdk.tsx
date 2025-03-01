@@ -34,11 +34,22 @@ import { OpenSdkList } from "../editors/openSdk/OpenSdkList";
 import VersionCompact from "../editors/VersionCompact";
 import { clearUrlParams } from "@/utils/utils";
 const { updateSpecs } = specsActions;
-const { addUnsavedChanges, updateAdyenWebVersion } = formulaActions;
+const { addUnsavedChanges, updateAdyenWebVersion, updateErrors } = formulaActions;
 const { updateView } = userActions;
 
-const formatJsString = (code: any, varName: string) => {
-  return `var ${varName} = ${code};`;
+const formatJsString = (code: any, varName: string, variant: string, integration: string) => {
+  const isCheckout = /checkout/.test(varName);
+
+  if (isCheckout) {
+    return `// Create a checkout configuration object
+  // ${integration === "sessions" ? "Session" : "Payment methods"} are automatically generated
+
+  var ${varName} = ${code};`;
+  } else {
+    return `// Create a ${variant} configuration object
+
+  var ${varName} = ${code};`;
+  }
 };
 
 const initialState = {
@@ -101,6 +112,7 @@ const Sdk = (props: any) => {
 
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const [config, dispatchConfig] = useReducer(configReducer, initialState);
+  const [localError, setLocalError] = useState<any>(null);
 
   const panelRef = useRef<ImperativePanelHandle>(null);
   const dispatch = useDispatch();
@@ -126,13 +138,20 @@ const Sdk = (props: any) => {
           })
         );
       }
-    }, 1000),
+    }, 300),
+    [dispatch]
+  );
+
+  const updateGlobalErrorState = useCallback(
+    debounce((error: any) => {
+      dispatch(updateErrors({ js: !!error }));
+    }, 300),
     [dispatch]
   );
 
   const syncLocalState = useCallback(async (configuration: any, type: any) => {
     let prettifiedString = await prettify(
-      formatJsString(configuration, type),
+      formatJsString(configuration, type, variant, integration),
       "babel"
     );
     dispatchConfig({
@@ -181,6 +200,10 @@ const Sdk = (props: any) => {
   useEffect(() => {
     syncLocalState(storeConfiguration, configurationType);
   }, [reset]);
+
+  useEffect(() => {
+    updateGlobalErrorState(localError);
+  }, [localError, updateGlobalErrorState]);
 
   const handlePrettify = useCallback(async () => {
     try {
@@ -244,7 +267,7 @@ const Sdk = (props: any) => {
           payload: {
             parsed: newObject,
             stringified: await prettify(
-              formatJsString(stringifyObject(newObject), configurationType),
+              formatJsString(stringifyObject(newObject), configurationType, variant, integration),
               "babel"
             ),
           },
@@ -264,7 +287,9 @@ const Sdk = (props: any) => {
               stringified: await prettify(
                 formatJsString(
                   stringifyObject(updatedRequest),
-                  configurationType
+                  configurationType,
+                  variant,
+                  integration
                 ),
                 "babel"
               ),
@@ -308,6 +333,9 @@ const Sdk = (props: any) => {
                   },
                 });
               }
+            }}
+            handleError={(error: any) => {
+              setLocalError(error);
             }}
             jsVariable={configurationType}
           />

@@ -83,9 +83,17 @@ const Style = (props: any) => {
 
   const [filteredProperties, setFilteredProperties] = useState(properties);
   const [config, dispatchConfig] = useReducer(configReducer, initialState);
+  const [localError, setLocalError] = useState<any>(null);
 
   const panelRef = useRef<ImperativePanelHandle>(null);
   const dispatch = useDispatch();
+
+  const updateGlobalErrorState = useCallback(
+    debounce((error: any) => {
+      dispatch(updateErrors({ style: !!error }));
+    }, 300),
+    [dispatch]
+  );
 
   const syncGlobalState: any = useCallback(
     debounce((localState: any, build: any) => {
@@ -108,7 +116,7 @@ const Style = (props: any) => {
           })
         );
       }
-    }, 1000),
+    }, 300),
     [dispatch]
   );
 
@@ -146,6 +154,10 @@ const Style = (props: any) => {
   useEffect(() => {
     syncLocalState(storeConfiguration, configurationType);
   }, [reset]);
+
+  useEffect(() => {
+    updateGlobalErrorState(localError);
+  }, [localError, updateGlobalErrorState]);
 
   const handlePrettify = useCallback(async () => {
     try {
@@ -261,6 +273,9 @@ const Style = (props: any) => {
             code={config.stringified}
             readOnly={false}
             theme={theme}
+            handleError={(error: any) => {
+              setLocalError(error);
+            }}
             onChange={(jsValue: any, stringValue: string) => {
               if (stringValue === config.stringified) {
                 return;

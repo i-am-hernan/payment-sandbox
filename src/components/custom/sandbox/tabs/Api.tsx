@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { clearUrlParams } from "@/utils/utils";
 const { updateSpecs } = specsActions;
-const { addUnsavedChanges, updateCheckoutAPIVersion } = formulaActions;
+const { addUnsavedChanges, updateCheckoutAPIVersion, updateErrors } = formulaActions;
 const initialState = {
   parsed: null,
   stringified: "",
@@ -75,9 +75,18 @@ const Api = (props: any) => {
   );
 
   const [filteredProperties, setFilteredProperties] = useState(properties);
+  const [localError, setLocalError] = useState<any>(null);
+
   const dispatch = useDispatch();
 
   const panelRef = useRef<ImperativePanelHandle>(null);
+
+  const updateGlobalErrorState = useCallback(
+    debounce((error: any) => {
+      dispatch(updateErrors({ [api]: !!error }));
+    }, 300),
+    [dispatch, api]
+  );
 
   const syncGlobalState: any = debounce((localState: any, build: any) => {
     const isEqual = deepEqual(build.request[api], localState);
@@ -95,7 +104,7 @@ const Api = (props: any) => {
         })
       );
     }
-  }, 1000);
+  }, 300);
 
   const syncLocalState = async (request: any) => {
     let prettifiedString = await prettify(JSON.stringify(request), "json");
@@ -210,6 +219,10 @@ const Api = (props: any) => {
     }
   }, [apiRequest.parsed]);
 
+  useEffect(() => {
+    updateGlobalErrorState(localError);
+  }, [localError, updateGlobalErrorState]);
+
   if (apiSpecsError) {
     return <div>Error</div>;
   }
@@ -239,6 +252,9 @@ const Api = (props: any) => {
             code={apiRequest.stringified}
             readOnly={false}
             theme={theme}
+            handleError={(error: any) => {
+              setLocalError(error);
+            }}
             onChange={(jsValue: any, stringValue: string) => {
               if (stringValue === apiRequest.stringified) {
                 return;

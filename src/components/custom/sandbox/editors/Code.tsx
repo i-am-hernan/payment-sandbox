@@ -85,6 +85,9 @@ const Code = (props: any) => {
         });
         if (diagnostics.length === 0) {
           onChange(jsonc.parse(value), value);
+          handleError(null);
+        } else {
+          handleError(diagnostics);
         }
       } else if (type === "babel") {
         diagnostics = await javascriptLinter({
@@ -94,8 +97,9 @@ const Code = (props: any) => {
           // Bug: What if the user doesn't have any bugs but also doesnt have checkout configuration in the code, we should still throw an error
 
           onChange(getVariableValueFromAST(value, jsVariable), value);
+          handleError(null);
         } else {
-          handleError(true);
+          handleError(diagnostics);
         }
       } else if (type === "style") {
         diagnostics = await cssLinter({
@@ -104,11 +108,13 @@ const Code = (props: any) => {
         if (diagnostics.length === 0) {
           const styleObject = cssToObject(value);
           onChange(styleObject, value);
+          handleError(null);
+        } else {
+          handleError(diagnostics);
         }
       }
     } catch (error) {
       console.error("Error in handleChange:", error);
-      handleError(true);
     }
   };
 
