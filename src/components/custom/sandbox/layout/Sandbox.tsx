@@ -31,7 +31,7 @@ const Sandbox = ({
       refA.current?.resize(0);
       refB.current?.resize(100);
     } else if (view === "preview") {
-      refA.current?.resize(50);
+      refA.current?.resize(30);
       refB.current?.resize(0);
     } else if (view === "developer") {
       refA.current?.resize(60);
@@ -70,7 +70,7 @@ const Sandbox = ({
       )}
     >
       <ResizablePanel
-        defaultSize={view === "developer" ? 60 : view === "preview" ? 50 : 0}
+        defaultSize={view === "developer" ? 60 : view === "preview" ? 30 : 0}
         ref={refA}
         maxSize={view === "demo" ? 0 : 100}
         className={cn(
@@ -93,7 +93,7 @@ const Sandbox = ({
         )}
       />
       <ResizablePanel
-        defaultSize={view === "developer" ? 40 : view === "preview" ? 50 : 100}
+        defaultSize={view === "developer" ? 40 : view === "preview" ? 70 : 100}
         className="transition-all duration-300 ease-in-out"
       >
         <ResizablePanelGroup direction="vertical">

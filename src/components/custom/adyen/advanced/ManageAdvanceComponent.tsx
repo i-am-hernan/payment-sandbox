@@ -64,7 +64,7 @@ export const ManageAdvanceComponent = (props: any) => {
   }
 
   return (
-    <div className={`h-[100%] ${className}`}>
+    <div className={`h-full ${className}`}>
       {!isRedirect && (
         <InitAdvanceComponent
           checkoutAPIVersion={checkoutAPIVersion}

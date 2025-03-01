@@ -36,6 +36,8 @@ export interface Formula {
     html: boolean;
     style: boolean;
     js: boolean;
+    checkout: boolean;
+    variant: boolean;
     paymentMethods: boolean;
     payments: boolean;
     paymentsDetails: boolean;
@@ -46,6 +48,8 @@ export interface Formula {
     html: boolean;
     style: boolean;
     js: boolean;
+    checkout: boolean;
+    variant: boolean;
     paymentMethods: boolean;
     payments: boolean;
     paymentsDetails: boolean;
@@ -111,6 +115,8 @@ const initialState: FormulaPropType = {
     html: false,
     style: false,
     js: false,
+    checkout: false,
+    variant: false,
     paymentMethods: false,
     payments: false,
     paymentsDetails: false,
@@ -121,6 +127,8 @@ const initialState: FormulaPropType = {
     html: false,
     style: false,
     js: false,
+    checkout: false,
+    variant: false,
     paymentMethods: false,
     payments: false,
     paymentsDetails: false,
@@ -203,6 +211,8 @@ const formulaSlice = createSlice({
         html: false,
         style: false,
         js: false,
+        checkout: false,
+        variant: false,
         paymentMethods: false,
         payments: false,
         paymentsDetails: false,
@@ -334,6 +344,8 @@ const formulaSlice = createSlice({
           html: false,
           style: false,
           js: false,
+          checkout: false,
+          variant: false,
           paymentMethods: false,
           payments: false,
           paymentsDetails: false,
@@ -356,6 +368,8 @@ const formulaSlice = createSlice({
           html: false,
           style: false,
           js: false,
+          checkout: false,
+          variant: false,
           paymentMethods: false,
           payments: false,
           paymentsDetails: false,

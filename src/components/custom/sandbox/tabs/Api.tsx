@@ -252,6 +252,7 @@ const Api = (props: any) => {
             code={apiRequest.stringified}
             readOnly={false}
             theme={theme}
+            lineWrap={true}
             handleError={(error: any) => {
               setLocalError(error);
             }}
@@ -290,7 +291,7 @@ const Api = (props: any) => {
         )} border-none bg-transparent`}
       />
       <ResizablePanel className="bg-card !overflow-y-scroll h-full rounded-lg border-[1px] border-border shadow-hover">
-        {!loadingApiSpecData && apiSpecsData && (
+        {apiSpecsData && (
           <div>
             <Search
               properties={properties}

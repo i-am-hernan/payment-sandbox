@@ -22,6 +22,7 @@ import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
 
 interface SectionType {
   section: "Client" | "Server" | "Style";
@@ -106,7 +107,13 @@ const Page: any = () => {
               {integration.toUpperCase()}
             </span>
           ),
-          content: <ManageAdvanceComponent key={run ? "run" : "default"} />,
+          content: view === "demo" || view === "preview" ? (
+            <CheckoutPage>
+              <ManageAdvanceComponent key={run ? "run" : "default"} />
+            </CheckoutPage>
+          ) : (
+            <ManageAdvanceComponent key={run ? "run" : "default"} />
+          ),
           value: variant,
         },
       ]
@@ -119,7 +126,13 @@ const Page: any = () => {
                 {integration.toUpperCase()}
               </span>
             ),
-            content: <ManageAdyenSessions key={run ? "run" : "default"} />,
+            content: view === "demo" || view === "preview" ? (
+              <CheckoutPage>
+                <ManageAdyenSessions key={run ? "run" : "default"} />
+              </CheckoutPage>
+            ) : (
+              <ManageAdyenSessions key={run ? "run" : "default"} />
+            ),
             value: variant,
           },
         ]
@@ -157,7 +170,7 @@ const Page: any = () => {
           />
         ),
         value: `checkout`,
-        unsavedChanges: unsavedChanges.js,
+        unsavedChanges: unsavedChanges.checkout,
       },
       {
         title: `${variant}`,
@@ -178,7 +191,7 @@ const Page: any = () => {
           />
         ),
         value: `${variant}`,
-        unsavedChanges: unsavedChanges.js,
+        unsavedChanges: unsavedChanges.variant,
       },
     ];
     crumbs = [integration, variant, "sdk"];
@@ -315,7 +328,7 @@ const Page: any = () => {
           <Sandbox
             main={
               formulaLoading || merchantAccount === null ? (
-                <Loading className="text-foreground" />
+                <Loading className="text-foreground hidden" />
               ) : integration !== "sessions" && integration !== "advance" ? (
                 <Alert variant="destructive" className="w-[50%]">
                   <AlertTitle>{"Error:"}</AlertTitle>

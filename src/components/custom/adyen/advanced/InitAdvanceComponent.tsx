@@ -85,12 +85,12 @@ export const InitAdvanceComponent = (props: any) => {
       : null;
 
   return (
-    <div className="flex justify-center align-center h-[100%]"> 
+    <div className="flex justify-center align-center h-full"> 
       {error && <Error error={error} />}
       {adyenResult && <Result adyenResult={adyenResult} />}
       {loadingPaymentMethods && <Loading className="text-foreground" />}
       {!error && !adyenSDKError && !adyenResult && !loadingPaymentMethods && (
-        <div className={`h-[100%] w-[100%] ${isEmbedPage ? '' : 'px-6 py-1'}`}>
+        <div className={`h-full w-full ${isEmbedPage ? '' : 'px-6 py-1'}`}>
           <div ref={checkoutRef}></div>
         </div>
       )}

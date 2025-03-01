@@ -58,7 +58,7 @@ export const ManageAdyenSessions = (props: any) => {
   }, [redirectResultQueryParameter, isRedirect]);
 
   if (loadingAdyenScript || !variant) {
-    return <Loading className="text-foreground" />;
+    return <Loading className="text-foreground hidden" />;
   }
 
   if (adyenScriptError) {

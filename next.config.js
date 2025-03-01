@@ -6,6 +6,10 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: false, // Set to true to ignore TypeScript errors during build
   },
+  // Configure image domains
+  images: {
+    domains: ['www.mystoredemo.io'],
+  },
   headers: async () => {
     return [
       {

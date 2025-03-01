@@ -273,6 +273,7 @@ const Style = (props: any) => {
             code={config.stringified}
             readOnly={false}
             theme={theme}
+            lineWrap={true}
             handleError={(error: any) => {
               setLocalError(error);
             }}

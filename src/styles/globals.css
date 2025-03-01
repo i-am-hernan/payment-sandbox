@@ -126,11 +126,6 @@
   @apply !text-foreground;
 }
 
-.adyen-checkout__button {
-  @apply !bg-adyen;
-  @apply !text-[#fff];
-}
-
 .cm-theme {
   @apply w-[100%] h-[100%];
 }

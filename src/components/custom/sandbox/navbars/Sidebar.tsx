@@ -66,9 +66,12 @@ const Sidebar = (props: any) => {
     html: htmlUnsavedChanges,
     style: styleUnsavedChanges,
     js: jsUnsavedChanges,
+    checkout: checkoutUnsavedChanges,
+    variant: variantUnsavedChanges,
     paymentMethods: paymentMethodsUnsavedChanges,
     payments: paymentsUnsavedChanges,
     paymentsDetails: paymentsDetailsUnsavedChanges,
+    sessions: sessionsUnsavedChanges,
     events: eventsUnsavedChanges,
   } = unsavedChanges;
 
@@ -145,6 +148,7 @@ const Sidebar = (props: any) => {
         paymentMethodsUnsavedChanges,
         paymentsUnsavedChanges,
         paymentsDetailsUnsavedChanges,
+        sessionsUnsavedChanges,
       },
       ref: serverButtonRef,
     },
@@ -160,7 +164,8 @@ const Sidebar = (props: any) => {
         </div>
       ),
       unsavedChanges: {
-        jsUnsavedChanges,
+        checkoutUnsavedChanges,
+        variantUnsavedChanges,
       },
       ref: clientButtonRef,
     },
@@ -224,7 +229,7 @@ const Sidebar = (props: any) => {
   };
   return (
     <div ref={sidebarRef}>
-      <span className="bg-card absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] border-border text-center">
+      <span className="bg-background absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] border-border text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>
@@ -241,7 +246,7 @@ const Sidebar = (props: any) => {
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
-                  <DrawerContent className="h-full w-[20vw] rounded-none border-[1px] border-border bg-card">
+                  <DrawerContent className="h-full w-[20vw] rounded-none border-[1px] border-border bg-background">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-sm py-0">
                         <span className="flex items-center">
@@ -337,7 +342,7 @@ const Sidebar = (props: any) => {
                       </Button>
                     </Tooltip>
                     {totalUnsavedChanges(tab.unsavedChanges) !== 0 && (
-                      <div className="w-4 h-4 border border-foreground rounded-full absolute -top-2 -right-2 transform bg-card text-foreground text-xxs flex items-center justify-center">
+                      <div className="w-4 h-4 border border-foreground rounded-full absolute -top-2 -right-2 transform bg-background text-foreground text-xxs flex items-center justify-center">
                         {totalUnsavedChanges(tab.unsavedChanges)}
                       </div>
                     )}

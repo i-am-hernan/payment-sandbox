@@ -128,13 +128,13 @@ const Sdk = (props: any) => {
         dispatch(updateStoreConfiguration(stringifiedLocalState));
         dispatch(
           addUnsavedChanges({
-            js: true,
+            [configurationType === "checkoutConfiguration" ? "checkout" : "variant"]: true,
           })
         );
       } else {
         dispatch(
           addUnsavedChanges({
-            js: false,
+            [configurationType === "checkoutConfiguration" ? "checkout" : "variant"]: false,
           })
         );
       }
@@ -321,6 +321,7 @@ const Sdk = (props: any) => {
             code={config.stringified}
             readOnly={false}
             theme={theme}
+            lineWrap={false}
             onChange={(jsValue: any, stringValue: string) => {
               if (stringValue === config.stringified) {
                 return;

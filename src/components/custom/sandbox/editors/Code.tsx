@@ -14,7 +14,7 @@ import * as jsonc from "jsonc-parser"; // Import jsonc-parser
 const cssParse = require("css/lib/parse");
 
 const Code = (props: any) => {
-  const { code, type, readOnly, onChange, theme, jsVariable, handleError } =
+  const { code, type, readOnly, onChange, theme, jsVariable, handleError, lineWrap } =
     props;
 
   const getVariableValueFromAST = (code: string, variableName: string) => {
@@ -204,11 +204,15 @@ const Code = (props: any) => {
   if (type === "html") {
     extensions.push(javascript({ jsx: true }));
   } else if (type === "json") {
-    extensions.push(json(), linter(jsonLinter)), EditorView.lineWrapping;
+    extensions.push(json(), linter(jsonLinter));
   } else if (type === "babel") {
     extensions.push(javascript(), linter(javascriptLinter));
   } else if (type === "style") {
     extensions.push(css(), linter(cssLinter));
+  }
+
+  if (lineWrap) {
+    extensions.push(EditorView.lineWrapping);
   }
 
   return (
