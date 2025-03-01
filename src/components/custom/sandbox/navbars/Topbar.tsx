@@ -56,7 +56,7 @@ const Topbar = (props: any) => {
   const storeToLocalStorage = (data: any) => {
     sessionStorage.setItem("formula", JSON.stringify(data));
   };
-  console.log("tabErrors", tabErrors);
+
   return (
     <span
       className="bg-background absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] border-r-[1px] border-border stretch flex items-center justify-end px-2"

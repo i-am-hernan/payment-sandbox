@@ -133,6 +133,50 @@ export const useAdyenAdvance = (
     }
   };
 
+  const adyenV6 = (
+    configuration: any,
+    checkoutRef: any,
+    txVariant: string,
+    txVariantConfiguration: any
+  ) => {
+    try {
+      const initCheckout: any = async () => {
+        const { AdyenCheckout, Dropin, createComponent } = await (window as any).AdyenWeb;
+        const checkout = await AdyenCheckout(configuration);
+        let component = null;
+        try {
+          if (txVariant === "dropin") {
+            component = new Dropin(checkout, txVariantConfiguration).mount(checkoutRef.current);
+          } else {
+            component = createComponent(txVariant, checkout, {
+              ...txVariantConfiguration,
+            }).mount(checkoutRef.current);
+          }
+          setHasMounted(true);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            setError({
+              message: error.message
+                ? error.message
+                : "Error mounting component",
+            });
+          }
+        }
+      }
+      if (checkoutRef.current) {
+        initCheckout();
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError({
+          message: error.message
+            ? error.message
+            : "Error initializing checkout",
+        });
+      }
+    }
+  }
+
   useEffect(() => {
     const executeConfiguration = new Function(
       "handleSubmit",
@@ -153,6 +197,8 @@ export const useAdyenAdvance = (
     if (readyToMount) {
       if (/^5./.test(adyenWebVersion)) {
         adyenV5(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
+      } else if (/^6./.test(adyenWebVersion)) {
+        adyenV6(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
       }
     }
   }, [

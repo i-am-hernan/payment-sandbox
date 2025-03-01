@@ -31,7 +31,7 @@ const Sandbox = ({
       refA.current?.resize(0);
       refB.current?.resize(100);
     } else if (view === "preview") {
-      refA.current?.resize(30);
+      refA.current?.resize(50);
       refB.current?.resize(0);
     } else if (view === "developer") {
       refA.current?.resize(60);

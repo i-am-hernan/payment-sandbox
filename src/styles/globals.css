@@ -118,7 +118,7 @@
   @apply !border-border;
   @apply !rounded-lg;
   @apply text-foreground;
-  @apply mb-1;
+  @apply mb-[1px];
   @apply shadow-hover;
 }
 

@@ -107,7 +107,7 @@ const Page: any = () => {
               {integration.toUpperCase()}
             </span>
           ),
-          content: view === "demo" || view === "preview" ? (
+          content: view === "demo" ? (
             <CheckoutPage>
               <ManageAdvanceComponent key={run ? "run" : "default"} />
             </CheckoutPage>
@@ -126,7 +126,7 @@ const Page: any = () => {
                 {integration.toUpperCase()}
               </span>
             ),
-            content: view === "demo" || view === "preview" ? (
+            content: view === "demo" ? (
               <CheckoutPage>
                 <ManageAdyenSessions key={run ? "run" : "default"} />
               </CheckoutPage>
