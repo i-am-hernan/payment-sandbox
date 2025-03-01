@@ -349,7 +349,7 @@ const Page: any = () => {
             }
             topRight={
               formulaLoading || merchantAccount === null ? (
-                <Loading className="text-foreground" />
+                <Loading className="text-foreground hidden" />
               ) : integration !== "sessions" && integration !== "advance" ? (
                 <Alert variant="destructive" className="w-[50%]">
                   <AlertTitle>{"Error:"}</AlertTitle>

@@ -79,7 +79,7 @@ const Sandbox = ({
           className
         )}
       >
-        <div className="items-center justify-center flex w-full h-full">
+        <div className="items-center justify-center flex w-full h-full animate-slide-in">
           {React.cloneElement(Main, {
             onExpand: handleMainExpand,
             onContract: handleContract,
@@ -101,7 +101,7 @@ const Sandbox = ({
             defaultSize={view === "developer" ? 50 : 100}
             className="transition-all duration-300 ease-in-out"
           >
-            <div className="items-center justify-center flex w-full h-full">
+            <div className="items-center justify-center flex w-full h-full animate-slide-in-right">
               {React.cloneElement(TopRight, {
                 onExpand: handleTopRightExpand,
                 onContract: handleContract,

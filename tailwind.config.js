@@ -129,9 +129,9 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         typing: "typing 2s steps(40), cursor 1s step-end infinite",
-        "slide-in": "slide-in 0.8s ease-out",
-        "slide-in-right": "slide-in-right 0.8s ease-out",
-        "slide-in-from-top": "slide-in-from-top 0.3s ease-out",
+        "slide-in": "slide-in 0.4s ease-out",
+        "slide-in-right": "slide-in-right 0.4s ease-out",
+        "slide-in-from-top": "slide-in-from-top 0.4s ease-out",
       },
       backgroundImage: {
         'dotted-grid': 'radial-gradient(circle, hsla(var(--border) / 0.3) 1.3px, transparent 0.5px)',
