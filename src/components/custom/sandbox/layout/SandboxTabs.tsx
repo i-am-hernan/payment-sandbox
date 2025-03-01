@@ -58,7 +58,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
         className="w-full h-full flex flex-col"
         onValueChange={(value) => setTabTitle(value)}
       >
-        <span className="flex justify-between mb-2 pl-6">
+        <span className="flex justify-between mb-2 pl-6 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-[45px] h-auto">
           <TabsList className="mt-3">
             {tabsMap.map((tab, index) => (
               <div key={index} className="p-[3px]">
