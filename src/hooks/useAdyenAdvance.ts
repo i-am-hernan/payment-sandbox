@@ -11,7 +11,7 @@ export const useAdyenAdvance = (
   checkoutAPIVersion: {
     paymentMethods: string;
     payments: string;
-    paymentDetails: string;
+    paymentsDetails: string;
   },
   adyenWebVersion: string,
   checkoutConfiguration: any,
@@ -59,7 +59,7 @@ export const useAdyenAdvance = (
 
   const handleAdditionalDetails = async (state: any, dropin: any) => {
     const response = await fetch(
-      `/api/checkout/v${checkoutAPIVersion.paymentDetails}/payments/details`,
+      `/api/checkout/v${checkoutAPIVersion.paymentsDetails}/payments/details`,
       {
         method: "POST",
         headers: {
