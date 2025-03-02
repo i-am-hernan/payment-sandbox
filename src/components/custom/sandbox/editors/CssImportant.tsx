@@ -12,8 +12,6 @@ const CssImportant = ({ children, onChange, value }: CssImportantProps) => {
 
   const handleImportantChange = (checked: boolean) => {
     setIsImportant(checked);
-    console.log(value);
-    console.log(checked);
     if (checked) {
       // Add !important if not already present
       const newValue = value.includes("!important")
@@ -28,10 +26,7 @@ const CssImportant = ({ children, onChange, value }: CssImportantProps) => {
   };
 
   const handleChildChange = (newValue: string) => {
-    // console.log("handleChildChange");
-    console.log(newValue);
     if (isImportant && !newValue.includes("!important")) {
-      console.log(newValue.replace(";", " !important;"));
       onChange(newValue + " !important;");
     } else {
       onChange(newValue + ";");

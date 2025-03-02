@@ -42,7 +42,7 @@ const Search = (props: any) => {
       <p className="text-[0.8rem] text-grey px-6">{`${description}`}</p>
       <div className="flex pb-3 pt-2 px-3">
         <Input
-          className="text-xs py-0 rounded-r-nones"
+          className="text-xs py-0 rounded-r-none"
           ref={inputRef}
           type="search"
           placeholder="search"
@@ -69,9 +69,6 @@ const Search = (props: any) => {
           size="icon"
           className="pt-0 rounded-l-none bg-adyen text-[#fff]"
           spellCheck={false}
-          onClick={(event) => {
-            console.log("search button clicked");
-          }}
         >
           <SearchIcon sx={{ fontSize: "12px" }} />
         </Button>

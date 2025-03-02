@@ -30,7 +30,6 @@ export default function FormulasPage() {
     setLoading(true);
     Promise.all([import("fuse.js"), getFormulas()]).then(
       ([Fuse, formulas]: [any, any[]]) => {
-        console.log(formulas);
         setAllFormulas(formulas);
         setFilteredFormulas(formulas);
 
