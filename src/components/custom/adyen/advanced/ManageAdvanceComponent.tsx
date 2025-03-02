@@ -6,6 +6,7 @@ import useAdyenScript from "@/hooks/useAdyenScript";
 import {
   componentActions,
   formulaActions,
+  sandboxActions,
   specsActions,
 } from "@/store/reducers";
 import type { RootState } from "@/store/store";
@@ -24,6 +25,8 @@ const {
 } = formulaActions;
 const { updateComponentState, updateResponse } = componentActions;
 const { updateSpecs } = specsActions;
+const { updateNetworkResponse } = sandboxActions;
+
 export const ManageAdvanceComponent = (props: any) => {
   const { className } = props;
   const { build, isRedirect, redirectResult } = useSelector(
@@ -115,6 +118,15 @@ export const ManageAdvanceComponent = (props: any) => {
               dispatch(updateReset());
             }
           }}
+          onPaymentMethodsNetworkResponse={(response: any) => {
+            dispatch(updateNetworkResponse(response));
+          }}
+          onPaymentsNetworkResponse={(response: any) => {
+            dispatch(updateNetworkResponse(response));
+          }}
+          onPaymentDetailsNetworkResponse={(response: any) => {
+            dispatch(updateNetworkResponse(response));
+          }}
         />
       )}
 
@@ -124,6 +136,9 @@ export const ManageAdvanceComponent = (props: any) => {
           redirectResult={redirectResult}
           checkoutAPIVersion={checkoutAPIVersion}
           paymentsDetailsRequest={paymentsDetails}
+          onPaymentDetailsNetworkResponse={(response: any) => {
+            dispatch(updateNetworkResponse(response));
+          }}
         />
       )}
     </div>

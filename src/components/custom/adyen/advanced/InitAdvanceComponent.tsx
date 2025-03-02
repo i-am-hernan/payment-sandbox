@@ -22,6 +22,9 @@ export const InitAdvanceComponent = (props: any) => {
     onPaymentMethodsResponse,
     onClassesCalculated,
     onChange,
+    onPaymentMethodsNetworkResponse,
+    onPaymentsNetworkResponse,
+    onPaymentDetailsNetworkResponse,
   } = props;
 
   const pathname = usePathname();
@@ -31,6 +34,7 @@ export const InitAdvanceComponent = (props: any) => {
     data: paymentMethodsResponse,
     loading: loadingPaymentMethods,
     error: paymentMethodsError,
+    response: paymentMethodsRawResponse,
   } = useApi(
     `api/checkout/v${checkoutAPIVersion.paymentMethods}/paymentMethods`,
     "POST",
@@ -44,6 +48,9 @@ export const InitAdvanceComponent = (props: any) => {
     if (paymentMethodsResponse && !paymentMethodsError) {
       onPaymentMethodsResponse(paymentMethodsResponse);
       setReadyToMount(true);
+    }
+    if (paymentMethodsRawResponse) {
+      onPaymentMethodsNetworkResponse(paymentMethodsRawResponse);
     }
   }, [paymentMethodsResponse]);
 
@@ -62,6 +69,8 @@ export const InitAdvanceComponent = (props: any) => {
     paymentsDetailsRequest,
     checkoutRef,
     onChange,
+    onPaymentsNetworkResponse,
+    onPaymentDetailsNetworkResponse,
     readyToMount
   );
 
@@ -85,7 +94,7 @@ export const InitAdvanceComponent = (props: any) => {
       : null;
 
   return (
-    <div className="flex justify-center align-center h-full"> 
+    <div className="flex justify-center align-center h-full">
       {error && <Error error={error} />}
       {adyenResult && <Result adyenResult={adyenResult} />}
       {loadingPaymentMethods && <Loading className="text-foreground" />}

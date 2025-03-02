@@ -7,7 +7,7 @@ type UseApi = (
   options?: {
     cache?: string;
   }
-) => { data: any; loading: boolean; error: any };
+) => { data: any; loading: boolean; error: any, response: Response | null };
 
 export type RequestOptions = {
   method: string;
@@ -23,6 +23,7 @@ export const useApi: UseApi = (endpoint, method, payload, options) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [response, setResponse] = useState<any>(null);
 
   useEffect(() => {
     const requestOptions: RequestOptions = {
@@ -44,6 +45,7 @@ export const useApi: UseApi = (endpoint, method, payload, options) => {
       try {
         setLoading(true);
         setData(null);
+        setResponse(null);
         const domain =
           process.env.VERCEL_URL || process.env.NEXT_PUBLIC_API_URL;
         const response = await fetch(`${domain}/${endpoint}`, {
@@ -53,6 +55,8 @@ export const useApi: UseApi = (endpoint, method, payload, options) => {
           cache: requestOptions.cache as RequestCache
         });
         const data = await response.json();
+
+        setResponse({ url: response.url, status: response.status, method: method, data: data, time: new Date().toISOString() });
         setLoading(false);
         if (data.status >= 400) {
           setError(data);
@@ -67,8 +71,8 @@ export const useApi: UseApi = (endpoint, method, payload, options) => {
 
     makeRequest();
 
-    return () => {};
+    return () => { };
   }, [endpoint, method]);
 
-  return { data, loading, error };
+  return { data, loading, error, response };
 };

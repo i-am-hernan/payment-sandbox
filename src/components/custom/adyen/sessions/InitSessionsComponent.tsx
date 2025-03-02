@@ -20,6 +20,7 @@ export const InitSessionsComponent = (props: any) => {
     onSessionsResponse,
     onClassesCalculated,
     onChange,
+    onSessionsNetworkResponse,
   } = props;
 
   const pathname = usePathname();
@@ -29,6 +30,7 @@ export const InitSessionsComponent = (props: any) => {
     data: sessionsResponse,
     loading: loadingSessions,
     error: sessionError,
+    response: sessionsRawResponse,
   } = useApi(
     `api/checkout/v${checkoutAPIVersion.sessions}/sessions`,
     "POST",
@@ -41,6 +43,9 @@ export const InitSessionsComponent = (props: any) => {
     if (sessionsResponse && !sessionError) {
       onSessionsResponse(sessionsResponse);
       setReadyToMount(true);
+    }
+    if (sessionsRawResponse) {
+      onSessionsNetworkResponse(sessionsRawResponse);
     }
   }, [sessionsResponse]);
 

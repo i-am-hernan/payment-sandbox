@@ -21,6 +21,8 @@ export const useAdyenAdvance = (
   paymentsDetailsRequest: any,
   checkoutRef: any,
   onChange: any,
+  onPaymentsNetworkResponse: any,
+  onPaymentDetailsNetworkResponse: any,
   readyToMount: boolean
 ): AdyenAdvanceHook => {
   const [error, setError] = useState<object | null>(null);
@@ -42,6 +44,7 @@ export const useAdyenAdvance = (
       }
     );
     const paymentResponse = await response.json();
+    onPaymentsNetworkResponse({ url: response.url, status: response.status, method: "POST", data: paymentResponse, time: new Date().toISOString() });
     if (paymentResponse.status >= 400) {
       setError({
         status: paymentResponse?.status,
@@ -72,6 +75,7 @@ export const useAdyenAdvance = (
       }
     );
     const paymentDetailsResponse = await response.json();
+    onPaymentDetailsNetworkResponse({ url: response.url, status: response.status, method: "POST", data: paymentDetailsResponse, time: new Date().toISOString() });
     if (paymentDetailsResponse.statusCode >= 400) {
       setError({
         status: paymentDetailsResponse?.status,

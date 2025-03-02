@@ -9,6 +9,7 @@ export interface Sandbox {
   variantName: string;
   title?: string;
   description?: string;
+  networkResponse: any[]
 }
 
 // Define the initial state
@@ -18,6 +19,7 @@ const initialState: Sandbox = {
   isRedirect: false,
   unsavedChanges: 0,
   variantName: "",
+  networkResponse: [],
 };
 
 // Create the slice with typed reducers
@@ -48,6 +50,9 @@ const sandboxSlice = createSlice({
     },
     updateVariantName: (state, action: PayloadAction<string>) => {
       state.variantName = action.payload;
+    },
+    updateNetworkResponse: (state, action: PayloadAction<any>) => {
+      state.networkResponse.push(action.payload);
     },
     incrementUnsavedChanges: (state) => {
       state.unsavedChanges += 1;

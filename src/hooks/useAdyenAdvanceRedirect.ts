@@ -4,6 +4,7 @@ interface AdyenAdvanceHook {
   error: object | null;
   result: object | null;
   loading: boolean;
+  response: any;
 }
 
 export const useAdyenAdvanceRedirect = (
@@ -14,14 +15,19 @@ export const useAdyenAdvanceRedirect = (
     paymentsDetails: string;
   },
   paymentsDetailsRequest: any,
-  redirectResult: any
+  redirectResult: any,
 ): AdyenAdvanceHook => {
   const [error, setError] = useState<object | null>(null);
   const [result, setResult] = useState<object | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [response, setResponse] = useState<object | null>(null);
 
   useEffect(() => {
     let onAdditionalDetails = async () => {
+      setResponse(null);
+      setLoading(true);
+      setResult(null);
+      setError(null);
       const response = await fetch(
         `/api/checkout/v${checkoutAPIVersion.paymentsDetails}/payment/details`,
         {
@@ -36,6 +42,7 @@ export const useAdyenAdvanceRedirect = (
         }
       );
       const paymentDetailsResponse = await response.json();
+      setResponse({ url: response.url, status: response.status, method: "POST", data: paymentDetailsResponse, time: new Date().toISOString() });
       if (paymentDetailsResponse.statusCode >= 400) {
         setError(paymentDetailsResponse);
       } else {
@@ -55,5 +62,5 @@ export const useAdyenAdvanceRedirect = (
     }
   }, [variant, paymentsDetailsRequest,]);
 
-  return { error, result, loading };
+  return { error, result, loading, response };
 };

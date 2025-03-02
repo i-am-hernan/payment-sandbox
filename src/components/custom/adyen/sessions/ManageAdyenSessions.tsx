@@ -2,7 +2,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import { componentActions, formulaActions, specsActions } from "@/store/reducers";
+import { componentActions, formulaActions, sandboxActions, specsActions } from "@/store/reducers";
 import useAdyenScript from "@/hooks/useAdyenScript";
 import { useParams, useSearchParams } from "next/navigation";
 import { InitSessionsComponent } from "./InitSessionsComponent";
@@ -22,6 +22,7 @@ const {
 } = formulaActions;
 const { updateComponentState, updateResponse } = componentActions;
 const { updateSpecs } = specsActions;
+const { updateNetworkResponse } = sandboxActions;
 export const ManageAdyenSessions = (props: any) => {
   const { className } = props;
   const { build, isRedirect, redirectResult, sessionId } = useSelector(
@@ -116,6 +117,9 @@ export const ManageAdyenSessions = (props: any) => {
               dispatch(updateResponse({ sessions: { ...response } }));
               dispatch(updateReset());
             }
+          }}
+          onSessionsNetworkResponse={(response: any) => {
+            dispatch(updateNetworkResponse(response));
           }}
         />
       )}

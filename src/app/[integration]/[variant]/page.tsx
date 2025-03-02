@@ -23,6 +23,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
+import Network from "@/components/custom/sandbox/tabs/Network";
 
 interface SectionType {
   section: "Client" | "Server" | "Style";
@@ -140,13 +141,19 @@ const Page: any = () => {
 
   let bottomRightTabsMap = [
     {
-      title: `${variant} (read-only)`,
+      title: `${variant}`,
       icon: (
         <span className="font-semibold px-1 text-xxs text-info">STATE</span>
       ),
       content: <StateData theme={theme} />,
       value: "state",
     },
+    {
+      title: `logs`,
+      icon: <span className="font-semibold px-1 text-xxs text-info">NETWORK</span>,
+      content: <Network theme={theme} />,
+      value: "network",
+    }
   ];
 
   if (section === "Client") {
