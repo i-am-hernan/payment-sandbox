@@ -237,7 +237,11 @@ export const replaceKeyValue = (
     key: string,
     newValue: string
   ) => {
-    const regex = new RegExp(`(${key}\\s*:\\s*)(\\{(?:[^{}]|(?:\\{(?:[^{}]|(?:\\{[^{}]*\\}))*\\}))*\\})(,?)`, "g");
+    // Extended regex to handle one more level of nesting
+    const regex = new RegExp(
+      `(${key}\\s*:\\s*)(\\{(?:[^{}]|(?:\\{(?:[^{}]|(?:\\{(?:[^{}]|(?:\\{[^{}]*\\}))*\\}))*\\}))*\\})(,?)`,
+      "g"
+    );
     const match = strObj.match(regex);
     if (match) {
       return strObj.replace(regex, `$1${newValue}$3`);
@@ -250,7 +254,7 @@ export const replaceKeyValue = (
       );
     }
   };
-
+  
   let regex = new RegExp(`(${key}\\s*:\\s*)("[^"]*")`, "g");
 
   if (type === "string") {
