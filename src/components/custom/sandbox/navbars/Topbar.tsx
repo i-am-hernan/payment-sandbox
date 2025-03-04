@@ -24,8 +24,9 @@ import ErrorIcon from "@mui/icons-material/Error";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import RestoreIcon from "@mui/icons-material/Restore";
 import Tooltip from "@mui/material/Tooltip";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { debounce } from "@/utils/utils";
 
 const {
   updateRun,
@@ -51,11 +52,29 @@ const Topbar = (props: any) => {
   ).length;
 
   const containerRef = useRef<HTMLSpanElement>(null);
+  const buildButtonRef = useRef<HTMLButtonElement>(null);
   const tabErrors = Object.keys(errors).filter((key) => errors[key]);
 
   const storeToLocalStorage = (data: any) => {
     sessionStorage.setItem("formula", JSON.stringify(data));
   };
+
+  useEffect(() => {
+    const handleKeyDown = debounce((event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        event.preventDefault();
+        if (buildButtonRef.current) {
+          buildButtonRef.current.click();
+        }
+      }
+    }, 300);
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <span
@@ -171,6 +190,7 @@ const Topbar = (props: any) => {
               key="run"
               variant="outline"
               disabled={tabErrors.length > 0}
+              ref={buildButtonRef}
               size="sm"
               className="px-4 border-adyen bg-adyen text-[#fff] hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
               onClick={() => {
