@@ -192,22 +192,6 @@ const Sidebar = (props: any) => {
       },
       ref: styleButtonRef,
     },
-    {
-      name: "Style",
-      hotKey: "⌘ + k",
-      icon: (
-        <div className="relative flex flex-col items-center justify-center">
-          <BrushIcon className="!text-[20px]" />
-          <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
-            STYLE
-          </p>
-        </div>
-      ),
-      unsavedChanges: {
-        styleUnsavedChanges,
-      },
-      ref: styleButtonRef,
-    },
   ];
 
   const fetchPaymentMethods = async (merchantAccount: string) => {
