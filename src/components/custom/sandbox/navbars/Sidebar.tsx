@@ -79,6 +79,7 @@ const Sidebar = (props: any) => {
   const serverButtonRef = useRef<HTMLButtonElement>(null);
   const clientButtonRef = useRef<HTMLButtonElement>(null);
   const styleButtonRef = useRef<HTMLButtonElement>(null);
+  const previewButtonRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -108,6 +109,11 @@ const Sidebar = (props: any) => {
         event.preventDefault();
         if (styleButtonRef.current) {
           styleButtonRef.current.click();
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key === "p") {
+        event.preventDefault();
+        if (previewButtonRef.current) {
+          previewButtonRef.current.click();
         }
       }
     };
@@ -169,6 +175,22 @@ const Sidebar = (props: any) => {
         variantUnsavedChanges,
       },
       ref: clientButtonRef,
+    },
+    {
+      name: "Style",
+      hotKey: "⌘ + k",
+      icon: (
+        <div className="relative flex flex-col items-center justify-center">
+          <BrushIcon className="!text-[20px]" />
+          <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
+            STYLE
+          </p>
+        </div>
+      ),
+      unsavedChanges: {
+        styleUnsavedChanges,
+      },
+      ref: styleButtonRef,
     },
     {
       name: "Style",
@@ -370,6 +392,23 @@ const Sidebar = (props: any) => {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuGroup>
+                    <DropdownMenuItem className="text-xs rounded-none"
+                      onClick={() => {
+                        if (view === "demo") {
+                          dispatch(updateView("preview"));
+                          clearUrlParams(["view"]);
+                        } else {
+                          dispatch(updateView("demo"));
+                          clearUrlParams(["view"]);
+                        }
+                      }}>
+                      <span className="px-2">Preview</span>
+                      {view === "demo" && <Check className="h-4 w-4 ml-2" />}
+                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuGroup>
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger className="text-xs rounded-none">
                         <p className="px-2">Theme</p>
@@ -398,21 +437,6 @@ const Sidebar = (props: any) => {
                         <p className="px-2">View</p>
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="ml-1 rounded-lg">
-                        <DropdownMenuItem
-                          className="text-xs rounded-none text-center flex items-center justify-between"
-                          onClick={() => {
-                            if (view === "demo") {
-                              dispatch(updateView("preview"));
-                              clearUrlParams(["view"]);
-                            } else {
-                              dispatch(updateView("demo"));
-                              clearUrlParams(["view"]);
-                            }
-                          }}
-                        >
-                          <span>Demo</span>
-                          {view === "demo" && <Check className="h-4 w-4 ml-2" />}
-                        </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-xs rounded-none text-center flex items-center justify-between"
                           onClick={() => {
