@@ -61,6 +61,10 @@ export const useAdyenAdvance = (
   };
 
   const handleAdditionalDetails = async (state: any, dropin: any) => {
+    let request = {
+      ...paymentsDetailsRequest,
+      ...state.data,
+    }
     const response = await fetch(
       `/api/checkout/v${checkoutAPIVersion.paymentsDetails}/payment/details`,
       {
@@ -68,10 +72,7 @@ export const useAdyenAdvance = (
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...paymentsDetailsRequest,
-          details: state.data.details,
-        }),
+        body: JSON.stringify(request),
       }
     );
     const paymentDetailsResponse = await response.json();
