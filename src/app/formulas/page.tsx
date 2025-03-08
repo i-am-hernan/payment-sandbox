@@ -82,14 +82,36 @@ export default function FormulasPage() {
             {/* Hero Section */}
             <div className="max-w-[1400px] mx-auto pt-32 pb-16 px-6">
               <div className="space-y-8 mb-16">
-                <div className="flex justify-center items-center gap-4">
-                  <div className="h-14 w-14 rounded-xl bg-primary/5 flex items-center justify-center text-adyen">
-                    <FlaskConical className="h-8 w-8" />
+                <div className="flex justify-center items-end gap-4">
+                  <div className="relative h-14 w-14 rounded-xl bg-primary/3 flex items-center justify-center text-adyen group">
+                    {/* Flask icon */}
+                    <FlaskConical className="h-12 w-12 relative z-10" />
+                    
+                    {/* Animated bubbles */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      <div 
+                        className="absolute w-2.5 h-2.5 rounded-full bg-adyen left-6 bottom-6 animate-bubble-slow"
+                        style={{ animationDelay: '0s' }}
+                      />
+                      <div 
+                        className="absolute w-2 h-2 rounded-full bg-adyen left-6 bottom-3 animate-bubble-medium"
+                        style={{ animationDelay: '0.5s' }}
+                      />
+                      <div 
+                        className="absolute w-1.5 h-1.5 rounded-full bg-adyen left-7 bottom-5 animate-bubble-fast"
+                        style={{ animationDelay: '1s' }}
+                      />
+                    </div>
                   </div>
-                  <h1 className="text-5xl font-semibold tracking-tight text-foreground bg-clip-text">
-                    formulas
-                  </h1>
+                  <div className="space-y-1">
+                    <h1 className="text-5xl font-semibold tracking-tight text-foreground bg-clip-text relative">
+                      <span className="bg-gradient-to-r from-adyen/90 to-adyen text-transparent bg-clip-text">
+                        formulas
+                      </span>
+                    </h1>
+                  </div>
                 </div>
+
                 <div className="space-y-4 text-center animate-fade-in">
                   <p className="text-muted-foreground text-lg max-w-[600px] mx-auto leading-relaxed">
                     Browse our collection of pre-built payment formulas to accelerate your Adyen integration
@@ -100,7 +122,7 @@ export default function FormulasPage() {
                   <div className="relative group">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 transition-colors group-hover:text-adyen z-10" />
                     <Input
-                      className="pl-12 h-14 bg-background/50 backdrop-blur-sm border-border/40 hover:border-adyen/40 focus:border-adyen focus:ring-adyen/20 transition-all duration-300 text-base"
+                      className="pl-12 h-14 backdrop-blur-sm border-border/40 hover:border-adyen/40 focus:ring-adyen/20 transition-all duration-300 text-base"
                       placeholder="Search formulas..."
                       value={search}
                       onChange={handleSearch}

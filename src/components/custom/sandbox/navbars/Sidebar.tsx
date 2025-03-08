@@ -255,7 +255,7 @@ const Sidebar = (props: any) => {
                   <DrawerOverlay />
                   <DrawerContent className="h-full w-[20vw] rounded-none border-[1px] border-border bg-background">
                     <DrawerHeader className="pb-2">
-                      <DrawerTitle className="text-foreground text-sm py-0">
+                      <DrawerTitle className="text-foreground text-md py-0">
                         <span className="flex items-center">
                           <ChevronDown className="h-4 w-4 pr-1 text-grey" />
                           <span className="display-inline">
@@ -269,7 +269,7 @@ const Sidebar = (props: any) => {
                           Browse formulas
                         </Link>
                       </DrawerTitle>
-                      <DrawerTitle className="text-foreground text-sm py-0">
+                      <DrawerTitle className="text-foreground text-md py-0">
                         {paymentMethods && paymentMethods.data && (
                           <span className="flex items-center">
                             <ChevronDown className="h-4 w-4 pr-1 text-grey" />

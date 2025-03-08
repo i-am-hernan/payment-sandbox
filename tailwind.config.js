@@ -124,6 +124,21 @@ module.exports = {
           "0%": { transform: "translateY(-100%)" },
           "100%": { transform: "translateY(0)" }
         },
+        "bubble-slow": {
+          '0%': { transform: 'translateY(0) scale(0.8)', opacity: '0.4' },
+          '50%': { transform: 'translateY(-20px) scale(1.2)', opacity: '0.8' },
+          '100%': { transform: 'translateY(-40px) scale(0.8)', opacity: '0' },
+        },
+        "bubble-medium": {
+          '0%': { transform: 'translateY(0) scale(0.8)', opacity: '0.4' },
+          '50%': { transform: 'translateY(-15px) scale(1.1)', opacity: '0.8' },
+          '100%': { transform: 'translateY(-30px) scale(0.8)', opacity: '0' },
+        },
+        "bubble-fast": {
+          '0%': { transform: 'translateY(0) scale(0.8)', opacity: '0.4' },
+          '50%': { transform: 'translateY(-10px) scale(1.1)', opacity: '0.8' },
+          '100%': { transform: 'translateY(-20px) scale(0.8)', opacity: '0' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -132,6 +147,9 @@ module.exports = {
         "slide-in": "slide-in 0.4s ease-out",
         "slide-in-right": "slide-in-right 0.4s ease-out",
         "slide-in-from-top": "slide-in-from-top 0.4s ease-out",
+        "bubble-slow": "bubble-slow 3s ease-in-out infinite",
+        "bubble-medium": "bubble-medium 2.5s ease-in-out infinite",
+        "bubble-fast": "bubble-fast 2s ease-in-out infinite",
       },
       backgroundImage: {
         'dotted-grid': 'radial-gradient(circle, hsla(var(--border) / 0.3) 1.3px, transparent 0.5px)',
