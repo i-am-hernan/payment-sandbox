@@ -82,7 +82,7 @@ export default function FormulasPage() {
             {/* Hero Section */}
             <div className="max-w-[1400px] mx-auto pt-32 pb-16 px-6">
               <div className="space-y-8 mb-16">
-                <div className="flex justify-center items-end gap-4">
+                <div className="flex justify-center items-end gap-1">
                   <div className="relative h-14 w-14 rounded-xl bg-primary/3 flex items-center justify-center text-adyen group">
                     {/* Flask icon */}
                     <FlaskConical className="h-12 w-12 relative z-10" />
