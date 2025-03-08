@@ -80,8 +80,8 @@ export default function FormulasPage() {
         ) : (
           <div>
             {/* Hero Section */}
-            <div className="max-w-[1400px] mx-auto pt-32 pb-16 px-6">
-              <div className="space-y-8 mb-16">
+            <div className="max-w-[1400px] mx-auto pt-32 px-6">
+              <div className="space-y-4 mb-16">
                 <div className="flex justify-center items-end gap-1">
                   <div className="relative h-14 w-14 rounded-xl bg-primary/3 flex items-center justify-center text-adyen group">
                     {/* Flask icon */}
@@ -113,8 +113,8 @@ export default function FormulasPage() {
                 </div>
 
                 <div className="space-y-4 text-center animate-fade-in">
-                  <p className="text-muted-foreground text-lg max-w-[600px] mx-auto leading-relaxed">
-                    Browse our collection of pre-built payment formulas to accelerate your Adyen integration
+                  <p className="text-muted-foreground text-lg mx-auto leading-relaxed">
+                    Browse our collection of pre-built checkout integrations
                   </p>
                 </div>
 
