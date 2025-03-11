@@ -7,10 +7,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFormula } from "@/hooks/useFormula";
 import { useStyle } from "@/hooks/useStyle";
 import { useView } from "@/hooks/useView";
+import { formulaActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Page: any = () => {
   const { theme, view } = useSelector((state: RootState) => state.user);
@@ -26,9 +27,23 @@ const Page: any = () => {
     view,
     integration
   );
-
+  const {
+    updateApiRequestMerchantAccount,
+    updateBuildMerchantAccount,
+    updateReset,
+  } = formulaActions;
+  const { updateMerchantAccount } = userActions;
   const { run, style } = useSelector((state: RootState) => state.formula);
+  const dispatch = useDispatch();
+
   useView(viewParam);
+  useEffect(() => {
+    if (merchantAccount) {
+      dispatch(updateApiRequestMerchantAccount(merchantAccount));
+      dispatch(updateMerchantAccount(merchantAccount));
+      dispatch(updateReset());
+    }
+  }, [merchantAccount]);
 
   const {
     loading: styleLoading,
