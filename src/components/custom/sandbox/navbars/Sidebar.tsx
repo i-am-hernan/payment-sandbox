@@ -253,7 +253,7 @@ const Sidebar = (props: any) => {
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
-                  <DrawerContent className="h-full w-[20vw] rounded-none border-[1px] border-border bg-background">
+                  <DrawerContent className="h-full w-[20vw] rounded-none border-[1px] border-border bg-card">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-md py-0">
                         <span className="flex items-center">
