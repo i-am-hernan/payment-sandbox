@@ -236,7 +236,7 @@ const Sidebar = (props: any) => {
   };
   return (
     <div ref={sidebarRef}>
-      <span className="bg-background absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] border-border text-center">
+      <span className="bg-card absolute top-0 left-0 w-[var(--sidebar-width)] h-[100%] border-[1px] border-border text-center">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div>
