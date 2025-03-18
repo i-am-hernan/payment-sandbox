@@ -20,7 +20,7 @@ import { useView } from "@/hooks/useView";
 import { formulaActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
 import Network from "@/components/custom/sandbox/tabs/Network";
@@ -44,7 +44,7 @@ const {
 
 const { updateMerchantAccount } = userActions;
 
-const Page: any = () => {
+const DemoContent = () => {
     const [section, setSection] = useState<SectionType["section"]>("Server");
     const { theme, defaultMerchantAccount, merchantAccount, view, logs } = useSelector(
         (state: RootState) => state.user
@@ -407,6 +407,14 @@ const Page: any = () => {
             </React.Fragment>
             <ScreenSizeDialog />
         </div>
+    );
+};
+
+const Page = () => {
+    return (
+        <Suspense fallback={<Loading className="text-foreground" />}>
+            <DemoContent />
+        </Suspense>
     );
 };
 
