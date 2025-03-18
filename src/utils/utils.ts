@@ -123,7 +123,9 @@ export const stringifyObject: any = (obj: any) => {
       
       const entries = [];
       for (const [key, val] of Object.entries(value)) {
-        entries.push(`${key}: ${stringify(val)}`);
+        // Quote keys that contain hyphens or special characters
+        const quotedKey = key.includes('-') || /[^a-zA-Z0-9_]/.test(key) ? `"${key}"` : key;
+        entries.push(`${quotedKey}: ${stringify(val)}`);
       }
       return `{${entries.join(', ')}}`;
     }

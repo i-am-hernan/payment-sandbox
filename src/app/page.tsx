@@ -92,7 +92,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-dotted-grid bg-grid bg-background">
+    <div className="min-h-screen bg-grid bg-card">
       <div className="max-w-[1400px] mx-auto pt-32 pb-16 px-6">
         {/* Hero Section with enhanced styling */}
         <div className="space-y-6 text-center mb-24">

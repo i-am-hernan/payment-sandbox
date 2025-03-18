@@ -121,7 +121,7 @@ const ShareableButton = (props: any) => {
             variant="outline"
             disabled={disabled}
             size="sm"
-            className="px-2 bg-background border-adyen text-foreground hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
+            className="px-2 bg-card border-adyen text-foreground hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
           >
             share
           </Button>
