@@ -28,7 +28,7 @@ const { updateSpecs } = specsActions;
 const { updateNetworkResponse } = sandboxActions;
 
 export const ManageAdvanceComponent = (props: any) => {
-  const { className } = props;
+  const { className, variant } = props;
   const { build, isRedirect, redirectResult } = useSelector(
     (state: RootState) => state.formula
   );
@@ -45,9 +45,6 @@ export const ManageAdvanceComponent = (props: any) => {
     useAdyenScript(adyenWebVersion);
 
   const dispatch = useDispatch();
-  const { variant } = useParams<{
-    variant: string;
-  }>();
   const searchParams = useSearchParams();
   const redirectResultQueryParameter = searchParams.get("redirectResult");
   useEffect(() => {

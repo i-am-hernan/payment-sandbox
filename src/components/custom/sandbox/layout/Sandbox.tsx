@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 interface SandboxContentProps {
   main: any;
   topRight: any;
-  bottomRight: any;
-  view: "developer" | "preview" | "demo";
+  bottomRight?: any;
+  view: "developer" | "preview" | "demo" | "subwindow";
   logs: boolean;
   className?: string;
 }
@@ -31,7 +31,8 @@ const Sandbox = ({
   useEffect(() => {
     if (view === "demo") {
       refA.current?.resize(100);
-      refB.current?.resize(0);
+    } else if (view === "subwindow") {
+      refA.current?.resize(30);
     } else if (view === "preview") {
       refA.current?.resize(50);
     } else if (view === "developer") {
@@ -61,12 +62,22 @@ const Sandbox = ({
   };
 
   const handleBottomRightContract = () => {
-    refB.current?.resize(7);
+    refB.current?.resize(0);
   };
 
   const handleContract = () => {
-    refA.current?.resize(60);
-    refB.current?.resize(0);
+    if (view === "subwindow") {
+      refA.current?.resize(30);
+    } else if (view === "demo") {
+      refA.current?.resize(100);
+    } else if (view === "preview") {
+      refA.current?.resize(50);
+    } else if (view === "developer") {
+      refA.current?.resize(60);
+    } else {
+      refA.current?.resize(60);
+      refB.current?.resize(0);
+    }
   };
 
   return (
@@ -104,37 +115,47 @@ const Sandbox = ({
         defaultSize={view === "developer" ? 40 : view === "preview" ? 70 : 100}
         className="transition-all duration-300 ease-in-out"
       >
-        <ResizablePanelGroup direction="vertical">
-          <ResizablePanel
-            defaultSize={100}
-            className="transition-all duration-300 ease-in-out"
-          >
-            <div className="items-center justify-center flex w-full h-full animate-slide-in-right">
-              {React.cloneElement(TopRight, {
-                onExpand: handleTopRightExpand,
-                onContract: handleContract,
-              })}
-            </div>
-          </ResizablePanel>
-          <ResizableHandle
-            className={cn(
-              view !== "developer" && "opacity-0 pointer-events-none hidden"
-            )}
-          />
-          <ResizablePanel
-            defaultSize={0}
-            maxSize={50}
-            ref={refB}
-            className={cn("transition-all duration-300 ease-in-out", className)}
-          >
-            <div className="items-center justify-center flex w-full h-full">
-              {React.cloneElement(BottomRight, {
-                onExpand: handleBottomRightExpand,
-                onContract: handleBottomRightContract,
-              })}
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+        {BottomRight && (
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel
+              defaultSize={100}
+              className="transition-all duration-300 ease-in-out"
+            >
+              <div className="items-center justify-center flex w-full h-full animate-slide-in-right">
+                {React.cloneElement(TopRight, {
+                  onExpand: handleTopRightExpand,
+                  onContract: handleContract,
+                })}
+              </div>
+            </ResizablePanel>
+            <ResizableHandle
+              className={cn(
+                view !== "developer" && "opacity-0 pointer-events-none hidden"
+              )}
+            />
+            <ResizablePanel
+              defaultSize={0}
+              maxSize={50}
+              ref={refB}
+              className={cn("transition-all duration-300 ease-in-out", className)}
+            >
+              <div className="items-center justify-center flex w-full h-full">
+                {React.cloneElement(BottomRight, {
+                  onExpand: handleBottomRightExpand,
+                  onContract: handleBottomRightContract,
+                })}
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        )}
+        {!BottomRight && (
+          <div className="items-center justify-center flex w-full h-full animate-slide-in-right">
+            {React.cloneElement(TopRight, {
+              onExpand: handleTopRightExpand,
+              onContract: handleContract,
+            })}
+          </div>
+        )}
       </ResizablePanel>
     </ResizablePanelGroup>
   );

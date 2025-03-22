@@ -10,8 +10,8 @@ export const useView = (viewParam: any) => {
   const view = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    if (viewParam && ["developer", "preview", "demo"].includes(viewParam)) {
-      dispatch(updateView(viewParam as "developer" | "preview" | "demo"));
+    if (viewParam && ["developer", "preview", "demo", "subwindow"].includes(viewParam)) {
+      dispatch(updateView(viewParam as "developer" | "preview" | "demo" | "subwindow"));
     }
   }, [viewParam, dispatch]);
   return view;

@@ -24,7 +24,7 @@ const { updateComponentState, updateResponse } = componentActions;
 const { updateSpecs } = specsActions;
 const { updateNetworkResponse } = sandboxActions;
 export const ManageAdyenSessions = (props: any) => {
-  const { className } = props;
+  const { className, variant } = props;
   const { build, isRedirect, redirectResult, sessionId } = useSelector(
     (state: RootState) => state.formula
   );
@@ -43,9 +43,6 @@ export const ManageAdyenSessions = (props: any) => {
     useAdyenScript(adyenWebVersion);
 
   const dispatch = useDispatch();
-  const { variant } = useParams<{
-    variant: string;
-  }>();
   const searchParams = useSearchParams();
   const redirectResultQueryParameter = searchParams.get("redirectResult");
   const sessionIdQueryParameter = searchParams.get("sessionId");
@@ -66,7 +63,7 @@ export const ManageAdyenSessions = (props: any) => {
     //TODO: Create Error Component
     return <div>Error...</div>;
   }
-  
+
   return (
     <div className={`h-[100%] ${className}`}>
       {!isRedirect && (

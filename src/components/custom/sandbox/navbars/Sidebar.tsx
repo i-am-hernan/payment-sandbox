@@ -55,6 +55,7 @@ const { clearOnDeckInfo } = formulaActions;
 const Sidebar = (props: any) => {
   const {
     section,
+    sections,
     setSection,
     unsavedChanges,
     merchantAccount,
@@ -328,7 +329,7 @@ const Sidebar = (props: any) => {
             </div>
             {sideTabs.map(
               (tab, index): any =>
-                view !== "demo" && (
+                sections.includes(tab.name) && (
                   <span className="relative" key={index}>
                     <Tooltip
                       title={`${tab.name} (${tab.hotKey})`}

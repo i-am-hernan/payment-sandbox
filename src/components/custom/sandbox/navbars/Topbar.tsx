@@ -44,7 +44,7 @@ const { updateView } = userActions;
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
   const { variantName } = useSelector((state: RootState) => state.sandbox);
-  const { view, merchantAccount, integration } = props;
+  const { view, merchantAccount, integration, variant } = props;
   const { unsavedChanges, errors } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
@@ -174,6 +174,8 @@ const Topbar = (props: any) => {
           <div className="mr-2">
             <ShareableButton
               disabled={totalUnsavedChanges !== 0 || tabErrors.length > 0}
+              variant={variant}
+              integration={integration}
             />
           </div>
         )}

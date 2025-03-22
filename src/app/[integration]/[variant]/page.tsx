@@ -110,10 +110,10 @@ const Page: any = () => {
           ),
           content: view === "demo" ? (
             <CheckoutPage>
-              <ManageAdvanceComponent key={run ? "run" : "default"} />
+              <ManageAdvanceComponent key={run ? "run" : "default"} variant={variant} />
             </CheckoutPage>
           ) : (
-            <ManageAdvanceComponent key={run ? "run" : "default"} />
+            <ManageAdvanceComponent key={run ? "run" : "default"} variant={variant} />
           ),
           value: variant,
         },
@@ -129,10 +129,10 @@ const Page: any = () => {
             ),
             content: view === "demo" ? (
               <CheckoutPage>
-                <ManageAdyenSessions key={run ? "run" : "default"} />
+                <ManageAdyenSessions key={run ? "run" : "default"} variant={variant} />
               </CheckoutPage>
             ) : (
-              <ManageAdyenSessions key={run ? "run" : "default"} />
+              <ManageAdyenSessions key={run ? "run" : "default"} variant={variant} />
             ),
             value: variant,
           },
@@ -410,6 +410,7 @@ const Page: any = () => {
             view={view}
             integration={integration}
             logs={logs}
+            sections={["Client", "Server", "Style"]}
           />
         </footer>
       </React.Fragment>

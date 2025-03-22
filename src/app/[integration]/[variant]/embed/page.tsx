@@ -72,9 +72,9 @@ const Page: any = () => {
               </AlertDescription>
             </Alert>
           ) : integration === "advance" ? (
-            <ManageAdvanceComponent key={run ? "run" : "default"} />
+            <ManageAdvanceComponent key={run ? "run" : "default"} variant={variant} />
           ) : (
-            <ManageAdyenSessions key={run ? "run" : "default"} />
+            <ManageAdyenSessions key={run ? "run" : "default"} variant={variant} />
           )}
         </main>
       </React.Fragment>

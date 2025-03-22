@@ -24,6 +24,7 @@ import { bookmarkletCode } from "@/utils/bookmarklet";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const ShareableButton = (props: any) => {
+
   const [copied, setCopied] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
   const [buildInfo, setBuildInfo] = useState<any>({
@@ -32,11 +33,8 @@ const ShareableButton = (props: any) => {
   });
   const [share, setShare] = useState(false);
   const [view, setView] = useState("preview");
-  const { disabled } = props;
-  const { variant, integration } = useParams<{
-    variant: string;
-    integration: string;
-  }>();
+  const { disabled, variant, integration } = props;
+
   const state = useSelector((state: RootState) => state.formula);
   const { merchantAccount } = useSelector((state: RootState) => state.user);
   const containerRef = useRef(null);

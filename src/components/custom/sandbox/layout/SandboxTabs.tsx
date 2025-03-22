@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { TabsProps } from "./types";
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
-  const { tabsMap, crumbs, onExpand, onContract, type, className } = props;
+  const { tabsMap, onExpand, onContract, type, className } = props;
   const [tabTitle, setTabTitle] = useState(tabsMap[0].value);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [hasExpanded, setHasExpanded] = useState(false);

@@ -10,7 +10,7 @@ export interface User {
   merchantAccount: FormulaPropType;
   defaultMerchantAccount: FormulaPropType;
   theme: "light" | "dark";
-  view: "developer" | "preview" | "demo";
+  view: "developer" | "preview" | "demo" | "subwindow";
   logs: boolean;
 }
 
@@ -39,7 +39,7 @@ const formulaSlice = createSlice({
     },
     updateView: (
       state,
-      action: PayloadAction<"developer" | "preview" | "demo">
+      action: PayloadAction<"developer" | "preview" | "demo" | "subwindow">
     ) => {
       state.view = action.payload;
     },
