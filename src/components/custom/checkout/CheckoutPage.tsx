@@ -110,7 +110,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ children, className }) => {
                                     <p className="text-sm text-gray-500 mb-6">Enter your payment details below</p>
                                     
                                     <div className="bg-white border border-gray-200 shadow-sm overflow-hidden p-3 rounded-xl">
-                                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Payment Method</p>
+                                        <p className="px-6 text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Payment Method</p>
                                         {children}
                                     </div>
                                     

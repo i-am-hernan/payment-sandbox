@@ -388,7 +388,7 @@ const Features = ({
     // Force reload of configurations after each toggle
     const [manualCheckoutConfig, setManualCheckoutConfig] = useState<any>(checkoutConfiguration);
     const [manualVariantConfig, setManualVariantConfig] = useState<any>(txVariantConfiguration);
-    const storeFormula = useSelector((state: RootState) => state.formula);
+    const storeFormula = useSelector((state: { formula: any }) => state.formula);
     const storeToLocalStorage = (data: any) => {
         sessionStorage.setItem("formula", JSON.stringify(data));
     };
@@ -519,13 +519,15 @@ const Features = ({
                         />
 
                         {/* Variant Features Section */}
-                        <FeatureCategory
-                            title="Variant Features"
-                            features={variantFeatures}
-                            config={parsedVariantConfig}
-                            onToggle={handleVariantFeatureToggle}
-                            onDropdownChange={handleVariantDropdownChange}
+                        <div className="pt-6">
+                            <FeatureCategory
+                                title="Variant Features"
+                                features={variantFeatures}
+                                config={parsedVariantConfig}
+                                onToggle={handleVariantFeatureToggle}
+                                onDropdownChange={handleVariantDropdownChange}
                         /></div>
+                    </div>
                 </div>
             </div>
         </div>

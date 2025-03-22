@@ -121,7 +121,7 @@ const ShareableButton = (props: any) => {
             size="sm"
             className="px-2 bg-card border-adyen text-foreground hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
           >
-            share
+            Share
           </Button>
         </DialogTrigger>
         <DialogPortal container={containerRef.current}>

@@ -71,7 +71,7 @@ export default function FormulasPage() {
   };
 
   return (
-    <div className="min-h-screen bg-dotted-grid bg-grid bg-background">
+    <div className="min-h-screen bg-dotted-grid bg-card">
       <div className="min-h-screen">
         {loading ? (
           <div className="h-screen flex items-center justify-center">

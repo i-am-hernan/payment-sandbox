@@ -25,6 +25,8 @@ import { useDispatch, useSelector } from "react-redux";
 import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
 import Network from "@/components/custom/sandbox/tabs/Network";
 import Features from "@/components/custom/sandbox/tabs/Features";
+import DemoTopbar from "@/components/custom/sandbox/navbars/DemoTopbar";
+import DemoSidebar from "@/components/custom/sandbox/navbars/DemoSidebar";
 
 interface SectionType {
   section: "Client" | "Style";
@@ -165,7 +167,7 @@ const Page: any = () => {
     <div className={`${theme} border-r-2 border-border bg-dotted-grid bg-grid bg-background`}>
       <React.Fragment>
         <header>
-          <Topbar
+          <DemoTopbar
             view={view}
             merchantAccount={merchantAccount}
             integration={integration}
@@ -221,7 +223,7 @@ const Page: any = () => {
           />
         </main>
         <footer className="h-[100%]">
-          <Sidebar
+          <DemoSidebar
             section={section}
             sections={["Client", "Style"]}
             setSection={setSection}
