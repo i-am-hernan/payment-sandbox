@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RequestOptions } from "@/hooks/useApi";
-import { FlaskConical, Rocket, PlayCircle } from "lucide-react";
+import { FlaskConical, Rocket, PlayCircle, Heart } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -132,19 +132,20 @@ const Page = () => {
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <HomeTopBar />
-      <div className="max-w-[1400px] mx-auto pt-32 pb-16 px-8">
+      <div className="max-w-[1400px] mx-auto px-8 pt-32 lg:pt-8 lg:h-[100vh] lg:flex lg:flex-col">
         {/* Hero Section with Stripe-like styling */}
-        <div className="text-center mb-32">
-          <h1 className="text-6xl font-bold tracking-tight text-foreground bg-clip-text bg-gradient-to-r from-foreground to-[#1A56DB]">
-            Build your own{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] to-[#08a344]">checkout experience</span>
+        <div className="text-center mb-32 lg:mb-0 lg:h-[25vh] lg:flex lg:flex-col lg:justify-center">
+          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-[#0A2540] bg-clip-text bg-gradient-to-r from-foreground">
+            Adyen
+            <Heart className="inline-block h-12 w-12 text-red-500 px-2 text-[#0A2540]" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-adyen">Developers</span>
+            <p className="text-[1rem] font-medium text-muted-foreground max-w-[900px] mx-auto">
+              Developer-focused solutions in one place: Integrate seamlessly with Adyen using our integration examples, tools, blogs, and more!
+            </p>
           </h1>
-          <p className="text-muted-foreground text-xl max-w-[800px] mx-auto mt-6 leading-relaxed">
-            Developer-focused solutions in one place: Integrate seamlessly with Adyen using our integration examples, tools, blogs, and more!
-          </p>
         </div>
         {/* Cards with Stripe-like design */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1200px] mx-auto mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 max-w-[1200px] mx-auto mb-16 lg:mb-0 lg:h-[45vh]">
           {/* Demo Experience Card */}
           <Card className="group flex flex-col bg-white border-0 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-all duration-300">
             <CardHeader className="pb-4">
@@ -158,7 +159,7 @@ const Page = () => {
                     <CardDescription className="text-base mt-1 text-muted-foreground">
                       Try our interactive demo
                     </CardDescription>
-                    <span className="text-[10px] px-2 py-1 rounded-full bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide">No code</span>
+                    <span className="text-[10px] px-2 py-1 rounded-md bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide border-border border-[1px]">No code</span>
                   </div>
                 </div>
               </div>
@@ -193,8 +194,8 @@ const Page = () => {
                       Build from scratch
                     </CardDescription>
                     <div className="flex gap-2">
-                      <span className="text-[10px] px-2 py-1 rounded-full bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide">Low code</span>
-                      <span className="text-[10px] px-2 py-1 rounded-full bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide">More code</span>
+                        <span className="text-[10px] px-2 py-1 rounded-md bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide border-border border-[1px]">Low code</span>
+                        <span className="text-[10px] px-2 py-1 rounded-md bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide border-border border-[1px]">More code</span>
                     </div>
                   </div>
                 </div>
@@ -267,14 +268,14 @@ const Page = () => {
                 <div>
                   <CardTitle className="text-2xl font-semibold text-foreground">Pre-built Use Cases</CardTitle>
                   <CardDescription className="text-base mt-1 text-muted-foreground">
-                    Ready-to-use payment integrations
+                    Ready-to-use sandbox configurations
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="flex-grow">
               <p className="text-muted-foreground text-base leading-relaxed">
-                Get started quickly with our pre-built solutions that cover common payment scenarios. Perfect for rapid deployment and standardized implementations.
+                Get started quickly with our pre-built sandbox configurations that cover common payment scenarios.
               </p>
             </CardContent>
             <CardFooter className="pt-6">
@@ -283,7 +284,7 @@ const Page = () => {
                   className="w-full bg-[#0A2540] font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                   onClick={() => setShowSandboxButton(true)}
                 >
-                  Browse formulas
+                  Browse builds
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
@@ -291,16 +292,16 @@ const Page = () => {
           </Card>
         </div>
         {/* Developer Image Section */}
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mt-8 lg:mt-0 lg:h-[30vh]">
           <img
             src="/img/dev-illustration2.svg"
             alt="Developer illustration"
-            className="w-full max-w-[800px] h-auto opacity-90"
+            className="w-full lg:h-full lg:w-auto max-w-[800px] object-contain opacity-90"
           />
         </div>
       </div>
 
-      <section className="py-24 px-8 bg-gradient-to-b from-white to-[#F6F9FC]">
+      <section className="py-12 px-8 bg-gradient-to-b from-white to-[#F6F9FC]">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-3xl font-bold mb-3 text-foreground">Implementation Examples</h3>
           <p className="text-muted-foreground text-lg mb-12">A list of integration examples on GitHub for you to quickly get started with the Adyen APIs.</p>
@@ -338,7 +339,7 @@ const Page = () => {
         </div>
       </section>
 
-      <section className="py-24 px-8 bg-white">
+      <section className="py-12 px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-3xl font-bold mb-3 text-foreground">Developer Tools</h3>
           <p className="text-muted-foreground text-lg mb-12">All the tools and locations to help you start integration fast.</p>
@@ -436,7 +437,7 @@ const Page = () => {
         </div>
       </section>
 
-      <section className="py-24 px-8 bg-gradient-to-b from-white to-[#F6F9FC]">
+      <section className="py-12 px-8 bg-gradient-to-b from-white to-[#F6F9FC]">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-3xl font-bold mb-3 text-foreground">Diving Further</h3>
           <p className="text-muted-foreground text-lg mb-12">Diving into our additional resources.</p>
@@ -517,7 +518,7 @@ const Page = () => {
         </div>
       </section>
 
-      <section className="py-24 px-8 bg-white">
+      <section className="py-12 px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-3xl font-bold mb-3 text-foreground">Knowledge Base</h3>
           <p className="text-muted-foreground text-lg mb-12">You ask, we answer.</p>

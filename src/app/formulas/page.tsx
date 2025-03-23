@@ -114,7 +114,7 @@ export default function FormulasPage() {
 
                 <div className="space-y-4 text-center animate-fade-in">
                   <p className="text-muted-foreground text-md mx-auto leading-relaxed">
-                    Browse our collection of pre-built checkout integrations
+                    Browse our collection of pre-built sandbox configurations
                   </p>
                 </div>
 
@@ -183,7 +183,7 @@ export default function FormulasPage() {
                           <CardFooter className="pt-4">
                             <Link
                               className="w-full"
-                              href={`/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
+                              href={`/sandbox/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
                             >
                               <Button
                                 className={cn(

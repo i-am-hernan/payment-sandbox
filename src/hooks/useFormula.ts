@@ -119,6 +119,9 @@ export const useFormula = (
             const returnUrl = new URL(configuration.returnUrl);
             returnUrl.searchParams.set("id", id);
             updateReturnUrl(returnUrl.toString());
+          } else if (view === "subwindow"){
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/demo?id=${id}`;
+            updateReturnUrl(returnUrl);
           } else {
             const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/sandbox/${integration}/${variant}?id=${id}${view ? "&view=" + view : ""}`;
             updateReturnUrl(returnUrl);
@@ -128,9 +131,13 @@ export const useFormula = (
           syncBase(configuration);
           syncFormula(configuration);
           syncMetaData({ title: "default", description: "default" });
-          updateReturnUrl(
-            `${process.env.NEXT_PUBLIC_CLIENT_URL}/sandbox/${integration}/${variant}`
-          );
+          if (view === "subwindow"){
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/demo`;
+            updateReturnUrl(returnUrl);
+          } else {
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/sandbox/${integration}/${variant}`;
+            updateReturnUrl(returnUrl);
+          }
           storeFormulaToLocalStorage(configuration);
         }
         syncSandBoxWithFormula();

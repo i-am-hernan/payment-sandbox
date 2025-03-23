@@ -48,7 +48,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
               asChild
             >
               <Link
-                href={`/sessions/${props.paymentMethodType}`}
+                href={`/sandbox/sessions/${props.paymentMethodType}`}
                 className="flex items-center"
                 onClick={() => {
                   onItemClick(`/sessions/${props.paymentMethodType}`);
@@ -72,10 +72,10 @@ export function ExpandableCards(props: ExpandableCardsProps) {
               asChild
             >
               <Link
-                href={`/advance/${props.paymentMethodType}`}
+                href={`/sandbox/advance/${props.paymentMethodType}`}
                 className="flex items-center"
                 onClick={() => {
-                  onItemClick(`/advance/${props.paymentMethodType}`);
+                  onItemClick(`/sandbox/advance/${props.paymentMethodType}`);
                 }}
               >
                 <SquareTerminal className="h-4 w-4 mb-1 text-preview" />
