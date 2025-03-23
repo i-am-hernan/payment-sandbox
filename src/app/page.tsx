@@ -172,7 +172,7 @@ const Page = () => {
             <CardFooter className="pt-6">
               <Link href="/demo" className="w-full">
                 <Button
-                  className="w-full bg-[#0A2540] font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  className="w-full bg-primary !hover:bg-primary/90 font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   Try demo
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -247,7 +247,7 @@ const Page = () => {
               >
                 <Button
                   className={cn(
-                    "w-full bg-[#0A2540] font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
+                    "w-full bg-primary !hover:bg-primary/90 font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
                     (!selectedVariant || !selectedIntegration) && "opacity-50 cursor-not-allowed"
                   )}
                   disabled={!selectedVariant || !selectedIntegration}
@@ -281,7 +281,7 @@ const Page = () => {
             <CardFooter className="pt-6">
               <Link href="/formulas" className="w-full">
                 <Button
-                  className="w-full bg-[#0A2540] font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  className="w-full bg-primary !hover:bg-primary/90 font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                   onClick={() => setShowSandboxButton(true)}
                 >
                   Browse builds
