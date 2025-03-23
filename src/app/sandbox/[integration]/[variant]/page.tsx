@@ -55,11 +55,14 @@ const Page: any = () => {
   }>();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
-
+  const id = searchParams.get("id");
+  const redirectResult = searchParams.get("redirectResult");
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(
     variant,
     view,
-    integration
+    integration,
+    id,
+    redirectResult
   );
 
   const {
@@ -329,6 +332,7 @@ const Page: any = () => {
             view={view}
             merchantAccount={merchantAccount}
             integration={integration}
+            variant={variant}
           />
         </header>
         <main>

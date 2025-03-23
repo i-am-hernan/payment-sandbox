@@ -1,7 +1,8 @@
+"use client";
+
 import { useApi } from "@/hooks/useApi";
 import { formulaActions, sandboxActions } from "@/store/reducers";
 import { sanitizeString } from "@/utils/utils";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -16,18 +17,15 @@ const {
 
 const { updateSandboxTitle, updateSandboxDescription } = sandboxActions;
 
-// I want to pass reset prop to useFormula and then I want to be able to trigger it with the reset prop
-// Then I will call useFormula when clear the
 
 export const useFormula = (
   variant: string,
   view: string,
-  integration: string
+  integration: string,
+  id: string | null,
+  redirectResult: string | null
 ) => {
   const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-  const redirectResult = searchParams.get("redirectResult");
   const { data, error: apiError } = useApi(
     `api/formula/${integration}${id ? "/" + id : ""}`,
     "GET"
@@ -122,7 +120,7 @@ export const useFormula = (
             returnUrl.searchParams.set("id", id);
             updateReturnUrl(returnUrl.toString());
           } else {
-            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}?id=${id}${view ? "&view=" + view : ""}`;
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/sandbox/${integration}/${variant}?id=${id}${view ? "&view=" + view : ""}`;
             updateReturnUrl(returnUrl);
           }
           storeFormulaToLocalStorage(configuration);
@@ -131,7 +129,7 @@ export const useFormula = (
           syncFormula(configuration);
           syncMetaData({ title: "default", description: "default" });
           updateReturnUrl(
-            `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}`
+            `${process.env.NEXT_PUBLIC_CLIENT_URL}/sandbox/${integration}/${variant}`
           );
           storeFormulaToLocalStorage(configuration);
         }

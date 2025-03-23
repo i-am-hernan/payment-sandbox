@@ -1,3 +1,5 @@
+"use client";
+
 /*
 List of configurations we want to be able to toggle
 Checkout configurations:
@@ -57,13 +59,13 @@ import { Switch } from "@/components/ui/switch";
 import { formulaActions } from "@/store/reducers";
 import {
     clearUrlParams, refineFormula,
-    stringifyObject,
+  stringifyObject,
     unstringifyObject
 } from "@/utils/utils";
 import {
-    memo,
-    useCallback,
-    useEffect,
+  memo,
+  useCallback,
+  useEffect,
     useState
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -376,14 +378,14 @@ const Features = ({
     description,
 }: FeaturesProps) => {
     const dispatch: any = useDispatch();
-    const [localError, setLocalError] = useState<any>(null);
+  const [localError, setLocalError] = useState<any>(null);
     // Add a forceUpdate counter to trigger re-renders
     const [updateCounter, setUpdateCounter] = useState(0);
 
     // Force component to re-render
     const forceUpdate = useCallback(() => {
         setUpdateCounter(prev => prev + 1);
-    }, []);
+  }, []);
 
     // Force reload of configurations after each toggle
     const [manualCheckoutConfig, setManualCheckoutConfig] = useState<any>(checkoutConfiguration);
@@ -393,11 +395,11 @@ const Features = ({
         sessionStorage.setItem("formula", JSON.stringify(data));
     };
     // Update manual configs when props change
-    useEffect(() => {
+  useEffect(() => {
         setManualCheckoutConfig(checkoutConfiguration);
     }, [checkoutConfiguration]);
 
-    useEffect(() => {
+  useEffect(() => {
         setManualVariantConfig(txVariantConfiguration);
     }, [txVariantConfiguration]);
 
@@ -502,7 +504,7 @@ const Features = ({
         forceUpdate();
     }, [parsedVariantConfig, updateTxVariantConfiguration, dispatch, forceUpdate, updateReset]);
 
-    return (
+  return (
         <div className="inline-block !overflow-y-scroll pl-6 pt-1 pb-6 w-full h-full">
             <div
                 className="shadow-hover sm:flex flex-col transition-all duration-300 ease-in-out bg-card h-full w-full border-[1px] rounded-lg p-[1px] border-border"
@@ -529,9 +531,9 @@ const Features = ({
                         /></div>
                     </div>
                 </div>
-            </div>
+          </div>
         </div>
-    );
+  );
 };
 
 const MemoizedOpenSdkList = memo(OpenSdkList);

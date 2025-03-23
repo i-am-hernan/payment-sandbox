@@ -25,7 +25,9 @@ const Page: any = () => {
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(
     variant,
     view,
-    integration
+    integration,
+    null,
+    null
   );
   const {
     updateApiRequestMerchantAccount,

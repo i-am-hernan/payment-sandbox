@@ -113,7 +113,7 @@ export default function FormulasPage() {
                 </div>
 
                 <div className="space-y-4 text-center animate-fade-in">
-                  <p className="text-muted-foreground text-lg mx-auto leading-relaxed">
+                  <p className="text-muted-foreground text-md mx-auto leading-relaxed">
                     Browse our collection of pre-built checkout integrations
                   </p>
                 </div>

@@ -1,42 +1,29 @@
 "use client";
 
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
-import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAdyenSessions";
+import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
-import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
-import Topbar from "@/components/custom/sandbox/navbars/Topbar";
-import Api from "@/components/custom/sandbox/tabs/Api";
-import Sdk from "@/components/custom/sandbox/tabs/Sdk";
-import StateData from "@/components/custom/sandbox/tabs/StateData";
+import DemoSidebar from "@/components/custom/sandbox/navbars/DemoSidebar";
+import DemoTopbar from "@/components/custom/sandbox/navbars/DemoTopbar";
+import Features from "@/components/custom/sandbox/tabs/Features";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFormula } from "@/hooks/useFormula";
 import useMerchantInCookie from "@/hooks/useMerchantInCookie";
-import { useStyle } from "@/hooks/useStyle";
 import { useView } from "@/hooks/useView";
 import { formulaActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useParams, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
-import Network from "@/components/custom/sandbox/tabs/Network";
-import Features from "@/components/custom/sandbox/tabs/Features";
-import DemoTopbar from "@/components/custom/sandbox/navbars/DemoTopbar";
-import DemoSidebar from "@/components/custom/sandbox/navbars/DemoSidebar";
 
 interface SectionType {
   section: "Client" | "Style";
 }
 
 const {
-  updatePaymentMethodsRequest,
-  updatePaymentsRequest,
-  updatePaymentsDetailsRequest,
-  updateSessionsRequest,
   updateCheckoutConfiguration,
   updateTxVariantConfiguration,
   updateStyle,
@@ -58,33 +45,19 @@ const Page: any = () => {
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(
     variant,
     view,
-    integration
+    integration,
+    null,
+    null
   );
 
   const {
     run,
     unsavedChanges,
-    request,
-    checkoutAPIVersion,
     checkoutConfiguration,
     txVariantConfiguration,
     style,
   } = useSelector((state: RootState) => state.formula);
   useView("subwindow");
-
-  const { paymentMethods, payments, paymentsDetails, sessions } = request;
-  const {
-    loading: styleLoading,
-    error: styleError,
-    success: styleSuccess,
-  } = useStyle(variant, style);
-
-  const {
-    paymentMethods: paymentMethodsAPIVersion,
-    payments: paymentsAPIVersion,
-    paymentsDetails: paymentsDetailsAPIVersion,
-    sessions: sessionsAPIVersion,
-  } = checkoutAPIVersion;
 
   const dispatch = useDispatch();
 
@@ -94,8 +67,8 @@ const Page: any = () => {
     dispatch(updateMerchantAccount(merchantAccount));
     dispatch(updateReset());
   });
-  console.log("checkoutConfiguration", checkoutConfiguration)
-  console.log("txVariantConfiguration", txVariantConfiguration)
+  // console.log("checkoutConfiguration", checkoutConfiguration)
+  // console.log("txVariantConfiguration", txVariantConfiguration)
   let tabsMap: any = [];
   let topRightTabsMap = [
     {
