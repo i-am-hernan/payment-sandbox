@@ -135,10 +135,10 @@ const Page = () => {
       <div className="max-w-[1400px] mx-auto px-8 pt-32 lg:pt-8 lg:h-[100vh] lg:flex lg:flex-col">
         {/* Hero Section with Stripe-like styling */}
         <div className="text-center mb-32 lg:mb-0 lg:h-[25vh] lg:flex lg:flex-col lg:justify-center">
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-[#0A2540] bg-clip-text bg-gradient-to-r from-foreground">
+          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-adyen bg-clip-text bg-gradient-to-r from-foreground">
             Adyen
-            <Heart className="inline-block h-12 w-12 text-red-500 px-2 text-[#0A2540]" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-adyen">Developers</span>
+            <Heart className="inline-block h-12 w-12 text-red-500 px-2 text-primary" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">Developers</span>
             <p className="text-[1rem] font-medium text-muted-foreground max-w-[900px] mx-auto">
               Developer-focused solutions in one place: Integrate seamlessly with Adyen using our integration examples, tools, blogs, and more!
             </p>
@@ -224,7 +224,7 @@ const Page = () => {
                   disabled={!selectedIntegration}
                   defaultValue="dropin"
                 >
-                  <SelectTrigger className="w-full h-12 bg-[#F6F9FC] border border-[#E3E8EE] rounded-lg hover:border-[#0abf53] transition-colors">
+                  <SelectTrigger className="w-full h-12 bg-[#F6F9FC] border border-[#E3E8EE] rounded-lg hover:border-adyen transition-colors">
                     <SelectValue placeholder="Select a payment method" />
                   </SelectTrigger>
                   <SelectContent>
@@ -242,15 +242,16 @@ const Page = () => {
             </CardContent>
             <CardFooter className="pt-6">
               <Link
-                href={selectedVariant ? `sandbox/${selectedIntegration}/${selectedVariant}` : '#'}
+                href={selectedVariant ? `sandbox/${selectedIntegration}/${selectedVariant}?view=preview` : '#'}
                 className="w-full"
               >
                 <Button
                   className={cn(
-                    "w-full bg-primary !hover:bg-primary/90 font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
-                    (!selectedVariant || !selectedIntegration) && "opacity-50 cursor-not-allowed"
+                    "w-full bg-primary text-card font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 !hover:bg-primary/1",
+                    (!selectedVariant || !selectedIntegration) && "opacity-50"
                   )}
                   disabled={!selectedVariant || !selectedIntegration}
+                  variant="outline"
                 >
                   Start building
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -275,7 +276,7 @@ const Page = () => {
             </CardHeader>
             <CardContent className="flex-grow">
               <p className="text-muted-foreground text-base leading-relaxed">
-                Get started quickly with our pre-built sandbox configurations that cover common payment scenarios.
+                Get started quickly with our pre-built sandbox configurations that cover common payment scenarios. Perfect for rapid deployment and standardized implementations
               </p>
             </CardContent>
             <CardFooter className="pt-6">

@@ -17,7 +17,7 @@ const DemoTopbar = (props: any) => {
 
     return (
         <span
-            className="bg-card absolute top-0 h-[var(--topbar-width)] border-b-[1px] border-x-[1px] border-border stretch flex items-center justify-end px-2 w-full"
+            className="bg-card fixed top-0 left-0 right-0 z-50 h-[var(--topbar-width)] border-b-[1px] border-x-[1px] border-border flex items-center justify-end px-2 w-full"
             ref={containerRef}
         >
             <div className="flex justify-end">
