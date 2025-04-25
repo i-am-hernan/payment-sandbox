@@ -55,6 +55,11 @@ export const useAdyenAdvance = (
       });
     } else if (paymentResponse.action) {
       dropin.handleAction(paymentResponse.action);
+      if(paymentResponse.pspReference){
+        window.checkoutLab = {
+          psp:paymentResponse.pspReference 
+        }
+      }
     } else {
       setResult(paymentResponse);
     }
