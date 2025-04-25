@@ -194,8 +194,8 @@ const Page = () => {
                       Build from scratch
                     </CardDescription>
                     <div className="flex gap-2">
-                        <span className="text-[10px] px-2 py-1 rounded-md bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide border-border border-[1px]">Low code</span>
-                        <span className="text-[10px] px-2 py-1 rounded-md bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide border-border border-[1px]">More code</span>
+                      <span className="text-[10px] px-2 py-1 rounded-md bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide border-border border-[1px]">Low code</span>
+                      <span className="text-[10px] px-2 py-1 rounded-md bg-[#F6F9FC] text-muted-foreground font-medium uppercase tracking-wide border-border border-[1px]">More code</span>
                     </div>
                   </div>
                 </div>
