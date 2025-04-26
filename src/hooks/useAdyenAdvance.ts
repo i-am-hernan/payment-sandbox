@@ -55,9 +55,9 @@ export const useAdyenAdvance = (
       });
     } else if (paymentResponse.action) {
       dropin.handleAction(paymentResponse.action);
-      if(paymentResponse.pspReference){
+      if (paymentResponse.pspReference) {
         window.checkoutLab = {
-          psp:paymentResponse.pspReference 
+          psp: paymentResponse.pspReference
         }
       }
     } else {
@@ -102,6 +102,83 @@ export const useAdyenAdvance = (
 
   const handleChange = (state: any) => {
     onChange(state);
+  };
+  const adyenV3 = (
+    configuration: any,
+    checkoutRef: any,
+    txVariant: string,
+    txVariantConfiguration: any
+  ) => {
+    try {
+      const initCheckout: any = async () => {
+        const checkout = new (window as any).AdyenCheckout(configuration);
+        try {
+          const component = checkout.create(txVariant, {
+            ...txVariantConfiguration,
+          });
+          component.mount(checkoutRef.current);
+          setHasMounted(true);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            setError({
+              message: error.message
+                ? error.message
+                : "Error mounting component",
+            });
+          }
+        }
+      };
+      if (checkoutRef.current) {
+        initCheckout();
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError({
+          message: error.message
+            ? error.message
+            : "Error initializing checkout",
+        });
+      }
+    }
+  };
+
+  const adyenV4 = (
+    configuration: any,
+    checkoutRef: any,
+    txVariant: string,
+    txVariantConfiguration: any
+  ) => {
+    try {
+      const initCheckout: any = async () => {
+        const checkout = new (window as any).AdyenCheckout(configuration);
+        try {
+          const component = checkout.create(txVariant, {
+            ...txVariantConfiguration,
+          });
+          component.mount(checkoutRef.current);
+          setHasMounted(true);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            setError({
+              message: error.message
+                ? error.message
+                : "Error mounting component",
+            });
+          }
+        }
+      };
+      if (checkoutRef.current) {
+        initCheckout();
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError({
+          message: error.message
+            ? error.message
+            : "Error initializing checkout",
+        });
+      }
+    }
   };
 
   const adyenV5 = (
@@ -205,7 +282,11 @@ export const useAdyenAdvance = (
     )();
 
     if (readyToMount) {
-      if (/^5./.test(adyenWebVersion)) {
+      if (/^3./.test(adyenWebVersion)) {
+        adyenV3(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
+      }else if (/^4./.test(adyenWebVersion)) {
+        adyenV4(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
+      } else if (/^5./.test(adyenWebVersion)) {
         adyenV5(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
       } else if (/^6./.test(adyenWebVersion)) {
         adyenV6(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
