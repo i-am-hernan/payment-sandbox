@@ -62,6 +62,7 @@ export interface Formula {
   reset: boolean;
   redirectResult: string | null;
   sessionId: string | null;
+  buildId: string | null;
 }
 
 // Define the initial state
@@ -111,6 +112,7 @@ const initialState: FormulaPropType = {
     },
   },
   style: "",
+  buildId: null,
   unsavedChanges: {
     html: false,
     style: false,
@@ -205,6 +207,9 @@ const formulaSlice = createSlice({
     updateVariantReturnUrl: (state, action: PayloadAction<string>) => {
       state.request.payments.returnUrl = action.payload;
       state.request.sessions.returnUrl = action.payload;
+    },
+    updateBuildId: (state, action: PayloadAction<string>) => {
+      state.buildId = action.payload;
     },
     resetUnsavedChanges: (state) => {
       state.unsavedChanges = {

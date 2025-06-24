@@ -17,16 +17,21 @@ import { useFormula } from "@/hooks/useFormula";
 import useMerchantInCookie from "@/hooks/useMerchantInCookie";
 import { useStyle } from "@/hooks/useStyle";
 import { useView } from "@/hooks/useView";
-import { formulaActions, userActions } from "@/store/reducers";
+import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
+import CheckoutPageMobile from "@/components/custom/checkout/CheckoutPageMobile";
 import Network from "@/components/custom/sandbox/tabs/Network";
+import { useSection } from "@/hooks/useSection";
+import { useTab } from "@/hooks/useTab";
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import PersonalVideoIcon from '@mui/icons-material/PersonalVideo';
 
 interface SectionType {
-  section: "Client" | "Server" | "Style";
+  section: "Client" | "Server" | "Style" | "Demo";
 }
 
 const {
@@ -43,23 +48,27 @@ const {
 } = formulaActions;
 
 const { updateMerchantAccount } = userActions;
+const { updateSandboxSection } = sandboxActions;
 
 const Page: any = () => {
-  const [section, setSection] = useState<SectionType["section"]>("Server");
   const { theme, defaultMerchantAccount, merchantAccount, view, logs } = useSelector(
     (state: RootState) => state.user
   );
+  const { section } = useSelector((state: RootState) => state.sandbox);
   const { integration, variant } = useParams<{
     integration: string;
     variant: string;
   }>();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
+  const sectionParam = searchParams.get("section");
+  const tabParam = searchParams.get("tab");
 
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(
     variant,
     view,
-    integration
+    integration,
+    section
   );
 
   const {
@@ -72,6 +81,8 @@ const Page: any = () => {
     style,
   } = useSelector((state: RootState) => state.formula);
   useView(viewParam);
+  useSection(sectionParam);
+  useTab(tabParam);
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
   const {
@@ -108,12 +119,10 @@ const Page: any = () => {
               {integration.toUpperCase()}
             </span>
           ),
-          content: view === "demo" ? (
-            <CheckoutPage>
+          content: (
+            <div className="px-6 py-1">
               <ManageAdvanceComponent key={run ? "run" : "default"} />
-            </CheckoutPage>
-          ) : (
-            <ManageAdvanceComponent key={run ? "run" : "default"} />
+            </div>
           ),
           value: variant,
         },
@@ -127,12 +136,10 @@ const Page: any = () => {
                 {integration.toUpperCase()}
               </span>
             ),
-            content: view === "demo" ? (
-              <CheckoutPage>
+            content: (
+              <div className="px-6 py-1">
                 <ManageAdyenSessions key={run ? "run" : "default"} />
-              </CheckoutPage>
-            ) : (
-              <ManageAdyenSessions key={run ? "run" : "default"} />
+              </div>
             ),
             value: variant,
           },
@@ -319,91 +326,131 @@ const Page: any = () => {
       },
     ];
     crumbs = [integration, variant];
+  } else if (section === "Demo") {
+    tabsMap = [
+      {
+        title: "desktop",
+        icon: (
+          <PersonalVideoIcon className="font-semibold pl-1 text-xl text-adyen" />
+        ),
+        content: (<CheckoutPage>
+          <ManageAdvanceComponent key={run ? "run" : "default"} />
+        </CheckoutPage>),
+        value: "desktop",
+      }, {
+        title: "mobile",
+        icon: (
+          <PhoneIphoneIcon className="font-semibold pl-1 text-xl text-adyen" />
+        ),
+        content: (<CheckoutPageMobile>
+          <ManageAdvanceComponent key={run ? "run" : "default"} />
+        </CheckoutPageMobile>),
+        value: "mobile",
+      }
+    ];
   }
 
   return (
-    <div className={`${theme} border-r-2 border-border bg-dotted-grid bg-grid bg-background`}>
+    <div className={`${theme} border-r-2 border-border bg-dotted-grid bg-grid bg-background h-full`}>
       <React.Fragment>
         <header>
           <Topbar
             view={view}
             merchantAccount={merchantAccount}
             integration={integration}
+            run={run}
           />
         </header>
         <main>
-          <Sandbox
-            main={
-              formulaLoading || merchantAccount === null ? (
-                <Loading className="text-foreground hidden" />
-              ) : integration !== "sessions" && integration !== "advance" ? (
-                <Alert variant="destructive" className="w-[50%]">
-                  <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {"Integration type not valid"}
-                  </AlertDescription>
-                </Alert>
-              ) : formulaError || !formulaSuccess ? (
-                <Alert variant="destructive" className="w-[50%]">
-                  <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {formulaError ? formulaError : "Formula unable to load"}
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <SandBoxTabs key={section} tabsMap={tabsMap} crumbs={crumbs} />
-              )
-            }
-            topRight={
-              formulaLoading || merchantAccount === null ? (
-                <Loading className="text-foreground hidden" />
-              ) : integration !== "sessions" && integration !== "advance" ? (
-                <Alert variant="destructive" className="w-[50%]">
-                  <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {"Integration type not valid"}
-                  </AlertDescription>
-                </Alert>
-              ) : formulaError || !formulaSuccess ? (
-                <Alert variant="destructive" className="w-[50%]">
-                  <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {formulaError ? formulaError : "Formula unable to load"}
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <SandBoxTabs tabsMap={topRightTabsMap} />
-              )
-            }
-            bottomRight={
-              formulaLoading || merchantAccount === null ? (
-                <Loading className="text-foreground" />
-              ) : integration !== "sessions" && integration !== "advance" ? (
-                <Alert variant="destructive" className="w-[50%]">
-                  <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {"Integration type not valid"}
-                  </AlertDescription>
-                </Alert>
-              ) : formulaError || !formulaSuccess ? (
-                <Alert variant="destructive" className="w-[50%]">
-                  <AlertTitle>{"Error:"}</AlertTitle>
-                  <AlertDescription className="text-foreground">
-                    {formulaError ? formulaError : "Formula unable to load"}
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <SandBoxTabs tabsMap={bottomRightTabsMap} type="subwindow" />
-              )
-            }
-            view={view}
-            logs={logs}
-          />
+          {section === "Demo" ? (
+            <div className="w-full h-full flex flex-col">
+              <div className="w-[calc(100%-var(--sidebar-width))] ml-[var(--sidebar-width)] mt-[var(--topbar-width)] flex justify-center h-[calc(100vh-var(--topbar-width))] animate-slide-in">
+                <SandBoxTabs key={section} tabsMap={tabsMap} type="subwindow" />
+              </div>
+            </div>
+          ) : section ? (
+            <Sandbox
+              main={
+                formulaLoading || merchantAccount === null ? (
+                  <Loading className="text-foreground hidden" />
+                ) : integration !== "sessions" && integration !== "advance" ? (
+                  <Alert variant="destructive" className="w-[50%]">
+                    <AlertTitle>{"Error:"}</AlertTitle>
+                    <AlertDescription className="text-foreground">
+                      {"Integration type not valid"}
+                    </AlertDescription>
+                  </Alert>
+                ) : formulaError || !formulaSuccess ? (
+                  <Alert variant="destructive" className="w-[50%]">
+                    <AlertTitle>{"Error:"}</AlertTitle>
+                    <AlertDescription className="text-foreground">
+                      {formulaError ? formulaError : "Formula unable to load"}
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <SandBoxTabs
+                    key={section}
+                    tabsMap={tabsMap}
+                    crumbs={crumbs}
+                  />
+                )
+              }
+              topRight={
+                formulaLoading || merchantAccount === null ? (
+                  <Loading className="text-foreground hidden" />
+                ) : integration !== "sessions" && integration !== "advance" ? (
+                  <Alert variant="destructive" className="w-[50%]">
+                    <AlertTitle>{"Error:"}</AlertTitle>
+                    <AlertDescription className="text-foreground">
+                      {"Integration type not valid"}
+                    </AlertDescription>
+                  </Alert>
+                ) : formulaError || !formulaSuccess ? (
+                  <Alert variant="destructive" className="w-[50%]">
+                    <AlertTitle>{"Error:"}</AlertTitle>
+                    <AlertDescription className="text-foreground">
+                      {formulaError ? formulaError : "Formula unable to load"}
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <SandBoxTabs tabsMap={topRightTabsMap} />
+                )
+              }
+              bottomRight={
+                formulaLoading || merchantAccount === null ? (
+                  <Loading className="text-foreground" />
+                ) : integration !== "sessions" && integration !== "advance" ? (
+                  <Alert variant="destructive" className="w-[50%]">
+                    <AlertTitle>{"Error:"}</AlertTitle>
+                    <AlertDescription className="text-foreground">
+                      {"Integration type not valid"}
+                    </AlertDescription>
+                  </Alert>
+                ) : formulaError || !formulaSuccess ? (
+                  <Alert variant="destructive" className="w-[50%]">
+                    <AlertTitle>{"Error:"}</AlertTitle>
+                    <AlertDescription className="text-foreground">
+                      {formulaError ? formulaError : "Formula unable to load"}
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <SandBoxTabs
+                    tabsMap={bottomRightTabsMap}
+                    type="subwindow"
+                  />
+                )
+              }
+              view={view}
+              logs={logs}
+            />
+          ) : null}
         </main>
         <footer className="h-[100%]">
           <Sidebar
             section={section}
-            setSection={setSection}
+            setSection={(section: "Client" | "Server" | "Style" | "Demo") => {
+              dispatch(updateSandboxSection(section));
+            }}
             unsavedChanges={unsavedChanges}
             merchantAccount={merchantAccount}
             variant={variant}

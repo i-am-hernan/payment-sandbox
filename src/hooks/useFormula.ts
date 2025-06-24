@@ -22,7 +22,8 @@ const { updateSandboxTitle, updateSandboxDescription } = sandboxActions;
 export const useFormula = (
   variant: string,
   view: string,
-  integration: string
+  integration: string,
+  section: string
 ) => {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
@@ -122,7 +123,7 @@ export const useFormula = (
             returnUrl.searchParams.set("id", id);
             updateReturnUrl(returnUrl.toString());
           } else {
-            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}?id=${id}${view ? "&view=" + view : ""}`;
+            const returnUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/${integration}/${variant}?id=${id}${view ? "&view=" + view : ""}${section ? "&section=" + section : ""}`;
             updateReturnUrl(returnUrl);
           }
           storeFormulaToLocalStorage(configuration);

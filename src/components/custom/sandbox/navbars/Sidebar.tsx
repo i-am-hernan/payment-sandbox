@@ -29,6 +29,7 @@ import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import AddCardIcon from '@mui/icons-material/AddCard';
 import BrushIcon from "@mui/icons-material/Brush";
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import SettingsIcon from "@mui/icons-material/Settings";
 import WebIcon from "@mui/icons-material/Web";
@@ -340,10 +341,13 @@ const Sidebar = (props: any) => {
                         size="icon"
                         ref={tab.ref}
                         className={`mt-5 rounded-md p-5 ${section === tab.name
-                          ? "bg-foreground/10 !text-adyen"
+                          ? "!text-adyen"
                           : "hover:bg-foreground/10 !text-foreground"
                           }`}
-                        onClick={() => setSection(tab.name)}
+                        onClick={() => {
+                          setSection(tab.name);
+                          clearUrlParams(["section", "view", "tab"]);
+                        }}
                       >
                         {tab.icon}
                       </Button>
@@ -356,6 +360,31 @@ const Sidebar = (props: any) => {
                   </span>
                 )
             )}
+            <span className="relative">
+              <Tooltip
+                title="Demo"
+                placement="right-start"
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`mt-5 rounded-md p-5 ${section === "Demo"
+                    ? "bg-foreground/10 !text-adyen"
+                    : "hover:bg-foreground/10 !text-foreground"
+                    }`}
+                  onClick={() => {
+                    setSection("Demo");
+                  }}
+                >
+                  <div className="relative flex flex-col items-center justify-center ">
+                    <OndemandVideoIcon className="!text-[20px]" />
+                    <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
+                      DEMO
+                    </p>
+                  </div>
+                </Button>
+              </Tooltip>
+            </span>
           </div>
           <div className="pb-3">
             <DropdownMenu>
@@ -375,23 +404,7 @@ const Sidebar = (props: any) => {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator className="bg-border" />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem className="text-xs rounded-none"
-                      onClick={() => {
-                        if (view === "demo") {
-                          dispatch(updateView("preview"));
-                          clearUrlParams(["view"]);
-                        } else {
-                          dispatch(updateView("demo"));
-                          clearUrlParams(["view"]);
-                        }
-                      }}>
-                      <span className="px-2">Preview</span>
-                      {view === "demo" && <Check className="h-4 w-4 ml-2" />}
-                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator className="bg-border" />
+
                   <DropdownMenuGroup>
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger className="text-xs rounded-none">

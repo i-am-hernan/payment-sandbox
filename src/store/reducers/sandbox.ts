@@ -3,23 +3,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Define the shape of the state
 export interface Sandbox {
   theme: "dark" | "light";
-  section: "frontend" | "backend" | "webhooks";
+  section: "Client" | "Server" | "Style" | "Demo";
   isRedirect: boolean;
   unsavedChanges: number;
   variantName: string;
   title?: string;
   description?: string;
-  networkResponse: any[]
+  networkResponse: any[];
+  tab: string | null;
 }
 
 // Define the initial state
 const initialState: Sandbox = {
   theme: "dark",
-  section: "frontend",
+  section: "Server",
   isRedirect: false,
   unsavedChanges: 0,
   variantName: "",
   networkResponse: [],
+  tab: null,
 };
 
 // Create the slice with typed reducers
@@ -39,9 +41,12 @@ const sandboxSlice = createSlice({
     updateSandboxDescription: (state, action: PayloadAction<string>) => {
       state.description = action.payload;
     },
+    updateTab: (state, action: PayloadAction<string>) => {
+      state.tab = action.payload;
+    },
     updateSandboxSection: (
       state,
-      action: PayloadAction<"frontend" | "backend" | "webhooks">
+      action: PayloadAction<"Client" | "Server" | "Style" | "Demo">
     ) => {
       state.section = action.payload;
     },

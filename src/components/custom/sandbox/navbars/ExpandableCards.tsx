@@ -68,7 +68,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
             </Button>
             <Button
               variant="ghost"
-              className="pl-1 h-auto py-1 bg-background text-sm text-foreground border-transparent shadow-none rounded-lg justify-start"
+              className="pl-1 h-auto py-1 text-sm text-foreground border-transparent shadow-none rounded-lg justify-start"
               asChild
             >
               <Link

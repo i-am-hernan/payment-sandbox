@@ -14,13 +14,21 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import React, { useEffect, useRef, useState } from "react";
 import { TabsProps } from "./types";
+import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { sandboxActions } from "@/store/reducers";
+import { clearUrlParams } from "@/utils/utils";
+
+const { updateTab } = sandboxActions;
 
 const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   const { tabsMap, crumbs, onExpand, onContract, type, className } = props;
-  const [tabTitle, setTabTitle] = useState(tabsMap[0].value);
+  const dispatch = useDispatch();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [hasExpanded, setHasExpanded] = useState(false);
-
+  const { tab } = useSelector((state: RootState) => state.sandbox);
+  const tabTitle = tab ? tab : tabsMap[0].value;
+  console.log("tabTitle", tabTitle);
   useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (tabsMap.length > 1) {
@@ -30,7 +38,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
             (tab) => tab.value === tabTitle
           );
           const nextIndex = (currentIndex + 1) % tabsMap.length;
-          setTabTitle(tabsMap[nextIndex].value);
+          dispatch(updateTab(tabsMap[nextIndex].value));
           tabRefs.current[nextIndex]?.focus();
         } else if (event.shiftKey && event.key === "ArrowLeft") {
           event.preventDefault();
@@ -39,7 +47,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
           );
           const prevIndex =
             (currentIndex - 1 + tabsMap.length) % tabsMap.length;
-          setTabTitle(tabsMap[prevIndex].value);
+          dispatch(updateTab(tabsMap[prevIndex].value));
           tabRefs.current[prevIndex]?.focus();
         }
       }
@@ -50,13 +58,17 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [tabTitle, tabsMap]);
-
+  console.log("tab", tab);
+  console.log("tabsMap", tabsMap);
   return (
     <div className={`w-full h-full flex flex-col ${className}`}>
       <Tabs
-        defaultValue={tabTitle}
+        defaultValue={tabsMap.find((t) => t.value === tab)?.value || tabsMap[0].value}
         className="w-full h-full flex flex-col"
-        onValueChange={(value) => setTabTitle(value)}
+        onValueChange={(value) => {
+          dispatch(updateTab(value));
+          clearUrlParams(["tab", "section", "view"]);
+        }}
       >
         <span className="flex justify-between mb-2 pl-6 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-[45px] h-auto">
           <TabsList className="mt-3">
@@ -79,7 +91,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               </div>
             ))}
           </TabsList>
-          {!hasExpanded && (
+          {!hasExpanded && type !== "subwindow" && (
             <Button
               key="clear"
               variant="outline"
@@ -92,14 +104,10 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
                 }
               }}
             >
-              {type === "subwindow" ? (
-                <ExpandLessIcon className="text-primary !text-xs" />
-              ) : (
-                <OpenInFullIcon className="text-primary !text-xs" />
-              )}
+              <OpenInFullIcon className="text-primary !text-xs" />
             </Button>
           )}
-          {hasExpanded && (
+          {hasExpanded && type !== "subwindow" && (
             <Button
               key="clear"
               variant="outline"
@@ -112,11 +120,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
                 }
               }}
             >
-              {type === "subwindow" ? (
-                <ExpandMoreIcon className="text-primary !text-xs" />
-              ) : (
-                <CloseFullscreenIcon className="text-primary !text-xs" />
-              )}
+              <CloseFullscreenIcon className="text-primary !text-xs" />
             </Button>
           )}
         </span>

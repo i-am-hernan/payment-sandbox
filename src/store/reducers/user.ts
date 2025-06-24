@@ -10,7 +10,7 @@ export interface User {
   merchantAccount: FormulaPropType;
   defaultMerchantAccount: FormulaPropType;
   theme: "light" | "dark";
-  view: "developer" | "preview" | "demo";
+  view: "developer" | "preview";
   logs: boolean;
 }
 
@@ -18,7 +18,7 @@ export interface User {
 const initialState: FormulaPropType = {
   merchantAccount: null,
   defaultMerchantAccount: `${process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT}`,
-  theme: "light",
+  theme: "dark",
   view: "preview",
   logs: false,
 };
@@ -39,7 +39,7 @@ const formulaSlice = createSlice({
     },
     updateView: (
       state,
-      action: PayloadAction<"developer" | "preview" | "demo">
+      action: PayloadAction<"developer" | "preview">
     ) => {
       state.view = action.payload;
     },

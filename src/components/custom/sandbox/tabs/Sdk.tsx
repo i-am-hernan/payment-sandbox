@@ -370,10 +370,10 @@ const Sdk = (props: any) => {
               onCheckedChange={(checked: boolean) => {
                 if (checked) {
                   dispatch(updateView("developer"));
-                  clearUrlParams(["view"]);
+                  clearUrlParams(["view", "section", "tab"]);
                 } else {
                   dispatch(updateView("preview"));
-                  clearUrlParams(["view"]);
+                  clearUrlParams(["view", "section", "tab"]);
                 }
               }}
               onChange={handleOpenApiSearchChange}

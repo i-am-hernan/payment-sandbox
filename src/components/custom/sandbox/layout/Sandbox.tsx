@@ -12,7 +12,7 @@ interface SandboxContentProps {
   main: any;
   topRight: any;
   bottomRight: any;
-  view: "developer" | "preview" | "demo";
+  view: "developer" | "preview";
   logs: boolean;
   className?: string;
 }
@@ -29,10 +29,7 @@ const Sandbox = ({
   const refB = useRef<ImperativePanelHandle>(null);
 
   useEffect(() => {
-    if (view === "demo") {
-      refA.current?.resize(100);
-      refB.current?.resize(0);
-    } else if (view === "preview") {
+    if (view === "preview") {
       refA.current?.resize(50);
     } else if (view === "developer") {
       refA.current?.resize(60);
@@ -65,7 +62,12 @@ const Sandbox = ({
   };
 
   const handleContract = () => {
-    refA.current?.resize(60);
+
+    if (view === "preview") {
+      refA.current?.resize(50);
+    } else if (view === "developer") {
+      refA.current?.resize(60);
+    }
     refB.current?.resize(0);
   };
 
@@ -80,10 +82,9 @@ const Sandbox = ({
       <ResizablePanel
         defaultSize={view === "developer" ? 60 : view === "preview" ? 30 : 0}
         ref={refA}
-        maxSize={view === "demo" ? 0 : 100}
+        maxSize={100}
         className={cn(
           "transition-all duration-300 ease-in-out",
-          view === "demo" && "opacity-0",
           className
         )}
       >
@@ -96,7 +97,6 @@ const Sandbox = ({
       </ResizablePanel>
       <ResizableHandle
         className={cn(
-          view === "demo" && "opacity-0 pointer-events-none hidden",
           "border-none bg-transparent"
         )}
       />

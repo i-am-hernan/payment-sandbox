@@ -90,9 +90,7 @@ export const InitSessionsComponent = (props: any) => {
       {adyenResult && <Result adyenResult={adyenResult} />}
       {loadingSessions && <Loading className="text-foreground" />}
       {!error && !adyenSDKError && !adyenResult && !loadingSessions && (
-        <div
-          className={`h-[100%] w-[100%] ${isEmbedPage ? "" : 'px-6 py-1'}`}
-        >
+        <div className="h-[100%] w-[100%]">
           <div ref={checkoutRef}></div>
         </div>
       )}

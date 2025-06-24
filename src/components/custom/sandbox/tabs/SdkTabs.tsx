@@ -46,7 +46,7 @@ interface SdkMapType {
 interface SdkTabsProps {
   sdkMap: SdkMapType;
   theme: string;
-  view: "developer" | "preview" | "demo";
+  view: "developer" | "preview";
   integration: string;
   variant: string;
 }
@@ -312,7 +312,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
     [configs, sdkMap, syncGlobalState]
   );
 
-  if (view === "demo" || view === "preview") {
+  if ( view === "preview") {
     panelRef.current?.resize(0);
   } else if (view === "developer") {
     panelRef.current?.resize(50);
@@ -328,8 +328,7 @@ const SdkTabs: React.FC<SdkTabsProps> = (props) => {
         maxSize={view === "preview" ? 0 : 100}
         ref={panelRef}
         className={cn(
-          "sm:flex bg-code flex-col items-stretch transition-all duration-300 ease-in-out",
-          view === "demo" && "opacity-0"
+          "sm:flex bg-code flex-col items-stretch transition-all duration-300 ease-in-out"
         )}
       >
         <div className="flex flex-1 overflow-scroll">

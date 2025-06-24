@@ -1,6 +1,5 @@
 "use client";
 
-import UpdateMerchantCookie from "@/components/custom/adyen/account/UpdateMerchantCookie";
 import ShareableButton from "@/components/custom/sandbox/share/ShareableButton";
 import {
   AlertDialog,
@@ -16,17 +15,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { formulaActions, specsActions, userActions } from "@/store/reducers";
+import { formulaActions, sandboxActions, specsActions, userActions } from "@/store/reducers";
 import { RootState } from "@/store/store";
-import { clearUrlParams, refineFormula } from "@/utils/utils";
-import CodeIcon from "@mui/icons-material/Code";
+import { clearUrlParams, debounce, refineFormula } from "@/utils/utils";
 import ErrorIcon from "@mui/icons-material/Error";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import RestoreIcon from "@mui/icons-material/Restore";
 import Tooltip from "@mui/material/Tooltip";
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { debounce } from "@/utils/utils";
 
 const {
   updateRun,
@@ -43,8 +40,8 @@ const { updateView } = userActions;
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
-  const { variantName } = useSelector((state: RootState) => state.sandbox);
-  const { view, merchantAccount, integration } = props;
+  const { section, tab } = useSelector((state: RootState) => state.sandbox);
+  const { view, merchantAccount, run } = props;
   const { unsavedChanges, errors } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
@@ -174,6 +171,10 @@ const Topbar = (props: any) => {
           <div className="mr-2">
             <ShareableButton
               disabled={totalUnsavedChanges !== 0 || tabErrors.length > 0}
+              section={section}
+              view={view}
+              tab={tab}
+              run={run}
             />
           </div>
         )}
@@ -205,6 +206,7 @@ const Topbar = (props: any) => {
                 dispatch(updateIsRedirect(false));
                 dispatch(updateRun());
                 dispatch(resetUnsavedChanges());
+                // Here I need to create a build id
               }}
             >
               Build

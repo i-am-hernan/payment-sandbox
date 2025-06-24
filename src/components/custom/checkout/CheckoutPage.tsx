@@ -104,16 +104,11 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ children, className }) => {
                             </div>
                             
                             {/* Right side - Payment component */}
-                            <div className="w-full md:w-3/5 pt-2 px-4 flex flex-col bg-white rounded-r-lg">
+                            <div className="w-full md:w-3/5 pt-2 flex flex-col bg-white rounded-r-lg">
                                 <div className="max-w-md w-full">
                                     <h2 className="text-xl font-medium text-gray-900 mb-1">Complete your purchase</h2>
                                     <p className="text-sm text-gray-500 mb-6">Enter your payment details below</p>
-                                    
-                                    <div className="bg-white border border-gray-200 shadow-sm overflow-hidden p-3 rounded-xl">
-                                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Payment Method</p>
                                         {children}
-                                    </div>
-                                    
                                     <div className="mt-6">                                       
                                         <div className="flex items-center justify-center mt-4 mb-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
