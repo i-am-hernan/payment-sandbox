@@ -51,10 +51,10 @@ const { updateMerchantAccount } = userActions;
 const { updateSandboxSection } = sandboxActions;
 
 const Page: any = () => {
-  const { theme, defaultMerchantAccount, merchantAccount, view, logs } = useSelector(
+  const { defaultMerchantAccount, merchantAccount, logs } = useSelector(
     (state: RootState) => state.user
   );
-  const { section } = useSelector((state: RootState) => state.sandbox);
+  const { section, theme, view } = useSelector((state: RootState) => state.sandbox);
   const { integration, variant } = useParams<{
     integration: string;
     variant: string;
@@ -78,6 +78,7 @@ const Page: any = () => {
     checkoutAPIVersion,
     checkoutConfiguration,
     txVariantConfiguration,
+    buildId,
     style,
   } = useSelector((state: RootState) => state.formula);
   useView(viewParam);
@@ -358,7 +359,7 @@ const Page: any = () => {
             view={view}
             merchantAccount={merchantAccount}
             integration={integration}
-            run={run}
+            buildId={buildId}
           />
         </header>
         <main>

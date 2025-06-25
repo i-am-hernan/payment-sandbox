@@ -28,7 +28,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
   const [hasExpanded, setHasExpanded] = useState(false);
   const { tab } = useSelector((state: RootState) => state.sandbox);
   const tabTitle = tab ? tab : tabsMap[0].value;
-  console.log("tabTitle", tabTitle);
+
   useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (tabsMap.length > 1) {
@@ -58,14 +58,14 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [tabTitle, tabsMap]);
-  console.log("tab", tab);
-  console.log("tabsMap", tabsMap);
+
   return (
     <div className={`w-full h-full flex flex-col ${className}`}>
       <Tabs
-        defaultValue={tabsMap.find((t) => t.value === tab)?.value || tabsMap[0].value}
+        value={tabsMap.find((t) => t.value === tab)?.value || tabsMap[0].value}
         className="w-full h-full flex flex-col"
         onValueChange={(value) => {
+          console.log("value", value);
           dispatch(updateTab(value));
           clearUrlParams(["tab", "section", "view"]);
         }}

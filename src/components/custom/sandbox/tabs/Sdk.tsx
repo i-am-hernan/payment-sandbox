@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
-import { formulaActions, specsActions, userActions } from "@/store/reducers";
+import { formulaActions, sandboxActions, specsActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   debounce,
@@ -35,7 +35,7 @@ import VersionCompact from "../editors/VersionCompact";
 import { clearUrlParams } from "@/utils/utils";
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateAdyenWebVersion, updateErrors } = formulaActions;
-const { updateView } = userActions;
+const { updateView } = sandboxActions;
 
 const formatJsString = (code: any, varName: string, variant: string, integration: string) => {
   const isCheckout = /checkout/.test(varName);

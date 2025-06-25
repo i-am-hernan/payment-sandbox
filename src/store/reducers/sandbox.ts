@@ -2,26 +2,26 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the shape of the state
 export interface Sandbox {
-  theme: "dark" | "light";
+  theme: "light" | "dark";
   section: "Client" | "Server" | "Style" | "Demo";
   isRedirect: boolean;
   unsavedChanges: number;
-  variantName: string;
   title?: string;
   description?: string;
   networkResponse: any[];
   tab: string | null;
+  view: "developer" | "preview";
 }
 
 // Define the initial state
 const initialState: Sandbox = {
-  theme: "dark",
+  theme: "light",
   section: "Server",
   isRedirect: false,
   unsavedChanges: 0,
-  variantName: "",
   networkResponse: [],
   tab: null,
+  view: "preview",
 };
 
 // Create the slice with typed reducers
@@ -32,7 +32,7 @@ const sandboxSlice = createSlice({
     updateSandbox: (state, action: PayloadAction<Partial<any>>) => {
       return { ...state, ...action.payload };
     },
-    updateSandboxTheme: (state, action: PayloadAction<"dark" | "light">) => {
+    updateTheme: (state, action: PayloadAction<"light" | "dark">) => {
       state.theme = action.payload;
     },
     updateSandboxTitle: (state, action: PayloadAction<string>) => {
@@ -44,6 +44,12 @@ const sandboxSlice = createSlice({
     updateTab: (state, action: PayloadAction<string>) => {
       state.tab = action.payload;
     },
+    updateView: (
+      state,
+      action: PayloadAction<"developer" | "preview">
+    ) => {
+      state.view = action.payload;
+    },
     updateSandboxSection: (
       state,
       action: PayloadAction<"Client" | "Server" | "Style" | "Demo">
@@ -52,9 +58,6 @@ const sandboxSlice = createSlice({
     },
     updateIsRedirect: (state, action: PayloadAction<boolean>) => {
       state.isRedirect = action.payload;
-    },
-    updateVariantName: (state, action: PayloadAction<string>) => {
-      state.variantName = action.payload;
     },
     updateNetworkResponse: (state, action: PayloadAction<any>) => {
       state.networkResponse.push(action.payload);

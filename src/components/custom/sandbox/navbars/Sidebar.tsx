@@ -49,8 +49,8 @@ interface SideTab {
   ref: any;
 }
 
-const { updateTheme, updateView, updateLogs } = userActions;
-const { updateVariantName } = sandboxActions;
+const { updateLogs } = userActions;
+const { updateTheme } = sandboxActions;
 const { clearOnDeckInfo } = formulaActions;
 
 const Sidebar = (props: any) => {
@@ -129,16 +129,6 @@ const Sidebar = (props: any) => {
   useEffect(() => {
     merchantAccount && fetchPaymentMethods(merchantAccount);
   }, [merchantAccount]);
-
-  useEffect(() => {
-    paymentMethods.data?.forEach((paymentMethod: any) => {
-      if (paymentMethod.type === variant) {
-        dispatch(updateVariantName(paymentMethod.name));
-      } else if (variant === "dropin") {
-        dispatch(updateVariantName("Dropin"));
-      }
-    });
-  }, [paymentMethods.data, variant]);
 
   const sideTabs: Array<SideTab> = [
     {

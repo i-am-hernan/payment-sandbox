@@ -112,7 +112,7 @@ const initialState: FormulaPropType = {
     },
   },
   style: "",
-  buildId: null,
+  buildId: "1",
   unsavedChanges: {
     html: false,
     style: false,

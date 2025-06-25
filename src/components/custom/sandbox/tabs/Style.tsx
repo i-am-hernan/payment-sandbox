@@ -10,7 +10,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
-import { formulaActions, specsActions, userActions } from "@/store/reducers";
+import { formulaActions, sandboxActions, specsActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   cssToObject,
@@ -34,7 +34,7 @@ import { clearUrlParams } from "@/utils/utils";
 const { updateSpecs } = specsActions;
 const { addUnsavedChanges, updateAdyenWebVersion, updateErrors } =
   formulaActions;
-const { updateView } = userActions;
+const { updateView } = sandboxActions;
 
 const formatCssString = (code: any) => {
   return code.slice(1, -1);
@@ -146,7 +146,7 @@ const Style = (props: any) => {
   }, [properties]);
 
   useEffect(() => {
-    if (view === "demo" || view === "preview") {
+    if (view === "preview") {
       panelRef.current?.resize(0);
     } else if (view === "developer") {
       panelRef.current?.resize(50);

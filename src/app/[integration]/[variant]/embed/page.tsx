@@ -5,7 +5,9 @@ import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAd
 import Loading from "@/components/custom/utils/Loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFormula } from "@/hooks/useFormula";
+import { useSection } from "@/hooks/useSection";
 import { useStyle } from "@/hooks/useStyle";
+import { useTab } from "@/hooks/useTab";
 import { useView } from "@/hooks/useView";
 import { formulaActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
@@ -14,18 +16,21 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Page: any = () => {
-  const { theme, view } = useSelector((state: RootState) => state.user);
+  const { section, theme, view } = useSelector((state: RootState) => state.sandbox);
   const { integration, variant } = useParams<{
     integration: string;
     variant: string;
   }>();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
+  const sectionParam = searchParams.get("section");
+  const tabParam = searchParams.get("tab");
   const merchantAccount = searchParams.get("merchantAccount");
   const { formulaLoading, formulaError, formulaSuccess } = useFormula(
     variant,
     view,
-    integration
+    integration,
+    section
   );
   const {
     updateApiRequestMerchantAccount,
@@ -37,6 +42,9 @@ const Page: any = () => {
   const dispatch = useDispatch();
 
   useView(viewParam);
+  useSection(sectionParam);
+  useTab(tabParam);
+
   useEffect(() => {
     if (merchantAccount) {
       dispatch(updateApiRequestMerchantAccount(merchantAccount));

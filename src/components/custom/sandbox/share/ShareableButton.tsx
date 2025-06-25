@@ -24,7 +24,7 @@ import { bookmarkletCode } from "@/utils/bookmarklet";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const ShareableButton = (props: any) => {
-  const { section, view, tab: sandboxTab } = props;
+  const { section, view, tab: sandboxTab, buildId } = props;
   const [showCheck, setShowCheck] = useState(false);
   const [tab, setTab] = useState("share");
   const { disabled } = props;
@@ -40,6 +40,7 @@ const ShareableButton = (props: any) => {
     loading: false,
     error: null,
   });
+  const [sharedBuildId, setSharedBuildId] = useState(null);
 
   const { data, loading, error } = formula;
   const handleShare = (request: any) => {
@@ -96,8 +97,10 @@ const ShareableButton = (props: any) => {
     <div ref={containerRef}>
       <Dialog
         onOpenChange={(open) => {
-          if (open) {
+          console.log(sharedBuildId, buildId);
+          if (open && sharedBuildId !== buildId) {
             handleShare(state);
+            setSharedBuildId(buildId);
           }
         }}
       >

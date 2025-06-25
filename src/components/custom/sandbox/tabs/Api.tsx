@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/resizable";
 import { useApi } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
-import { formulaActions, specsActions, userActions } from "@/store/reducers";
+import { formulaActions, sandboxActions, specsActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import {
   debounce,
@@ -47,7 +47,7 @@ const apiRequestReducer = (state: any, action: any) => {
   }
 };
 
-const { updateView } = userActions;
+const { updateView } = sandboxActions;
 
 const Api = (props: any) => {
   const {
@@ -65,7 +65,7 @@ const Api = (props: any) => {
     (state: RootState) => state.specs
   );
 
-  const { theme, view } = useSelector((state: RootState) => state.user);
+  const { theme, view } = useSelector((state: RootState) => state.sandbox);
   const schemas = checkoutConfiguration?.components?.schemas ?? null;
   const properties = schemas?.[schema]?.properties ?? null;
   const required = schemas?.[schema]?.required ?? null;
@@ -215,7 +215,7 @@ const Api = (props: any) => {
   }, [reset]);
 
   useEffect(() => {
-    if (view === "demo" || view === "preview") {
+    if (view === "preview") {
       panelRef.current?.resize(0);
     } else if (view === "developer") {
       panelRef.current?.resize(50);
@@ -243,11 +243,9 @@ const Api = (props: any) => {
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}
-        maxSize={view === "product" ? 0 : 100}
         ref={panelRef}
         className={cn(
-          `shadow-hover sm:flex flex-col transition-all duration-300 ease-in-out rounded-lg ${view === "developer" ? "mr-6" : ""}`,
-          view === "demo" && "opacity-0"
+          `shadow-hover sm:flex flex-col transition-all duration-300 ease-in-out rounded-lg ${view === "developer" ? "mr-6" : ""}`
         )}
       >
         <div className="flex flex-col h-full border-[1px] rounded-lg p-[1px] border-border">

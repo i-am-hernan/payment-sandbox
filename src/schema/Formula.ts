@@ -56,8 +56,8 @@ const FormulaSchema: Schema = new Schema(
       txVariantConfiguration: { type: String, required: false },
       isRedirect: { type: Boolean, required: true },
     },
-    title: { type: String, required: true },
-    description: { type: String, required: true },
+    title: { type: String, required: false },
+    description: { type: String, required: false },
     integrationType: {
       type: String,
       enum: ["advance", "sessions"],

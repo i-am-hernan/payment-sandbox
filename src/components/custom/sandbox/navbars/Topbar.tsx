@@ -24,6 +24,7 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from 'uuid';
 
 const {
   updateRun,
@@ -34,14 +35,14 @@ const {
   resetUnsavedChanges,
   updateApiRequestMerchantAccount,
   updateBuildMerchantAccount,
+  updateBuildId,
 } = formulaActions;
 const { updateSpecs } = specsActions;
-const { updateView } = userActions;
 
 const Topbar = (props: any) => {
   const storeFormula = useSelector((state: RootState) => state.formula);
   const { section, tab } = useSelector((state: RootState) => state.sandbox);
-  const { view, merchantAccount, run } = props;
+  const { view, merchantAccount, buildId } = props;
   const { unsavedChanges, errors } = storeFormula;
   const dispatch = useDispatch();
   const totalUnsavedChanges = Object.values(unsavedChanges).filter(
@@ -174,7 +175,7 @@ const Topbar = (props: any) => {
               section={section}
               view={view}
               tab={tab}
-              run={run}
+              buildId={buildId}
             />
           </div>
         )}
@@ -206,7 +207,9 @@ const Topbar = (props: any) => {
                 dispatch(updateIsRedirect(false));
                 dispatch(updateRun());
                 dispatch(resetUnsavedChanges());
-                // Here I need to create a build id
+                const myUuid = uuidv4();
+                dispatch(updateBuildId(myUuid));
+
               }}
             >
               Build
