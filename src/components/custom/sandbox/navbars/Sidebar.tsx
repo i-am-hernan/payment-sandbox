@@ -28,7 +28,7 @@ import { RequestOptions } from "@/hooks/useApi";
 import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import { clearUrlParams } from "@/utils/utils";
 import AddCardIcon from '@mui/icons-material/AddCard';
-import BrushIcon from "@mui/icons-material/Brush";
+import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -172,7 +172,7 @@ const Sidebar = (props: any) => {
       hotKey: "⌘ + k",
       icon: (
         <div className="relative flex flex-col items-center justify-center">
-          <BrushIcon className="!text-[20px]" />
+          <FormatColorFillIcon className="!text-[20px]" />
           <p className="font-mono text-[0.6rem] flex leading-none mt-[3px]">
             STYLE
           </p>

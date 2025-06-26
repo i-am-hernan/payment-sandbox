@@ -88,7 +88,7 @@ const Sandbox = ({
           className
         )}
       >
-        <div className="items-center justify-center flex w-full h-full animate-slide-in">
+        <div className="items-center justify-center flex w-full h-full animate-slide-in pl-6 pr-3 pt-1 pb-3">
           {React.cloneElement(Main, {
             onExpand: handleMainExpand,
             onContract: handleContract,
@@ -102,7 +102,7 @@ const Sandbox = ({
       />
       <ResizablePanel
         defaultSize={view === "developer" ? 40 : view === "preview" ? 70 : 100}
-        className="transition-all duration-300 ease-in-out"
+        className="transition-all duration-300 ease-in-out pl-3 pr-6 pt-1 pb-3"
       >
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel

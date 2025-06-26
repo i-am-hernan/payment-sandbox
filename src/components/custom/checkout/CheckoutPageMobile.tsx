@@ -37,7 +37,7 @@ const CheckoutPageMobile: React.FC<CheckoutPageMobileProps> = ({ children, class
                     {/* Main content */}
                     <main className="flex-1 flex flex-col px-2 pb-4 max-w-md w-full mx-auto">
                         {/* Order summary */}
-                        <section className="bg-card p-4 mt-4 mb-4">
+                        <section className="bg-card text-foreground p-4 mt-4 mb-4">
                             <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Order summary</h2>
                             <div className="flex items-center mb-3">
                                 <div className="w-12 h-12 rounded-md flex items-center justify-center mr-3 overflow-hidden border border-gray-200">
@@ -72,7 +72,7 @@ const CheckoutPageMobile: React.FC<CheckoutPageMobileProps> = ({ children, class
                             </div>
                         </section>
                         {/* Payment form */}
-                        <section className="bg-card p-4 flex flex-col">
+                        <section className="bg-card text-foreground p-4 flex flex-col">
                             <h2 className="text-lg font-medium text-gray-900 mb-1">Complete your purchase</h2>
                             <p className="text-xs text-gray-500 mb-4">Enter your payment details below</p>
                             {children}

@@ -10,10 +10,10 @@ interface CheckoutPageProps {
 
 const CheckoutPage: React.FC<CheckoutPageProps> = ({ children, className }) => {
     return (
-        <div className="flex flex-col h-full pb-6 pt-1 px-6 rounded-lg text-foreground">
-            <div className="flex flex-col md:flex-row h-full bg-card rounded-lg">
+        <div className="flex flex-col h-full rounded-t-lg rounded-b-xl text-foreground">
+            <div className="flex flex-col md:flex-row h-full bg-card rounded-t-lg rounded-b-xl">
                 {/* Browser chrome */}
-                <div className="w-full shadow-xl border border-gray-200 bg-white flex flex-col rounded-lg">
+                <div className="w-full shadow-xl border border-gray-200 bg-white flex flex-col rounded-t-lg rounded-b-xl">
                     {/* Browser toolbar */}
                     <div className="bg-background border-b border-gray-200 px-4 py-2 flex items-center rounded-t-lg">
                         {/* Window controls */}

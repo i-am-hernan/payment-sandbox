@@ -29,6 +29,7 @@ import { useSection } from "@/hooks/useSection";
 import { useTab } from "@/hooks/useTab";
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import PersonalVideoIcon from '@mui/icons-material/PersonalVideo';
+import { useRefreshWarning } from '@/hooks/useRefreshWarning';
 
 interface SectionType {
   section: "Client" | "Server" | "Style" | "Demo";
@@ -84,6 +85,7 @@ const Page: any = () => {
   useView(viewParam);
   useSection(sectionParam);
   useTab(tabParam);
+  useRefreshWarning();
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
   const {
@@ -121,7 +123,7 @@ const Page: any = () => {
             </span>
           ),
           content: (
-            <div className="px-6 py-1">
+            <div className="">
               <ManageAdvanceComponent key={run ? "run" : "default"} />
             </div>
           ),
@@ -365,7 +367,7 @@ const Page: any = () => {
         <main>
           {section === "Demo" ? (
             <div className="w-full h-full flex flex-col">
-              <div className="w-[calc(100%-var(--sidebar-width))] ml-[var(--sidebar-width)] mt-[var(--topbar-width)] flex justify-center h-[calc(100vh-var(--topbar-width))] animate-slide-in">
+              <div className="w-[calc(100%-var(--sidebar-width))] ml-[var(--sidebar-width)] mt-[var(--topbar-width)] flex justify-center h-[calc(100vh-var(--topbar-width))] animate-slide-in-right pb-6 pt-1 px-6">
                 <SandBoxTabs key={section} tabsMap={tabsMap} type="subwindow" />
               </div>
             </div>

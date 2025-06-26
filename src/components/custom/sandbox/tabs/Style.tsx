@@ -258,7 +258,7 @@ const Style = (props: any) => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="inline-block !overflow-y-scroll pl-6 pt-1 pb-6"
+      className="inline-block !overflow-y-scroll"
     >
       <ResizablePanel
         defaultSize={view === "developer" ? 50 : 0}

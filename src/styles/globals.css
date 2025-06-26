@@ -53,6 +53,7 @@
     --custom-accent-info: #01baef;
     --custom-font-xxs: 0.65rem;
     --custom-prettify-height: 31px;
+
   }
 
   /* .light {
@@ -93,6 +94,8 @@
     --grey: 0, 0%, 75%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    --adyen-sdk-color-label-primary: 210 40% 98%;
   }
 
   /* When embed-iframe class exists, make root transparent too */

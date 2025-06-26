@@ -70,7 +70,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
           clearUrlParams(["tab", "section", "view"]);
         }}
       >
-        <span className="flex justify-between mb-2 pl-6 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-[45px] h-auto">
+        <span className="flex justify-between mb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-[45px] h-auto">
           <TabsList className="mt-3">
             {tabsMap.map((tab, index) => (
               <div key={index} className="p-[3px]">
@@ -92,36 +92,38 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
             ))}
           </TabsList>
           {!hasExpanded && type !== "subwindow" && (
-            <Button
-              key="clear"
-              variant="outline"
-              size="sm"
-              className="shadow-none border-none w-7 h-7 rounded-none"
-              onClick={(e) => {
-                if (onExpand) {
-                  onExpand();
-                  setHasExpanded(!hasExpanded);
-                }
-              }}
-            >
-              <OpenInFullIcon className="text-primary !text-xs" />
-            </Button>
+            <div className="flex items-center bg-[hsl(var(--accent))] border-[1px] border-border p-1 mt-3 rounded-md">
+              <Button
+                key="clear"
+                variant="outline"
+                size="sm"
+                className="shadow-none w-5 h-6 bg-card border-none"
+                onClick={(e) => {
+                  if (onExpand) {
+                    onExpand();
+                    setHasExpanded(!hasExpanded);
+                  }
+                }}
+              >
+                <OpenInFullIcon className="text-primary !text-xs" />
+              </Button></div>
           )}
           {hasExpanded && type !== "subwindow" && (
-            <Button
-              key="clear"
-              variant="outline"
-              size="sm"
-              className="shadow-none px-2 mb-0 pt-0 pb-0 border-none"
-              onClick={(e) => {
-                if (onContract) {
-                  onContract();
-                  setHasExpanded(!hasExpanded);
-                }
-              }}
-            >
-              <CloseFullscreenIcon className="text-primary !text-xs" />
-            </Button>
+            <div className="flex items-center bg-[hsl(var(--accent))] border-[1px] border-border p-1 mt-3 rounded-md">
+              <Button
+                key="clear"
+                variant="outline"
+                size="sm"
+                className="shadow-none w-5 h-6 bg-card border-none"
+                onClick={(e) => {
+                  if (onContract) {
+                    onContract();
+                    setHasExpanded(!hasExpanded);
+                  }
+                }}
+              >
+                <CloseFullscreenIcon className="text-primary !text-xs" />
+              </Button></div>
           )}
         </span>
         {tabsMap.map((tab, index) => (
