@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the shape of the state
 export interface Sandbox {
-  theme: "light" | "dark";
+  theme: "light" | "dark" | null;
   section: "Client" | "Server" | "Style" | "Demo";
   isRedirect: boolean;
   unsavedChanges: number;
@@ -15,7 +15,7 @@ export interface Sandbox {
 
 // Define the initial state
 const initialState: Sandbox = {
-  theme: "light",
+  theme: null,
   section: "Server",
   isRedirect: false,
   unsavedChanges: 0,
@@ -32,7 +32,7 @@ const sandboxSlice = createSlice({
     updateSandbox: (state, action: PayloadAction<Partial<any>>) => {
       return { ...state, ...action.payload };
     },
-    updateTheme: (state, action: PayloadAction<"light" | "dark">) => {
+    updateTheme: (state, action: PayloadAction<"light" | "dark" | null>) => {
       state.theme = action.payload;
     },
     updateSandboxTitle: (state, action: PayloadAction<string>) => {

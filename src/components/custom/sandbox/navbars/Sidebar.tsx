@@ -405,6 +405,7 @@ const Sidebar = (props: any) => {
                           className="text-xs rounded-lg"
                           onClick={() => {
                             dispatch(updateTheme("dark"));
+                            localStorage.setItem("theme", "dark");
                           }}
                         >
                           <span>Dark</span>
@@ -413,6 +414,7 @@ const Sidebar = (props: any) => {
                           className="text-xs rounded-none"
                           onClick={() => {
                             dispatch(updateTheme("light"));
+                            localStorage.setItem("theme", "light");
                           }}
                         >
                           <span>Light</span>

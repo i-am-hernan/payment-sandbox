@@ -30,6 +30,7 @@ import { useTab } from "@/hooks/useTab";
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import PersonalVideoIcon from '@mui/icons-material/PersonalVideo';
 import { useRefreshWarning } from '@/hooks/useRefreshWarning';
+import useThemeInStorage from '@/hooks/useThemeInCookie';
 
 interface SectionType {
   section: "Client" | "Server" | "Style" | "Demo";
@@ -85,6 +86,7 @@ const Page: any = () => {
   useView(viewParam);
   useSection(sectionParam);
   useTab(tabParam);
+  useThemeInStorage();
   useRefreshWarning();
 
   const { paymentMethods, payments, paymentsDetails, sessions } = request;
@@ -165,6 +167,10 @@ const Page: any = () => {
       value: "network",
     }
   ];
+
+  if (theme === null) {
+    return <Loading className="text-foreground" />;
+  }
 
   if (section === "Client") {
     tabsMap = [
