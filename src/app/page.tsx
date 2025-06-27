@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -71,7 +69,7 @@ const IMPLEMENTATION_EXAMPLES: Example[] = [
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen">
       <HomeTopBar />
       <div className="max-w-[1400px] mx-auto px-8 pt-32 lg:pt-8 lg:h-[100vh] lg:flex lg:flex-col">
         {/* Hero Section with Stripe-like styling */}
@@ -110,9 +108,10 @@ const Page = () => {
               </p>
             </CardContent>
             <CardFooter className="pt-6">
-              <Link href="/demo" className="w-full">
+              <Link href="/demo" className="w-full bg-background">
                 <Button
-                  className="w-full bg-primary !hover:bg-primary/90 font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  className="w-full bg-[hsl(222.2 84% 4.9%)] !hover:bg-primary/90 font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  variant="default"
                 >
                   Try demo
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -152,8 +151,10 @@ const Page = () => {
                 className="w-full"
               >
                 <Button
-                  className="w-full !bg-[hsl(222.2 84% 4.9%)] text-card font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 !hover:bg-[hsl(222.2 84% 4.9%)]"
-
+                  className={cn(
+                    "w-full !bg-[hsl(222.2 84% 4.9%)] text-card font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
+                    "!hover:bg-[hsl(222.2 84% 4.9%)]"
+                  )}
                 >
                   Start building
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
