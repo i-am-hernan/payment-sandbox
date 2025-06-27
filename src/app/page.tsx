@@ -136,9 +136,8 @@ const Page = () => {
         {/* Hero Section with Stripe-like styling */}
         <div className="text-center mb-32 lg:mb-0 lg:h-[25vh] lg:flex lg:flex-col lg:justify-center">
           <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-adyen bg-clip-text bg-gradient-to-r from-foreground">
-            Adyen
-            <Heart className="inline-block h-12 w-12 text-red-500 px-2 text-primary" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">Developers</span>
+            Checkout
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">Lab</span>
             <p className="text-[1rem] font-medium text-muted-foreground max-w-[900px] mx-auto">
               Developer-focused solutions in one place: Integrate seamlessly with Adyen using our integration examples, tools, blogs, and more!
             </p>
@@ -154,7 +153,7 @@ const Page = () => {
                   <PlayCircle className="h-7 w-7" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-semibold text-foreground">Demo Experience</CardTitle>
+                  <CardTitle className="text-2xl font-semibold text-foreground">Demo</CardTitle>
                   <div className="flex flex-col items-start gap-2">
                     <CardDescription className="text-base mt-1 text-muted-foreground">
                       Try our interactive demo
@@ -188,7 +187,7 @@ const Page = () => {
                   <Rocket className="h-7 w-7" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-semibold text-foreground">Sandbox Playground</CardTitle>
+                  <CardTitle className="text-2xl font-semibold text-foreground">Sandbox</CardTitle>
                   <div className="flex flex-col items-start gap-2">
                     <CardDescription className="text-base mt-1 text-muted-foreground">
                       Build from scratch
