@@ -169,7 +169,7 @@ const Page: any = () => {
   ];
 
   if (theme === null) {
-    return <Loading className="text-foreground" />;
+    return null;
   }
 
   if (section === "Client") {

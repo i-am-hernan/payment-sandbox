@@ -70,65 +70,6 @@ const IMPLEMENTATION_EXAMPLES: Example[] = [
 ];
 
 const Page = () => {
-  const [selectedVariant, setSelectedVariant] = useState("dropin");
-  const [selectedIntegration, setSelectedIntegration] = useState("advance");
-  const [showSandboxButton, setShowSandboxButton] = useState(true);
-  const [paymentMethods, setPaymentMethods] = useState<{
-    data: any;
-    loading: boolean;
-    error: any;
-  }>({
-    data: null,
-    loading: true,
-    error: null,
-  });
-
-  const integrationTypes = [
-    { value: "advance", label: "Advanced" },
-    { value: "sessions", label: "Sessions" },
-  ];
-
-  const fetchPaymentMethods = async (merchantAccount: string) => {
-    try {
-      const requestOptions: RequestOptions = {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ merchantAccount: merchantAccount }),
-      };
-      const domain = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(
-        `${domain}/api/checkout/v71/paymentMethods`,
-        {
-          method: requestOptions.method,
-          headers: requestOptions.headers,
-          body: requestOptions.body,
-        }
-      );
-      const data = await response.json();
-      if (data.status >= 400) {
-        throw new Error(data.message);
-      } else {
-        setPaymentMethods({
-          data: data.paymentMethods,
-          loading: false,
-          error: null,
-        });
-      }
-    } catch (error: any) {
-      setPaymentMethods({
-        data: null,
-        loading: false,
-        error: error.message,
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetchPaymentMethods(process.env.NEXT_PUBLIC_MERCHANT_ACCOUNT || "");
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <HomeTopBar />
@@ -200,57 +141,19 @@ const Page = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="flex-grow space-y-6">
-              <div className="space-y-4">
-                <Select onValueChange={(value) => setSelectedIntegration(value)} defaultValue="advance">
-                  <SelectTrigger className="w-full h-12 bg-[#F6F9FC] border border-[#E3E8EE] rounded-lg hover:border-[#0abf53] transition-colors">
-                    <SelectValue placeholder="Select integration type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {integrationTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Select
-                  onValueChange={(value) => {
-                    setSelectedVariant(value);
-                    setShowSandboxButton(true);
-                  }}
-                  disabled={!selectedIntegration}
-                  defaultValue="dropin"
-                >
-                  <SelectTrigger className="w-full h-12 bg-[#F6F9FC] border border-[#E3E8EE] rounded-lg hover:border-adyen transition-colors">
-                    <SelectValue placeholder="Select a payment method" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem key={"dropin"} value={"dropin"}>
-                      Dropin
-                    </SelectItem>
-                    {paymentMethods.data?.map((variant: any, index: number) => (
-                      <SelectItem key={index} value={variant.type}>
-                        {variant.name.charAt(0).toUpperCase() + variant.name.slice(1)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <CardContent className="flex-grow">
+              <p className="text-muted-foreground text-base leading-relaxed">
+                Experience our payment solutions in action with our interactive demo environment. Test features, explore configurations, and see real-time updates.
+              </p>
             </CardContent>
             <CardFooter className="pt-6">
               <Link
-                href={selectedVariant ? `sandbox/${selectedIntegration}/${selectedVariant}?view=preview` : '#'}
+                href={`advance/dropin?view=preview`}
                 className="w-full"
               >
                 <Button
-                  className={cn(
-                    "w-full bg-primary text-card font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 !hover:bg-primary/1",
-                    (!selectedVariant || !selectedIntegration) && "opacity-50"
-                  )}
-                  disabled={!selectedVariant || !selectedIntegration}
-                  variant="outline"
+                  className="w-full !bg-[hsl(222.2 84% 4.9%)] text-card font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 !hover:bg-[hsl(222.2 84% 4.9%)]"
+
                 >
                   Start building
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -282,7 +185,6 @@ const Page = () => {
               <Link href="/formulas" className="w-full">
                 <Button
                   className="w-full bg-primary !hover:bg-primary/90 font-white font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                  onClick={() => setShowSandboxButton(true)}
                 >
                   Browse builds
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
