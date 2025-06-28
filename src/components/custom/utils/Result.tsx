@@ -14,7 +14,7 @@ interface AdyenResult {
 const Result = ({ adyenResult }: { adyenResult: AdyenResult }) => {
   const { resultCode, pspReference, refusalReason } = adyenResult;
   return (
-    <div className="h-[100%] w-[100%] px-6 py-1">
+    <div className="h-[100%] w-[100%] py-1">
       <Alert variant="default" className="border-border flex items-center bg-card">
         <div className="flex items-center">
           {resultCode === "Authorised" ? (
