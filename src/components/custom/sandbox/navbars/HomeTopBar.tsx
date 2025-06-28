@@ -38,10 +38,10 @@ const DemoTopbar = (props: any) => {
                             size="sm"
                             className="px-4 border-adyen bg-adyen text-[#fff] hover:text-adyen hover:bg-background hover:border-adyen hover:border-1"
                             onClick={() => {
-                                window.location.href = "https://adyen.com/signup";
+                                window.location.href = "https://github.com/i-am-hernan/payment-sandbox";
                             }}
                         >
-                            Sign Up
+                            Documentation
                         </Button>
                     </span>
                 </Tooltip>

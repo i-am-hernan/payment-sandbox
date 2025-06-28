@@ -17,6 +17,7 @@ import { getFormulas } from "../actions/formula";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import Loading from "@/components/custom/utils/Loading";
+import HomeTopBar from "@/components/custom/sandbox/navbars/HomeTopBar";
 
 export default function FormulasPage() {
   const [allFormulas, setAllFormulas] = useState<any[]>([]);
@@ -71,8 +72,9 @@ export default function FormulasPage() {
   };
 
   return (
-    <div className="min-h-screen bg-dotted-grid bg-grid bg-background">
+    <div className="min-h-screen bg-background">
       <div className="min-h-screen">
+        <HomeTopBar />
         {loading ? (
           <div className="h-screen flex items-center justify-center">
             <Loading className="text-foreground" />
@@ -80,52 +82,52 @@ export default function FormulasPage() {
         ) : (
           <div>
             {/* Hero Section */}
-            <div className="max-w-[1400px] mx-auto pt-32 px-6">
-              <div className="space-y-4 mb-16">
+            <div className="max-w-[1400px] mx-auto pt-16 px-6">
+              <div className="space-y-4 mb-1">
                 <div className="flex justify-center items-end gap-1">
                   <div className="relative h-14 w-14 rounded-xl bg-primary/3 flex items-center justify-center text-adyen group">
                     {/* Flask icon */}
                     <FlaskConical className="h-12 w-12 relative z-10" />
-                    
+
                     {/* Animated bubbles */}
                     <div className="absolute inset-0 pointer-events-none">
-                      <div 
+                      <div
                         className="absolute w-2.5 h-2.5 rounded-full bg-adyen left-6 bottom-6 animate-bubble-slow"
                         style={{ animationDelay: '0s' }}
                       />
-                      <div 
+                      <div
                         className="absolute w-2 h-2 rounded-full bg-adyen left-6 bottom-3 animate-bubble-medium"
                         style={{ animationDelay: '0.5s' }}
                       />
-                      <div 
+                      <div
                         className="absolute w-1.5 h-1.5 rounded-full bg-adyen left-7 bottom-5 animate-bubble-fast"
                         style={{ animationDelay: '1s' }}
                       />
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <h1 className="text-5xl font-semibold tracking-tight text-foreground bg-clip-text relative">
-                      <span className="bg-gradient-to-r from-adyen/90 to-adyen text-transparent bg-clip-text">
-                        formulas
-                      </span>
+                  <div className="">
+                    <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-adyen bg-clip-text bg-gradient-to-r from-foreground">
+                      Lab
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">Formulas</span>
                     </h1>
                   </div>
                 </div>
 
                 <div className="space-y-4 text-center animate-fade-in">
-                  <p className="text-muted-foreground text-lg mx-auto leading-relaxed">
+                  <p className="text-[1rem] font-medium text-muted-foreground max-w-[900px] mx-auto">
                     Browse our collection of pre-built checkout integrations
                   </p>
                 </div>
 
-                <div className="relative max-w-[500px] mx-auto mt-12 animate-slide-in-from-bottom">
+                <div className="relative w-full max-w-[95%] sm:max-w-[80%] md:max-w-[60%] lg:max-w-[50%] mx-auto mt-12 animate-slide-in-from-bottom">
                   <div className="relative group">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 transition-colors group-hover:text-adyen z-10" />
                     <Input
-                      className="pl-12 h-14 backdrop-blur-sm border-border/40 hover:border-adyen/40 focus:ring-adyen/20 transition-all duration-300 text-base"
+                      className="rounded-lg pl-12 h-14 backdrop-blur-sm border-border/40 hover:border-adyen/40 focus:ring-adyen/20 transition-all duration-300 text-base"
                       placeholder="Search formulas..."
                       value={search}
                       onChange={handleSearch}
+                      id="search"
                     />
                   </div>
                   <p className="text-sm text-muted-foreground mt-3 text-center">
@@ -186,10 +188,7 @@ export default function FormulasPage() {
                               href={`/${formula.integrationType}/${formula.txVariant}?id=${formula._id}`}
                             >
                               <Button
-                                className={cn(
-                                  "w-full group/button relative overflow-hidden bg-adyen hover:bg-adyen/90 text-[#fff]",
-                                  "transition-all duration-300"
-                                )}
+                                className="w-full bg-primary hover:border-primary  hover:border-2 text-card hover:text-primary font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                                 variant="default"
                               >
                                 <span className="flex items-center justify-center gap-2">
