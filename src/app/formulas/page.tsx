@@ -85,30 +85,10 @@ export default function FormulasPage() {
             <div className="max-w-[1400px] mx-auto pt-16 px-6">
               <div className="space-y-4 mb-1">
                 <div className="flex justify-center items-end gap-1">
-                  <div className="relative h-14 w-14 rounded-xl bg-primary/3 flex items-center justify-center text-adyen group">
-                    {/* Flask icon */}
-                    <FlaskConical className="h-12 w-12 relative z-10" />
-
-                    {/* Animated bubbles */}
-                    <div className="absolute inset-0 pointer-events-none">
-                      <div
-                        className="absolute w-2.5 h-2.5 rounded-full bg-adyen left-6 bottom-6 animate-bubble-slow"
-                        style={{ animationDelay: '0s' }}
-                      />
-                      <div
-                        className="absolute w-2 h-2 rounded-full bg-adyen left-6 bottom-3 animate-bubble-medium"
-                        style={{ animationDelay: '0.5s' }}
-                      />
-                      <div
-                        className="absolute w-1.5 h-1.5 rounded-full bg-adyen left-7 bottom-5 animate-bubble-fast"
-                        style={{ animationDelay: '1s' }}
-                      />
-                    </div>
-                  </div>
                   <div className="">
                     <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-adyen bg-clip-text bg-gradient-to-r from-foreground">
                       Lab
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">Formulas</span>
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">{" "} Formulas</span>
                     </h1>
                   </div>
                 </div>
