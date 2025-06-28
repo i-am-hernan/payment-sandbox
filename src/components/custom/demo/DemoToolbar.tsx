@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const DemoTopbar = (props: any) => {
     const storeFormula = useSelector((state: RootState) => state.formula);
-    const { variantName } = useSelector((state: RootState) => state.sandbox);
     const { view, merchantAccount, integration, variant } = props;
     const { unsavedChanges, errors } = storeFormula;
     const dispatch = useDispatch();

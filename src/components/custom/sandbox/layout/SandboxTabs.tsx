@@ -65,7 +65,6 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
         value={tabsMap.find((t) => t.value === tab)?.value || tabsMap[0].value}
         className="w-full h-full flex flex-col"
         onValueChange={(value) => {
-          console.log("value", value);
           dispatch(updateTab(value));
           clearUrlParams(["tab", "section", "view"]);
         }}

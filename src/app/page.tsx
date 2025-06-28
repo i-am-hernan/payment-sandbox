@@ -1,3 +1,5 @@
+
+import HomeTopBar from "@/components/custom/sandbox/navbars/HomeTopBar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,20 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { RequestOptions } from "@/hooks/useApi";
-import { FlaskConical, Rocket, PlayCircle, Heart } from "lucide-react";
+import { ArrowRight, FlaskConical, PlayCircle, Rocket } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
-import HomeTopBar from "@/components/custom/sandbox/navbars/HomeTopBar";
 
 interface Language {
   name: string;
@@ -33,39 +23,6 @@ interface Example {
   description: string;
   languages: Language[];
 }
-
-const IMPLEMENTATION_EXAMPLES: Example[] = [
-  {
-    title: "Online Payments",
-    description: "Perform an online payment using sessions",
-    languages: [
-      { name: "Java", url: "https://github.com/adyen-examples/adyen-java-spring-online-payments/tree/main/checkout-example", icon: "/icons/languages/java-original.svg" },
-      { name: "Node.js", url: "https://github.com/adyen-examples/adyen-node-online-payments/tree/main/checkout-example", icon: "/icons/languages/nodejs-original-wordmark.svg" },
-      { name: ".NET", url: "https://github.com/adyen-examples/adyen-dotnet-online-payments/tree/main/checkout-example", icon: "/icons/languages/dot-net-original.svg" },
-      { name: "Python", url: "https://github.com/adyen-examples/adyen-python-online-payments", icon: "/icons/languages/python-original.svg" },
-      { name: "PHP", url: "https://github.com/adyen-examples/adyen-php-online-payments", icon: "/icons/languages/laravel-original.svg" },
-      { name: "Ruby", url: "https://github.com/adyen-examples/adyen-rails-online-payments", icon: "/icons/languages/rails-plain.svg" }
-    ]
-  },
-  {
-    title: "Advanced Online Payments",
-    description: "Perform a complex online payment in three steps",
-    languages: [
-      { name: "Java", url: "https://github.com/adyen-examples/adyen-java-spring-online-payments/tree/main/checkout-example-advanced", icon: "/icons/languages/java-original.svg" },
-      { name: "Node.js", url: "https://github.com/adyen-examples/adyen-node-online-payments/tree/main/checkout-example-advanced", icon: "/icons/languages/nodejs-original-wordmark.svg" },
-      { name: ".NET", url: "https://github.com/adyen-examples/adyen-dotnet-online-payments/tree/main/checkout-example-advanced", icon: "/icons/languages/dot-net-original.svg" }
-    ]
-  },
-  {
-    title: "Plugins",
-    description: "Connect your existing E-commerce system to our payments platform",
-    languages: [
-      { name: "Magento", url: "https://github.com/adyen-examples/adyen-magento-plugin-demo", icon: "/icons/languages/magento-original.svg" },
-      { name: "Shopware", url: "https://github.com/adyen-examples/adyen-shopware-plugin-demo", icon: "/icons/languages/shopware-original.svg" },
-      { name: "Salesforce", url: "https://github.com/adyen-examples/adyen-salesforce-pwa-headless-demo", icon: "/icons/languages/salesforce-plain.svg" }
-    ]
-  }
-];
 
 const Page = () => {
   return (
@@ -108,7 +65,7 @@ const Page = () => {
               </p>
             </CardContent>
             <CardFooter className="pt-6">
-              <Link href="/demo" className="w-full bg-background">
+              <Link href="/demo/dropin" className="w-full bg-background">
                 <Button
                   className="w-full bg-primary hover:border-primary  hover:border-2 text-card hover:text-primary font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                 >
@@ -166,7 +123,7 @@ const Page = () => {
                   <FlaskConical className="h-7 w-7" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-semibold text-foreground">Pre-built Use Cases</CardTitle>
+                  <CardTitle className="text-2xl font-semibold text-foreground">Example Builds</CardTitle>
                   <CardDescription className="text-base mt-1 text-muted-foreground">
                     Ready-to-use sandbox configurations
                   </CardDescription>

@@ -5,9 +5,9 @@ import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
 import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
-import DemoSidebar from "@/components/custom/sandbox/navbars/DemoSidebar";
-import DemoTopbar from "@/components/custom/sandbox/navbars/DemoTopbar";
-import Features from "@/components/custom/sandbox/tabs/Features";
+import DemoSidebar from "@/components/custom/demo/DemoSidebar";
+import DemoTopbar from "@/components/custom/demo/DemoToolbar";
+import Features from "@/components/custom/demo/Features";
 import Style from "@/components/custom/sandbox/tabs/Style";
 import Loading from "@/components/custom/utils/Loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -18,6 +18,10 @@ import { formulaActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import CheckoutPageMobile from "@/components/custom/checkout/CheckoutPageMobile";
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import PersonalVideoIcon from '@mui/icons-material/PersonalVideo';
+import HomeTopBar from "@/components/custom/sandbox/navbars/HomeTopBar";
 
 interface SectionType {
   section: "Client" | "Style";
@@ -46,7 +50,6 @@ const Page: any = () => {
     variant,
     view,
     integration,
-    null,
     null
   );
 
@@ -55,9 +58,7 @@ const Page: any = () => {
     unsavedChanges,
     checkoutConfiguration,
     txVariantConfiguration,
-    style,
   } = useSelector((state: RootState) => state.formula);
-  useView("subwindow");
 
   const dispatch = useDispatch();
 
@@ -67,25 +68,34 @@ const Page: any = () => {
     dispatch(updateMerchantAccount(merchantAccount));
     dispatch(updateReset());
   });
-  // console.log("checkoutConfiguration", checkoutConfiguration)
-  // console.log("txVariantConfiguration", txVariantConfiguration)
+
+  console.log("merchantAccount", merchantAccount)
+  console.log("formulaLoading", formulaLoading)
+  console.log("formulaError", formulaError)
+  console.log("formulaSuccess", formulaSuccess)
+  console.log("formulaLoading || merchantAccount === null", formulaLoading || merchantAccount === null)
   let tabsMap: any = [];
   let topRightTabsMap = [
     {
-      title: `${variant}`,
+      title: "desktop",
       icon: (
-        <span className="font-semibold px-1 text-xxs text-adyen">
-          {"PREVIEW"}
-        </span>
+        <PersonalVideoIcon className="font-semibold pl-1 text-xl text-adyen" />
       ),
-      content: (
-        <CheckoutPage>
-          <ManageAdvanceComponent key={run ? "run" : "default"} variant={variant} />
-        </CheckoutPage>
+      content: (<CheckoutPage>
+        <ManageAdvanceComponent key={run ? "run" : "default"} />
+      </CheckoutPage>),
+      value: "desktop",
+    }, {
+      title: "mobile",
+      icon: (
+        <PhoneIphoneIcon className="font-semibold pl-1 text-xl text-adyen" />
       ),
-      value: variant,
-    },
-  ]
+      content: (<CheckoutPageMobile>
+        <ManageAdvanceComponent key={run ? "run" : "default"} />
+      </CheckoutPageMobile>),
+      value: "mobile",
+    }
+  ];
   if (section === "Client") {
     tabsMap = [
       {
@@ -102,7 +112,7 @@ const Page: any = () => {
             variant={variant}
             theme={theme}
             integration={integration}
-            view={view}
+            view={"preview"}
             description="Create a configuration object for Checkout"
           />
         ),
@@ -110,42 +120,13 @@ const Page: any = () => {
         unsavedChanges: unsavedChanges.checkout,
       }
     ];
-  } else if (section === "Style") {
-    tabsMap = [
-      {
-        title: "style",
-        icon: (
-          <span className="font-semibold px-1 text-xxs text-info">{"CSS"}</span>
-        ),
-        content: (
-          <Style
-            key={"style"}
-            storeConfiguration={style}
-            updateStoreConfiguration={updateStyle}
-            configurationType="style"
-            variant={variant}
-            theme={theme}
-            integration={integration}
-            view={view}
-            description={`Customize the style of ${variant}. Inspect the browser console to view all selectors.`}
-          />
-        ),
-        value: "style",
-        unsavedChanges: unsavedChanges.style,
-      },
-    ];
   }
 
   return (
     <div className={`${theme} border-r-2 border-border bg-dotted-grid bg-grid bg-background`}>
       <React.Fragment>
         <header>
-          <DemoTopbar
-            view={view}
-            merchantAccount={merchantAccount}
-            integration={integration}
-            variant={variant}
-          />
+          <HomeTopBar />
         </header>
         <main>
           <Sandbox
@@ -191,23 +172,11 @@ const Page: any = () => {
                 <SandBoxTabs tabsMap={topRightTabsMap} />
               )
             }
-            view={view}
+            view={"feature"}
             logs={logs}
+            className="pt-[var(--topbar-width)]"
           />
         </main>
-        <footer className="h-[100%]">
-          <DemoSidebar
-            section={section}
-            sections={["Client", "Style"]}
-            setSection={setSection}
-            unsavedChanges={unsavedChanges}
-            merchantAccount={merchantAccount}
-            variant={variant}
-            view={view}
-            integration={integration}
-            logs={logs}
-          />
-        </footer>
       </React.Fragment>
       <ScreenSizeDialog />
     </div>

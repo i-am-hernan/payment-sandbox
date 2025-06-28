@@ -451,6 +451,7 @@ const Page: any = () => {
               }
               view={view}
               logs={logs}
+              className="pt-[var(--topbar-width)] pl-[var(--sidebar-width)]"
             />
           ) : null}
         </main>

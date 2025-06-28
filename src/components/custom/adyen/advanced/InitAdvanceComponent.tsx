@@ -93,7 +93,7 @@ export const InitAdvanceComponent = (props: any) => {
       ? { ...adyenSDKError, ...paymentMethodsError }
       : null;
 
-
+console.log(loadingPaymentMethods)
   return (
     <div className="flex justify-center align-center h-full">
       {error && <Error error={error} />}

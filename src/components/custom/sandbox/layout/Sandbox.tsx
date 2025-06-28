@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 interface SandboxContentProps {
   main: any;
   topRight: any;
-  bottomRight: any;
-  view: "developer" | "preview";
+  bottomRight?: any;
+  view: "developer" | "preview" | "feature";
   logs: boolean;
   className?: string;
 }
@@ -33,6 +33,8 @@ const Sandbox = ({
       refA.current?.resize(50);
     } else if (view === "developer") {
       refA.current?.resize(60);
+    } else if (view === "feature") {
+      refA.current?.resize(30);
     }
   }, [view]);
 
@@ -75,7 +77,7 @@ const Sandbox = ({
     <ResizablePanelGroup
       direction="horizontal"
       className={cn(
-        "sm:!h-screen inline-block pt-[var(--topbar-width)] pl-[var(--sidebar-width)] border-b-[1px] border-border",
+        "sm:!h-screen inline-block",
         className
       )}
     >
@@ -85,7 +87,6 @@ const Sandbox = ({
         maxSize={100}
         className={cn(
           "transition-all duration-300 ease-in-out",
-          className
         )}
       >
         <div className="items-center justify-center flex w-full h-full animate-slide-in pl-6 pr-3 pt-1 pb-3">
@@ -125,10 +126,10 @@ const Sandbox = ({
             defaultSize={0}
             maxSize={50}
             ref={refB}
-            className={cn("transition-all duration-300 ease-in-out", className)}
+            className={cn("transition-all duration-300 ease-in-out")}
           >
             <div className="items-center justify-center flex w-full h-full">
-              {React.cloneElement(BottomRight, {
+              {BottomRight && React.cloneElement(BottomRight, {
                 onExpand: handleBottomRightExpand,
                 onContract: handleBottomRightContract,
               })}

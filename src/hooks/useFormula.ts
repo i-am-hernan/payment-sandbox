@@ -23,7 +23,7 @@ export const useFormula = (
   variant: string,
   view: string,
   integration: string,
-  section: string
+  section: string | null
 ) => {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
