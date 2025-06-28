@@ -111,8 +111,8 @@ export const useAdyenAdvance = (
   ) => {
     try {
       const initCheckout: any = async () => {
-        const checkout = new (window as any).AdyenCheckout(configuration);
         try {
+          const checkout = new (window as any).AdyenCheckout(configuration);
           const component = checkout.create(txVariant, {
             ...txVariantConfiguration,
           });
@@ -150,8 +150,8 @@ export const useAdyenAdvance = (
   ) => {
     try {
       const initCheckout: any = async () => {
-        const checkout = new (window as any).AdyenCheckout(configuration);
         try {
+          const checkout = new (window as any).AdyenCheckout(configuration);
           const component = checkout.create(txVariant, {
             ...txVariantConfiguration,
           });
@@ -189,8 +189,8 @@ export const useAdyenAdvance = (
   ) => {
     try {
       const initCheckout: any = async () => {
-        const checkout = await (window as any).AdyenCheckout(configuration);
         try {
+          const checkout = await (window as any).AdyenCheckout(configuration);
           const component = checkout.create(txVariant, {
             ...txVariantConfiguration,
           });
@@ -229,9 +229,9 @@ export const useAdyenAdvance = (
     try {
       const initCheckout: any = async () => {
         const { AdyenCheckout, Dropin, createComponent } = await (window as any).AdyenWeb;
-        const checkout = await AdyenCheckout(configuration);
         let component = null;
         try {
+          const checkout = await AdyenCheckout(configuration);
           if (txVariant === "dropin") {
             component = new Dropin(checkout, txVariantConfiguration).mount(checkoutRef.current);
           } else {
@@ -284,7 +284,7 @@ export const useAdyenAdvance = (
     if (readyToMount) {
       if (/^3./.test(adyenWebVersion)) {
         adyenV3(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
-      }else if (/^4./.test(adyenWebVersion)) {
+      } else if (/^4./.test(adyenWebVersion)) {
         adyenV4(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);
       } else if (/^5./.test(adyenWebVersion)) {
         adyenV5(configuration, checkoutRef, txVariant, executeTxVariantConfiguration);

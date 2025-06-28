@@ -12,7 +12,7 @@ interface AdyenError {
 
 const Error = ({ error }: { error: AdyenError }) => {
   return (
-    <div className="h-[100%] w-[100%] px-6 py-2">
+    <div className="h-[100%] w-[100%] py-2">
       <Alert variant="default" className="border-primary px-3 flex">
         <div className="flex items-center">
           <ErrorOutlineIcon className="text-warning" />

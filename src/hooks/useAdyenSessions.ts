@@ -41,8 +41,8 @@ export const useAdyenSessions = (
   ) => {
     try {
       const initCheckout: any = async () => {
-        const checkout = await (window as any).AdyenCheckout(configuration);
         try {
+          const checkout = await (window as any).AdyenCheckout(configuration);
           const component = checkout.create(txVariant, {
             ...txVariantConfiguration,
           });
@@ -83,9 +83,9 @@ export const useAdyenSessions = (
     try {
       const initCheckout: any = async () => {
         const { AdyenCheckout, Dropin, createComponent } = await (window as any).AdyenWeb;
-        const checkout = await AdyenCheckout(configuration);
         let component = null;
         try {
+          const checkout = await AdyenCheckout(configuration);
           if (txVariant === "dropin") {
             component = new Dropin(checkout, txVariantConfiguration).mount(checkoutRef.current);
           } else {

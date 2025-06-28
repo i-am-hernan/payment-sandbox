@@ -58,8 +58,6 @@ export const ManageAdvanceComponent = (props: any) => {
   }, [redirectResultQueryParameter, isRedirect]);
 
   if (loadingAdyenScript || !variant) {
-    console.log("loadingAdyenScript", loadingAdyenScript)
-    console.log("variant", variant)
     return <Loading className="text-foreground" />;
   }
 
