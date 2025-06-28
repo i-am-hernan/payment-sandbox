@@ -31,9 +31,9 @@ const Page = () => {
       <div className="max-w-[1400px] mx-auto px-8 pt-32 lg:pt-8 lg:h-[100vh] lg:flex lg:flex-col">
         {/* Hero Section with Stripe-like styling */}
         <div className="text-center mb-32 lg:mb-0 lg:h-[25vh] lg:flex lg:flex-col lg:justify-center">
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-adyen bg-clip-text bg-gradient-to-r from-foreground">
+          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-primary bg-clip-text bg-gradient-to-r from-foreground">
             Checkout
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">Lab</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-adyen">Lab</span>
             <p className="pt-1 text-[1rem] font-medium text-muted-foreground max-w-[900px] mx-auto">
               Integrate seamlessly with Adyen using our integration tools! Developer-focused solutions in one place.
             </p>
