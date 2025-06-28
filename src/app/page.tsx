@@ -78,7 +78,7 @@ const Page = () => {
             Checkout
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">Lab</span>
             <p className="pt-1 text-[1rem] font-medium text-muted-foreground max-w-[900px] mx-auto">
-              Developer-focused solutions in one place. Integrate seamlessly with Adyen using our integration tools!
+              Integrate seamlessly with Adyen using our integration tools! Developer-focused solutions in one place.
             </p>
           </h1>
         </div>
@@ -109,7 +109,7 @@ const Page = () => {
             </CardContent>
             <CardFooter className="pt-6">
               <Link href="/demo" className="w-full bg-background">
-              <Button
+                <Button
                   className="w-full bg-primary hover:border-primary  hover:border-2 text-card hover:text-primary font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   Try demo
