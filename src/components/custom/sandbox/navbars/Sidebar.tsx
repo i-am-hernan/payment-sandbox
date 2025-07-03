@@ -63,6 +63,7 @@ const Sidebar = (props: any) => {
     view,
     integration,
     logs,
+    theme,
   } = props;
   const {
     html: htmlUnsavedChanges,
@@ -402,22 +403,24 @@ const Sidebar = (props: any) => {
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="ml-1 rounded-lg">
                         <DropdownMenuItem
-                          className="text-xs rounded-lg"
+                          className="text-xs rounded-none text-center flex items-center justify-between"
                           onClick={() => {
                             dispatch(updateTheme("dark"));
                             localStorage.setItem("theme", "dark");
                           }}
                         >
                           <span>Dark</span>
+                          {theme === "dark" && <Check className="h-4 w-4 ml-2" />}
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="text-xs rounded-none"
+                          className="text-xs rounded-none text-center flex items-center justify-between"
                           onClick={() => {
                             dispatch(updateTheme("light"));
                             localStorage.setItem("theme", "light");
                           }}
                         >
                           <span>Light</span>
+                          {theme === "light" && <Check className="h-4 w-4 ml-2" />}
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>

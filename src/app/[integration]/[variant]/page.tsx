@@ -450,7 +450,7 @@ const Page: any = () => {
               }
               view={view}
               logs={logs}
-              className="pt-[var(--topbar-width)] pl-[var(--sidebar-width)]"
+              className="pt-[var(--topbar-width)] pl-[var(--sidebar-width)] !h-screen"
             />
           ) : null}
         </main>
@@ -466,6 +466,7 @@ const Page: any = () => {
             view={view}
             integration={integration}
             logs={logs}
+            theme={theme}
           />
         </footer>
       </React.Fragment>

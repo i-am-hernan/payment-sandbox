@@ -10,7 +10,7 @@ interface CheckoutPageMobileProps {
 
 const CheckoutPageMobile: React.FC<CheckoutPageMobileProps> = ({ children, className }) => {
     return (
-        <div className="h-full bg-gradient-to-br pb-6 from-gray-100 to-gray-300 flex items-center justify-center">
+        <div className={cn("h-full bg-gradient-to-br pb-6 from-gray-100 to-gray-300 flex items-center justify-center", className)}>
             {/* iPhone frame */}
             <div className="relative w-[370px] max-h-[780px] h-full bg-black rounded-[40px] shadow-2xl border-4 border-black flex flex-col items-center overflow-hidden">
                 {/* Notch */}

@@ -10,7 +10,7 @@ interface CheckoutPageProps {
 
 const CheckoutPage: React.FC<CheckoutPageProps> = ({ children, className }) => {
     return (
-        <div className="flex flex-col h-full rounded-t-lg rounded-b-xl text-foreground">
+        <div className={cn("flex flex-col h-full rounded-t-lg rounded-b-xl text-foreground", className)}>
             <div className="flex flex-col md:flex-row h-full bg-card rounded-t-lg rounded-b-xl">
                 {/* Browser chrome */}
                 <div className="w-full shadow-xl border border-gray-200 bg-white flex flex-col rounded-t-lg rounded-b-xl">
