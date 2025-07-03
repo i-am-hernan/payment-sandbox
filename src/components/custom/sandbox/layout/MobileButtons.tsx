@@ -11,9 +11,9 @@ const MobileNextButtons = ({ onBack, onNext }: { onBack: any, onNext: any }) => 
             {!preview && (
                 <Button
                     key="clear"
-                    variant="outline"
+                    variant="default"
                     size="sm"
-                    className="border-primary bg-secondary rounded-xl text-primary text-lg font-semibold p-5"
+                    className="bg-adyen rounded-full text-[hsl(var(--white))] hover:text-adyen text-lg font-semibold p-5"
                     onClick={() => {
                         onBack();
                         setPreview(true);
@@ -24,9 +24,9 @@ const MobileNextButtons = ({ onBack, onNext }: { onBack: any, onNext: any }) => 
             )}
             {preview && (<Button
                 key="clear"
-                variant="outline"
+                variant="default"
                 size="sm"
-                className="border-primary bg-secondary rounded-xl text-primary text-lg font-semibold p-5"
+                className="bg-adyen rounded-full text-[hsl(var(--white))] hover:text-adyen text-lg font-semibold p-5"
                 onClick={() => {
                     onNext();
                     setPreview(false);

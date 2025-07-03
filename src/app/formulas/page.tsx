@@ -82,11 +82,11 @@ export default function FormulasPage() {
         ) : (
           <div>
             {/* Hero Section */}
-            <div className="max-w-[1400px] mx-auto pt-16 px-6">
+            <div className="max-w-[1400px] mx-auto pt-24 px-6">
               <div className="space-y-4 mb-1">
                 <div className="flex justify-center items-end gap-1">
                   <div className="">
-                    <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-adyen bg-clip-text bg-gradient-to-r from-foreground">
+                    <h1 className="text-3xl font-bold tracking-tight text-adyen bg-clip-text bg-gradient-to-r from-foreground">
                       Lab
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--custom-accent)] text-primary">{" "} Formulas</span>
                     </h1>

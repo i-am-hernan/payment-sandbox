@@ -87,13 +87,11 @@ const Topbar = (props: any) => {
   "
       ref={containerRef}
     >
-      <div className="flex justify-between w-full">
-        <div className="flex items-baseline pl-3">
-          <Logo />
-        </div>
+      <div className="flex justify-between w-full pl-2 md:pl-4">
+        <Logo />
         <div className="flex justify-end gap-2">
           {view !== "demo" && (
-            <div className="mr-0 md:mr-2">
+            <div className="">
               <AlertDialog>
                 <Tooltip title="Reset (⌘ + delete)">
                   <AlertDialogTrigger asChild>
@@ -103,7 +101,7 @@ const Topbar = (props: any) => {
                         disabled={view === "user"}
                         variant="ghost"
                         size="sm"
-                        className="rounded-md px-0 sm:px-2"
+                        className="rounded-md px-2"
                       >
                         <RestartAltIcon className="!text-foreground !text-[16px]" />
                       </Button>
@@ -156,7 +154,7 @@ const Topbar = (props: any) => {
             </div>
           )}
           {view !== "demo" && (
-            <div className="mr-0 md:mr-2 relative">
+            <div className="relative pr-1">
               <span className="absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-background text-foreground text-xs rounded-full">
                 {totalUnsavedChanges !== 0 && totalUnsavedChanges}
               </span>
@@ -166,7 +164,7 @@ const Topbar = (props: any) => {
                     key="clear"
                     variant="ghost"
                     size="sm"
-                    className="rounded-md px-0 sm:pr-2"
+                    className="rounded-md px-2"
                     disabled={totalUnsavedChanges === 0}
                     onClick={() => {
                       dispatch(clearOnDeckInfo());
