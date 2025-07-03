@@ -99,7 +99,7 @@ const Sandbox = ({
       <ResizablePanelGroup
         direction="horizontal"
         className={cn(
-          "inline-block",
+          "!h-screen inline-block",
           className
         )}
       >

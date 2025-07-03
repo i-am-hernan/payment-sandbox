@@ -88,7 +88,7 @@ const Topbar = (props: any) => {
       ref={containerRef}
     >
       <div className="flex justify-between w-full">
-        <div className="pl-3">
+        <div className="flex items-baseline pl-3">
           <Logo />
         </div>
         <div className="flex justify-end gap-2">
