@@ -41,7 +41,7 @@ export function ExpandableCards(props: ExpandableCardsProps) {
           <span className="flex items-center">{props.paymentMethodName}</span>
         </Button>
         {isExpanded && (
-          <div className="flex md:flex-col justify-start pl-2 border-l-[1px] ml-1">
+          <div className="flex flex-col justify-start pl-2 border-l-[1px] ml-1">
             <Button
               variant="ghost"
               className="pl-1 h-auto py-1 text-sm text-foreground border-transparent shadow-none rounded-lg justify-start"
@@ -49,14 +49,14 @@ export function ExpandableCards(props: ExpandableCardsProps) {
             >
               <Link
                 href={`/sessions/${props.paymentMethodType}`}
-                className="flex items-center"
+                className="flex items-baseline"
                 onClick={() => {
                   onItemClick(`/sessions/${props.paymentMethodType}`);
                 }}
               >
-                <Clock className="h-4 w-4 mb-1 text-adyen" />
+                <Clock className="h-3 w-3 mb-1 text-adyen" />
                 <span
-                  className={`pl-1 text-sm ${
+                  className={`pl-2 text-sm ${
                     defaultIntegration === "sessions" && defaultExpanded
                       ? ""
                       : "font-thin"
@@ -73,14 +73,14 @@ export function ExpandableCards(props: ExpandableCardsProps) {
             >
               <Link
                 href={`/advance/${props.paymentMethodType}`}
-                className="flex items-center"
+                className="flex items-baseline"
                 onClick={() => {
                   onItemClick(`/advance/${props.paymentMethodType}`);
                 }}
               >
-                <SquareTerminal className="h-4 w-4 mb-1 text-preview" />
+                <SquareTerminal className="h-3 w-3 mb-1 text-preview" />
                 <span
-                  className={`pl-1 text-sm ${
+                  className={`pl-2 text-sm ${
                     defaultIntegration === "advance" && defaultExpanded
                       ? ""
                       : "font-thin"

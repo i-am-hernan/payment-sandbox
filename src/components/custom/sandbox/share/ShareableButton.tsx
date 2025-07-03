@@ -97,7 +97,6 @@ const ShareableButton = (props: any) => {
     <div ref={containerRef}>
       <Dialog
         onOpenChange={(open) => {
-          console.log(sharedBuildId, buildId);
           if (open && sharedBuildId !== buildId) {
             handleShare(state);
             setSharedBuildId(buildId);

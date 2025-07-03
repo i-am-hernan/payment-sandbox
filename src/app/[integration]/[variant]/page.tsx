@@ -2,12 +2,14 @@
 
 import { ManageAdvanceComponent } from "@/components/custom/adyen/advanced/ManageAdvanceComponent";
 import { ManageAdyenSessions } from "@/components/custom/adyen/sessions/ManageAdyenSessions";
+import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
+import CheckoutPageMobile from "@/components/custom/checkout/CheckoutPageMobile";
 import Sandbox from "@/components/custom/sandbox/layout/Sandbox";
 import SandBoxTabs from "@/components/custom/sandbox/layout/SandboxTabs";
-import { ScreenSizeDialog } from "@/components/custom/sandbox/mobile/screenSizeDialog";
 import Sidebar from "@/components/custom/sandbox/navbars/Sidebar";
 import Topbar from "@/components/custom/sandbox/navbars/Topbar";
 import Api from "@/components/custom/sandbox/tabs/Api";
+import Network from "@/components/custom/sandbox/tabs/Network";
 import Sdk from "@/components/custom/sandbox/tabs/Sdk";
 import StateData from "@/components/custom/sandbox/tabs/StateData";
 import Style from "@/components/custom/sandbox/tabs/Style";
@@ -15,22 +17,19 @@ import Loading from "@/components/custom/utils/Loading";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFormula } from "@/hooks/useFormula";
 import useMerchantInCookie from "@/hooks/useMerchantInCookie";
+import { useRefreshWarning } from '@/hooks/useRefreshWarning';
+import { useSection } from "@/hooks/useSection";
 import { useStyle } from "@/hooks/useStyle";
+import { useTab } from "@/hooks/useTab";
+import useThemeInStorage from '@/hooks/useThemeInCookie';
 import { useView } from "@/hooks/useView";
 import { formulaActions, sandboxActions, userActions } from "@/store/reducers";
 import type { RootState } from "@/store/store";
-import { useParams, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import CheckoutPage from "@/components/custom/checkout/CheckoutPage";
-import CheckoutPageMobile from "@/components/custom/checkout/CheckoutPageMobile";
-import Network from "@/components/custom/sandbox/tabs/Network";
-import { useSection } from "@/hooks/useSection";
-import { useTab } from "@/hooks/useTab";
-import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import PersonalVideoIcon from '@mui/icons-material/PersonalVideo';
-import { useRefreshWarning } from '@/hooks/useRefreshWarning';
-import useThemeInStorage from '@/hooks/useThemeInCookie';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import { useParams, useSearchParams } from "next/navigation";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface SectionType {
   section: "Client" | "Server" | "Style" | "Demo";
@@ -125,7 +124,7 @@ const Page: any = () => {
             </span>
           ),
           content: (
-            <div className="">
+            <div className="pr-6 md:pr-0">
               <ManageAdvanceComponent key={run ? "run" : "default"} />
             </div>
           ),
@@ -142,7 +141,7 @@ const Page: any = () => {
               </span>
             ),
             content: (
-              <div className="px-6 py-1">
+              <div className="pr-6 md:pr-0">
                 <ManageAdyenSessions key={run ? "run" : "default"} />
               </div>
             ),
@@ -374,7 +373,7 @@ const Page: any = () => {
           {section === "Demo" ? (
             <div className="w-full h-full flex flex-col">
               <div className="w-[calc(100%-var(--sidebar-width))] ml-[var(--sidebar-width)] mt-[var(--topbar-width)] flex justify-center h-[calc(100vh-var(--topbar-width))] animate-slide-in-right pb-6 pt-1 px-6">
-                <SandBoxTabs key={section} tabsMap={tabsMap} type="subwindow" />
+                <SandBoxTabs key={section} tabsMap={tabsMap} type="subwindow"/>
               </div>
             </div>
           ) : section ? (
@@ -470,7 +469,6 @@ const Page: any = () => {
           />
         </footer>
       </React.Fragment>
-      <ScreenSizeDialog />
     </div>
   );
 };

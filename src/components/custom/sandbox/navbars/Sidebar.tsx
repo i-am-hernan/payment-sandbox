@@ -244,20 +244,20 @@ const Sidebar = (props: any) => {
                 </DrawerTrigger>
                 <DrawerPortal container={sidebarRef.current}>
                   <DrawerOverlay />
-                  <DrawerContent className="h-full w-[20vw] rounded-none border-[1px] border-border bg-card">
+                  <DrawerContent className="h-full w-[60vw] md:w-[20vw] rounded-none border-[1px] border-border bg-card">
                     <DrawerHeader className="pb-2">
                       <DrawerTitle className="text-foreground text-md py-0">
                         <span className="flex items-center">
                           <ChevronDown className="h-4 w-4 pr-1 text-grey" />
-                          <span className="display-inline">
-                            Prebuilt Integrations
+                          <span className="display-inline px-0">
+                            Formulas
                           </span>
                         </span>
                         <Link
                           href="/formulas"
                           className="text-sm ml-1 text-grey font-thin border-l-[1px] border-border pl-2"
                         >
-                          Browse formulas
+                          Browse prebuilt integrations
                         </Link>
                       </DrawerTitle>
                       <DrawerTitle className="text-foreground text-md py-0">

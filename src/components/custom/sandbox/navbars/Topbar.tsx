@@ -77,17 +77,23 @@ const Topbar = (props: any) => {
 
   return (
     <span
-      className="bg-card absolute top-0 left-[var(--sidebar-width)] h-[var(--topbar-width)] border-y-[1px] border-r-[1px] border-border stretch flex items-center justify-end px-2"
-      style={{ width: `calc(100vw - var(--sidebar-width))` }}
+      className="
+    bg-card absolute top-0 
+    left-[var(--sidebar-width)]
+    w-[calc(100vw-var(--sidebar-width))]
+    h-[var(--topbar-width)]
+    border-y border-r border-border
+    flex items-center justify-end px-2 z-50
+  "
       ref={containerRef}
     >
       <div className="flex justify-between w-full">
-        <div className="flex items-center px-4">
+        <div className="flex items-center">
           <Logo />
         </div>
         <div className="flex justify-end gap-2">
           {view !== "demo" && (
-            <div className="mr-2">
+            <div className="mr-0 md:mr-2">
               <AlertDialog>
                 <Tooltip title="Reset (⌘ + delete)">
                   <AlertDialogTrigger asChild>
@@ -97,7 +103,7 @@ const Topbar = (props: any) => {
                         disabled={view === "user"}
                         variant="ghost"
                         size="sm"
-                        className="rounded-md"
+                        className="rounded-md px-0 sm:px-2"
                       >
                         <RestartAltIcon className="!text-foreground !text-[16px]" />
                       </Button>
@@ -150,7 +156,7 @@ const Topbar = (props: any) => {
             </div>
           )}
           {view !== "demo" && (
-            <div className="mr-2 relative">
+            <div className="mr-0 md:mr-2 relative">
               <span className="absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-background text-foreground text-xs rounded-full">
                 {totalUnsavedChanges !== 0 && totalUnsavedChanges}
               </span>
@@ -160,7 +166,7 @@ const Topbar = (props: any) => {
                     key="clear"
                     variant="ghost"
                     size="sm"
-                    className="rounded-md"
+                    className="rounded-md px-0 sm:pr-2"
                     disabled={totalUnsavedChanges === 0}
                     onClick={() => {
                       dispatch(clearOnDeckInfo());
@@ -174,7 +180,7 @@ const Topbar = (props: any) => {
             </div>
           )}
           {view !== "demo" && (
-            <div className="mr-2">
+            <div className="md:mr-2">
               <ShareableButton
                 disabled={totalUnsavedChanges !== 0 || tabErrors.length > 0}
                 section={section}

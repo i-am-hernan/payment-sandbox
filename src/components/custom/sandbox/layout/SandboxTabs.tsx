@@ -91,7 +91,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
             ))}
           </TabsList>
           {!hasExpanded && type !== "subwindow" && (
-            <div className="flex items-center bg-[hsl(var(--accent))] border-[1px] border-border p-1 mt-3 rounded-md">
+            <div className="hidden md:flex items-center bg-[hsl(var(--accent))] border-[1px] border-border p-1 mt-3 rounded-md">
               <Button
                 key="clear"
                 variant="outline"
@@ -108,7 +108,7 @@ const SandboxTabs: React.FC<TabsProps> = (props: TabsProps) => {
               </Button></div>
           )}
           {hasExpanded && type !== "subwindow" && (
-            <div className="flex items-center bg-[hsl(var(--accent))] border-[1px] border-border p-1 mt-3 rounded-md">
+            <div className="hidden md:flex items-center bg-[hsl(var(--accent))] border-[1px] border-border p-1 mt-3 rounded-md">
               <Button
                 key="clear"
                 variant="outline"

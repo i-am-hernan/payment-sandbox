@@ -34,7 +34,7 @@ const Search = (props: any) => {
             <code className="px-1 text-xs text-grey font-normal">{method}</code>
           )}
         </h4>
-        <div className="flex items-center space-x-2 px-5 pt-3">
+        <div className="items-center space-x-2 px-5 pt-3 hidden lg:flex">
           <p className="text-xs text-grey font-normal">{`${checked ? "less code" : "more code"}`}</p>
           <Switch id="dev-mode" onCheckedChange={onCheckedChange} checked={checked} />
         </div></div>

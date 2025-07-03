@@ -178,7 +178,6 @@ const Page: any = () => {
           />
         </main>
       </React.Fragment>
-      <ScreenSizeDialog />
     </div>
   );
 };
